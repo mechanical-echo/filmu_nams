@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:json_theme_plus/json_theme_plus.dart';
 import 'package:flutter/services.dart';
 import 'dart:convert';
+import 'package:flutter_svg/flutter_svg.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -77,17 +78,29 @@ class MainApp extends StatelessWidget {
           selectedLabelStyle: const TextStyle(overflow: TextOverflow.visible),
           unselectedLabelStyle: const TextStyle(overflow: TextOverflow.visible),
         ),
-        body: Center(
-          child: Container(
-            width: 300,
-            height: 300,
-            decoration: BoxDecoration(
-              color: Theme.of(context).splashColor,
-              borderRadius: BorderRadius.all(Radius.circular(15)),
-            ),
-            padding: EdgeInsets.all(25),
-            child: Text("test"),
-          ),
+        appBar: AppBar(
+          titleSpacing: 0,
+          clipBehavior: Clip.none,
+          backgroundColor: Colors.transparent,
+          title: Container(
+              clipBehavior: Clip.none,
+              child: Column(
+                children: [
+                  Container(height: 75),
+                  AppBar(
+                    clipBehavior: Clip.none,
+                    title: Container(
+                      padding: EdgeInsets.only(bottom: 10),
+                      child: SvgPicture.asset(
+                        "assets/Logo.svg",
+                        height: 120,
+                      ),
+                    ),
+                    centerTitle: false,
+                  )
+                ],
+              )),
+          centerTitle: false,
         ),
       ),
     );
