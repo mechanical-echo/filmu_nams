@@ -1,16 +1,12 @@
 import 'package:filmu_nams/views/auth/login.dart';
 import 'package:filmu_nams/views/main/start.dart';
 import 'package:flutter/material.dart';
-import 'package:json_theme_plus/json_theme_plus.dart';
-import 'package:flutter/services.dart';
-import 'dart:convert';
+import 'assets/theme.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  final themeStr = await rootBundle.loadString('assets/appainter_theme.json');
-  final themeJson = jsonDecode(themeStr);
-  final theme = ThemeDecoder.decodeThemeData(themeJson)!;
+  initializeDateFormatting('lv');
 
   runApp(App(
     theme: theme,
