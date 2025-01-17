@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "969973706564",
+    "project_id": "filmu-nams",
+    "storage_bucket": "filmu-nams.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:969973706564:android:5895d6fa749551d0bdb111",
+        "android_client_info": {
+          "package_name": "com.example.filmu_nams"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCIOHju0RemdQBn0f2VR_OEL88fB4tcZhQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

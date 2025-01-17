@@ -1,10 +1,10 @@
 import 'package:bordered_text/bordered_text.dart';
+import 'package:filmu_nams/views/resources/background.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:motion_tab_bar/MotionBadgeWidget.dart';
 import 'package:motion_tab_bar/MotionTabBarController.dart';
 import 'package:motion_tab_bar/MotionTabBar.dart';
-import 'package:pattern_background/pattern_background.dart';
 import 'package:intl/intl.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -36,8 +36,6 @@ class _StartState extends State<Start> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    final height = MediaQuery.of(context).size.height;
     return Scaffold(
       extendBodyBehindAppBar: true,
 
@@ -96,27 +94,7 @@ class _StartState extends State<Start> with TickerProviderStateMixin {
        * Galvena daļa
        * Container un CustomPaint ir nepieciešamas fona attēlošanai
        */
-      body: Stack(
-        children: [
-          // Gradients
-          Container(
-            decoration: BoxDecoration(
-                gradient: LinearGradient(
-                    colors: [Color.fromARGB(255, 34, 5, 6), Colors.black],
-                    begin: Alignment.bottomCenter,
-                    end: Alignment.topCenter)),
-          ),
-
-          // Melnie punkti
-          CustomPaint(
-              size: Size(width, height),
-              painter: DotPainter(
-                dotColor: Colors.black,
-                dotRadius: 4,
-                spacing: 10,
-              )),
-        ],
-      ),
+      body: Background(child: Placeholder()),
 
       /**
        * Navigācijas josla
