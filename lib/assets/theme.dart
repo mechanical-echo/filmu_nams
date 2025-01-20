@@ -26,6 +26,10 @@ ThemeData theme = ThemeData(
     dialogBackgroundColor: Color.fromARGB(255, 44, 39, 39),
     filledButtonTheme: FilledButtonThemeData(
       style: ButtonStyle(
+        textStyle: WidgetStatePropertyAll(GoogleFonts.poppins(
+          fontSize: 22,
+          fontWeight: FontWeight.bold,
+        )),
         fixedSize: WidgetStatePropertyAll(Size(272, 50)),
         backgroundColor:
             WidgetStatePropertyAll(Color.fromARGB(255, 151, 50, 39)),

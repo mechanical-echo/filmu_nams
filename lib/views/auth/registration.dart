@@ -4,14 +4,14 @@ import 'package:filmu_nams/views/resources/text_input.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class Login extends StatefulWidget {
-  const Login({super.key});
+class Registration extends StatefulWidget {
+  const Registration({super.key});
 
   @override
-  State<Login> createState() => _LoginState();
+  State<Registration> createState() => _RegistrationState();
 }
 
-class _LoginState extends State<Login> {
+class _RegistrationState extends State<Registration> {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
@@ -35,7 +35,7 @@ class _LoginState extends State<Login> {
                 Container(
                   margin: const EdgeInsets.only(top: 50),
                   child: Text(
-                    'Laipni lūdzam!',
+                    'Prieks iepazīsties!',
                     style: GoogleFonts.poppins(
                         color: Colors.white,
                         fontSize: 36,
@@ -54,46 +54,13 @@ class _LoginState extends State<Login> {
                   obscureText: true,
                   labelText: "Parole",
                   hintText: "dro\$aParole1",
-                  margin: [0, 35, 0, 35],
+                  margin: [0, 35, 25, 35],
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      margin: EdgeInsets.symmetric(vertical: 23, horizontal: 6),
-                      decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 119, 41, 32),
-                        shape: BoxShape.circle,
-                      ),
-                      child: IconButton(
-                        onPressed: () {},
-                        icon: Image.asset(
-                          'assets/google.png',
-                          width: 25,
-                          color: Colors.white,
-                        ),
-                        iconSize: 48,
-                        padding: EdgeInsets.all(12),
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.symmetric(vertical: 23, horizontal: 6),
-                      decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 119, 41, 32),
-                        shape: BoxShape.circle,
-                      ),
-                      child: IconButton(
-                        onPressed: () {},
-                        icon: Image.asset(
-                          'assets/facebook.png',
-                          width: 25,
-                          color: Colors.white,
-                        ),
-                        iconSize: 48,
-                        padding: EdgeInsets.all(12),
-                      ),
-                    ),
-                  ],
+                TextInput(
+                  obscureText: true,
+                  labelText: "Parole atkārtoti",
+                  hintText: "dro\$aParole1",
+                  margin: [0, 35, 0, 35],
                 ),
                 Column(
                   children: [
@@ -101,7 +68,7 @@ class _LoginState extends State<Login> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          "Nav konta?",
+                          "Ir konts?",
                           style: GoogleFonts.poppins(
                             color: Color.fromARGB(255, 167, 167, 167),
                             fontWeight: FontWeight.bold,
@@ -110,16 +77,16 @@ class _LoginState extends State<Login> {
                         ),
                         TextButton(
                           onPressed: () {
-                            Navigator.pushNamed(context, '/register');
+                            Navigator.pushNamed(context, '/login');
                           },
-                          child: Text("Piereġistrēties"),
+                          child: Text("Ielogoties"),
                         )
                       ],
                     ),
                     FilledButton(
                       onPressed: () {},
                       child: Text(
-                        "Ielogoties",
+                        "Reġistrēties",
                       ),
                     ),
                   ],
