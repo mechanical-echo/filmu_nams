@@ -6,6 +6,7 @@ class TextInput extends StatefulWidget {
   final String? labelText;
   final Icon? icon;
   final List<double> margin;
+  final TextEditingController controller;
 
   static const defaultMargin = [0.0, 0.0, 0.0, 0.0];
 
@@ -16,6 +17,7 @@ class TextInput extends StatefulWidget {
     this.labelText,
     this.icon,
     this.margin = defaultMargin,
+    required this.controller,
   });
 
   @override
@@ -47,6 +49,7 @@ class _TextInputState extends State<TextInput> {
         left: widget.margin[3],
       ),
       child: TextFormField(
+        controller: widget.controller,
         cursorColor: const Color.fromARGB(255, 123, 123, 123),
         style: const TextStyle(
           color: Colors.white,

@@ -16,6 +16,10 @@ class _RegistrationState extends State<Registration> {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
 
+    final emailController = TextEditingController();
+    final passwordController = TextEditingController();
+    final passwordConfirmationController = TextEditingController();
+
     return Scaffold(
       body: Background(
         child: Column(
@@ -49,18 +53,21 @@ class _RegistrationState extends State<Registration> {
                   hintText: "epasts@epasts.lv",
                   icon: Icon(Icons.email),
                   margin: [25, 35, 25, 35],
+                  controller: emailController,
                 ),
                 TextInput(
                   obscureText: true,
                   labelText: "Parole",
                   hintText: "dro\$aParole1",
                   margin: [0, 35, 25, 35],
+                  controller: passwordController,
                 ),
                 TextInput(
                   obscureText: true,
                   labelText: "Parole atkārtoti",
                   hintText: "dro\$aParole1",
                   margin: [0, 35, 0, 35],
+                  controller: passwordConfirmationController,
                 ),
                 Column(
                   children: [

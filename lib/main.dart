@@ -1,13 +1,20 @@
+import 'package:filmu_nams/views/auth/auth.dart';
 import 'package:filmu_nams/views/auth/login.dart';
 import 'package:filmu_nams/views/auth/registration.dart';
 import 'package:filmu_nams/views/main/start.dart';
 import 'package:flutter/material.dart';
 import 'assets/theme.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   initializeDateFormatting('lv');
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   runApp(App(
     theme: theme,
@@ -23,7 +30,7 @@ class App extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: theme,
-      home: Login(),
+      home: Auth(),
       routes: {
         '/login': (context) => Login(),
         '/home': (context) => Start(),

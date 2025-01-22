@@ -1,6 +1,7 @@
 import 'package:filmu_nams/views/resources/background.dart';
 import 'package:filmu_nams/views/resources/big_logo.dart';
 import 'package:filmu_nams/views/resources/text_input.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -15,6 +16,16 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
+
+    final emailController = TextEditingController();
+    final passwordController = TextEditingController();
+
+    void signIn() async {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailController.text,
+        password: passwordController.text,
+      );
+    }
 
     return Scaffold(
       body: Background(
@@ -49,12 +60,14 @@ class _LoginState extends State<Login> {
                   hintText: "epasts@epasts.lv",
                   icon: Icon(Icons.email),
                   margin: [25, 35, 25, 35],
+                  controller: emailController,
                 ),
                 TextInput(
                   obscureText: true,
                   labelText: "Parole",
                   hintText: "dro\$aParole1",
                   margin: [0, 35, 0, 35],
+                  controller: passwordController,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -117,7 +130,7 @@ class _LoginState extends State<Login> {
                       ],
                     ),
                     FilledButton(
-                      onPressed: () {},
+                      onPressed: signIn,
                       child: Text(
                         "Ielogoties",
                       ),
