@@ -1,7 +1,7 @@
 import 'package:filmu_nams/views/auth/auth.dart';
 import 'package:filmu_nams/views/auth/login.dart';
 import 'package:filmu_nams/views/auth/registration.dart';
-import 'package:filmu_nams/views/main/start.dart';
+import 'package:filmu_nams/views/main/wrapper.dart';
 import 'package:flutter/material.dart';
 import 'assets/theme.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -33,7 +33,7 @@ class App extends StatelessWidget {
       home: Auth(),
       routes: {
         '/login': (context) => Login(),
-        '/home': (context) => Start(),
+        '/home': (context) => Wrapper(),
         '/register': (context) => Registration(),
       },
     );
