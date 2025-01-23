@@ -1,6 +1,7 @@
-import 'package:filmu_nams/views/resources/text_input.dart';
+import 'package:filmu_nams/views/auth/registration_first_step.dart';
+import 'package:filmu_nams/views/auth/registration_second_step.dart';
+import 'package:filmu_nams/views/resources/carousel_switch.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class Registration extends StatefulWidget {
   final Function(int) onViewChange;
@@ -11,75 +12,46 @@ class Registration extends StatefulWidget {
 }
 
 class _RegistrationState extends State<Registration> {
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final passwordConfirmationController = TextEditingController();
+  final nameController = TextEditingController();
+
+  late List<Widget> views = [
+    RegistrationFirstStep(
+      nextRegistrationStep: nextStep,
+      onViewChange: widget.onViewChange,
+      emailController: emailController,
+      passwordController: passwordController,
+      passwordConfirmationController: passwordConfirmationController,
+    ),
+    RegistrationSecondStep(
+      previousRegistrationStep: previousStep,
+      nameController: nameController,
+    ),
+  ];
+
+  int currentView = 0;
+
+  void nextStep() {
+    setState(() {
+      currentView = 1;
+    });
+  }
+
+  void previousStep() {
+    setState(() {
+      currentView = 0;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    final emailController = TextEditingController();
-    final passwordController = TextEditingController();
-    final passwordConfirmationController = TextEditingController();
-
-    return Center(
-      child: Column(children: [
-        Container(
-          margin: const EdgeInsets.only(top: 50),
-          child: Text(
-            'Prieks iepazīsties!',
-            style: GoogleFonts.poppins(
-                color: Colors.white,
-                fontSize: 36,
-                fontWeight: FontWeight.w300,
-                decoration: TextDecoration.none),
-          ),
-        ),
-        TextInput(
-          obscureText: false,
-          labelText: "E-pasts",
-          hintText: "epasts@epasts.lv",
-          icon: Icon(Icons.email),
-          margin: [25, 35, 25, 35],
-          controller: emailController,
-        ),
-        TextInput(
-          obscureText: true,
-          labelText: "Parole",
-          hintText: "dro\$aParole1",
-          margin: [0, 35, 25, 35],
-          controller: passwordController,
-        ),
-        TextInput(
-          obscureText: true,
-          labelText: "Parole atkārtoti",
-          hintText: "dro\$aParole1",
-          margin: [0, 35, 0, 35],
-          controller: passwordConfirmationController,
-        ),
-        Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "Ir konts?",
-                  style: GoogleFonts.poppins(
-                    color: Color.fromARGB(255, 167, 167, 167),
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15,
-                  ),
-                ),
-                TextButton(
-                  onPressed: () => widget.onViewChange(0),
-                  child: Text("Ielogoties"),
-                )
-              ],
-            ),
-            FilledButton(
-              onPressed: () {},
-              child: Text(
-                "Reġistrēties",
-              ),
-            ),
-          ],
-        )
-      ]),
+    return CarouselSwitch(
+      direction: currentView == 1
+          ? CarouselSwitchDirection.left
+          : CarouselSwitchDirection.right,
+      child: views[currentView],
     );
   }
 }
