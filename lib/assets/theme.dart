@@ -5,6 +5,7 @@ ThemeData theme = ThemeData(
     primarySwatch: Colors.red,
     primaryColor: Color.fromARGB(255, 123, 29, 29),
     focusColor: Color.fromARGB(255, 119, 41, 32),
+    cardColor: Color.fromARGB(255, 87, 33, 27),
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
         backgroundColor: Color.fromARGB(255, 102, 30, 23),
         unselectedItemColor: Color.fromARGB(255, 178, 104, 96),

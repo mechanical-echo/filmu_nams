@@ -1,48 +1,82 @@
-import 'package:filmu_nams/views/resources/background.dart';
-import 'package:filmu_nams/views/resources/big_logo.dart';
 import 'package:filmu_nams/views/resources/text_input.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class Login extends StatefulWidget {
-  const Login({super.key});
+  const Login({super.key, required this.onPressed});
+
+  final VoidCallback onPressed;
 
   @override
   State<Login> createState() => _LoginState();
 }
 
 class _LoginState extends State<Login> {
-  @override
-  Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
+  bool isLoading = false;
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
 
-    final emailController = TextEditingController();
-    final passwordController = TextEditingController();
+  void signIn() async {
+    setState(() {
+      isLoading = true;
+    });
 
-    void signIn() async {
+    try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: emailController.text,
         password: passwordController.text,
       );
-    }
+    } on FirebaseAuthException catch (e) {
+      String message;
 
-    return Scaffold(
-      body: Background(
-        child: Column(
-          children: [
-            BigLogo(
-              top: 164,
-            ),
-            Container(
-              margin: const EdgeInsets.only(top: 100, right: 25, left: 25),
-              width: width,
-              height: 475,
-              decoration: BoxDecoration(
-                color: Theme.of(context).dialogBackgroundColor,
-                borderRadius: BorderRadius.circular(24),
-              ),
-              child: Column(children: [
+      switch (e.code) {
+        case "user-not-found":
+        case "invalid-credential":
+          message = "Lietotājs nav atrasts";
+          break;
+        case "wrong-password":
+          message = "Nepareizs epasts vai parole";
+          break;
+        default:
+          message = e.code;
+      }
+
+      showCupertinoDialog(
+        context: context,
+        builder: (BuildContext context) => CupertinoAlertDialog(
+          title: Text("Kļūda"),
+          content: Text(message),
+          actions: [
+            CupertinoDialogAction(
+              isDefaultAction: true,
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            )
+          ],
+        ),
+      );
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: isLoading
+          ? LoadingAnimationWidget.stretchedDots(
+              size: 100,
+              color: Theme.of(context).focusColor,
+            )
+          : Column(
+              children: [
                 Container(
                   margin: const EdgeInsets.only(top: 50),
                   child: Text(
@@ -136,12 +170,9 @@ class _LoginState extends State<Login> {
                       ),
                     ),
                   ],
-                )
-              ]),
-            )
-          ],
-        ),
-      ),
+                ),
+              ],
+            ),
     );
   }
 }

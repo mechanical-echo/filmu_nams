@@ -1,3 +1,4 @@
+import 'package:filmu_nams/views/auth/auth_form.dart';
 import 'package:filmu_nams/views/auth/login.dart';
 import 'package:filmu_nams/views/main/wrapper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -16,7 +17,7 @@ class Auth extends StatelessWidget {
             return Wrapper();
           }
 
-          return Login();
+          return AuthForm();
         },
       ),
     );

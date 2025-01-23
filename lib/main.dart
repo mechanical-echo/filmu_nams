@@ -32,7 +32,9 @@ class App extends StatelessWidget {
       theme: theme,
       home: Auth(),
       routes: {
-        '/login': (context) => Login(),
+        '/login': (context) => Login(
+              onPressed: () {},
+            ),
         '/home': (context) => Wrapper(),
         '/register': (context) => Registration(),
       },
