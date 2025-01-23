@@ -1,6 +1,7 @@
 import 'package:filmu_nams/views/main/home/home.dart';
 import 'package:filmu_nams/views/main/profile/profile.dart';
 import 'package:filmu_nams/views/resources/background.dart';
+import 'package:filmu_nams/views/resources/carousel_switch.dart';
 import 'package:filmu_nams/views/resources/logo.dart';
 import 'package:filmu_nams/views/resources/navigation_bar.dart';
 import 'package:flutter/material.dart';
@@ -13,9 +14,11 @@ class Wrapper extends StatefulWidget {
 
 class _WrapperState extends State<Wrapper> with TickerProviderStateMixin {
   int _currentPageIndex = 2;
+  int _previousPageIndex = 2;
 
   void _onPageChanged(int index) {
     setState(() {
+      _previousPageIndex = _currentPageIndex;
       _currentPageIndex = index;
     });
   }
@@ -37,7 +40,12 @@ class _WrapperState extends State<Wrapper> with TickerProviderStateMixin {
         child: Logo(),
       ),
       body: Background(
-        child: pages[_currentPageIndex],
+        child: CarouselSwitch(
+          direction: _currentPageIndex > _previousPageIndex
+              ? CarouselSwitchDirection.left
+              : CarouselSwitchDirection.right,
+          child: pages[_currentPageIndex],
+        ),
       ),
       bottomNavigationBar: NavBar(
         onPageChanged: _onPageChanged,

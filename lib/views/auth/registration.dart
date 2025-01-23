@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Registration extends StatefulWidget {
-  const Registration({super.key});
+  final Function(int) onViewChange;
+  const Registration({super.key, required this.onViewChange});
 
   @override
   State<Registration> createState() => _RegistrationState();
@@ -65,9 +66,7 @@ class _RegistrationState extends State<Registration> {
                   ),
                 ),
                 TextButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/login');
-                  },
+                  onPressed: () => widget.onViewChange(0),
                   child: Text("Ielogoties"),
                 )
               ],

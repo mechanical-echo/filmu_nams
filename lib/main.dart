@@ -1,6 +1,4 @@
 import 'package:filmu_nams/views/auth/auth.dart';
-import 'package:filmu_nams/views/auth/login.dart';
-import 'package:filmu_nams/views/auth/registration.dart';
 import 'package:filmu_nams/views/main/wrapper.dart';
 import 'package:flutter/material.dart';
 import 'assets/theme.dart';
@@ -32,11 +30,7 @@ class App extends StatelessWidget {
       theme: theme,
       home: Auth(),
       routes: {
-        '/login': (context) => Login(
-              onPressed: () {},
-            ),
         '/home': (context) => Wrapper(),
-        '/register': (context) => Registration(),
       },
     );
   }

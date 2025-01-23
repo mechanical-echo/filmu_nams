@@ -2,6 +2,7 @@ import 'package:filmu_nams/views/auth/login.dart';
 import 'package:filmu_nams/views/auth/registration.dart';
 import 'package:filmu_nams/views/resources/background.dart';
 import 'package:filmu_nams/views/resources/big_logo.dart';
+import 'package:filmu_nams/views/resources/carousel_switch.dart';
 import 'package:flutter/material.dart';
 
 class AuthForm extends StatefulWidget {
@@ -16,17 +17,17 @@ class _AuthFormState extends State<AuthForm> {
 
   _AuthFormState() {
     views = [
-      Login(onPressed: () => toggleView(1)),
-      Registration(),
+      Login(onViewChange: toggleView),
+      Registration(onViewChange: toggleView),
       Placeholder(),
     ];
   }
 
   int currentView = 0;
 
-  void toggleView(int view) {
+  void toggleView(int? view) {
     setState(() {
-      currentView = view;
+      currentView = view ?? 0;
     });
   }
 
@@ -37,10 +38,9 @@ class _AuthFormState extends State<AuthForm> {
       body: Background(
         child: Column(
           children: [
-            BigLogo(
-              top: 164,
-            ),
+            BigLogo(top: 164),
             Container(
+              clipBehavior: Clip.hardEdge,
               margin: const EdgeInsets.only(top: 100, right: 25, left: 25),
               width: width,
               height: 475,
@@ -48,7 +48,10 @@ class _AuthFormState extends State<AuthForm> {
                 color: Theme.of(context).dialogBackgroundColor,
                 borderRadius: BorderRadius.circular(24),
               ),
-              child: views[currentView],
+              child: CarouselSwitch(
+                direction: CarouselSwitchDirection.left,
+                child: views[currentView],
+              ),
             ),
           ],
         ),

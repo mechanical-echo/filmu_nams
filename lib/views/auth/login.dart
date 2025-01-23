@@ -6,9 +6,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class Login extends StatefulWidget {
-  const Login({super.key, required this.onPressed});
+  final Function(int) onViewChange;
 
-  final VoidCallback onPressed;
+  const Login({super.key, required this.onViewChange});
 
   @override
   State<Login> createState() => _LoginState();
@@ -156,10 +156,8 @@ class _LoginState extends State<Login> {
                           ),
                         ),
                         TextButton(
-                          onPressed: () {
-                            Navigator.pushNamed(context, '/register');
-                          },
-                          child: Text("Piereġistrēties"),
+                          onPressed: () => widget.onViewChange(1),
+                          child: Text("Piereģistrēties"),
                         )
                       ],
                     ),
