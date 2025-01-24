@@ -9,11 +9,17 @@ import 'package:image_picker/image_picker.dart';
 class RegistrationSecondStep extends StatefulWidget {
   final TextEditingController nameController;
   final VoidCallback previousRegistrationStep;
+  final TextEditingController emailController;
+  final TextEditingController passwordController;
+  final TextEditingController passwordConfirmationController;
 
   const RegistrationSecondStep({
     super.key,
     required this.nameController,
     required this.previousRegistrationStep,
+    required this.emailController,
+    required this.passwordController,
+    required this.passwordConfirmationController,
   });
 
   @override

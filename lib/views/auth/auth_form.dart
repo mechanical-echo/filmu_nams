@@ -43,7 +43,7 @@ class _AuthFormState extends State<AuthForm> {
               clipBehavior: Clip.hardEdge,
               margin: const EdgeInsets.only(top: 100, right: 25, left: 25),
               width: width,
-              height: 475,
+              height: 535,
               decoration: BoxDecoration(
                 color: Theme.of(context).dialogBackgroundColor,
                 borderRadius: BorderRadius.circular(24),

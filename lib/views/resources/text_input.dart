@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class TextInput extends StatefulWidget {
   final bool obscureText;
@@ -7,6 +8,7 @@ class TextInput extends StatefulWidget {
   final Icon? icon;
   final List<double> margin;
   final TextEditingController controller;
+  final String? error;
 
   static const defaultMargin = [0.0, 0.0, 0.0, 0.0];
 
@@ -18,6 +20,7 @@ class TextInput extends StatefulWidget {
     this.icon,
     this.margin = defaultMargin,
     required this.controller,
+    this.error,
   });
 
   @override
@@ -48,26 +51,41 @@ class _TextInputState extends State<TextInput> {
         bottom: widget.margin[2],
         left: widget.margin[3],
       ),
-      child: TextFormField(
-        controller: widget.controller,
-        cursorColor: const Color.fromARGB(255, 123, 123, 123),
-        style: const TextStyle(
-          color: Colors.white,
-        ),
-        obscureText: _obscureText,
-        decoration: InputDecoration(
-          filled: true,
-          hintText: widget.hintText ?? 'dro\$aParole1',
-          labelText: widget.labelText ?? 'Parole',
-          suffixIcon: widget.obscureText
-              ? IconButton(
-                  icon: Icon(
-                    _obscureText ? Icons.visibility : Icons.visibility_off,
-                  ),
-                  onPressed: _toggle,
-                )
-              : widget.icon,
-        ),
+      child: Column(
+        children: [
+          TextFormField(
+            controller: widget.controller,
+            cursorColor: const Color.fromARGB(255, 123, 123, 123),
+            style: const TextStyle(
+              color: Colors.white,
+            ),
+            obscureText: _obscureText,
+            decoration: InputDecoration(
+              filled: true,
+              hintText: widget.hintText ?? 'dro\$aParole1',
+              labelText: widget.labelText ?? 'Parole',
+              suffixIcon: widget.obscureText
+                  ? IconButton(
+                      icon: Icon(
+                        _obscureText ? Icons.visibility : Icons.visibility_off,
+                      ),
+                      onPressed: _toggle,
+                    )
+                  : widget.icon,
+            ),
+          ),
+          if (widget.error != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: Text(
+                widget.error!,
+                style: GoogleFonts.poppins(
+                  color: Colors.red[700],
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            )
+        ],
       ),
     );
   }

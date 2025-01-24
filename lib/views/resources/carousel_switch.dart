@@ -22,8 +22,8 @@ class CarouselSwitch extends StatelessWidget {
         : const Offset(-2.0, 0.0);
 
     return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 300),
-      reverseDuration: const Duration(milliseconds: 200),
+      duration: const Duration(milliseconds: 750),
+      reverseDuration: const Duration(milliseconds: 500),
       transitionBuilder: (Widget child, Animation<double> animation) {
         final isEntering = animation.isForwardOrCompleted;
         return SlideTransition(
@@ -32,7 +32,7 @@ class CarouselSwitch extends StatelessWidget {
             end: Offset.zero,
           ).animate(CurvedAnimation(
             parent: animation,
-            curve: Curves.easeInOut,
+            curve: Cubic(1, -0.24, 0, 1.23),
           )),
           child: child,
         );

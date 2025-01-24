@@ -28,6 +28,9 @@ class _RegistrationState extends State<Registration> {
     RegistrationSecondStep(
       previousRegistrationStep: previousStep,
       nameController: nameController,
+      emailController: emailController,
+      passwordController: passwordController,
+      passwordConfirmationController: passwordConfirmationController,
     ),
   ];
 
@@ -47,11 +50,15 @@ class _RegistrationState extends State<Registration> {
 
   @override
   Widget build(BuildContext context) {
-    return CarouselSwitch(
-      direction: currentView == 1
-          ? CarouselSwitchDirection.left
-          : CarouselSwitchDirection.right,
-      child: views[currentView],
+    return Column(
+      children: [
+        CarouselSwitch(
+          direction: currentView == 1
+              ? CarouselSwitchDirection.left
+              : CarouselSwitchDirection.right,
+          child: views[currentView],
+        ),
+      ],
     );
   }
 }
