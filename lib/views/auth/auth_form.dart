@@ -42,15 +42,19 @@ class _AuthFormState extends State<AuthForm> {
             Container(
               clipBehavior: Clip.hardEdge,
               margin: const EdgeInsets.only(top: 100, right: 25, left: 25),
+              padding: const EdgeInsets.only(bottom: 25),
               width: width,
-              height: 535,
               decoration: BoxDecoration(
                 color: Theme.of(context).dialogBackgroundColor,
                 borderRadius: BorderRadius.circular(24),
               ),
-              child: CarouselSwitch(
-                direction: CarouselSwitchDirection.left,
-                child: views[currentView],
+              child: AnimatedSize(
+                duration: const Duration(milliseconds: 350),
+                curve: Curves.linearToEaseOut,
+                child: CarouselSwitch(
+                  direction: CarouselSwitchDirection.left,
+                  child: views[currentView],
+                ),
               ),
             ),
           ],

@@ -35,8 +35,6 @@ class _LoginState extends State<Login> {
       switch (e.code) {
         case "user-not-found":
         case "invalid-credential":
-          message = "Lietotājs nav atrasts";
-          break;
         case "wrong-password":
           message = "Nepareizs epasts vai parole";
           break;
@@ -78,7 +76,7 @@ class _LoginState extends State<Login> {
           : Column(
               children: [
                 Container(
-                  margin: const EdgeInsets.only(top: 50),
+                  margin: const EdgeInsets.only(top: 25),
                   child: Text(
                     'Laipni lūdzam!',
                     style: GoogleFonts.poppins(

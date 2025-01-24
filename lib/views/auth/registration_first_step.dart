@@ -32,7 +32,7 @@ class _RegistrationFirstStepState extends State<RegistrationFirstStep> {
     return Center(
       child: Column(children: [
         Container(
-          margin: const EdgeInsets.only(top: 40),
+          margin: const EdgeInsets.only(top: 25),
           child: Text(
             'Prieks iepazīsties!',
             style: GoogleFonts.poppins(
