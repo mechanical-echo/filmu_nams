@@ -34,7 +34,7 @@ class _RegistrationFirstStepState extends State<RegistrationFirstStep> {
         Container(
           margin: const EdgeInsets.only(top: 25),
           child: Text(
-            'Prieks iepazīsties!',
+            'Prieks iepazīties!',
             style: GoogleFonts.poppins(
                 color: Colors.white,
                 fontSize: 36,
