@@ -1,4 +1,7 @@
-import 'package:filmu_nams/views/resources/input/filled_button_icon.dart';
+import 'package:filmu_nams/views/main/profile/profile_details.dart';
+import 'package:filmu_nams/views/resources/animations/animated_routing.dart';
+import 'package:filmu_nams/views/resources/decorations/profile_image.dart';
+import 'package:filmu_nams/views/resources/input/filled_text_icon._buttondart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -34,24 +37,9 @@ class Profile extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(
-                  clipBehavior: Clip.antiAlias,
-                  width: 85,
-                  height: 85,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                  ),
-                  child: user!.photoURL != null
-                      ? Image.network(
-                          user!.photoURL!,
-                          fit: BoxFit.cover,
-                        )
-                      : Icon(
-                          Icons.person,
-                          size: 85,
-                          color: Colors.white,
-                        ),
-                ),
+                // lietotāja bilde
+                ProfileImage(width: 85),
+
                 // Lietotāja vārds
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 30.0),
@@ -79,7 +67,11 @@ class Profile extends StatelessWidget {
                   padding_y: 5,
                 ),
                 FilledButtonIcon(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      AnimatedRouting(page: ProfileDetails()),
+                    );
+                  },
                   icon: Icons.info_outlined,
                   title: "Profila info",
                   padding_y: 5,

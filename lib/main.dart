@@ -1,5 +1,6 @@
 import 'package:filmu_nams/views/auth/auth.dart';
 import 'package:filmu_nams/views/auth/registration_steps/registration_state.dart';
+import 'package:filmu_nams/views/main/profile/profile_details.dart';
 import 'package:filmu_nams/views/main/wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -38,6 +39,7 @@ class App extends StatelessWidget {
       home: Auth(),
       routes: {
         '/home': (context) => Wrapper(),
+        '/profile/details': (context) => ProfileDetails(),
       },
     );
   }
