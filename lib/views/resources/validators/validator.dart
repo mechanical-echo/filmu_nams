@@ -91,4 +91,28 @@ class Validator {
       problematicFields,
     );
   }
+
+  ValidatorResult validateName(String? name) {
+    String error = "";
+    bool isValid = true;
+    List<String> problematicFields = [];
+
+    if (name == null || name.isEmpty) {
+      error = "Ievadiet savu vārdu";
+      isValid = false;
+      problematicFields.add("name");
+    }
+
+    if (name!.length > 20) {
+      error = "Vārds nedrīkst būt garāks par 20 simboliem";
+      isValid = false;
+      problematicFields.add("name");
+    }
+
+    return ValidatorResult(
+      error,
+      isValid,
+      problematicFields,
+    );
+  }
 }

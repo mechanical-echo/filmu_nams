@@ -1,6 +1,8 @@
 import 'package:filmu_nams/views/auth/auth.dart';
+import 'package:filmu_nams/views/auth/registration_steps/registration_state.dart';
 import 'package:filmu_nams/views/main/wrapper.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'assets/theme.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -14,9 +16,14 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  runApp(App(
-    theme: theme,
-  ));
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => RegistrationState()),
+      ],
+      child: App(theme: theme),
+    ),
+  );
 }
 
 class App extends StatelessWidget {

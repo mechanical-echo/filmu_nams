@@ -34,11 +34,23 @@ class Profile extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                Container(
+                  clipBehavior: Clip.antiAlias,
+                  width: 85,
+                  height: 85,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                  ),
+                  child: Image.network(
+                    user!.photoURL!,
+                    fit: BoxFit.cover,
+                  ),
+                ),
                 // Lietotāja vārds
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 30.0),
                   child: Text(
-                    user!.email!,
+                    user!.displayName!,
                     style: GoogleFonts.poppins(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
