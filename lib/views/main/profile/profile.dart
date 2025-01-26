@@ -41,10 +41,16 @@ class Profile extends StatelessWidget {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                   ),
-                  child: Image.network(
-                    user!.photoURL!,
-                    fit: BoxFit.cover,
-                  ),
+                  child: user!.photoURL != null
+                      ? Image.network(
+                          user!.photoURL!,
+                          fit: BoxFit.cover,
+                        )
+                      : Icon(
+                          Icons.person,
+                          size: 85,
+                          color: Colors.white,
+                        ),
                 ),
                 // Lietotāja vārds
                 Padding(

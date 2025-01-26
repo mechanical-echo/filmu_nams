@@ -1,9 +1,12 @@
 import 'dart:io';
 import 'package:filmu_nams/views/auth/registration_steps/registration_state.dart';
+import 'package:filmu_nams/views/resources/dialog/dialog.dart';
+import 'package:filmu_nams/views/resources/enums/auth_error_codes.dart';
 import 'package:filmu_nams/views/resources/input/filled_button_icon.dart';
 import 'package:filmu_nams/views/resources/input/text_input.dart';
 import 'package:filmu_nams/views/resources/services/user_registration.dart';
 import 'package:filmu_nams/views/resources/validators/validator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
@@ -167,9 +170,8 @@ class _RegistrationSecondStepState extends State<RegistrationSecondStep> {
       name: widget.nameController.text,
       profileImage: _image,
     )
-        .then((user) {
-      if (user != null) {
-        print('User registered successfully');
+        .then((response) {
+      if (response?.user != null) {
         if (mounted) {
           setState(() {
             isLoading = false;
@@ -178,7 +180,17 @@ class _RegistrationSecondStepState extends State<RegistrationSecondStep> {
               .setRegistrationComplete(true);
         }
       } else {
-        print('Registration failed');
+        FirebaseAuth.instance.signOut();
+        if (mounted) {
+          setState(() {
+            isLoading = false;
+          });
+          StylizedDialog.alert(
+            context,
+            "Kļūda",
+            getFirebaseAuthErrorCode(response?.errorMessage),
+          );
+        }
       }
     });
   }

@@ -1,4 +1,5 @@
 import 'package:filmu_nams/views/resources/dialog/dialog.dart';
+import 'package:filmu_nams/views/resources/enums/auth_error_codes.dart';
 import 'package:filmu_nams/views/resources/input/text_input.dart';
 import 'package:filmu_nams/views/resources/validators/validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -198,23 +199,11 @@ class _LoginState extends State<Login> {
         password: passwordController.text,
       );
     } on FirebaseAuthException catch (e) {
-      String message;
-
-      switch (e.code) {
-        case "user-not-found":
-        case "invalid-credential":
-        case "wrong-password":
-          message = "Nepareizs epasts vai parole";
-          break;
-        default:
-          message = e.code;
-      }
-
       if (mounted) {
         StylizedDialog.alert(
           context,
           "Kļūda",
-          message,
+          getFirebaseAuthErrorCode(e.code),
         );
       }
     } finally {

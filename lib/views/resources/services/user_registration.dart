@@ -3,12 +3,22 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+class RegistrationResponse {
+  final String? errorMessage;
+  final User? user;
+
+  RegistrationResponse({
+    this.errorMessage,
+    this.user,
+  });
+}
+
 class UserRegistrationService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<User?> registerUser({
+  Future<RegistrationResponse?> registerUser({
     required String email,
     required String password,
     required String name,
@@ -42,10 +52,9 @@ class UserRegistrationService {
         photoURL: imageUrl,
       );
 
-      return user;
-    } catch (e) {
-      print('Registration error: $e');
-      return null;
+      return RegistrationResponse(user: user);
+    } on FirebaseAuthException catch (e) {
+      return RegistrationResponse(errorMessage: e.code);
     }
   }
 

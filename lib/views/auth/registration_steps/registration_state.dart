@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 class RegistrationState extends ChangeNotifier {
-  bool _isRegistrationComplete = false;
+  bool _isRegistrationComplete = true;
 
   bool get isRegistrationComplete => _isRegistrationComplete;
 
