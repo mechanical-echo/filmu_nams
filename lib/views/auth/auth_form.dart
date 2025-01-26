@@ -34,14 +34,22 @@ class _AuthFormState extends State<AuthForm> {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
+
     return Scaffold(
       body: Background(
+          child: SingleChildScrollView(
         child: Column(
           children: [
-            BigLogo(top: 164),
+            BigLogo(top: height * 0.17),
             Container(
               clipBehavior: Clip.hardEdge,
-              margin: const EdgeInsets.only(top: 100, right: 25, left: 25),
+              margin: EdgeInsets.only(
+                top: height * 0.06,
+                right: 25,
+                left: 25,
+                bottom: 25,
+              ),
               padding: const EdgeInsets.only(bottom: 25),
               width: width,
               decoration: BoxDecoration(
@@ -59,7 +67,7 @@ class _AuthFormState extends State<AuthForm> {
             ),
           ],
         ),
-      ),
+      )),
     );
   }
 }

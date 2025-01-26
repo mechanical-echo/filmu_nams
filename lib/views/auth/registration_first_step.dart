@@ -1,4 +1,6 @@
+import 'package:filmu_nams/views/dialog/dialog.dart';
 import 'package:filmu_nams/views/resources/text_input.dart';
+import 'package:filmu_nams/views/validators/validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -27,6 +29,12 @@ class _RegistrationFirstStepState extends State<RegistrationFirstStep> {
   String? passwordError;
   String? passwordConfirmationError;
 
+  Validator validator = Validator();
+
+  get email => widget.emailController.text;
+  get password => widget.passwordController.text;
+  get passwordConfirmation => widget.passwordConfirmationController.text;
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -50,6 +58,7 @@ class _RegistrationFirstStepState extends State<RegistrationFirstStep> {
           margin: [25, 35, 25, 35],
           controller: widget.emailController,
           error: emailError,
+          obligatory: true,
         ),
         TextInput(
           obscureText: true,
@@ -58,6 +67,7 @@ class _RegistrationFirstStepState extends State<RegistrationFirstStep> {
           margin: [0, 35, 25, 35],
           controller: widget.passwordController,
           error: passwordError,
+          obligatory: true,
         ),
         TextInput(
           obscureText: true,
@@ -66,6 +76,7 @@ class _RegistrationFirstStepState extends State<RegistrationFirstStep> {
           margin: [0, 35, 0, 35],
           controller: widget.passwordConfirmationController,
           error: passwordConfirmationError,
+          obligatory: true,
         ),
         Column(
           children: [
@@ -104,114 +115,71 @@ class _RegistrationFirstStepState extends State<RegistrationFirstStep> {
 
   bool areFieldsValid() {
     emailError = passwordError = passwordConfirmationError = null;
-    return checkEmptyFields() && validatePassword() && validateEmail();
-  }
-
-  bool checkEmptyFields() {
-    String? email = widget.emailController.text;
-    String? password = widget.passwordController.text;
-    String? passwordConfirmation = widget.passwordConfirmationController.text;
-
     bool isValid = true;
 
-    if (email.isEmpty) {
+    ValidatorResult passwordValidation = validator.validatePassword(
+      password,
+      passwordConfirmation,
+    );
+    ValidatorResult emailValidation = validator.validateEmail(email);
+    ValidatorResult emptyFieldsValidation = validator.checkEmptyFields({
+      "password": password,
+      "passwordConfirmation": passwordConfirmation,
+      "email": email,
+    });
+
+    if (passwordValidation.isNotValid) {
+      if (passwordValidation.problematicFields.contains(
+        "passwordConfirmation",
+      )) {
+        StylizedDialog.alert(
+          context,
+          "Kļūda",
+          "Paroles nesakrīt",
+        );
+
+        setState(() {
+          passwordConfirmationError = passwordValidation.error;
+        });
+      } else {
+        setState(() {
+          passwordError = passwordValidation.error;
+        });
+      }
+
+      isValid = false;
+    }
+
+    if (emailValidation.isNotValid) {
       setState(() {
-        emailError = "Lūdzu, ievadiet e-pastu";
+        emailError = emailValidation.error;
       });
 
       isValid = false;
     }
 
-    if (password.isEmpty) {
-      setState(() {
-        passwordError = "Lūdzu, ievadiet paroli";
-      });
+    if (emptyFieldsValidation.isNotValid) {
+      for (var field in emptyFieldsValidation.problematicFields) {
+        switch (field) {
+          case "password":
+            setState(() {
+              passwordError = emptyFieldsValidation.error;
+            });
+            break;
+          case "passwordConfirmation":
+            setState(() {
+              passwordConfirmationError = emptyFieldsValidation.error;
+            });
+            break;
+          case "email":
+            setState(() {
+              emailError = emptyFieldsValidation.error;
+            });
+            break;
+        }
+      }
 
       isValid = false;
-    }
-
-    if (passwordConfirmation.isEmpty) {
-      setState(() {
-        passwordConfirmationError = "Lūdzu, ievadiet paroli atkārtoti";
-      });
-
-      isValid = false;
-    }
-
-    return isValid;
-  }
-
-  bool validatePassword() {
-    String? password = widget.passwordController.text;
-    String? passwordConfirmation = widget.passwordConfirmationController.text;
-
-    bool isValid = true;
-
-    if (password != passwordConfirmation) {
-      showCupertinoDialog(
-        context: context,
-        builder: (BuildContext context) => CupertinoAlertDialog(
-          title: Text("Kļūda"),
-          content: Text("Paroles nesakrīt"),
-          actions: [
-            CupertinoDialogAction(
-              isDefaultAction: true,
-              child: Text('OK'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            )
-          ],
-        ),
-      );
-
-      isValid = false;
-    }
-
-    if (password.length < 8) {
-      setState(() {
-        passwordError = "Parolei jābūt vismaz 8 simboliem garai";
-      });
-
-      isValid = false;
-    }
-
-    if (!password.contains(RegExp(r'[A-Z]'))) {
-      setState(() {
-        passwordError = "Parolē jābūt vismaz 1 lielām burtam";
-      });
-
-      isValid = false;
-    }
-
-    if (!password.contains(RegExp(r'[a-z]'))) {
-      setState(() {
-        passwordError = "Parolē jābūt vismaz 1 mazām burtam";
-      });
-
-      isValid = false;
-    }
-
-    if (!password.contains(RegExp(r'[0-9]'))) {
-      setState(() {
-        passwordError = "Parolē jābūt vismaz 1 skaitlim";
-      });
-
-      isValid = false;
-    }
-
-    return isValid;
-  }
-
-  bool validateEmail() {
-    String? email = widget.emailController.text;
-    bool isValid = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
-        .hasMatch(email);
-
-    if (!isValid) {
-      setState(() {
-        emailError = "Lūdzu, ievadiet derīgu e-pastu";
-      });
     }
 
     return isValid;

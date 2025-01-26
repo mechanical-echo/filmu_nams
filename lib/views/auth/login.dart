@@ -1,6 +1,7 @@
+import 'package:filmu_nams/views/dialog/dialog.dart';
 import 'package:filmu_nams/views/resources/text_input.dart';
+import 'package:filmu_nams/views/validators/validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -16,62 +17,27 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   bool isLoading = false;
+  Validator validator = Validator();
+
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
-  void signIn() async {
-    setState(() {
-      isLoading = true;
-    });
+  String? emailError;
+  String? passwordError;
 
-    try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: emailController.text,
-        password: passwordController.text,
-      );
-    } on FirebaseAuthException catch (e) {
-      String message;
-
-      switch (e.code) {
-        case "user-not-found":
-        case "invalid-credential":
-        case "wrong-password":
-          message = "Nepareizs epasts vai parole";
-          break;
-        default:
-          message = e.code;
-      }
-
-      showCupertinoDialog(
-        context: context,
-        builder: (BuildContext context) => CupertinoAlertDialog(
-          title: Text("Kļūda"),
-          content: Text(message),
-          actions: [
-            CupertinoDialogAction(
-              isDefaultAction: true,
-              child: Text('OK'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            )
-          ],
-        ),
-      );
-    } finally {
-      setState(() {
-        isLoading = false;
-      });
-    }
-  }
+  get email => emailController.text;
+  get password => passwordController.text;
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: isLoading
-          ? LoadingAnimationWidget.stretchedDots(
-              size: 100,
-              color: Theme.of(context).focusColor,
+          ? Padding(
+              padding: const EdgeInsets.only(top: 65, bottom: 40),
+              child: LoadingAnimationWidget.stretchedDots(
+                size: 100,
+                color: Theme.of(context).focusColor,
+              ),
             )
           : Column(
               children: [
@@ -93,6 +59,8 @@ class _LoginState extends State<Login> {
                   icon: Icon(Icons.email),
                   margin: [25, 35, 25, 35],
                   controller: emailController,
+                  obligatory: true,
+                  error: emailError,
                 ),
                 TextInput(
                   obscureText: true,
@@ -100,6 +68,8 @@ class _LoginState extends State<Login> {
                   hintText: "dro\$aParole1",
                   margin: [0, 35, 0, 35],
                   controller: passwordController,
+                  obligatory: true,
+                  error: passwordError,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -170,5 +140,87 @@ class _LoginState extends State<Login> {
               ],
             ),
     );
+  }
+
+  bool areFieldsValid() {
+    emailError = passwordError = null;
+
+    ValidatorResult emailValidation = validator.validateEmail(email);
+    ValidatorResult emptyFieldsValidation = validator.checkEmptyFields({
+      "email": email,
+      "password": password,
+    });
+
+    bool isValid = true;
+
+    if (emailValidation.isNotValid) {
+      setState(() {
+        emailError = emailValidation.error;
+      });
+      isValid = false;
+    }
+
+    if (emptyFieldsValidation.isNotValid) {
+      for (var field in emptyFieldsValidation.problematicFields) {
+        switch (field) {
+          case "email":
+            setState(() {
+              emailError = emptyFieldsValidation.error;
+            });
+
+            break;
+          case "password":
+            setState(() {
+              passwordError = emptyFieldsValidation.error;
+            });
+            break;
+        }
+      }
+
+      isValid = false;
+    }
+
+    return isValid;
+  }
+
+  void signIn() async {
+    if (!areFieldsValid()) {
+      return;
+    }
+
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailController.text,
+        password: passwordController.text,
+      );
+    } on FirebaseAuthException catch (e) {
+      String message;
+
+      switch (e.code) {
+        case "user-not-found":
+        case "invalid-credential":
+        case "wrong-password":
+          message = "Nepareizs epasts vai parole";
+          break;
+        default:
+          message = e.code;
+      }
+
+      if (mounted) {
+        StylizedDialog.alert(
+          context,
+          "Kļūda",
+          message,
+        );
+      }
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 }

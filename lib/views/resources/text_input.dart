@@ -9,6 +9,7 @@ class TextInput extends StatefulWidget {
   final List<double> margin;
   final TextEditingController controller;
   final String? error;
+  final bool obligatory;
 
   static const defaultMargin = [0.0, 0.0, 0.0, 0.0];
 
@@ -21,6 +22,7 @@ class TextInput extends StatefulWidget {
     this.margin = defaultMargin,
     required this.controller,
     this.error,
+    this.obligatory = false,
   });
 
   @override
@@ -53,26 +55,46 @@ class _TextInputState extends State<TextInput> {
       ),
       child: Column(
         children: [
-          TextFormField(
-            controller: widget.controller,
-            cursorColor: const Color.fromARGB(255, 123, 123, 123),
-            style: const TextStyle(
-              color: Colors.white,
-            ),
-            obscureText: _obscureText,
-            decoration: InputDecoration(
-              filled: true,
-              hintText: widget.hintText ?? 'dro\$aParole1',
-              labelText: widget.labelText ?? 'Parole',
-              suffixIcon: widget.obscureText
-                  ? IconButton(
-                      icon: Icon(
-                        _obscureText ? Icons.visibility : Icons.visibility_off,
-                      ),
-                      onPressed: _toggle,
-                    )
-                  : widget.icon,
-            ),
+          Stack(
+            clipBehavior: Clip.none,
+            children: [
+              TextFormField(
+                controller: widget.controller,
+                cursorColor: const Color.fromARGB(255, 123, 123, 123),
+                style: const TextStyle(
+                  color: Colors.white,
+                ),
+                obscureText: _obscureText,
+                decoration: InputDecoration(
+                  filled: true,
+                  hintText: widget.hintText ?? 'dro\$aParole1',
+                  labelText: widget.labelText ?? 'Parole',
+                  suffixIcon: widget.obscureText
+                      ? IconButton(
+                          icon: Icon(
+                            _obscureText
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                          ),
+                          onPressed: _toggle,
+                        )
+                      : widget.icon,
+                ),
+              ),
+              if (widget.obligatory)
+                Positioned(
+                  top: 9,
+                  right: -23,
+                  child: Text(
+                    "*",
+                    style: GoogleFonts.poppins(
+                      color: Colors.red[700],
+                      fontWeight: FontWeight.bold,
+                      fontSize: 40,
+                    ),
+                  ),
+                ),
+            ],
           ),
           if (widget.error != null)
             Padding(
@@ -84,7 +106,7 @@ class _TextInputState extends State<TextInput> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-            )
+            ),
         ],
       ),
     );
