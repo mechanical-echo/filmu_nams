@@ -1,8 +1,8 @@
 import 'package:filmu_nams/views/main/home/home.dart';
 import 'package:filmu_nams/views/main/profile/profile.dart';
-import 'package:filmu_nams/views/resources/background.dart';
-import 'package:filmu_nams/views/resources/carousel_switch.dart';
-import 'package:filmu_nams/views/resources/logo.dart';
+import 'package:filmu_nams/views/resources/decorations/background.dart';
+import 'package:filmu_nams/views/resources/animations/carousel_switch.dart';
+import 'package:filmu_nams/views/resources/decorations/logo.dart';
 import 'package:filmu_nams/views/resources/navigation_bar.dart';
 import 'package:flutter/material.dart';
 

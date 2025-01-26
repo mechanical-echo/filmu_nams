@@ -1,6 +1,6 @@
-import 'package:filmu_nams/views/dialog/dialog.dart';
-import 'package:filmu_nams/views/resources/text_input.dart';
-import 'package:filmu_nams/views/validators/validator.dart';
+import 'package:filmu_nams/views/resources/dialog/dialog.dart';
+import 'package:filmu_nams/views/resources/input/text_input.dart';
+import 'package:filmu_nams/views/resources/validators/validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';

@@ -1,8 +1,8 @@
 import 'package:filmu_nams/views/auth/login.dart';
 import 'package:filmu_nams/views/auth/registration.dart';
-import 'package:filmu_nams/views/resources/background.dart';
-import 'package:filmu_nams/views/resources/big_logo.dart';
-import 'package:filmu_nams/views/resources/carousel_switch.dart';
+import 'package:filmu_nams/views/resources/decorations/background.dart';
+import 'package:filmu_nams/views/resources/decorations/big_logo.dart';
+import 'package:filmu_nams/views/resources/animations/carousel_switch.dart';
 import 'package:flutter/material.dart';
 
 class AuthForm extends StatefulWidget {

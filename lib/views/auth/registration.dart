@@ -1,6 +1,6 @@
-import 'package:filmu_nams/views/auth/registration_first_step.dart';
-import 'package:filmu_nams/views/auth/registration_second_step.dart';
-import 'package:filmu_nams/views/resources/carousel_switch.dart';
+import 'package:filmu_nams/views/auth/registration_steps/registration_first_step.dart';
+import 'package:filmu_nams/views/auth/registration_steps/registration_second_step.dart';
+import 'package:filmu_nams/views/resources/animations/carousel_switch.dart';
 import 'package:flutter/material.dart';
 
 class Registration extends StatefulWidget {
