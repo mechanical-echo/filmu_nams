@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
 
-class FilledButtonIcon extends StatelessWidget {
-  const FilledButtonIcon({
+class FilledTextIconButton extends StatelessWidget {
+  const FilledTextIconButton({
     super.key,
     required this.icon,
     required this.title,
     required this.onPressed,
-    required this.padding_y,
+    required this.paddingY,
   });
 
   final String title;
   final IconData icon;
   final VoidCallback onPressed;
-  final double padding_y;
+  final double paddingY;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: padding_y),
+      padding: EdgeInsets.symmetric(vertical: paddingY),
       child: FilledButton(
         onPressed: onPressed,
         child: Stack(

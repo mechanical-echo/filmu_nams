@@ -159,23 +159,19 @@ class _RegistrationFirstStepState extends State<RegistrationFirstStep> {
 
     if (emptyFieldsValidation.isNotValid) {
       for (var field in emptyFieldsValidation.problematicFields) {
-        switch (field) {
-          case "password":
-            setState(() {
+        setState(() {
+          switch (field) {
+            case "password":
               passwordError = emptyFieldsValidation.error;
-            });
-            break;
-          case "passwordConfirmation":
-            setState(() {
+              break;
+            case "passwordConfirmation":
               passwordConfirmationError = emptyFieldsValidation.error;
-            });
-            break;
-          case "email":
-            setState(() {
+              break;
+            case "email":
               emailError = emptyFieldsValidation.error;
-            });
-            break;
-        }
+              break;
+          }
+        });
       }
 
       isValid = false;

@@ -1,7 +1,7 @@
 import 'package:filmu_nams/views/main/profile/profile_details.dart';
 import 'package:filmu_nams/views/resources/animations/animated_routing.dart';
 import 'package:filmu_nams/views/resources/decorations/profile_image.dart';
-import 'package:filmu_nams/views/resources/input/filled_text_icon._buttondart';
+import 'package:filmu_nams/views/resources/input/filled_text_icon_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -54,19 +54,19 @@ class Profile extends StatelessWidget {
                 ),
 
                 // Profila zemsadaļas
-                FilledButtonIcon(
+                FilledTextIconButton(
                   onPressed: () {},
                   icon: Icons.credit_card,
                   title: "Maksājumi",
-                  padding_y: 5,
+                  paddingY: 5,
                 ),
-                FilledButtonIcon(
+                FilledTextIconButton(
                   onPressed: () {},
                   icon: Icons.payments_outlined,
                   title: "Biļetes",
-                  padding_y: 5,
+                  paddingY: 5,
                 ),
-                FilledButtonIcon(
+                FilledTextIconButton(
                   onPressed: () {
                     Navigator.of(context).push(
                       AnimatedRouting(page: ProfileDetails()),
@@ -74,18 +74,18 @@ class Profile extends StatelessWidget {
                   },
                   icon: Icons.info_outlined,
                   title: "Profila info",
-                  padding_y: 5,
+                  paddingY: 5,
                 ),
               ],
             ),
           ),
 
           // Izlogošana
-          FilledButtonIcon(
+          FilledTextIconButton(
             icon: Icons.logout,
             title: "Izlogoties",
             onPressed: logOut,
-            padding_y: 20,
+            paddingY: 20,
           ),
         ],
       ),

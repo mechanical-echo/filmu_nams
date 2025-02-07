@@ -15,7 +15,7 @@ class FilledIconButton extends StatelessWidget {
     return SizedBox(
       width: 50,
       child: FilledButton(
-        onPressed: () {},
+        onPressed: onPressed,
         style: ButtonStyle(
           padding: WidgetStatePropertyAll(EdgeInsets.all(0)),
         ),

@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:filmu_nams/views/auth/registration_steps/registration_state.dart';
 import 'package:filmu_nams/views/resources/dialog/dialog.dart';
 import 'package:filmu_nams/views/resources/enums/auth_error_codes.dart';
-import 'package:filmu_nams/views/resources/input/filled_text_icon._buttondart';
+import 'package:filmu_nams/views/resources/input/filled_text_icon_button.dart';
 import 'package:filmu_nams/views/resources/input/text_input.dart';
 import 'package:filmu_nams/views/resources/services/user_registration.dart';
 import 'package:filmu_nams/views/resources/validators/validator.dart';
@@ -55,11 +55,11 @@ class _RegistrationSecondStepState extends State<RegistrationSecondStep> {
               ),
             )
           : Column(children: [
-              FilledButtonIcon(
+              FilledTextIconButton(
                 icon: Icons.keyboard_return,
                 title: "Atpakaļ",
                 onPressed: widget.previousRegistrationStep,
-                padding_y: 25,
+                paddingY: 25,
               ),
               Container(
                 margin: const EdgeInsets.only(top: 10),

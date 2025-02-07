@@ -38,36 +38,37 @@ class _AuthFormState extends State<AuthForm> {
 
     return Scaffold(
       body: Background(
-          child: SingleChildScrollView(
-        child: Column(
-          children: [
-            BigLogo(top: height * 0.17),
-            Container(
-              clipBehavior: Clip.hardEdge,
-              margin: EdgeInsets.only(
-                top: height * 0.06,
-                right: 25,
-                left: 25,
-                bottom: 25,
-              ),
-              padding: const EdgeInsets.only(bottom: 25),
-              width: width,
-              decoration: BoxDecoration(
-                color: Theme.of(context).dialogBackgroundColor,
-                borderRadius: BorderRadius.circular(24),
-              ),
-              child: AnimatedSize(
-                duration: const Duration(milliseconds: 350),
-                curve: Curves.linearToEaseOut,
-                child: CarouselSwitch(
-                  direction: CarouselSwitchDirection.left,
-                  child: views[currentView],
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              BigLogo(top: height * 0.17),
+              Container(
+                clipBehavior: Clip.hardEdge,
+                margin: EdgeInsets.only(
+                  top: height * 0.06,
+                  right: 25,
+                  left: 25,
+                  bottom: 25,
+                ),
+                padding: const EdgeInsets.only(bottom: 25),
+                width: width,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).dialogBackgroundColor,
+                  borderRadius: BorderRadius.circular(24),
+                ),
+                child: AnimatedSize(
+                  duration: const Duration(milliseconds: 350),
+                  curve: Curves.linearToEaseOut,
+                  child: CarouselSwitch(
+                    direction: CarouselSwitchDirection.left,
+                    child: views[currentView],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      )),
+      ),
     );
   }
 }
