@@ -57,7 +57,7 @@ class Validator {
     );
   }
 
-  ValidatorResult validateEmail(String email) {
+  ValidatorResult validateEmail(String email, bool obligatory) {
     bool isValid = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
         .hasMatch(email);
 
@@ -66,6 +66,12 @@ class Validator {
 
     if (!isValid) {
       emailError = "Lūdzu, ievadiet derīgu e-pastu";
+      problematicFields.add("email");
+    }
+
+    if (obligatory && email.isEmpty) {
+      isValid = false;
+      emailError = "Lūdzu, ievadiet e-pastu";
       problematicFields.add("email");
     }
 

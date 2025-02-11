@@ -94,7 +94,7 @@ class _CredentialsStepState extends State<CredentialsStep> {
   }
 
   bool _validateEmail() {
-    final validation = validator.validateEmail(email);
+    final validation = validator.validateEmail(email, true);
     if (validation.isNotValid) {
       setState(() => emailError = validation.error);
       return false;

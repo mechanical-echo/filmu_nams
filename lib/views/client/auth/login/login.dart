@@ -87,7 +87,7 @@ class _LoginState extends State<Login> {
   bool areFieldsValid() {
     emailError = passwordError = null;
 
-    ValidatorResult emailValidation = validator.validateEmail(email);
+    ValidatorResult emailValidation = validator.validateEmail(email, true);
     ValidatorResult emptyFieldsValidation = validator.checkEmptyFields({
       "email": email,
       "password": password,
