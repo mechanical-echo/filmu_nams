@@ -1,9 +1,9 @@
-import 'package:filmu_nams/views/resources/decorations/background.dart';
-import 'package:filmu_nams/views/resources/decorations/profile_image.dart';
-import 'package:filmu_nams/views/resources/dialog/dialog.dart';
-import 'package:filmu_nams/views/resources/enums/auth_error_codes.dart';
-import 'package:filmu_nams/views/resources/input/filled_icon_button.dart';
-import 'package:filmu_nams/views/resources/input/text_input.dart';
+import 'package:filmu_nams/assets/decorations/background.dart';
+import 'package:filmu_nams/assets/decorations/profile_image.dart';
+import 'package:filmu_nams/assets/dialog/dialog.dart';
+import 'package:filmu_nams/enums/auth_error_codes.dart';
+import 'package:filmu_nams/assets/input/filled_icon_button.dart';
+import 'package:filmu_nams/assets/input/text_input.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';

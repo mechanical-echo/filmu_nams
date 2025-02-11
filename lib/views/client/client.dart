@@ -1,13 +1,13 @@
-import 'package:filmu_nams/views/auth/auth_form.dart';
-import 'package:filmu_nams/views/auth/registration_steps/email_not_verified.dart';
-import 'package:filmu_nams/views/auth/registration_steps/registration_state.dart';
-import 'package:filmu_nams/views/main/wrapper.dart';
+import 'package:filmu_nams/views/client/auth/auth_form.dart';
+import 'package:filmu_nams/views/client/auth/registration/registration_steps/email_not_verified.dart';
+import 'package:filmu_nams/views/client/auth/registration/registration_steps/registration_state.dart';
+import 'package:filmu_nams/views/client/main/wrapper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class Auth extends StatelessWidget {
-  const Auth({super.key});
+class ClientApp extends StatelessWidget {
+  const ClientApp({super.key});
 
   @override
   Widget build(BuildContext context) {

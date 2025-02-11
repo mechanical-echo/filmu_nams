@@ -1,23 +1,27 @@
 import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
-class RegistrationResponse {
-  final String? errorMessage;
-  final User? user;
-
-  RegistrationResponse({
-    this.errorMessage,
-    this.user,
-  });
-}
-
-class UserRegistrationService {
+class UserController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  /// Parbaudit vai lietotajam ir dota loma
+  Future<bool> userHasRole(
+    User user,
+    String role,
+  ) async {
+    var userDocument = await _firestore.collection('users').doc(user.uid).get();
+
+    print(userDocument);
+
+    return false;
+  }
+
+  /// Pieregistret jauno lietotaju
   Future<RegistrationResponse?> registerUser({
     required String email,
     required String password,
@@ -44,6 +48,7 @@ class UserRegistrationService {
         'name': name,
         'email': email,
         'profileImageUrl': imageUrl,
+        'role': 'user',
         'createdAt': FieldValue.serverTimestamp(),
       });
 
@@ -71,4 +76,14 @@ class UserRegistrationService {
       return null;
     }
   }
+}
+
+class RegistrationResponse {
+  final String? errorMessage;
+  final User? user;
+
+  RegistrationResponse({
+    this.errorMessage,
+    this.user,
+  });
 }

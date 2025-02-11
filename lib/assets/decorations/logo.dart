@@ -1,14 +1,19 @@
 import 'package:bordered_text/bordered_text.dart';
+import 'package:filmu_nams/assets/input/filled_icon_button.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class Logo extends StatelessWidget {
   const Logo({super.key});
 
   @override
   Widget build(BuildContext context) {
+    User? user = FirebaseAuth.instance.currentUser;
+
     return AppBar(
       titleSpacing: 0,
       clipBehavior: Clip.none,
@@ -24,6 +29,7 @@ class Logo extends StatelessWidget {
               AppBar(
                 clipBehavior: Clip.none,
                 title: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     // Logo
                     Container(
@@ -35,19 +41,26 @@ class Logo extends StatelessWidget {
                     ),
 
                     // Šodienas datums
-                    Container(
-                      padding: const EdgeInsets.only(left: 12),
-                      child: BorderedText(
-                        strokeWidth: 5.0,
-                        strokeColor: Colors.black,
-                        child: Text(
-                          DateFormat('E dd.MM.', 'lv').format(DateTime.now()),
-                          style: GoogleFonts.kodchasan(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold),
+                    Row(
+                      spacing: 20,
+                      children: [
+                        BorderedText(
+                          strokeWidth: 5.0,
+                          strokeColor: Colors.black,
+                          child: Text(
+                            DateFormat('E dd.MM.', 'lv').format(DateTime.now()),
+                            style: GoogleFonts.kodchasan(
+                                color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold),
+                          ),
                         ),
-                      ),
+                        if (kIsWeb && user != null)
+                          FilledIconButton(
+                            onPressed: () {},
+                            icon: Icons.logout,
+                          ),
+                      ],
                     ),
                   ],
                 ),

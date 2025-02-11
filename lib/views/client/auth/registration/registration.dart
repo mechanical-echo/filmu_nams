@@ -1,6 +1,6 @@
-import 'package:filmu_nams/views/auth/registration_steps/registration_first_step.dart';
-import 'package:filmu_nams/views/auth/registration_steps/registration_second_step.dart';
-import 'package:filmu_nams/views/resources/animations/carousel_switch.dart';
+import 'package:filmu_nams/views/client/auth/registration/registration_steps/credentials_step.dart';
+import 'package:filmu_nams/views/client/auth/registration/registration_steps/profile_setup_step.dart';
+import 'package:filmu_nams/assets/animations/carousel_switch.dart';
 import 'package:flutter/material.dart';
 
 class Registration extends StatefulWidget {
@@ -18,14 +18,14 @@ class _RegistrationState extends State<Registration> {
   final nameController = TextEditingController();
 
   late List<Widget> views = [
-    RegistrationFirstStep(
+    CredentialsStep(
       nextRegistrationStep: nextStep,
       onViewChange: widget.onViewChange,
       emailController: emailController,
       passwordController: passwordController,
       passwordConfirmationController: passwordConfirmationController,
     ),
-    RegistrationSecondStep(
+    ProfileSetupStep(
       previousRegistrationStep: previousStep,
       nameController: nameController,
       emailController: emailController,
@@ -46,6 +46,15 @@ class _RegistrationState extends State<Registration> {
     setState(() {
       currentView = 0;
     });
+  }
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    passwordConfirmationController.dispose();
+    nameController.dispose();
+    super.dispose();
   }
 
   @override
