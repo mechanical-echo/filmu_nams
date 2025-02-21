@@ -54,7 +54,7 @@ class _NavBarState extends State<NavBar> with SingleTickerProviderStateMixin {
       Icons.list,
       Icons.home,
       Icons.notifications,
-      Icons.people_alt,
+      Icons.person,
     ];
 
     return Container(
@@ -68,6 +68,13 @@ class _NavBarState extends State<NavBar> with SingleTickerProviderStateMixin {
             decoration: BoxDecoration(
               color: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
               borderRadius: BorderRadius.circular(10),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withAlpha(100),
+                  blurRadius: 20,
+                  offset: const Offset(0, -5),
+                ),
+              ],
             ),
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 20),

@@ -18,69 +18,81 @@ class Logo extends StatelessWidget {
     User? user = FirebaseAuth.instance.currentUser;
 
     return AppBar(
+      scrolledUnderElevation: 0,
       titleSpacing: 0,
       clipBehavior: Clip.none,
       backgroundColor: Colors.transparent,
       centerTitle: false,
       title: Container(
-          clipBehavior: Clip.none,
-          child: Column(
-            children: [
-              Container(height: 75), //tukšā vieta virs logotipa
+        clipBehavior: Clip.none,
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withAlpha(130),
+              blurRadius: 25,
+              offset: const Offset(0, 5),
+            ),
+          ],
+        ),
+        child: Column(
+          children: [
+            Container(height: 75), //tukšā vieta virs logotipa
 
-              // Josla ar logotipu
-              AppBar(
-                clipBehavior: Clip.none,
-                title: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    // Logo
-                    Container(
-                      padding: const EdgeInsets.only(bottom: 10),
-                      child: SvgPicture.asset(
-                        "assets/Logo.svg",
-                        height: 120,
-                      ),
+            // Josla ar logotipu
+            AppBar(
+              scrolledUnderElevation: 0,
+              clipBehavior: Clip.none,
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // Logo
+                  Container(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: SvgPicture.asset(
+                      "assets/Logo.svg",
+                      height: 120,
                     ),
+                  ),
 
-                    // Šodienas datums
-                    Row(
-                      spacing: 20,
-                      children: [
-                        BorderedText(
-                          strokeWidth: 5.0,
-                          strokeColor: Colors.black,
-                          child: Text(
-                            DateFormat('E dd.MM.', 'lv').format(DateTime.now()),
-                            style: GoogleFonts.kodchasan(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold),
-                          ),
+                  // Šodienas datums
+                  Row(
+                    spacing: 20,
+                    children: [
+                      BorderedText(
+                        strokeWidth: 5.0,
+                        strokeColor: Colors.black,
+                        child: Text(
+                          DateFormat('E dd.MM.', 'lv').format(DateTime.now()),
+                          style: GoogleFonts.kodchasan(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold),
                         ),
-                        if (kIsWeb && user != null)
-                          FutureBuilder<bool>(
-                            future: userController.userHasRole(user, "admin"),
-                            builder: (context, snapshot) {
-                              if (snapshot.data == true) {
-                                return FilledIconButton(
-                                  onPressed: () {
-                                    FirebaseAuth.instance.signOut();
-                                  },
-                                  icon: Icons.logout,
-                                );
-                              }
-                              return const SizedBox.shrink();
-                            },
-                          ),
-                      ],
-                    ),
-                  ],
-                ),
-                centerTitle: false,
-              )
-            ],
-          )),
+                      ),
+                      if (kIsWeb && user != null)
+                        FutureBuilder<bool>(
+                          future: userController.userHasRole(user, "admin"),
+                          builder: (context, snapshot) {
+                            if (snapshot.data == true) {
+                              return FilledIconButton(
+                                onPressed: () {
+                                  FirebaseAuth.instance.signOut();
+                                },
+                                icon: Icons.logout,
+                              );
+                            }
+                            return const SizedBox.shrink();
+                          },
+                        ),
+                    ],
+                  ),
+                ],
+              ),
+              centerTitle: false,
+            )
+          ],
+        ),
+      ),
     );
   }
 }
