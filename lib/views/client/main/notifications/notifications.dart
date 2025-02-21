@@ -109,6 +109,69 @@ class _NotificationItemState extends State<NotificationItem> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
 
+    return NotificationScreenBody(
+      width,
+      context,
+      isLoading
+          ? Loading()
+          : NotificationBody(
+              context,
+              [
+                NotificationTitleRow(),
+                NotificationTitle(),
+                if (isExpanded) NotificationButtons(context)
+              ],
+            ),
+    );
+  }
+
+  Center Loading() {
+    return Center(
+      child: LoadingAnimationWidget.stretchedDots(
+        size: 100,
+        color: Colors.white,
+      ),
+    );
+  }
+
+  Padding NotificationTitleRow() {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 5.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            widget.notification.title,
+            style: GoogleFonts.poppins(
+                fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
+          ),
+          Icon(
+            getNotificationIcon(widget.notification.type),
+            color: Colors.white60,
+            size: 30,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Text NotificationTitle() {
+    return Text(
+      widget.notification.message,
+      style: GoogleFonts.poppins(
+        color: Colors.grey[500],
+        fontSize: 16,
+      ),
+      maxLines: isExpanded ? null : 2,
+      overflow: isExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
+    );
+  }
+
+  AnimatedSize NotificationScreenBody(
+    double width,
+    BuildContext context,
+    Widget child,
+  ) {
     return AnimatedSize(
       duration: const Duration(milliseconds: 400),
       alignment: Alignment.topCenter,
@@ -131,90 +194,59 @@ class _NotificationItemState extends State<NotificationItem> {
                 : Theme.of(context).disabledColor,
             borderRadius: BorderRadius.circular(10),
           ),
-          child: isLoading
-              ? Center(
-                  child: LoadingAnimationWidget.stretchedDots(
-                    size: 100,
-                    color: Colors.white,
-                  ),
-                )
-              : Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 5.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            widget.notification.title,
-                            style: GoogleFonts.poppins(
-                                fontSize: 20,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          Icon(
-                            getNotificationIcon(widget.notification.type),
-                            color: Colors.white60,
-                            size: 30,
-                          ),
-                        ],
-                      ),
-                    ),
-                    Text(
-                      widget.notification.message,
-                      style: GoogleFonts.poppins(
-                        color: Colors.grey[500],
-                        fontSize: 16,
-                      ),
-                      maxLines: isExpanded ? null : 2,
-                      overflow: isExpanded
-                          ? TextOverflow.visible
-                          : TextOverflow.ellipsis,
-                    ),
-                    if (isExpanded)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 15.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            FilledButton(
-                              onPressed: _toggleRead,
-                              style: FilledButton.styleFrom(
-                                fixedSize: Size(200, 40),
-                                backgroundColor: widget.notification.state ==
-                                        NotificationState.unread
-                                    ? Theme.of(context).focusColor
-                                    : Theme.of(context)
-                                        .disabledColor
-                                        .withRed(100),
-                              ),
-                              child: Text(
-                                "Atzimēt kā ${widget.notification.state == NotificationState.unread ? "izlasīto" : "neizlasīto"}",
-                                style: GoogleFonts.poppins(fontSize: 15),
-                              ),
-                            ),
-                            FilledButton(
-                              onPressed: _onDelete,
-                              style: FilledButton.styleFrom(
-                                fixedSize: Size(140, 40),
-                                backgroundColor: widget.notification.state ==
-                                        NotificationState.unread
-                                    ? Theme.of(context).focusColor
-                                    : Theme.of(context)
-                                        .disabledColor
-                                        .withRed(100),
-                              ),
-                              child: Text(
-                                "Dzest",
-                                style: GoogleFonts.poppins(fontSize: 15),
-                              ),
-                            ),
-                          ],
-                        ),
-                      )
-                  ],
-                ),
+          child: child,
         ),
+      ),
+    );
+  }
+
+  Column NotificationBody(BuildContext context, List<Widget> children) {
+    return Column(
+      children: children,
+    );
+  }
+
+  Padding NotificationButtons(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 15.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          NotificationReadButton(context),
+          NotificationDeleteButton(context),
+        ],
+      ),
+    );
+  }
+
+  FilledButton NotificationReadButton(BuildContext context) {
+    return FilledButton(
+      onPressed: _toggleRead,
+      style: FilledButton.styleFrom(
+        fixedSize: Size(200, 40),
+        backgroundColor: widget.notification.state == NotificationState.unread
+            ? Theme.of(context).focusColor
+            : Theme.of(context).disabledColor.withRed(100),
+      ),
+      child: Text(
+        "Atzimēt kā ${widget.notification.state == NotificationState.unread ? "izlasīto" : "neizlasīto"}",
+        style: GoogleFonts.poppins(fontSize: 15),
+      ),
+    );
+  }
+
+  FilledButton NotificationDeleteButton(BuildContext context) {
+    return FilledButton(
+      onPressed: _onDelete,
+      style: FilledButton.styleFrom(
+        fixedSize: Size(140, 40),
+        backgroundColor: widget.notification.state == NotificationState.unread
+            ? Theme.of(context).focusColor
+            : Theme.of(context).disabledColor.withRed(100),
+      ),
+      child: Text(
+        "Dzest",
+        style: GoogleFonts.poppins(fontSize: 15),
       ),
     );
   }
