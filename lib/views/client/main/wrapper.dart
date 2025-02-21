@@ -52,6 +52,7 @@ class Base extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
+      extendBody: true,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(200),
         child: Logo(),

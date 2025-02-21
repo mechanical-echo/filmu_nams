@@ -1,96 +1,156 @@
 import 'package:flutter/material.dart';
-import 'package:motion_tab_bar/MotionBadgeWidget.dart';
-import 'package:motion_tab_bar/MotionTabBar.dart';
-import 'package:motion_tab_bar/MotionTabBarController.dart';
 
 class NavBar extends StatefulWidget {
-  final Function(int) onPageChanged;
-  final int currentIndex;
-
   const NavBar({
     super.key,
     required this.onPageChanged,
     required this.currentIndex,
   });
 
+  final Function(int) onPageChanged;
+  final int currentIndex;
+
   @override
   State<NavBar> createState() => _NavBarState();
 }
 
-class _NavBarState extends State<NavBar> with TickerProviderStateMixin {
-  MotionTabBarController? _motionTabBarController;
+class _NavBarState extends State<NavBar> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  int _previousIndex = 0;
 
   @override
   void initState() {
     super.initState();
-
-    _motionTabBarController = MotionTabBarController(
-      initialIndex: 2,
-      length: 5,
+    _previousIndex = widget.currentIndex;
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 300),
       vsync: this,
     );
   }
 
   @override
   void dispose() {
-    _motionTabBarController?.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
   @override
+  void didUpdateWidget(NavBar oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.currentIndex != widget.currentIndex) {
+      _previousIndex = oldWidget.currentIndex;
+      _controller.forward(from: 0.0);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return MotionTabBar(
-      controller: _motionTabBarController,
+    List<IconData> icons = [
+      Icons.percent,
+      Icons.list,
+      Icons.home,
+      Icons.notifications,
+      Icons.people_alt,
+    ];
 
-      // Pogas
-      initialSelectedTab: "Sākums",
-      labels: const [
-        "Piedāvājumi",
-        "Filmas",
-        "Sākums",
-        "Paziņojumi",
-        "Profils"
-      ],
-      icons: const [
-        Icons.percent,
-        Icons.list,
-        Icons.home,
-        Icons.notifications,
-        Icons.people_alt,
-      ],
+    return Container(
+      padding: const EdgeInsets.only(bottom: 45, left: 10, right: 10),
+      color: Colors.transparent,
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Container(
+            height: 80,
+            decoration: BoxDecoration(
+              color: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: List.generate(
+                  icons.length,
+                  (index) {
+                    final isSelected = widget.currentIndex == index;
+                    final wasSelected = _previousIndex == index;
 
-      // Jaunumu indikatora attēlošana uz navigācijas josla pogas
-      badges: [
-        null,
-        null,
-        null,
-        const MotionBadgeWidget(
-          isIndicator: true,
-          show: true,
-        ),
-        null,
-      ],
+                    Animation<double> animation;
+                    if (isSelected) {
+                      animation = Tween<double>(begin: 0.0, end: 1.0).animate(
+                        CurvedAnimation(
+                          parent: _controller,
+                          curve: Cubic(.21, .88, 1, .93),
+                        ),
+                      );
+                    } else if (wasSelected) {
+                      animation = Tween<double>(begin: 1.0, end: 0.0).animate(
+                        CurvedAnimation(
+                          parent: _controller,
+                          curve: Cubic(.21, .88, 1, .93),
+                        ),
+                      );
+                    } else {
+                      animation = const AlwaysStoppedAnimation<double>(0.0);
+                    }
 
-      // Stilizācija
-      tabSize: 50,
-      tabBarHeight: 75,
-      textStyle: Theme.of(context).bottomNavigationBarTheme.selectedLabelStyle,
-      tabIconColor:
-          Theme.of(context).bottomNavigationBarTheme.unselectedItemColor,
-      tabIconSize: 30.0,
-      tabIconSelectedSize: 34.0,
-      tabSelectedColor: Theme.of(context).primaryColor,
-      tabIconSelectedColor:
-          Theme.of(context).bottomNavigationBarTheme.selectedItemColor,
-      tabBarColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
+                    return AnimatedBuilder(
+                      animation: animation,
+                      builder: (context, child) {
+                        final verticalOffset = -10 * animation.value;
+                        final scale = 1.0 + (0.25 * animation.value);
 
-      // Funkcionalitāte
-      onTabItemSelected: (int value) {
-        setState(() {
-          _motionTabBarController?.index = value;
-          widget.onPageChanged(value);
-        });
-      },
+                        return Transform.translate(
+                          offset: Offset(0, verticalOffset),
+                          child: Transform.scale(
+                            scale: scale,
+                            child: Container(
+                              margin: EdgeInsets.only(
+                                bottom: 18 * animation.value,
+                                left: animation.value * 10,
+                                right: animation.value * 10,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).focusColor,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withAlpha(60),
+                                    blurRadius: 3,
+                                    offset: const Offset(0, 6),
+                                  ),
+                                ],
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: IconButton(
+                                icon: Icon(
+                                  icons[index],
+                                  color: Color.lerp(
+                                    Theme.of(context)
+                                        .bottomNavigationBarTheme
+                                        .unselectedItemColor,
+                                    Theme.of(context)
+                                        .bottomNavigationBarTheme
+                                        .selectedItemColor,
+                                    animation.value,
+                                  ),
+                                  size: 40 + (5 * animation.value),
+                                ),
+                                onPressed: () {
+                                  widget.onPageChanged(index);
+                                },
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

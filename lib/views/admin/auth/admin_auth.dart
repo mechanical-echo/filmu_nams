@@ -9,13 +9,26 @@ class AdminAuth extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     UserController userController = UserController();
-    User? user = FirebaseAuth.instance.currentUser;
 
-    if (user != null) {
-      userController.userHasRole(user, "role");
-      return AdminDashboard();
-    }
+    return StreamBuilder<User?>(
+      stream: FirebaseAuth.instance.authStateChanges(),
+      builder: (context, authSnapshot) {
+        final user = authSnapshot.data;
 
-    return AdminLogin();
+        return FutureBuilder<bool>(
+          future: user != null
+              ? userController.userHasRole(user, "admin")
+              : Future.value(false),
+          builder: (context, roleSnapshot) {
+            if (user != null && roleSnapshot.data == true) {
+              return AdminDashboard();
+            } else if (user != null && roleSnapshot.data == false) {
+              FirebaseAuth.instance.signOut();
+            }
+            return AdminLogin();
+          },
+        );
+      },
+    );
   }
 }

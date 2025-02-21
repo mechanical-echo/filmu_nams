@@ -1,7 +1,9 @@
+import 'package:filmu_nams/controllers/user_controller.dart';
 import 'package:filmu_nams/validators/validator.dart';
 import 'package:filmu_nams/views/client/auth/components/auth_form_container.dart';
 import 'package:filmu_nams/assets/input/filled_text_icon_button.dart';
 import 'package:filmu_nams/assets/input/text_input.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -120,9 +122,25 @@ class _LoginFormState extends State<LoginForm> {
     );
   }
 
-  void login() {
+  void login() async {
     if (!isValid()) {
       return;
+    }
+
+    await FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      bool userIsAdmin = await UserController().userHasRole(user, "admin");
+      print('here ' + user.toString());
+
+      if (!userIsAdmin) {
+        await FirebaseAuth.instance.signOut();
+        return;
+      }
     }
   }
 

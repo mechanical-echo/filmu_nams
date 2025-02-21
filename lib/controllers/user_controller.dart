@@ -9,16 +9,32 @@ class UserController {
   final FirebaseStorage _storage = FirebaseStorage.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  Future<DocumentSnapshot<Map<String, dynamic>>?> getUserDocument(
+    String uid,
+  ) async {
+    try {
+      if (_auth.currentUser == null) return null;
+      var userDocument = await _firestore.collection('users').doc(uid).get();
+      return userDocument;
+    } catch (e) {
+      print('Error getting user document: $e');
+      return null;
+    }
+  }
+
   /// Parbaudit vai lietotajam ir dota loma
   Future<bool> userHasRole(
     User user,
     String role,
   ) async {
-    var userDocument = await _firestore.collection('users').doc(user.uid).get();
-
-    print(userDocument);
-
-    return false;
+    try {
+      var userDocument = await getUserDocument(user.uid);
+      if (userDocument == null) return false;
+      return userDocument.data()?['role'] == role;
+    } catch (e) {
+      print('Error checking user role: $e');
+      return false;
+    }
   }
 
   /// Pieregistret jauno lietotaju

@@ -1,5 +1,6 @@
 import 'package:bordered_text/bordered_text.dart';
 import 'package:filmu_nams/assets/input/filled_icon_button.dart';
+import 'package:filmu_nams/controllers/user_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -8,7 +9,9 @@ import 'package:intl/intl.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
 class Logo extends StatelessWidget {
-  const Logo({super.key});
+  Logo({super.key});
+
+  final UserController userController = UserController();
 
   @override
   Widget build(BuildContext context) {
@@ -56,9 +59,19 @@ class Logo extends StatelessWidget {
                           ),
                         ),
                         if (kIsWeb && user != null)
-                          FilledIconButton(
-                            onPressed: () {},
-                            icon: Icons.logout,
+                          FutureBuilder<bool>(
+                            future: userController.userHasRole(user, "admin"),
+                            builder: (context, snapshot) {
+                              if (snapshot.data == true) {
+                                return FilledIconButton(
+                                  onPressed: () {
+                                    FirebaseAuth.instance.signOut();
+                                  },
+                                  icon: Icons.logout,
+                                );
+                              }
+                              return const SizedBox.shrink();
+                            },
                           ),
                       ],
                     ),
