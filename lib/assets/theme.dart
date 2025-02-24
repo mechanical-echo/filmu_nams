@@ -2,6 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 ThemeData theme = ThemeData(
+    colorScheme: ColorScheme.fromSeed(
+      seedColor: Color.fromARGB(255, 87, 33, 27),
+      primary: Color.fromARGB(255, 123, 29, 29),
+      primaryContainer: Color.fromARGB(255, 123, 29, 29),
+      secondary: Color.fromARGB(255, 123, 29, 29),
+      secondaryContainer: Color.fromARGB(255, 87, 33, 27),
+      surface: Color.fromARGB(255, 123, 29, 29),
+      onSurface: Colors.white,
+    ),
     primarySwatch: Colors.red,
     primaryColor: Color.fromARGB(255, 123, 29, 29),
     focusColor: Color.fromARGB(255, 119, 41, 32),
