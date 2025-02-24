@@ -1,5 +1,5 @@
 import 'package:filmu_nams/assets/decorations/background.dart';
-import 'package:filmu_nams/assets/decorations/profile_image.dart';
+import 'package:filmu_nams/assets/widgets/profile_image.dart';
 import 'package:filmu_nams/assets/dialog/dialog.dart';
 import 'package:filmu_nams/enums/auth_error_codes.dart';
 import 'package:filmu_nams/assets/input/filled_icon_button.dart';

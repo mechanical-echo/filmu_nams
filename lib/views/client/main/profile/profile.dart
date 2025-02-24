@@ -1,5 +1,5 @@
 import 'package:filmu_nams/assets/animations/animated_routing.dart';
-import 'package:filmu_nams/assets/decorations/profile_image.dart';
+import 'package:filmu_nams/assets/widgets/profile_image.dart';
 import 'package:filmu_nams/assets/input/filled_text_icon_button.dart';
 import 'package:filmu_nams/views/client/main/profile/profile_details.dart';
 import 'package:firebase_auth/firebase_auth.dart';
