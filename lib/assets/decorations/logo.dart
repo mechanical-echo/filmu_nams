@@ -31,6 +31,8 @@ class Logo extends StatelessWidget {
               // Josla ar logotipu
               AppBar(
                 clipBehavior: Clip.none,
+                backgroundColor:
+                    Theme.of(context).bottomNavigationBarTheme.backgroundColor,
                 title: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -54,7 +56,7 @@ class Logo extends StatelessWidget {
                             DateFormat('E dd.MM.', 'lv').format(DateTime.now()),
                             style: GoogleFonts.kodchasan(
                                 color: Colors.white,
-                                fontSize: 20,
+                                fontSize: 22,
                                 fontWeight: FontWeight.bold),
                           ),
                         ),
