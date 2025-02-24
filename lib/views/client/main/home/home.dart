@@ -1,4 +1,5 @@
 import 'package:filmu_nams/assets/widgets/overlapping_carousel.dart';
+import 'package:filmu_nams/controllers/movie_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -11,59 +12,44 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   int _activeIndex = 0;
+  List<Map<String, String>>? movieData;
+  List<Widget>? carouselItems;
+  bool isLoading = true;
 
-  final List<Map<String, String>> movieData = [
-    {
-      'title': 'Gladiators II',
-      'description':
-          'Leģendārā režisora Ridlija Skota jaunā filma "Gladiators II" turpina episko sāgu par spēku, intrigām un atriebību',
-      'image':
-          'https://forumcinemaslv.blob.core.windows.net/1012/Event_10533/portrait_medium/Gladiators-2-plakats-final.jpg?width=323',
-    },
-    {
-      'title': 'Dune: Part Two',
-      'description':
-          'Turpinājums episkajam stāstam par Paula Atreida ceļojumu, kurā viņš apvienojas ar Čani un frēmeniem',
-      'image':
-          'https://m.media-amazon.com/images/M/MV5BNTc0YmQxMjEtODI5MC00NjFiLTlkMWUtOGQ5NjFmYWUyZGJhXkEyXkFqcGc@._V1_.jpg',
-    },
-    {
-      'title': 'Poor Things',
-      'description':
-          'Jorgosa Lantimosa fantastikas filma par jaunu sievieti, kuru atdzīvina ekscentriskais zinātnieks',
-      'image':
-          'https://m.media-amazon.com/images/M/MV5BYWU2MjRjZTYtMjVkMS00MTBjLWFiMTAtYmZlYTk1YjkyMWFkXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg',
-    },
-    {
-      'title': 'Kung Fu Panda 4',
-      'description':
-          'Po kļūst par Miera ielejas garīgo līderi un sastopas ar jaunu, bīstamu pretinieku',
-      'image':
-          'https://upload.wikimedia.org/wikipedia/en/7/7f/Kung_Fu_Panda_4_poster.jpg',
-    },
-    {
-      'title': 'Lorem ipsum',
-      'description':
-          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-      'image':
-          'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png',
+  Future<void> fetchHomescreenCarouselFromFirebase() async {
+    try {
+      final response = await MovieController().getHomescreenCarousel();
+      final movies = response
+          .map((item) =>
+              item.map((key, value) => MapEntry(key, value.toString())))
+          .toList();
+
+      setState(() {
+        movieData = movies;
+        carouselItems = List.generate(
+          movies.length,
+          (index) => Builder(builder: (context) {
+            final homeState = context.findAncestorStateOfType<_HomeState>();
+            final isActive = homeState?._activeIndex == index;
+
+            return MovieItem(index, isActive);
+          }),
+        );
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+      // Handle error appropriately
+      debugPrint('Error fetching movies: $e');
     }
-  ];
-
-  late final List<Widget> carouselItems;
+  }
 
   @override
   void initState() {
     super.initState();
-    carouselItems = List.generate(
-      movieData.length,
-      (index) => Builder(builder: (context) {
-        final homeState = context.findAncestorStateOfType<_HomeState>();
-        final isActive = homeState?._activeIndex == index;
-
-        return MovieItem(index, isActive);
-      }),
-    );
+    fetchHomescreenCarouselFromFirebase();
   }
 
   Stack MovieItem(int index, bool isActive) {
@@ -94,7 +80,7 @@ class _HomeState extends State<Home> {
 
   Text MovieItemDescription(int index) {
     return Text(
-      movieData[index]['description']!,
+      movieData![index]['description']!,
       style: GoogleFonts.poppins(
         fontSize: 16,
         fontWeight: FontWeight.bold,
@@ -106,7 +92,7 @@ class _HomeState extends State<Home> {
 
   Text MovieItemTitle(int index) {
     return Text(
-      movieData[index]['title']!,
+      movieData![index]['title']!,
       style: GoogleFonts.poppins(
         fontSize: 24,
         fontWeight: FontWeight.bold,
@@ -130,7 +116,7 @@ class _HomeState extends State<Home> {
         ],
       ),
       child: Center(
-        child: Image.network(movieData[index]['image']!),
+        child: Image.network(movieData![index]['image-url']!),
       ),
     );
   }
@@ -140,12 +126,24 @@ class _HomeState extends State<Home> {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
+    if (isLoading) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+
+    if (movieData == null || carouselItems == null || movieData!.isEmpty) {
+      return const Center(
+        child: Text('No movies available'),
+      );
+    }
+
     return Center(
       child: Column(
         children: [
           const SizedBox(height: 240),
           OverlappingCarousel(
-            items: carouselItems,
+            items: carouselItems!,
             itemWidth: width * 0.55,
             itemHeight: height * 0.33,
             scaleFactor: 0.85,
