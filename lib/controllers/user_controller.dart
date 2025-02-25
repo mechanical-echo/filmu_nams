@@ -14,7 +14,8 @@ class UserController {
   ) async {
     try {
       if (_auth.currentUser == null) return null;
-      var userDocument = await _firestore.collection('users').doc(uid).get();
+      var userDocument =
+          await FirebaseFirestore.instance.collection('users').doc(uid).get();
       return userDocument;
     } catch (e) {
       print('Error getting user document: $e');

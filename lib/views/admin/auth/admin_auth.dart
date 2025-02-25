@@ -3,12 +3,14 @@ import 'package:filmu_nams/controllers/user_controller.dart';
 import 'package:filmu_nams/views/admin/dashboard/admin_dashboard.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class AdminAuth extends StatelessWidget {
   const AdminAuth({super.key});
   @override
   Widget build(BuildContext context) {
     UserController userController = UserController();
+    double height = MediaQuery.of(context).size.height;
 
     return StreamBuilder<User?>(
       stream: FirebaseAuth.instance.authStateChanges(),
@@ -23,7 +25,15 @@ class AdminAuth extends StatelessWidget {
             if (user != null && roleSnapshot.data == true) {
               return AdminDashboard();
             } else if (user != null && roleSnapshot.data == false) {
-              FirebaseAuth.instance.signOut();
+              return Center(
+                child: SizedBox(
+                  height: height * 0.5,
+                  child: LoadingAnimationWidget.stretchedDots(
+                    size: 100,
+                    color: Theme.of(context).focusColor,
+                  ),
+                ),
+              );
             }
             return AdminLogin();
           },

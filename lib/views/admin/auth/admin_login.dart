@@ -31,23 +31,28 @@ class Wrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 750,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          AuthFormContainer(
-            child: Padding(
-              padding: const EdgeInsets.only(
-                top: 60.0,
-                left: 40,
-                right: 40,
+    return Center(
+      child: SizedBox(
+        width: 750,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Material(
+              type: MaterialType.transparency,
+              child: AuthFormContainer(
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                    top: 60.0,
+                    left: 40,
+                    right: 40,
+                  ),
+                  child: child,
+                ),
               ),
-              child: child,
-            ),
-          )
-        ],
+            )
+          ],
+        ),
       ),
     );
   }
@@ -135,7 +140,6 @@ class _LoginFormState extends State<LoginForm> {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       bool userIsAdmin = await UserController().userHasRole(user, "admin");
-      print('here ' + user.toString());
 
       if (!userIsAdmin) {
         await FirebaseAuth.instance.signOut();
