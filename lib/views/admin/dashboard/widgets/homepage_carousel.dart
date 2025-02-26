@@ -1,3 +1,5 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:filmu_nams/assets/input/text_input.dart';
 import 'package:filmu_nams/controllers/movie_controller.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/expandable_view/expandable_view.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/table/stylized_table.dart';
@@ -6,6 +8,7 @@ import 'package:filmu_nams/views/admin/dashboard/widgets/table/stylized_table_im
 import 'package:filmu_nams/views/admin/dashboard/widgets/table/stylized_table_text_cell.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class HomepageCarousel extends StatefulWidget {
   const HomepageCarousel({super.key});
@@ -18,8 +21,10 @@ class _HomepageCarouselState extends State<HomepageCarousel> {
   List<Map<String, dynamic>> carouselItems = [];
   String? selectedDocId;
   bool isEditing = false;
+  bool isEditLoading = false;
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
+  String? imageUrl;
 
   @override
   void initState() {
@@ -35,9 +40,13 @@ class _HomepageCarouselState extends State<HomepageCarousel> {
             .map((item) =>
                 item.map((key, value) => MapEntry(key, value.toString())))
             .toList();
+        isEditLoading = false;
       });
     } catch (e) {
       print('Error fetching carousel items: $e');
+      setState(() {
+        isEditLoading = false;
+      });
     }
   }
 
@@ -48,10 +57,15 @@ class _HomepageCarouselState extends State<HomepageCarousel> {
           carouselItems.firstWhere((item) => item['id'] == docId)['title'];
       descriptionController.text = carouselItems
           .firstWhere((item) => item['id'] == docId)['description'];
+      imageUrl =
+          carouselItems.firstWhere((item) => item['id'] == docId)['image-url'];
     });
   }
 
   Future<void> updateCarouselItem() async {
+    setState(() {
+      isEditLoading = true;
+    });
     await MovieController().updateHomescreenCarousel(
       selectedDocId!,
       titleController.text,
@@ -96,30 +110,89 @@ class _HomepageCarouselState extends State<HomepageCarousel> {
                       ),
                     ],
                   ),
-                  child: Column(
-                    children: [
-                      TextField(
-                        controller: titleController,
-                        decoration: InputDecoration(
-                          hintText: "Nosaukums",
+                  child: isEditLoading
+                      ? Center(
+                          child: LoadingAnimationWidget.staggeredDotsWave(
+                          color: Colors.white,
+                          size: 100,
+                        ))
+                      : Column(
+                          children: [
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 10.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                spacing: 10,
+                                children: [
+                                  Column(
+                                    spacing: 20,
+                                    children: [
+                                      Text(
+                                        "Rediģēt elementu",
+                                        style: GoogleFonts.poppins(
+                                          color: Colors.white,
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 400,
+                                        child: TextInput(
+                                          controller: titleController,
+                                          hintText: "Ievadiet nosaukumu...",
+                                          labelText: "Nosaukums",
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 400,
+                                        child: TextInput(
+                                          controller: descriptionController,
+                                          hintText: "Ievadiet aprakstu...",
+                                          labelText: "Apraksts",
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  CachedNetworkImage(
+                                    imageUrl: imageUrl!,
+                                    placeholder: (context, url) =>
+                                        CircularProgressIndicator(),
+                                    height: 200,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 20.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                spacing: 20,
+                                children: [
+                                  FilledButton(
+                                    onPressed: updateCarouselItem,
+                                    style: FilledButton.styleFrom(
+                                      fixedSize: Size(150, 30),
+                                    ),
+                                    child: Text(
+                                      "Saglabāt",
+                                      style: TextStyle(fontSize: 16),
+                                    ),
+                                  ),
+                                  FilledButton(
+                                    onPressed: () {},
+                                    style: FilledButton.styleFrom(
+                                      fixedSize: Size(150, 30),
+                                    ),
+                                    child: Text(
+                                      "Dzēst",
+                                      style: TextStyle(fontSize: 16),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                      TextField(
-                        controller: descriptionController,
-                        decoration: InputDecoration(
-                          hintText: "Apraksts",
-                        ),
-                      ),
-                      FilledButton(
-                        onPressed: updateCarouselItem,
-                        child: Text("Saglabāt"),
-                      ),
-                      FilledButton(
-                        onPressed: () {},
-                        child: Text("Dzēst"),
-                      ),
-                    ],
-                  ),
                 ),
             ],
           ),
