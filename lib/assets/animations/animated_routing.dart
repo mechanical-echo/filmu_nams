@@ -23,7 +23,7 @@ class AnimatedRouting extends PageRouteBuilder {
               child: child,
             );
           },
-          reverseTransitionDuration: const Duration(milliseconds: 500),
+          reverseTransitionDuration: const Duration(milliseconds: 600),
           transitionDuration: const Duration(milliseconds: 1000),
         );
 }
