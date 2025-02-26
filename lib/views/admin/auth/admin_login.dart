@@ -1,3 +1,4 @@
+import 'package:filmu_nams/assets/decorations/background.dart';
 import 'package:filmu_nams/controllers/user_controller.dart';
 import 'package:filmu_nams/validators/validator.dart';
 import 'package:filmu_nams/views/client/auth/components/auth_form_container.dart';
@@ -12,13 +13,15 @@ class AdminLogin extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Wrapper(
-      child: Column(
-        spacing: 30,
-        children: [
-          WelcomeText(),
-          LoginForm(),
-        ],
+    return Background(
+      child: Wrapper(
+        child: Column(
+          spacing: 30,
+          children: [
+            WelcomeText(),
+            LoginForm(),
+          ],
+        ),
       ),
     );
   }

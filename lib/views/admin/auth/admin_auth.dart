@@ -1,3 +1,4 @@
+import 'package:filmu_nams/assets/decorations/background.dart';
 import 'package:filmu_nams/views/admin/auth/admin_login.dart';
 import 'package:filmu_nams/controllers/user_controller.dart';
 import 'package:filmu_nams/views/admin/dashboard/admin_dashboard.dart';
@@ -12,33 +13,38 @@ class AdminAuth extends StatelessWidget {
     UserController userController = UserController();
     double height = MediaQuery.of(context).size.height;
 
-    return StreamBuilder<User?>(
-      stream: FirebaseAuth.instance.authStateChanges(),
-      builder: (context, authSnapshot) {
-        final user = authSnapshot.data;
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: StreamBuilder<User?>(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, authSnapshot) {
+          final user = authSnapshot.data;
 
-        return FutureBuilder<bool>(
-          future: user != null
-              ? userController.userHasRole(user, "admin")
-              : Future.value(false),
-          builder: (context, roleSnapshot) {
-            if (user != null && roleSnapshot.data == true) {
-              return AdminDashboard();
-            } else if (user != null && roleSnapshot.data == false) {
-              return Center(
-                child: SizedBox(
-                  height: height * 0.5,
-                  child: LoadingAnimationWidget.stretchedDots(
-                    size: 100,
-                    color: Theme.of(context).focusColor,
+          return FutureBuilder<bool>(
+            future: user != null
+                ? userController.userHasRole(user, "admin")
+                : Future.value(false),
+            builder: (context, roleSnapshot) {
+              if (user != null && roleSnapshot.data == true) {
+                return AdminDashboard();
+              } else if (user != null && roleSnapshot.data == false) {
+                return Background(
+                  child: Center(
+                    child: SizedBox(
+                      height: height * 0.5,
+                      child: LoadingAnimationWidget.stretchedDots(
+                        size: 100,
+                        color: Theme.of(context).focusColor,
+                      ),
+                    ),
                   ),
-                ),
-              );
-            }
-            return AdminLogin();
-          },
-        );
-      },
+                );
+              }
+              return AdminLogin();
+            },
+          );
+        },
+      ),
     );
   }
 }
