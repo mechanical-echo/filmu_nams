@@ -126,7 +126,7 @@ class _HomeState extends State<Home> {
             placeholder: (context, url) => Container(
               color: Colors.grey[800],
               child: Center(
-                child: LoadingAnimationWidget.stretchedDots(
+                child: LoadingAnimationWidget.staggeredDotsWave(
                   size: 50,
                   color: Theme.of(context).focusColor,
                 ),
@@ -149,7 +149,7 @@ class _HomeState extends State<Home> {
 
     if (isLoading) {
       return Center(
-        child: LoadingAnimationWidget.stretchedDots(
+        child: LoadingAnimationWidget.staggeredDotsWave(
           size: 100,
           color: Theme.of(context).focusColor,
         ),

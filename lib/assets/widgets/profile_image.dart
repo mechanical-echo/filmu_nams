@@ -1,5 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class ProfileImage extends StatelessWidget {
   ProfileImage({
@@ -21,9 +23,18 @@ class ProfileImage extends StatelessWidget {
         shape: BoxShape.circle,
       ),
       child: user!.photoURL != null
-          ? Image.network(
-              user!.photoURL!,
+          ? CachedNetworkImage(
+              imageUrl: user!.photoURL!,
               fit: BoxFit.cover,
+              placeholder: (context, url) => Container(
+                color: Colors.grey[800],
+                child: Center(
+                  child: LoadingAnimationWidget.hexagonDots(
+                    size: 50,
+                    color: Theme.of(context).focusColor,
+                  ),
+                ),
+              ),
             )
           : Icon(
               Icons.person,

@@ -132,7 +132,7 @@ class _LoadingIndicator extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: 65, bottom: 40),
-      child: LoadingAnimationWidget.stretchedDots(
+      child: LoadingAnimationWidget.staggeredDotsWave(
         size: 100,
         color: Theme.of(context).focusColor,
       ),

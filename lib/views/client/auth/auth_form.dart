@@ -90,6 +90,7 @@ class FormContainer extends StatelessWidget {
         borderRadius: BorderRadius.circular(24),
       ),
       child: AnimatedSize(
+        alignment: Alignment.topCenter,
         duration: const Duration(milliseconds: 350),
         curve: Curves.linearToEaseOut,
         child: child,

@@ -179,7 +179,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
   Widget build(BuildContext context) {
     if (isLoading) {
       return Center(
-        child: LoadingAnimationWidget.stretchedDots(
+        child: LoadingAnimationWidget.staggeredDotsWave(
           size: 100,
           color: Theme.of(context).focusColor,
         ),
