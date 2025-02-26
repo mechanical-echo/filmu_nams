@@ -8,6 +8,9 @@ class StylizedTable extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+      constraints: const BoxConstraints(
+        minWidth: 800, // Set minimum width for the table
+      ),
       decoration: BoxDecoration(
         color: Theme.of(context).focusColor,
         borderRadius: BorderRadius.circular(10),
