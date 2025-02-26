@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 class BigLogo extends StatelessWidget {
   const BigLogo({super.key, required this.top});
@@ -9,25 +11,55 @@ class BigLogo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-    return SizedBox(
-      height: 250,
+    return Container(
+      margin: const EdgeInsets.only(
+        top: 175,
+        left: 10,
+        right: 10,
+      ),
+      width: width,
+      height: 70,
+      decoration: BoxDecoration(
+        color: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
+        borderRadius: BorderRadius.circular(8),
+      ),
       child: Stack(
-        alignment: Alignment.center,
+        alignment: Alignment.bottomCenter,
         clipBehavior: Clip.none,
         children: [
           Positioned(
-            top: top,
+            bottom: -10,
             child: Container(
-              width: width,
-              height: 94,
-              color: Theme.of(context).primaryColor,
-            ),
-          ),
-          Positioned(
-            top: (top - 49),
-            child: SvgPicture.asset(
-              'assets/Logo.svg',
-              height: 179,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              decoration: BoxDecoration(
+                color: Theme.of(context).focusColor,
+                borderRadius: BorderRadius.circular(8),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withAlpha(100),
+                    blurRadius: 8,
+                    offset: Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Row(
+                spacing: 10,
+                children: [
+                  Icon(
+                    Icons.movie_filter,
+                    color: Colors.white,
+                    size: 37,
+                  ),
+                  Text(
+                    "Filmu Nams",
+                    style: GoogleFonts.poppins(
+                      color: Colors.white,
+                      fontSize: 37,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],
