@@ -32,7 +32,7 @@ class CarouselSwitch extends StatelessWidget {
             end: Offset.zero,
           ).animate(CurvedAnimation(
             parent: animation,
-            curve: Cubic(1, -0.24, 0, 1.23),
+            curve: Cubic(1, 0, 0, 1),
           )),
           child: child,
         );
