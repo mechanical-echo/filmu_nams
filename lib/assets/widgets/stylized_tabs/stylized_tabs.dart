@@ -31,26 +31,8 @@ class _StylizedTabsState extends State<StylizedTabs> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      spacing: 20,
+      verticalDirection: VerticalDirection.up,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: List.generate(
-            widget.tabs.length,
-            (index) => StylizedTab(
-              isLast: index == widget.tabs.length - 1,
-              title: widget.tabs[index].title,
-              isActive: index == currentIndex,
-              index: index,
-              onTap: () {
-                setState(() {
-                  previousIndex = currentIndex;
-                  currentIndex = index;
-                });
-              },
-            ),
-          ),
-        ),
         CarouselSwitch(
           direction: currentIndex < previousIndex
               ? CarouselSwitchDirection.right
@@ -58,6 +40,35 @@ class _StylizedTabsState extends State<StylizedTabs> {
           child: KeyedSubtree(
             key: ValueKey(currentIndex),
             child: widget.tabs[currentIndex].child,
+          ),
+        ),
+        Container(
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withAlpha(180),
+                blurRadius: 8,
+                offset: const Offset(0, 15),
+              ),
+            ],
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List.generate(
+              widget.tabs.length,
+              (index) => StylizedTab(
+                isLast: index == widget.tabs.length - 1,
+                title: widget.tabs[index].title,
+                isActive: index == currentIndex,
+                index: index,
+                onTap: () {
+                  setState(() {
+                    previousIndex = currentIndex;
+                    currentIndex = index;
+                  });
+                },
+              ),
+            ),
           ),
         ),
       ],

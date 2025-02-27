@@ -8,4 +8,10 @@ class MovieController {
 
     return response.docs.map((doc) => doc.data()).toList();
   }
+
+  Future<List<Map<String, dynamic>>> getAllMovies() async {
+    final response = await _firestore.collection('movies').get();
+
+    return response.docs.map((doc) => doc.data()).toList();
+  }
 }

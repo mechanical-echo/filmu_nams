@@ -68,6 +68,13 @@ class _NavBarState extends State<NavBar> with SingleTickerProviderStateMixin {
             decoration: BoxDecoration(
               color: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
               borderRadius: BorderRadius.circular(10),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withAlpha(100),
+                  blurRadius: 10,
+                  offset: const Offset(0, -8),
+                ),
+              ],
             ),
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 20),
