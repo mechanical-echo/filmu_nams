@@ -46,8 +46,8 @@ class _StylizedTabsState extends State<StylizedTabs> {
           decoration: BoxDecoration(
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withAlpha(180),
-                blurRadius: 8,
+                color: Colors.black.withAlpha(120),
+                blurRadius: 20,
                 offset: const Offset(0, 15),
               ),
             ],

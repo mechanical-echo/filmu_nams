@@ -89,8 +89,7 @@ class _MovieListState extends State<MovieList> {
     return SizedBox(
       height: MediaQuery.of(context).size.height - 325,
       child: GridView.count(
-        padding:
-            const EdgeInsets.only(top: 20, bottom: 70, left: 10, right: 10),
+        padding: const EdgeInsets.only(top: 0, bottom: 70, left: 10, right: 10),
         crossAxisCount: 1,
         childAspectRatio: 1.5,
         mainAxisSpacing: 10,
@@ -158,7 +157,7 @@ class MovieCard extends StatelessWidget {
 
   Container button(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
+      margin: const EdgeInsets.only(left: 16, right: 16, bottom: 10),
       decoration: BoxDecoration(boxShadow: [
         BoxShadow(
           color: Colors.black.withAlpha(80),
@@ -229,33 +228,34 @@ class MovieCard extends StatelessWidget {
     );
   }
 
-  Container description(BuildContext context) {
-    return Container(
-      height: 125,
-      margin: const EdgeInsets.only(left: 15, right: 15, bottom: 10),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
-      decoration: BoxDecoration(
-          color: Theme.of(context).focusColor,
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(10),
-            topRight: Radius.circular(10),
-            bottomRight: Radius.circular(10),
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withAlpha(60),
-              blurRadius: 8,
-              offset: const Offset(0, 7),
+  Expanded description(BuildContext context) {
+    return Expanded(
+      child: Container(
+        margin: const EdgeInsets.only(left: 15, right: 15, bottom: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+        decoration: BoxDecoration(
+            color: Theme.of(context).focusColor,
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(10),
+              topRight: Radius.circular(10),
+              bottomRight: Radius.circular(10),
             ),
-          ]),
-      child: Text(
-        data['description']!,
-        maxLines: 5,
-        overflow: TextOverflow.ellipsis,
-        style: GoogleFonts.poppins(
-          color: Colors.white,
-          fontSize: 15,
-          fontWeight: FontWeight.w300,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withAlpha(60),
+                blurRadius: 8,
+                offset: const Offset(0, 7),
+              ),
+            ]),
+        child: Text(
+          data['description']!,
+          maxLines: 5,
+          overflow: TextOverflow.ellipsis,
+          style: GoogleFonts.poppins(
+            color: Colors.white,
+            fontSize: 15,
+            fontWeight: FontWeight.w300,
+          ),
         ),
       ),
     );

@@ -12,7 +12,7 @@ ThemeData theme = ThemeData(
       onSurface: Colors.white,
     ),
     primarySwatch: Colors.red,
-    primaryColor: Color.fromARGB(255, 123, 29, 29),
+    primaryColor: Color.fromARGB(255, 102, 30, 23),
     focusColor: Color.fromARGB(255, 119, 41, 32),
     cardColor: Color.fromARGB(255, 87, 33, 27),
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
