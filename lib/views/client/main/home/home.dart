@@ -1,7 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:filmu_nams/assets/widgets/overlapping_carousel.dart';
 import 'package:filmu_nams/controllers/movie_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -116,7 +118,26 @@ class _HomeState extends State<Home> {
         ],
       ),
       child: Center(
-        child: Image.network(movieData![index]['image-url']!),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(3),
+          child: CachedNetworkImage(
+            imageUrl: movieData![index]['image-url']!,
+            fit: BoxFit.cover,
+            placeholder: (context, url) => Container(
+              color: Colors.grey[800],
+              child: Center(
+                child: LoadingAnimationWidget.staggeredDotsWave(
+                  size: 50,
+                  color: Theme.of(context).focusColor,
+                ),
+              ),
+            ),
+            errorWidget: (context, url, error) => Container(
+              color: Colors.grey[800],
+              child: const Icon(Icons.error, color: Colors.white),
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -127,8 +148,11 @@ class _HomeState extends State<Home> {
     double height = MediaQuery.of(context).size.height;
 
     if (isLoading) {
-      return const Center(
-        child: CircularProgressIndicator(),
+      return Center(
+        child: LoadingAnimationWidget.staggeredDotsWave(
+          size: 100,
+          color: Theme.of(context).focusColor,
+        ),
       );
     }
 
