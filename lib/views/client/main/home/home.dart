@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:filmu_nams/assets/widgets/overlapping_carousel.dart';
 import 'package:filmu_nams/controllers/movie_controller.dart';
+import 'package:filmu_nams/models/carousel_item.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -14,22 +15,18 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   int _activeIndex = 0;
-  List<Map<String, String>>? movieData;
+  List<CarouselItemModel>? movieData;
   List<Widget>? carouselItems;
   bool isLoading = true;
 
   Future<void> fetchHomescreenCarouselFromFirebase() async {
     try {
       final response = await MovieController().getHomescreenCarousel();
-      final movies = response
-          .map((item) =>
-              item.map((key, value) => MapEntry(key, value.toString())))
-          .toList();
 
       setState(() {
-        movieData = movies;
+        movieData = response;
         carouselItems = List.generate(
-          movies.length,
+          response.length,
           (index) => Builder(builder: (context) {
             final homeState = context.findAncestorStateOfType<_HomeState>();
             final isActive = homeState?._activeIndex == index;
@@ -43,7 +40,6 @@ class _HomeState extends State<Home> {
       setState(() {
         isLoading = false;
       });
-      // Handle error appropriately
       debugPrint('Error fetching movies: $e');
     }
   }
@@ -82,7 +78,7 @@ class _HomeState extends State<Home> {
 
   Text MovieItemDescription(int index) {
     return Text(
-      movieData![index]['description']!,
+      movieData![index].description,
       style: GoogleFonts.poppins(
         fontSize: 16,
         fontWeight: FontWeight.bold,
@@ -94,7 +90,7 @@ class _HomeState extends State<Home> {
 
   Text MovieItemTitle(int index) {
     return Text(
-      movieData![index]['title']!,
+      movieData![index].title,
       style: GoogleFonts.poppins(
         fontSize: 24,
         fontWeight: FontWeight.bold,
@@ -121,7 +117,7 @@ class _HomeState extends State<Home> {
         child: ClipRRect(
           borderRadius: BorderRadius.circular(3),
           child: CachedNetworkImage(
-            imageUrl: movieData![index]['image-url']!,
+            imageUrl: movieData![index].imageUrl,
             fit: BoxFit.cover,
             placeholder: (context, url) => Container(
               color: Colors.grey[800],
