@@ -1,71 +1,40 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
+import 'package:filmu_nams/models/movie.dart';
 
 class ScheduleModel {
-  final DateTime date;
-  final List<ScheduleItem> movies;
+  final String id;
+  final MovieModel movie;
+  final int hall;
+  final Timestamp time;
 
-  ScheduleModel({
-    required this.date,
-    required this.movies,
-  });
+  ScheduleModel(
+      {required this.id,
+      required this.movie,
+      required this.hall,
+      required this.time});
 
-  factory ScheduleModel.fromFirestore(QuerySnapshot snapshot, DateTime date) {
-    List<ScheduleItem> scheduleItems = [];
-
-    for (var doc in snapshot.docs) {
-      try {
-        final data = doc.data() as Map<String, dynamic>;
-        final item = ScheduleItem.fromMap(data);
-        scheduleItems.add(item);
-      } catch (e) {
-        debugPrint('Skipping invalid schedule item: $e');
-        continue;
-      }
-    }
-
+  factory ScheduleModel.fromMap(Map<String, dynamic> map, MovieModel movie) {
     return ScheduleModel(
-      date: date,
-      movies: scheduleItems,
+      id: map['id'] ?? '',
+      movie: movie,
+      hall: map['hall'] ?? 0,
+      time: map['time'] ?? Timestamp.now(),
     );
   }
-}
 
-class ScheduleItem {
-  final DocumentReference? movie;
-  final DateTime time;
-  final int hall;
+  static Future<ScheduleModel> fromMapAsync(Map<String, dynamic> map) async {
+    final movieSnapshot = await map['movie'].get();
+    final movie = MovieModel.fromMap(movieSnapshot.data());
 
-  ScheduleItem({
-    this.movie,
-    required this.time,
-    required this.hall,
-  });
+    return ScheduleModel.fromMap(map, movie);
+  }
 
-  factory ScheduleItem.fromMap(Map<String, dynamic> map) {
-    final movieIdValue = map['movieId'];
-    DocumentReference? movieRef;
-
-    if (movieIdValue != null) {
-      if (movieIdValue is DocumentReference) {
-        movieRef = movieIdValue;
-      } else if (movieIdValue is String) {
-        movieRef =
-            FirebaseFirestore.instance.collection('movies').doc(movieIdValue);
-      }
-    }
-
-    if (map['time'] == null) {
-      throw FormatException('time is required in schedule item');
-    }
-    if (map['hall'] == null) {
-      throw FormatException('hall is required in schedule item');
-    }
-
-    return ScheduleItem(
-      movie: movieRef,
-      time: (map['time'] as Timestamp).toDate(),
-      hall: map['hall'] as int,
-    );
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'movie': movie,
+      'hall': hall,
+      'time': time,
+    };
   }
 }

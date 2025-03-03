@@ -1,6 +1,8 @@
+import 'package:filmu_nams/assets/widgets/stylized_tabs/stylized_tab.dart';
+import 'package:filmu_nams/assets/widgets/stylized_tabs/stylized_tabs.dart';
 import 'package:filmu_nams/controllers/movie_controller.dart';
-import 'package:filmu_nams/models/movie.dart';
 import 'package:filmu_nams/models/schedule.dart';
+import 'package:filmu_nams/views/client/main/schedule/movie_list.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
@@ -12,37 +14,17 @@ class ScheduleList extends StatefulWidget {
 }
 
 class _ScheduleListState extends State<ScheduleList> {
-  ScheduleModel? scheduleData;
-  List<MovieModel> movieData = [];
+  List<ScheduleModel>? scheduleData;
   bool isLoading = true;
 
   Future<void> fetchSchedule() async {
-    final currentDate = DateTime.now();
+    final currentDate = DateTime(2025, 3, 2);
 
     try {
       final response = await MovieController().getSchedule(currentDate);
       setState(() {
         scheduleData = response;
       });
-
-      for (var scheduleItem in response.movies) {
-        try {
-          if (scheduleItem.movie == null) {
-            debugPrint('Skipping schedule item with null movieId');
-            continue;
-          }
-
-          final movieDetails =
-              await MovieController().getMovieById(scheduleItem.movie!.id);
-
-          setState(() {
-            movieData.add(movieDetails);
-          });
-        } catch (e, stackTrace) {
-          debugPrint('Error fetching movie details: $e');
-          debugPrint('Stack trace: $stackTrace');
-        }
-      }
 
       setState(() {
         isLoading = false;
@@ -64,14 +46,50 @@ class _ScheduleListState extends State<ScheduleList> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Column(
+      children: [
+        StylizedTabs(
+          upsideDown: true,
+          fontSize: 20.5,
+          tabs: [
+            StylizedTabPage(
+              title: StylizedTabTitle.text("Šodien"),
+              child: scheduleList(context),
+            ),
+            StylizedTabPage(
+              title: StylizedTabTitle.text("Rīt"),
+              child: scheduleList(context),
+            ),
+            StylizedTabPage(
+              title: StylizedTabTitle.text("Pārīt"),
+              child: scheduleList(context),
+            ),
+            StylizedTabPage(
+              title: StylizedTabTitle.icon(Icons.calendar_month),
+              child: scheduleList(context),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  SizedBox scheduleList(BuildContext context) {
+    return SizedBox(
+      height: MediaQuery.of(context).size.height - 325,
       child: isLoading
           ? LoadingAnimationWidget.staggeredDotsWave(
               color: Colors.white, size: 100)
-          : Column(
+          : GridView.count(
+              padding: const EdgeInsets.only(top: 10, bottom: 70),
+              crossAxisCount: 1,
+              childAspectRatio: 1.5,
+              mainAxisSpacing: 10,
               children: List.generate(
-                movieData.length,
-                (index) => Text(movieData[index].title),
+                scheduleData!.length,
+                (index) => ScheduleMovieItem(
+                  data: scheduleData![index],
+                ),
               ),
             ),
     );
@@ -79,10 +97,17 @@ class _ScheduleListState extends State<ScheduleList> {
 }
 
 class ScheduleMovieItem extends StatelessWidget {
-  const ScheduleMovieItem({super.key});
+  const ScheduleMovieItem({
+    super.key,
+    required this.data,
+  });
+
+  final ScheduleModel data;
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return MovieCard(
+      data: data.movie,
+    );
   }
 }

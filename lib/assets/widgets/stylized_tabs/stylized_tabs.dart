@@ -8,7 +8,7 @@ class StylizedTabPage {
     required this.child,
   });
 
-  final String title;
+  final StylizedTabTitle title;
   final Widget child;
 }
 
@@ -16,9 +16,13 @@ class StylizedTabs extends StatefulWidget {
   const StylizedTabs({
     super.key,
     required this.tabs,
+    this.upsideDown = false,
+    this.fontSize = 24,
   });
 
   final List<StylizedTabPage> tabs;
+  final bool upsideDown;
+  final double fontSize;
 
   @override
   State<StylizedTabs> createState() => _StylizedTabsState();
@@ -46,9 +50,9 @@ class _StylizedTabsState extends State<StylizedTabs> {
           decoration: BoxDecoration(
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withAlpha(120),
-                blurRadius: 20,
-                offset: const Offset(0, 15),
+                color: Colors.black.withAlpha(100),
+                blurRadius: 10,
+                offset: const Offset(0, 10),
               ),
             ],
           ),
@@ -61,6 +65,8 @@ class _StylizedTabsState extends State<StylizedTabs> {
                 title: widget.tabs[index].title,
                 isActive: index == currentIndex,
                 index: index,
+                upsideDown: widget.upsideDown,
+                fontSize: widget.fontSize,
                 onTap: () {
                   setState(() {
                     previousIndex = currentIndex;

@@ -1,3 +1,4 @@
+import 'package:filmu_nams/assets/widgets/stylized_tabs/stylized_tab.dart';
 import 'package:filmu_nams/assets/widgets/stylized_tabs/stylized_tabs.dart';
 import 'package:filmu_nams/views/client/main/schedule/movie_list.dart';
 import 'package:filmu_nams/views/client/main/schedule/schedule_list.dart';
@@ -17,11 +18,11 @@ class Schedule extends StatelessWidget {
             StylizedTabs(
               tabs: [
                 StylizedTabPage(
-                  title: 'Saraksts',
+                  title: StylizedTabTitle.text('Saraksts'),
                   child: ScheduleList(),
                 ),
                 StylizedTabPage(
-                  title: 'Visas filmas',
+                  title: StylizedTabTitle.text('Visas filmas'),
                   child: MovieList(),
                 )
               ],

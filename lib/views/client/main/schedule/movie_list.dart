@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:filmu_nams/assets/theme.dart';
 import 'package:filmu_nams/controllers/movie_controller.dart';
 import 'package:filmu_nams/models/movie.dart';
-import 'package:filmu_nams/views/client/auth/login/login.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -46,20 +45,19 @@ class _MovieListState extends State<MovieList> {
   Widget build(BuildContext context) {
     return SizedBox(
       height: MediaQuery.of(context).size.height - 325,
-      child: GridView.count(
-        padding: const EdgeInsets.only(top: 10, bottom: 70),
-        crossAxisCount: 1,
-        childAspectRatio: 1.5,
-        mainAxisSpacing: 10,
-        children: movieData != null
-            ? List.generate(
+      child: isLoading
+          ? LoadingAnimationWidget.staggeredDotsWave(
+              color: Colors.white, size: 100)
+          : GridView.count(
+              padding: const EdgeInsets.only(top: 10, bottom: 70),
+              crossAxisCount: 1,
+              childAspectRatio: 1.5,
+              mainAxisSpacing: 10,
+              children: List.generate(
                 movieData!.length,
                 (index) => MovieCard(data: movieData![index]),
-              )
-            : [
-                Loading(),
-              ],
-      ),
+              ),
+            ),
     );
   }
 }

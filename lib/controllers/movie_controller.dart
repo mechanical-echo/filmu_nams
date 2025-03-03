@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:filmu_nams/models/carousel_item.dart';
 import 'package:filmu_nams/models/movie.dart';
 import 'package:filmu_nams/models/schedule.dart';
-import 'package:flutter/foundation.dart';
 
 class MovieController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -27,7 +26,7 @@ class MovieController {
     return MovieModel.fromMap(response.data()!);
   }
 
-  Future<ScheduleModel> getSchedule(DateTime date) async {
+  Future<List<ScheduleModel>> getSchedule(DateTime date) async {
     final startOfDay = DateTime(date.year, date.month, date.day, 0, 0, 0);
     final endOfDay = DateTime(date.year, date.month, date.day, 23, 59, 59);
 
@@ -40,10 +39,14 @@ class MovieController {
         .where('time', isLessThanOrEqualTo: endTimestamp)
         .get();
 
+    List<ScheduleModel> scheduleList = [];
+
     for (var doc in querySnapshot.docs) {
-      debugPrint('Schedule document data: ${doc.data()}');
+      final schedule =
+          await ScheduleModel.fromMapAsync(doc.data() as Map<String, dynamic>);
+      scheduleList.add(schedule);
     }
 
-    return ScheduleModel.fromFirestore(querySnapshot, date);
+    return scheduleList;
   }
 }
