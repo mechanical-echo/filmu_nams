@@ -1,12 +1,14 @@
 import 'package:filmu_nams/assets/theme.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
 
 class DatePicker extends StatefulWidget {
   const DatePicker({
     super.key,
+    required this.onDateSelected,
   });
+
+  final void Function(DateTime) onDateSelected;
 
   @override
   State<DatePicker> createState() => _DatePickerState();
@@ -266,24 +268,33 @@ class DatePickerDay extends StatelessWidget {
     bool isToday =
         date.day == DateTime.now().day && date.month == DateTime.now().month;
 
-    return Container(
-      decoration: BoxDecoration(
-        color: disabled
-            ? Colors.black.withAlpha(currentMonth ? 10 : 35)
-            : isToday
-                ? Colors.white.withAlpha(60)
-                : Colors.white12,
-        borderRadius: BorderRadius.circular(5),
-        border: Border(
-          bottom: BorderSide(
-            color: red003,
-            width: 3,
+    return GestureDetector(
+      onTap: disabled
+          ? null
+          : () {
+              final datePicker =
+                  context.findAncestorWidgetOfExactType<DatePicker>();
+              datePicker?.onDateSelected(date);
+            },
+      child: Container(
+        decoration: BoxDecoration(
+          color: disabled
+              ? Colors.black.withAlpha(currentMonth ? 10 : 35)
+              : isToday
+                  ? Colors.white.withAlpha(60)
+                  : Colors.white12,
+          borderRadius: BorderRadius.circular(5),
+          border: Border(
+            bottom: BorderSide(
+              color: red003,
+              width: 3,
+            ),
           ),
         ),
+        height: 20,
+        width: 15,
+        child: Center(child: Text("${date.day}", style: bodyMedium)),
       ),
-      height: 20,
-      width: 15,
-      child: Center(child: Text("${date.day}", style: bodyMedium)),
     );
   }
 }

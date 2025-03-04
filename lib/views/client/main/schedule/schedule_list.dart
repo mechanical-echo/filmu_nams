@@ -6,6 +6,7 @@ import 'package:filmu_nams/models/schedule.dart';
 import 'package:filmu_nams/views/client/main/schedule/date_picker.dart';
 import 'package:filmu_nams/views/client/main/schedule/movie_list.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class ScheduleWidget extends StatefulWidget {
@@ -21,6 +22,22 @@ class _ScheduleWidgetState extends State<ScheduleWidget> {
   DateTime dayAfterTomorrow() => today().add(const Duration(days: 2));
 
   bool isDatePickerOpen = false;
+  DateTime? datePickerSelectedDate;
+
+  void onDateSelected(DateTime date) {
+    setState(() {
+      datePickerSelectedDate = date;
+      isDatePickerOpen = false;
+    });
+  }
+
+  void closeDatePicker() {
+    setState(() {
+      isDatePickerOpen = false;
+      datePickerSelectedDate = null;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -32,34 +49,61 @@ class _ScheduleWidgetState extends State<ScheduleWidget> {
             StylizedTabPage(
               title: StylizedTabTitle.text("Šodien"),
               child: ScheduleDateView(date: today()),
+              onTap: closeDatePicker,
             ),
             StylizedTabPage(
               title: StylizedTabTitle.text("Rīt"),
               child: ScheduleDateView(date: tomorrow()),
+              onTap: closeDatePicker,
             ),
             StylizedTabPage(
               title: StylizedTabTitle.text("Pārīt"),
               child: ScheduleDateView(date: dayAfterTomorrow()),
+              onTap: closeDatePicker,
             ),
             StylizedTabPage(
               title: StylizedTabTitle.icon(Icons.calendar_month),
-              child: ScheduleDateView(
-                date: DateTime.now().add(const Duration(days: 3)),
+              child: Column(
+                children: [
+                  if (datePickerSelectedDate != null)
+                    Container(
+                      margin: const EdgeInsets.symmetric(vertical: 10),
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      decoration: BoxDecoration(
+                        color: red002,
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      child: Text(
+                        DateFormat(DateFormat.ABBR_MONTH_DAY, 'lv')
+                            .format(datePickerSelectedDate!),
+                        style: bodyLarge,
+                      ),
+                    ),
+                  ScheduleDateView(
+                    date: datePickerSelectedDate,
+                  ),
+                ],
               ),
               onTap: () {
                 setState(() {
-                  isDatePickerOpen = !isDatePickerOpen;
+                  isDatePickerOpen = true;
                 });
               },
             ),
           ],
         ),
-        if (isDatePickerOpen)
-          Positioned(
-            right: 50,
-            top: 50,
-            child: DatePicker(),
+        AnimatedPositioned(
+          duration: const Duration(milliseconds: 500),
+          curve: Cubic(1, 0, 0, 1),
+          right: 50,
+          top: isDatePickerOpen ? 50 : -400,
+          child: AnimatedOpacity(
+            duration: const Duration(milliseconds: 300),
+            curve: Cubic(1, 0, 0, 1),
+            opacity: isDatePickerOpen ? 1.0 : 0.0,
+            child: DatePicker(onDateSelected: onDateSelected),
           ),
+        ),
       ],
     );
   }
@@ -68,7 +112,7 @@ class _ScheduleWidgetState extends State<ScheduleWidget> {
 class ScheduleDateView extends StatefulWidget {
   const ScheduleDateView({super.key, required this.date});
 
-  final DateTime date;
+  final DateTime? date;
 
   @override
   State<ScheduleDateView> createState() => _ScheduleDateViewState();
@@ -80,6 +124,10 @@ class _ScheduleDateViewState extends State<ScheduleDateView> {
 
   Future<void> fetchSchedule() async {
     final currentDate = widget.date;
+
+    if (currentDate == null) {
+      return;
+    }
 
     try {
       final response = await MovieController().getSchedule(currentDate);
@@ -106,13 +154,25 @@ class _ScheduleDateViewState extends State<ScheduleDateView> {
   }
 
   @override
+  void didUpdateWidget(ScheduleDateView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.date != widget.date) {
+      setState(() {
+        isLoading = true;
+        scheduleData = null;
+      });
+      fetchSchedule();
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: MediaQuery.of(context).size.height - 425,
       child: isLoading
           ? LoadingAnimationWidget.staggeredDotsWave(
               color: Colors.white, size: 100)
-          : scheduleData!.length == 1
+          : scheduleData != null && scheduleData!.isNotEmpty
               ? GridView.count(
                   padding: const EdgeInsets.only(top: 10, bottom: 70),
                   crossAxisCount: 1,
