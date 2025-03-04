@@ -83,7 +83,7 @@ class _BodyState extends State<Body> {
   Widget build(BuildContext context) {
     List<Widget> pages = [
       Placeholder(),
-      Schedule(),
+      ScheduleAndMovies(),
       Home(),
       Placeholder(),
       Profile(),

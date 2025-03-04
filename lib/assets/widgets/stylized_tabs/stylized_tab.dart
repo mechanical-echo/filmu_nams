@@ -55,6 +55,10 @@ class _StylizedTabState extends State<StylizedTab>
       duration: const Duration(milliseconds: 300),
       vsync: this,
     );
+
+    if (widget.isActive) {
+      _controller.value = 1.0;
+    }
   }
 
   @override

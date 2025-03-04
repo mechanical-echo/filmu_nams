@@ -6,10 +6,12 @@ class StylizedTabPage {
   const StylizedTabPage({
     required this.title,
     required this.child,
+    this.onTap,
   });
 
   final StylizedTabTitle title;
   final Widget child;
+  final VoidCallback? onTap;
 }
 
 class StylizedTabs extends StatefulWidget {
@@ -31,6 +33,16 @@ class StylizedTabs extends StatefulWidget {
 class _StylizedTabsState extends State<StylizedTabs> {
   int currentIndex = 0;
   int previousIndex = 0;
+
+  void _handleTap(int index) {
+    if (widget.tabs[index].onTap != null) {
+      widget.tabs[index].onTap!();
+    }
+    setState(() {
+      previousIndex = currentIndex;
+      currentIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,12 +79,7 @@ class _StylizedTabsState extends State<StylizedTabs> {
                 index: index,
                 upsideDown: widget.upsideDown,
                 fontSize: widget.fontSize,
-                onTap: () {
-                  setState(() {
-                    previousIndex = currentIndex;
-                    currentIndex = index;
-                  });
-                },
+                onTap: () => _handleTap(index),
               ),
             ),
           ),

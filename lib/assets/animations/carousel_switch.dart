@@ -24,6 +24,15 @@ class CarouselSwitch extends StatelessWidget {
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 750),
       reverseDuration: const Duration(milliseconds: 500),
+      layoutBuilder: (Widget? currentChild, List<Widget> previousChildren) {
+        return Stack(
+          alignment: AlignmentDirectional.topStart,
+          children: <Widget>[
+            ...previousChildren,
+            if (currentChild != null) currentChild,
+          ],
+        );
+      },
       transitionBuilder: (Widget child, Animation<double> animation) {
         final isEntering = animation.isForwardOrCompleted;
         return SlideTransition(
