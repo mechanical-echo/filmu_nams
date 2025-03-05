@@ -4,7 +4,7 @@ import 'package:filmu_nams/assets/widgets/stylized_tabs/stylized_tabs.dart';
 import 'package:filmu_nams/controllers/movie_controller.dart';
 import 'package:filmu_nams/models/schedule.dart';
 import 'package:filmu_nams/views/client/main/schedule/date_picker.dart';
-import 'package:filmu_nams/views/client/main/schedule/movie_list.dart';
+import 'package:filmu_nams/views/client/main/schedule/movie_card.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -180,8 +180,10 @@ class _ScheduleDateViewState extends State<ScheduleDateView> {
                   mainAxisSpacing: 10,
                   children: List.generate(
                     scheduleData!.length,
-                    (index) => ScheduleMovieItem(
-                      data: scheduleData![index],
+                    (index) => MovieCard(
+                      data: scheduleData![index].movie,
+                      time: scheduleData![index].time.toDate(),
+                      hall: scheduleData![index].hall,
                     ),
                   ),
                 )
