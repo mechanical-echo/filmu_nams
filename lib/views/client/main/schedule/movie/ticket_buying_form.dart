@@ -46,6 +46,11 @@ class _TicketBuyingFormState extends State<TicketBuyingForm> {
           availableDates.add(date.time.toDate());
         }
       }
+
+      if (availableDates.isEmpty) {
+        return;
+      }
+
       selectedDate = availableDates[0];
       getDropdownList();
     });
@@ -107,7 +112,8 @@ class _TicketBuyingFormState extends State<TicketBuyingForm> {
         Padding(
           padding: const EdgeInsets.only(top: 10, bottom: 20),
           child: Text(
-              scheduleData == null || scheduleData!.isNotEmpty
+              scheduleData == null ||
+                      (scheduleData!.isNotEmpty && availableDates.isNotEmpty)
                   ? "Nopirkt biļeti"
                   : "Nav pieejama saraksta",
               style: header2),
@@ -119,7 +125,7 @@ class _TicketBuyingFormState extends State<TicketBuyingForm> {
                   size: 100,
                 ),
               )
-            : scheduleData!.isNotEmpty
+            : scheduleData!.isNotEmpty && availableDates.isNotEmpty
                 ? Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
                     child: Column(
