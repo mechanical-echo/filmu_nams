@@ -3,6 +3,7 @@ import 'package:filmu_nams/assets/widgets/date_picker/date_picker_input.dart';
 import 'package:filmu_nams/controllers/movie_controller.dart';
 import 'package:filmu_nams/models/movie.dart';
 import 'package:filmu_nams/models/schedule.dart';
+import 'package:filmu_nams/views/client/main/schedule/movie/hall_seats.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -84,6 +85,13 @@ class _TicketBuyingFormState extends State<TicketBuyingForm> {
         .toDate();
   }
 
+  int getHall() {
+    return scheduleData!
+        .firstWhere((sch) => sch.id == selectedId,
+            orElse: () => scheduleData![0])
+        .hall;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -112,45 +120,56 @@ class _TicketBuyingFormState extends State<TicketBuyingForm> {
             : scheduleData!.isNotEmpty
                 ? Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    child: Column(
+                      spacing: 10,
                       children: [
-                        Expanded(
-                          flex: 2,
-                          child: DatePickerInput(
-                            availableDates: availableDates,
-                            height: 50,
-                            onDateChanged: (date) {
-                              setState(() {
-                                selectedDate = date;
-                                getDropdownList();
-                              });
-                            },
-                            initialValue: selectedDate,
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          flex: 1,
-                          child: Container(
-                            height: 50,
-                            decoration: classicDecoration,
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                            child: DropdownButton(
-                              iconEnabledColor: Colors.white,
-                              underline: Container(),
-                              style: bodyMedium,
-                              items: timeList,
-                              onChanged: (value) {
-                                setState(() {
-                                  selectedId = value;
-                                });
-                              },
-                              value: selectedId,
-                              isExpanded: true,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          spacing: 10,
+                          children: [
+                            Expanded(
+                              flex: 2,
+                              child: DatePickerInput(
+                                availableDates: availableDates,
+                                sharp: true,
+                                height: 50,
+                                onDateChanged: (date) {
+                                  setState(() {
+                                    selectedDate = date;
+                                    getDropdownList();
+                                  });
+                                },
+                                initialValue: selectedDate,
+                              ),
                             ),
-                          ),
+                            Expanded(
+                              flex: 1,
+                              child: Container(
+                                height: 50,
+                                decoration: classicDecorationSharper,
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 20),
+                                child: DropdownButton(
+                                  iconEnabledColor: Colors.white,
+                                  underline: Container(),
+                                  style: bodyMedium,
+                                  items: timeList,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      selectedId = value;
+                                    });
+                                  },
+                                  value: selectedId,
+                                  isExpanded: true,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
+                        HallSeats(
+                          scheduleId: selectedId ?? "",
+                          hallId: getHall(),
+                        )
                       ],
                     ),
                   )

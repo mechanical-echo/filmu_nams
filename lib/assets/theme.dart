@@ -71,23 +71,23 @@ ThemeData theme = ThemeData(
   ),
   inputDecorationTheme: InputDecorationTheme(
     floatingLabelBehavior: FloatingLabelBehavior.always,
-    fillColor: Color.fromARGB(255, 64, 62, 62),
+    fillColor: Colors.black26,
     filled: true,
     floatingLabelStyle: GoogleFonts.poppins(color: Colors.white, fontSize: 20),
     border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(5),
       borderSide: BorderSide(color: Colors.red, width: 4),
     ),
     hintStyle: GoogleFonts.poppins(
         fontWeight: FontWeight.w200, color: Color.fromARGB(255, 123, 123, 123)),
     suffixIconColor: Color.fromARGB(255, 123, 123, 123),
     enabledBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(5),
       borderSide:
           BorderSide(color: Color.fromARGB(255, 123, 123, 123), width: 0),
     ),
     focusedBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(5),
       borderSide:
           BorderSide(color: Color.fromARGB(255, 123, 123, 123), width: 1),
     ),
@@ -116,6 +116,13 @@ ThemeData theme = ThemeData(
         ),
       ),
       iconColor: WidgetStatePropertyAll(Colors.white),
+    ),
+  ),
+  iconButtonTheme: IconButtonThemeData(
+    style: IconButton.styleFrom(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(5),
+      ),
     ),
   ),
 );
@@ -176,4 +183,19 @@ BoxDecoration classicDecorationSharper = BoxDecoration(
   boxShadow: cardShadow,
   border: bottomBorder,
   borderRadius: BorderRadius.circular(5),
+);
+
+BoxDecoration darkDecorationSharper = BoxDecoration(
+  color: Colors.black26,
+  borderRadius: BorderRadius.circular(5),
+);
+
+BoxDecoration mediumDarkDecorationSharper = BoxDecoration(
+  color: Colors.black12,
+  borderRadius: BorderRadius.circular(5),
+);
+
+BoxDecoration darkDecoration = BoxDecoration(
+  color: Colors.black26,
+  borderRadius: BorderRadius.circular(15),
 );

@@ -12,6 +12,7 @@ class DatePickerInput extends StatefulWidget {
     this.availableDates,
     this.onDateChanged,
     this.padding = const EdgeInsets.all(0),
+    this.sharp = false,
   });
 
   final double width;
@@ -20,6 +21,7 @@ class DatePickerInput extends StatefulWidget {
   final List<DateTime>? availableDates;
   final Function(DateTime)? onDateChanged;
   final EdgeInsets padding;
+  final bool sharp;
 
   @override
   State<DatePickerInput> createState() => _DatePickerInputState();
@@ -138,7 +140,8 @@ class _DatePickerInputState extends State<DatePickerInput>
           padding: widget.padding,
           width: widget.width,
           height: widget.height,
-          decoration: classicDecoration,
+          decoration:
+              widget.sharp ? classicDecorationSharper : classicDecoration,
           child: Center(
             child: Text(
               formatDate(selectedDate),

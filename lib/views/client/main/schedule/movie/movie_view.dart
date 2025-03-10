@@ -6,7 +6,7 @@ import 'package:filmu_nams/views/client/main/schedule/movie/ticket_buying_form.d
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
-class MovieView extends StatelessWidget {
+class MovieView extends StatefulWidget {
   const MovieView({
     super.key,
     required this.data,
@@ -33,8 +33,41 @@ class MovieView extends StatelessWidget {
     );
   }
 
+  @override
+  State<MovieView> createState() => _MovieViewState();
+}
+
+class _MovieViewState extends State<MovieView> {
   String getDuration(int dur) => '${dur ~/ 60}h ${dur % 60}m';
+
   String formatTitle(String s) => s.replaceFirst(':', ':\n');
+
+  double headerHeight = 250;
+
+  final double minHeaderHeight = 100;
+
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    double offset = _scrollController.offset;
+
+    setState(() {
+      headerHeight = (250 - (offset * 0.5)).clamp(minHeaderHeight, 250);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,41 +78,49 @@ class MovieView extends StatelessWidget {
       clipBehavior: Clip.hardEdge,
       decoration: BoxDecoration(
         color: red001,
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(25),
-        ),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(25)),
       ),
       width: width,
       height: height * 0.82,
       child: Column(
         children: [
-          header(width, context),
           SizedBox(
-            height: height * 0.5,
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.only(bottom: 35, top: 10),
-              child: Column(
-                children: [
-                  title(),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 25,
-                      vertical: 4,
-                    ),
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        spacing: 5.0,
-                        children: List.generate(
-                          data.actors.length,
-                          (index) => badge(data.actors[index]),
+            width: width,
+            height: headerHeight,
+            child: header(context),
+          ),
+          Expanded(
+            child: NotificationListener<ScrollNotification>(
+              onNotification: (scrollNotification) {
+                _onScroll();
+                return true;
+              },
+              child: SingleChildScrollView(
+                controller: _scrollController,
+                padding: const EdgeInsets.only(bottom: 35, top: 10),
+                child: Column(
+                  children: [
+                    title(),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 25,
+                        vertical: 4,
+                      ),
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          spacing: 15,
+                          children: List.generate(
+                            widget.data.actors.length,
+                            (index) => badge(widget.data.actors[index]),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  FoldableDescription(data: data),
-                  TicketBuyingForm(movieData: data)
-                ],
+                    FoldableDescription(data: widget.data),
+                    TicketBuyingForm(movieData: widget.data),
+                  ],
+                ),
               ),
             ),
           ),
@@ -102,59 +143,61 @@ class MovieView extends StatelessWidget {
     );
   }
 
-  SizedBox header(double width, BuildContext context) {
-    return SizedBox(
-      width: width,
-      height: 250,
-      child: Stack(
-        alignment: Alignment.topCenter,
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withAlpha(190),
-                  blurRadius: 25,
-                  offset: Offset(0, 8),
-                )
-              ],
-            ),
-            child: CachedNetworkImage(
-              imageUrl: data.heroUrl,
-              placeholder: (context, url) =>
-                  LoadingAnimationWidget.staggeredDotsWave(
+  Widget header(BuildContext context) {
+    return Stack(
+      alignment: Alignment.topCenter,
+      children: [
+        SizedBox(
+          width: double.infinity,
+          height: headerHeight,
+          child: CachedNetworkImage(
+            imageUrl: widget.data.heroUrl,
+            fit: BoxFit.cover,
+            placeholder: (context, url) => Center(
+              child: LoadingAnimationWidget.staggeredDotsWave(
                 color: Colors.white,
                 size: 100,
               ),
             ),
           ),
-          Positioned(
-            top: 10,
-            right: 10,
-            child: IconButton(
-              icon: const Icon(Icons.close, color: Colors.white),
-              onPressed: () => Navigator.of(context).pop(),
+        ),
+        Positioned(
+          top: 10,
+          right: 10,
+          child: IconButton(
+            icon: const Icon(Icons.close, color: Colors.white),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+        ),
+        Positioned(
+          bottom: calculatePadding(headerHeight),
+          child: Container(
+            clipBehavior: Clip.none,
+            margin: const EdgeInsets.symmetric(horizontal: 25),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 5,
+              children: [
+                badge(GenreName[widget.data.genre]!),
+                badge(widget.data.director),
+                badge(getDuration(widget.data.duration)),
+              ],
             ),
           ),
-          Positioned(
-            bottom: 15,
-            child: Container(
-              clipBehavior: Clip.none,
-              margin: const EdgeInsets.symmetric(horizontal: 25),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                spacing: 5,
-                children: [
-                  badge(GenreName[data.genre]!),
-                  badge(data.director),
-                  badge(getDuration(data.duration)),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
+  }
+
+  double calculatePadding(double headerHeight) {
+    double minHeight = 50;
+    double maxHeight = 250;
+    double startPadding = -105;
+    double endPadding = 15;
+
+    return startPadding +
+        ((headerHeight - minHeight) / (maxHeight - minHeight)) *
+            (endPadding - startPadding);
   }
 
   Container title() {
@@ -168,7 +211,7 @@ class MovieView extends StatelessWidget {
         color: red002,
       ),
       child: Text(
-        formatTitle(data.title),
+        formatTitle(widget.data.title),
         style: bodyLarge,
         textAlign: TextAlign.center,
       ),

@@ -73,7 +73,7 @@ class _FoldableDescriptionState extends State<FoldableDescription>
                   top: 15,
                   bottom: 35,
                 ),
-                decoration: classicDecoration,
+                decoration: mediumDarkDecorationSharper,
                 child: Stack(
                   alignment: Alignment.bottomCenter,
                   clipBehavior: Clip.none,
