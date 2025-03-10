@@ -7,6 +7,7 @@ class MovieModel {
   final String rating;
   final String genre;
   final String director;
+  final String heroUrl;
 
   MovieModel({
     required this.id,
@@ -17,18 +18,21 @@ class MovieModel {
     required this.rating,
     required this.genre,
     required this.director,
+    required this.heroUrl,
   });
 
-  factory MovieModel.fromMap(Map<String, dynamic> map) {
+  factory MovieModel.fromMap(Map<String, dynamic> map, String id) {
     return MovieModel(
-        id: map['id'] ?? '',
-        title: map['title'] ?? '',
-        description: map['description'] ?? '',
-        posterUrl: map['poster-url'] ?? '',
-        duration: map['duration'] ?? 0,
-        rating: map['rating'] ?? '',
-        genre: map['genre'] ?? '',
-        director: map['director'] ?? '');
+      id: id,
+      title: map['title'] ?? '',
+      description: map['description'] ?? '',
+      posterUrl: map['poster-url'] ?? '',
+      duration: map['duration'] ?? 0,
+      rating: map['rating'] ?? '',
+      genre: map['genre'] ?? '',
+      director: map['director'] ?? '',
+      heroUrl: map['hero-url'] ?? '',
+    );
   }
 
   Map<String, dynamic> toMap() {
@@ -40,7 +44,8 @@ class MovieModel {
       'duration': duration,
       'rating': rating,
       'genre': genre,
-      'director': director
+      'director': director,
+      'hero-url': heroUrl,
     };
   }
 }

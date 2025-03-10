@@ -1,6 +1,6 @@
 import 'package:filmu_nams/controllers/movie_controller.dart';
 import 'package:filmu_nams/models/movie.dart';
-import 'package:filmu_nams/views/client/main/schedule/movie_card.dart';
+import 'package:filmu_nams/views/client/main/schedule/movie_list/movie_card.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 

@@ -7,26 +7,27 @@ class ScheduleModel {
   final int hall;
   final Timestamp time;
 
-  ScheduleModel(
-      {required this.id,
-      required this.movie,
-      required this.hall,
-      required this.time});
+  ScheduleModel({
+    required this.id,
+    required this.movie,
+    required this.hall,
+    required this.time,
+  });
 
-  factory ScheduleModel.fromMap(Map<String, dynamic> map, MovieModel movie) {
+  factory ScheduleModel.fromMap(Map<String, dynamic> map, MovieModel movie, String id) {
     return ScheduleModel(
-      id: map['id'] ?? '',
+      id: id ?? '',
       movie: movie,
       hall: map['hall'] ?? 0,
       time: map['time'] ?? Timestamp.now(),
     );
   }
 
-  static Future<ScheduleModel> fromMapAsync(Map<String, dynamic> map) async {
+  static Future<ScheduleModel> fromMapAsync(Map<String, dynamic> map, String id) async {
     final movieSnapshot = await map['movie'].get();
-    final movie = MovieModel.fromMap(movieSnapshot.data());
+    final movie = MovieModel.fromMap(movieSnapshot.data(), movieSnapshot.id);
 
-    return ScheduleModel.fromMap(map, movie);
+    return ScheduleModel.fromMap(map, movie, id);
   }
 
   Map<String, dynamic> toMap() {

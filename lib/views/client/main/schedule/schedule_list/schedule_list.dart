@@ -3,8 +3,8 @@ import 'package:filmu_nams/assets/widgets/stylized_tabs/stylized_tab.dart';
 import 'package:filmu_nams/assets/widgets/stylized_tabs/stylized_tabs.dart';
 import 'package:filmu_nams/controllers/movie_controller.dart';
 import 'package:filmu_nams/models/schedule.dart';
-import 'package:filmu_nams/views/client/main/schedule/date_picker.dart';
-import 'package:filmu_nams/views/client/main/schedule/movie_card.dart';
+import 'package:filmu_nams/assets/widgets/date_picker/date_picker.dart';
+import 'package:filmu_nams/views/client/main/schedule/movie_list/movie_card.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -23,6 +23,7 @@ class _ScheduleWidgetState extends State<ScheduleWidget> {
 
   bool isDatePickerOpen = false;
   DateTime? datePickerSelectedDate;
+  List<DateTime> availableDates = [];
 
   void onDateSelected(DateTime date) {
     setState(() {
@@ -36,6 +37,24 @@ class _ScheduleWidgetState extends State<ScheduleWidget> {
       isDatePickerOpen = false;
       datePickerSelectedDate = null;
     });
+  }
+
+  Future<void> fetchAllSchedule() async {
+    final response = await MovieController().getAllSchedule();
+    setAvailableDates(response);
+  }
+
+  void setAvailableDates(List<ScheduleModel> scheduleData) {
+    setState(() {
+      for (ScheduleModel schedule in scheduleData) {
+        availableDates.add(schedule.time.toDate());
+      }
+    });
+  }
+
+  @override void initState() {
+    super.initState();
+    fetchAllSchedule();
   }
 
   @override
@@ -101,7 +120,10 @@ class _ScheduleWidgetState extends State<ScheduleWidget> {
             duration: const Duration(milliseconds: 300),
             curve: Cubic(1, 0, 0, 1),
             opacity: isDatePickerOpen ? 1.0 : 0.0,
-            child: DatePicker(onDateSelected: onDateSelected),
+            child: DatePicker(
+              onDateSelected: onDateSelected,
+              availableDates: availableDates,
+            ),
           ),
         ),
       ],
@@ -130,7 +152,7 @@ class _ScheduleDateViewState extends State<ScheduleDateView> {
     }
 
     try {
-      final response = await MovieController().getSchedule(currentDate);
+      final response = await MovieController().getScheduleByDate(currentDate);
       setState(() {
         scheduleData = response;
       });
@@ -193,22 +215,6 @@ class _ScheduleDateViewState extends State<ScheduleDateView> {
                     style: bodyMedium,
                   ),
                 ),
-    );
-  }
-}
-
-class ScheduleMovieItem extends StatelessWidget {
-  const ScheduleMovieItem({
-    super.key,
-    required this.data,
-  });
-
-  final ScheduleModel data;
-
-  @override
-  Widget build(BuildContext context) {
-    return MovieCard(
-      data: data.movie,
     );
   }
 }

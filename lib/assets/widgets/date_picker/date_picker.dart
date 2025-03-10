@@ -6,9 +6,11 @@ class DatePicker extends StatefulWidget {
   const DatePicker({
     super.key,
     required this.onDateSelected,
+    this.availableDates,
   });
 
   final void Function(DateTime) onDateSelected;
+  final List<DateTime>? availableDates;
 
   @override
   State<DatePicker> createState() => _DatePickerState();
@@ -88,6 +90,7 @@ class _DatePickerState extends State<DatePicker> {
             lastDayPrevMonth,
             currentMonthDays,
             daysFromNextMonth,
+            widget.availableDates,
           ),
         ],
       ),
@@ -136,6 +139,7 @@ class _DatePickerState extends State<DatePicker> {
     DateTime lastDayPrevMonth,
     int currentMonthDays,
     int daysFromNextMonth,
+    List<DateTime>? availableDates,
   ) {
     return Container(
       margin: const EdgeInsets.only(left: 13, right: 10),
@@ -172,6 +176,12 @@ class _DatePickerState extends State<DatePicker> {
                 selectedDate.month,
                 index + 1,
               ),
+              disabled: availableDates != null
+                  ? !availableDates.any((available) =>
+                      available.year == selectedDate.year &&
+                      available.month == selectedDate.month &&
+                      available.day == (index + 1))
+                  : false,
             ),
           ),
           ...List.generate(
@@ -279,17 +289,14 @@ class DatePickerDay extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           color: disabled
-              ? Colors.black.withAlpha(currentMonth ? 10 : 35)
+              ? currentMonth
+                  ? Colors.white.withAlpha(15)
+                  : Colors.black12
               : isToday
-                  ? Colors.white.withAlpha(60)
-                  : Colors.white12,
+                  ? red003.withAlpha(240)
+                  : Colors.white.withAlpha(80),
           borderRadius: BorderRadius.circular(5),
-          border: Border(
-            bottom: BorderSide(
-              color: red003,
-              width: 3,
-            ),
-          ),
+          border: bottomBorder,
         ),
         height: 20,
         width: 15,

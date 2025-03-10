@@ -1,12 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:filmu_nams/assets/theme.dart';
 import 'package:filmu_nams/models/movie.dart';
+import 'package:filmu_nams/views/client/main/schedule/movie/movie_view.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
-class MovieCard extends StatelessWidget {
+class MovieCard extends StatefulWidget {
   const MovieCard({
     super.key,
     required this.data,
@@ -19,9 +20,20 @@ class MovieCard extends StatelessWidget {
   final int? hall;
 
   @override
+  State<MovieCard> createState() => _MovieCardState();
+}
+
+class _MovieCardState extends State<MovieCard> {
+  void openMovieView() {
+    setState(() {
+      MovieView.show(context, widget.data);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final double topMargin = data.title.length > 12 ? 88 : 75;
-    final double bottomMargin = data.title.length > 12 ? 63 : 70;
+    final double topMargin = widget.data.title.length > 12 ? 88 : 75;
+    final double bottomMargin = widget.data.title.length > 12 ? 63 : 70;
 
     return Container(
       clipBehavior: Clip.antiAlias,
@@ -90,7 +102,7 @@ class MovieCard extends StatelessWidget {
               children: [
                 poster(),
                 rating(context),
-                if (time != null) scheduledTime(context)
+                if (widget.time != null) scheduledTime(context)
               ],
             ),
           )
@@ -100,9 +112,12 @@ class MovieCard extends StatelessWidget {
   }
 
   String capitalize(String s) => s[0].toUpperCase() + s.substring(1);
-  String getDuration() => '${data.duration ~/ 60}h ${data.duration % 60}min';
+
+  String getDuration() =>
+      '${widget.data.duration ~/ 60}h ${widget.data.duration % 60}min';
+
   String getTime() =>
-      intl.DateFormat(intl.DateFormat.HOUR24_MINUTE).format(time!);
+      intl.DateFormat(intl.DateFormat.HOUR24_MINUTE).format(widget.time!);
 
   Container poster() {
     return Container(
@@ -115,7 +130,7 @@ class MovieCard extends StatelessWidget {
         ),
       ),
       child: CachedNetworkImage(
-        imageUrl: data.posterUrl,
+        imageUrl: widget.data.posterUrl,
         fit: BoxFit.cover,
         placeholder: (context, url) => Center(
           child: LoadingAnimationWidget.staggeredDotsWave(
@@ -148,7 +163,7 @@ class MovieCard extends StatelessWidget {
         color: red002,
       ),
       child: Text(
-        data.rating,
+        widget.data.rating,
       ),
     );
   }
@@ -177,7 +192,7 @@ class MovieCard extends StatelessWidget {
           color: red002,
         ),
         child: Text(
-          '${getTime()}  -  $hall. Zāle',
+          '${getTime()}  -  ${widget.hall}. Zāle',
         ),
       ),
     );
@@ -186,13 +201,13 @@ class MovieCard extends StatelessWidget {
   title() {
     return TextContainer(
       Text(
-        data.title,
+        widget.data.title,
         maxLines: 2,
         textAlign: TextAlign.center,
         overflow: TextOverflow.ellipsis,
         style: GoogleFonts.poppins(
           color: red002,
-          fontSize: data.title.length > 12 ? 17 : 25,
+          fontSize: widget.data.title.length > 12 ? 17 : 25,
           fontWeight: FontWeight.w700,
         ),
       ),
@@ -220,7 +235,7 @@ class MovieCard extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           SizedBox(width: 10),
-          Text(capitalize(data.genre), style: bodyMedium),
+          Text(capitalize(widget.data.genre), style: bodyMedium),
           Icon(Icons.movie, size: 15, color: Colors.white),
         ],
       ),
@@ -234,7 +249,7 @@ class MovieCard extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           SizedBox(width: 10),
-          Text(data.director, style: bodyMedium),
+          Text(widget.data.director, style: bodyMedium),
           Icon(Icons.person, size: 15, color: Colors.white),
         ],
       ),
@@ -254,14 +269,14 @@ class MovieCard extends StatelessWidget {
         ],
       ),
       child: FilledButton(
-        onPressed: () {},
+        onPressed: openMovieView,
         style: FilledButton.styleFrom(
           padding: const EdgeInsets.all(0),
           backgroundColor: red002,
           fixedSize: Size(108, 10),
         ),
-        child:
-            Text(time != null ? "Nopirkt biļeti" : "Vairāk", style: bodyLarge),
+        child: Text(widget.time != null ? "Nopirkt biļeti" : "Vairāk",
+            style: bodyLarge),
       ),
     );
   }

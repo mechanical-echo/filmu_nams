@@ -17,16 +17,18 @@ class MovieController {
   Future<List<MovieModel>> getAllMovies() async {
     final response = await _firestore.collection('movies').get();
 
-    return response.docs.map((doc) => MovieModel.fromMap(doc.data())).toList();
+    return response.docs
+        .map((doc) => MovieModel.fromMap(doc.data(), doc.id))
+        .toList();
   }
 
   Future<MovieModel> getMovieById(String id) async {
     final response = await _firestore.collection('movies').doc(id).get();
 
-    return MovieModel.fromMap(response.data()!);
+    return MovieModel.fromMap(response.data()!, response.id);
   }
 
-  Future<List<ScheduleModel>> getSchedule(DateTime date) async {
+  Future<List<ScheduleModel>> getScheduleByDate(DateTime date) async {
     final startOfDay = DateTime(date.year, date.month, date.day, 0, 0, 0);
     final endOfDay = DateTime(date.year, date.month, date.day, 23, 59, 59);
 
@@ -39,11 +41,33 @@ class MovieController {
         .where('time', isLessThanOrEqualTo: endTimestamp)
         .get();
 
+    return await convertQuerySnapshotToSchedule(querySnapshot);
+  }
+
+  Future<List<ScheduleModel>> getScheduleByMovie(MovieModel movie) async {
+    DocumentReference movieRef = _firestore.collection('movies').doc(movie.id);
+
+    final QuerySnapshot querySnapshot = await _firestore
+        .collection('schedule')
+        .where('movie', isEqualTo: movieRef)
+        .get();
+
+    return await convertQuerySnapshotToSchedule(querySnapshot);
+  }
+
+  Future<List<ScheduleModel>> getAllSchedule() async {
+    final response = await _firestore.collection('schedule').get();
+    final futures = response.docs.map((doc) => ScheduleModel.fromMapAsync(doc.data(), doc.id)).toList();
+    return await Future.wait(futures);
+  }
+
+  Future<List<ScheduleModel>> convertQuerySnapshotToSchedule(
+      QuerySnapshot qs) async {
     List<ScheduleModel> scheduleList = [];
 
-    for (var doc in querySnapshot.docs) {
+    for (var doc in qs.docs) {
       final schedule =
-          await ScheduleModel.fromMapAsync(doc.data() as Map<String, dynamic>);
+          await ScheduleModel.fromMapAsync(doc.data() as Map<String, dynamic>, doc.id);
       scheduleList.add(schedule);
     }
 

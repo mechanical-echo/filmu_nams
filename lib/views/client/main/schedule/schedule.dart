@@ -1,7 +1,7 @@
 import 'package:filmu_nams/assets/widgets/stylized_tabs/stylized_tab.dart';
 import 'package:filmu_nams/assets/widgets/stylized_tabs/stylized_tabs.dart';
-import 'package:filmu_nams/views/client/main/schedule/movie_list.dart';
-import 'package:filmu_nams/views/client/main/schedule/schedule_list.dart';
+import 'package:filmu_nams/views/client/main/schedule/movie_list/movie_list.dart';
+import 'package:filmu_nams/views/client/main/schedule/schedule_list/schedule_list.dart';
 import 'package:flutter/material.dart';
 
 class ScheduleAndMovies extends StatelessWidget {
