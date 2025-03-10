@@ -47,12 +47,15 @@ class _ScheduleWidgetState extends State<ScheduleWidget> {
   void setAvailableDates(List<ScheduleModel> scheduleData) {
     setState(() {
       for (ScheduleModel schedule in scheduleData) {
-        availableDates.add(schedule.time.toDate());
+        if (schedule.time.toDate().isAfter(DateTime.now())) {
+          availableDates.add(schedule.time.toDate());
+        }
       }
     });
   }
 
-  @override void initState() {
+  @override
+  void initState() {
     super.initState();
     fetchAllSchedule();
   }

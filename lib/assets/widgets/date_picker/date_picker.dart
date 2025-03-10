@@ -292,11 +292,12 @@ class DatePickerDay extends StatelessWidget {
               ? currentMonth
                   ? Colors.white.withAlpha(15)
                   : Colors.black12
-              : isToday
-                  ? red003.withAlpha(240)
-                  : Colors.white.withAlpha(80),
+              : Colors.white.withAlpha(80),
           borderRadius: BorderRadius.circular(5),
-          border: bottomBorder,
+          border: Border.all(
+            width: .45,
+            color: smokeyWhite.withAlpha(isToday ? 135 : 0),
+          ),
         ),
         height: 20,
         width: 15,

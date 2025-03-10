@@ -42,7 +42,9 @@ class _TicketBuyingFormState extends State<TicketBuyingForm> {
       }
 
       for (var date in scheduleData!) {
-        availableDates.add(date.time.toDate());
+        if (date.time.toDate().isAfter(DateTime.now())) {
+          availableDates.add(date.time.toDate());
+        }
       }
       selectedDate = availableDates[0];
       getDropdownList();
