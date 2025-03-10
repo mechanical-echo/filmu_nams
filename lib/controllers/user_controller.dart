@@ -1,8 +1,9 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class UserController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -17,7 +18,7 @@ class UserController {
       var userDocument = await _firestore.collection('users').doc(uid).get();
       return userDocument;
     } catch (e) {
-      print('Error getting user document: $e');
+      debugPrint('Error getting user document: $e');
       return null;
     }
   }
@@ -32,7 +33,7 @@ class UserController {
       if (userDocument == null) return false;
       return userDocument.data()?['role'] == role;
     } catch (e) {
-      print('Error checking user role: $e');
+      debugPrint('Error checking user role: $e');
       return false;
     }
   }
@@ -88,9 +89,21 @@ class UserController {
       TaskSnapshot taskSnapshot = await uploadTask;
       return await taskSnapshot.ref.getDownloadURL();
     } catch (e) {
-      print('Image upload error: $e');
+      debugPrint('Image upload error: $e');
       return null;
     }
+  }
+
+  Future<UserCredential> signInWithGoogle() async {
+    final GoogleSignInAccount? user = await GoogleSignIn().signIn();
+    final GoogleSignInAuthentication auth = await user!.authentication;
+
+    final credential = GoogleAuthProvider.credential(
+      accessToken: auth.accessToken,
+      idToken: auth.idToken,
+    );
+
+    return await _auth.signInWithCredential(credential);
   }
 }
 

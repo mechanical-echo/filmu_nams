@@ -1,4 +1,5 @@
 import 'package:filmu_nams/assets/dialog/dialog.dart';
+import 'package:filmu_nams/controllers/user_controller.dart';
 import 'package:filmu_nams/enums/auth_error_codes.dart';
 import 'package:filmu_nams/assets/input/text_input.dart';
 import 'package:filmu_nams/validators/validator.dart';
@@ -211,7 +212,7 @@ class SocialLoginButtons extends StatelessWidget {
       children: [
         _SocialButton(
           icon: 'assets/google.png',
-          onPressed: () {},
+          onPressed: () => UserController().signInWithGoogle(),
         ),
         _SocialButton(
           icon: 'assets/facebook.png',
