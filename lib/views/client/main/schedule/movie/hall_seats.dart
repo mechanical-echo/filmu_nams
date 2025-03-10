@@ -87,7 +87,7 @@ class _HallSeatsState extends State<HallSeats> {
         selectSeatDropdowns(),
         seatGrid(),
         ticketTable(),
-        promocodeInput(),
+        if (chosenSeats.isNotEmpty) promocodeInput(),
         submitButton(),
       ],
     );
