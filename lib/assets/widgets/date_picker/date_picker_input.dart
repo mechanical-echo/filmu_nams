@@ -11,6 +11,7 @@ class DatePickerInput extends StatefulWidget {
     this.initialValue,
     this.availableDates,
     this.onDateChanged,
+    this.padding = const EdgeInsets.all(0),
   });
 
   final double width;
@@ -18,6 +19,7 @@ class DatePickerInput extends StatefulWidget {
   final DateTime? initialValue;
   final List<DateTime>? availableDates;
   final Function(DateTime)? onDateChanged;
+  final EdgeInsets padding;
 
   @override
   State<DatePickerInput> createState() => _DatePickerInputState();
@@ -133,6 +135,7 @@ class _DatePickerInputState extends State<DatePickerInput>
       child: GestureDetector(
         onTap: _showOverlay,
         child: Container(
+          padding: widget.padding,
           width: widget.width,
           height: widget.height,
           decoration: classicDecoration,

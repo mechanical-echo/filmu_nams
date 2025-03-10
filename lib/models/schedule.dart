@@ -14,16 +14,18 @@ class ScheduleModel {
     required this.time,
   });
 
-  factory ScheduleModel.fromMap(Map<String, dynamic> map, MovieModel movie, String id) {
+  factory ScheduleModel.fromMap(
+      Map<String, dynamic> map, MovieModel movie, String id) {
     return ScheduleModel(
-      id: id ?? '',
+      id: id,
       movie: movie,
       hall: map['hall'] ?? 0,
       time: map['time'] ?? Timestamp.now(),
     );
   }
 
-  static Future<ScheduleModel> fromMapAsync(Map<String, dynamic> map, String id) async {
+  static Future<ScheduleModel> fromMapAsync(
+      Map<String, dynamic> map, String id) async {
     final movieSnapshot = await map['movie'].get();
     final movie = MovieModel.fromMap(movieSnapshot.data(), movieSnapshot.id);
 

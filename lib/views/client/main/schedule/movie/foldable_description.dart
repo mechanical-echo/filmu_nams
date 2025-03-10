@@ -62,72 +62,57 @@ class _FoldableDescriptionState extends State<FoldableDescription>
             builder: (context, child) {
               return Container(
                 margin: const EdgeInsets.only(
+                  left: 25,
+                  right: 25,
+                  top: 10,
+                  bottom: 15,
+                ),
+                padding: const EdgeInsets.only(
                   left: 35,
                   right: 35,
                   top: 15,
                   bottom: 35,
                 ),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 35, vertical: 10),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(10),
-                    topRight: Radius.circular(10),
-                    topLeft: Radius.circular(10),
-                  ),
-                  border: bottomBorder,
-                  boxShadow: cardShadow,
-                  color: red002,
-                ),
-                child: ClipRect(
-                  child: Align(
-                    alignment: Alignment.topCenter,
-                    heightFactor: 1 - (0.78 * (1 - _clipAnimation.value)),
-                    child: Text(
-                      widget.data.description,
-                      style: bodyMedium,
-                      textAlign: TextAlign.justify,
+                decoration: classicDecoration,
+                child: Stack(
+                  alignment: Alignment.bottomCenter,
+                  clipBehavior: Clip.none,
+                  children: [
+                    ClipRect(
+                      child: Align(
+                        alignment: Alignment.topCenter,
+                        heightFactor: 1 - (0.78 * (1 - _clipAnimation.value)),
+                        child: Text(
+                          widget.data.description,
+                          style: bodyMedium,
+                          textAlign: TextAlign.justify,
+                        ),
+                      ),
                     ),
-                  ),
+                    Positioned(
+                      bottom: -30,
+                      child: AnimatedBuilder(
+                        animation: _animationController,
+                        builder: (context, child) {
+                          return Transform.rotate(
+                            angle: _animationController.value *
+                                    (270 - 90) *
+                                    3.1415927 /
+                                    180 +
+                                (90 * 3.1415927 / 180),
+                            child: Icon(
+                              Icons.chevron_right,
+                              size: 25,
+                              color: Colors.white,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
                 ),
               );
             },
-          ),
-          Positioned(
-            right: 35,
-            bottom: 10,
-            child: Container(
-              decoration: BoxDecoration(
-                color: red002,
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(15),
-                  bottomRight: Radius.circular(15),
-                ),
-                boxShadow: cardShadow,
-                border: bottomBorder,
-              ),
-              width: 80,
-              height: 30,
-              child: Center(
-                child: AnimatedBuilder(
-                  animation: _animationController,
-                  builder: (context, child) {
-                    return Transform.rotate(
-                      angle: _animationController.value *
-                              (270 - 90) *
-                              3.1415927 /
-                              180 +
-                          (90 * 3.1415927 / 180),
-                      child: Icon(
-                        Icons.chevron_right,
-                        size: 30,
-                        color: Colors.white,
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ),
           ),
         ],
       ),

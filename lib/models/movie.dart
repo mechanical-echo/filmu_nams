@@ -8,6 +8,7 @@ class MovieModel {
   final String genre;
   final String director;
   final String heroUrl;
+  final List<dynamic> actors;
 
   MovieModel({
     required this.id,
@@ -19,6 +20,7 @@ class MovieModel {
     required this.genre,
     required this.director,
     required this.heroUrl,
+    required this.actors,
   });
 
   factory MovieModel.fromMap(Map<String, dynamic> map, String id) {
@@ -32,6 +34,7 @@ class MovieModel {
       genre: map['genre'] ?? '',
       director: map['director'] ?? '',
       heroUrl: map['hero-url'] ?? '',
+      actors: map['actors'] ?? '',
     );
   }
 
@@ -46,6 +49,12 @@ class MovieModel {
       'genre': genre,
       'director': director,
       'hero-url': heroUrl,
+      'actors': actors,
     };
   }
 }
+
+Map<String, String> GenreName = {
+  "adventure": "Piedzīvojums",
+  "animation": "Animācija",
+};

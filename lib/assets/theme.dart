@@ -137,6 +137,18 @@ TextStyle bodyLarge = GoogleFonts.poppins(
   fontWeight: FontWeight.w800,
 );
 
+TextStyle header1 = GoogleFonts.poppins(
+  color: Colors.white,
+  fontSize: 30,
+  fontWeight: FontWeight.w800,
+);
+
+TextStyle header2 = GoogleFonts.poppins(
+  color: Colors.white,
+  fontSize: 26,
+  fontWeight: FontWeight.w800,
+);
+
 Border bottomBorder = Border(
   bottom: BorderSide(
     color: Colors.white12,
@@ -157,4 +169,11 @@ BoxDecoration classicDecoration = BoxDecoration(
   boxShadow: cardShadow,
   border: bottomBorder,
   borderRadius: BorderRadius.circular(15),
+);
+
+BoxDecoration classicDecorationSharper = BoxDecoration(
+  color: red002,
+  boxShadow: cardShadow,
+  border: bottomBorder,
+  borderRadius: BorderRadius.circular(5),
 );
