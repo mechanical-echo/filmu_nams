@@ -4,6 +4,7 @@ import 'package:filmu_nams/assets/decorations/background.dart';
 import 'package:filmu_nams/assets/animations/carousel_switch.dart';
 import 'package:filmu_nams/assets/decorations/logo.dart';
 import 'package:filmu_nams/assets/navigation_bar.dart';
+import 'package:filmu_nams/views/client/main/schedule/schedule.dart';
 import 'package:flutter/material.dart';
 
 class Wrapper extends StatefulWidget {
@@ -82,7 +83,7 @@ class _BodyState extends State<Body> {
   Widget build(BuildContext context) {
     List<Widget> pages = [
       Placeholder(),
-      Placeholder(),
+      ScheduleAndMovies(),
       Home(),
       Placeholder(),
       Profile(),
