@@ -26,7 +26,7 @@ class CarouselSwitch extends StatelessWidget {
       reverseDuration: const Duration(milliseconds: 500),
       layoutBuilder: (Widget? currentChild, List<Widget> previousChildren) {
         return Stack(
-          alignment: AlignmentDirectional.topStart,
+          alignment: AlignmentDirectional.center,
           children: <Widget>[
             ...previousChildren,
             if (currentChild != null) currentChild,

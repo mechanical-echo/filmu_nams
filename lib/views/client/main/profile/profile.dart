@@ -1,136 +1,119 @@
-import 'package:filmu_nams/assets/animations/animated_routing.dart';
+import 'package:filmu_nams/assets/animations/carousel_switch.dart';
+import 'package:filmu_nams/assets/theme.dart';
 import 'package:filmu_nams/assets/widgets/profile_image.dart';
-import 'package:filmu_nams/assets/input/filled_text_icon_button.dart';
-import 'package:filmu_nams/views/client/main/profile/profile_details.dart';
+import 'package:filmu_nams/views/client/main/profile/profile_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
-class Profile extends StatelessWidget {
+class Profile extends StatefulWidget {
   const Profile({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Wrapper(
-      children: [
-        ProfileContainer(
-          children: [
-            ProfileImage(width: 85),
-            Username(),
-            ProfileSubPages(),
-          ],
-        ),
-        LogoutButton(),
-      ],
-    );
-  }
+  State<Profile> createState() => _ProfileState();
 }
 
-class Wrapper extends StatelessWidget {
-  const Wrapper({super.key, required this.children});
-  final List<Widget> children;
+class _ProfileState extends State<Profile> {
+  User? user = FirebaseAuth.instance.currentUser;
+
+  List<Widget> views = [];
+
+  @override
+  void initState() {
+    super.initState();
+    views = [
+      profileMenu(),
+      ProfileView(onPressed: () => switchView(0)),
+    ];
+  }
+
+  int currentView = 0;
+  CarouselSwitchDirection direction = CarouselSwitchDirection.left;
+
+  void switchView(int viewIndex) {
+    setState(() {
+      direction = viewIndex == 0
+          ? CarouselSwitchDirection.right
+          : CarouselSwitchDirection.left;
+      currentView = viewIndex;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: children,
+      child: CarouselSwitch(
+        direction: direction,
+        child: KeyedSubtree(
+          key: ValueKey(currentView),
+          child: views[currentView],
+        ),
       ),
     );
   }
-}
 
-class ProfileContainer extends StatelessWidget {
-  const ProfileContainer({super.key, required this.children});
-  final List<Widget> children;
-
-  @override
-  Widget build(BuildContext context) {
+  Container profileMenu() {
     return Container(
-      height: 400,
-      width: 320,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: Theme.of(context).cardColor,
-      ),
+      decoration: classicDecoration,
+      width: 350,
+      height: 420,
+      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 25),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: children,
+        children: [
+          Row(
+            spacing: 15,
+            children: [
+              ProfileImage(width: 120),
+              Expanded(
+                child: Text(
+                  user!.displayName!,
+                  style: header2,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ),
+          ...divider(),
+          button("Profils", Icons.person, () => switchView(1)),
+          button("Biļetes", Icons.payments_sharp, () {}),
+          button("Maksājumi", Icons.payment, () {}),
+          button("Iestatījumi", Icons.settings, () {}),
+        ],
       ),
     );
   }
-}
 
-class Username extends StatelessWidget {
-  Username({super.key});
-  final user = FirebaseAuth.instance.currentUser;
+  divider() {
+    return [
+      SizedBox(height: 25),
+      Divider(color: red003.withAlpha(100)),
+      SizedBox(height: 25)
+    ];
+  }
 
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 30.0),
-      child: Text(
-        user!.displayName!,
-        style: GoogleFonts.poppins(
-          color: Colors.white,
-          fontWeight: FontWeight.bold,
-          fontSize: 24,
+  button(
+    String title,
+    IconData icon,
+    VoidCallback onPressed,
+  ) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 15),
+      child: FilledButton(
+        onPressed: onPressed,
+        style: FilledButton.styleFrom(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5),
+          ),
+          fixedSize: Size(500, 30),
+        ),
+        child: Stack(
+          alignment: Alignment.centerRight,
+          children: [
+            Icon(icon, size: 25),
+            SizedBox(width: 500, child: Text(title)),
+          ],
         ),
       ),
     );
-  }
-}
-
-class ProfileSubPages extends StatelessWidget {
-  const ProfileSubPages({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        FilledTextIconButton(
-          onPressed: () {},
-          icon: Icons.credit_card,
-          title: "Maksājumi",
-          paddingY: 5,
-        ),
-        FilledTextIconButton(
-          onPressed: () {},
-          icon: Icons.payments_outlined,
-          title: "Biļetes",
-          paddingY: 5,
-        ),
-        FilledTextIconButton(
-          onPressed: () {
-            Navigator.of(context).push(
-              AnimatedRouting(page: ProfileDetails()),
-            );
-          },
-          icon: Icons.info_outlined,
-          title: "Profila info",
-          paddingY: 5,
-        ),
-      ],
-    );
-  }
-}
-
-class LogoutButton extends StatelessWidget {
-  const LogoutButton({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return FilledTextIconButton(
-      icon: Icons.logout,
-      title: "Izlogoties",
-      onPressed: logOut,
-      paddingY: 20,
-    );
-  }
-
-  void logOut() {
-    FirebaseAuth.instance.signOut();
   }
 }

@@ -64,9 +64,12 @@ class _MovieViewState extends State<MovieView> {
   void _onScroll() {
     double offset = _scrollController.offset;
 
-    setState(() {
-      headerHeight = (250 - (offset * 0.5)).clamp(minHeaderHeight, 250);
-    });
+    /* Commented this out for now because it randomly throws an error 
+      TODO: fix header crashing an app on scroll */
+
+    // setState(() {
+    //   headerHeight = (250 - (offset * 0.5)).clamp(minHeaderHeight, 250);
+    // });
   }
 
   @override
