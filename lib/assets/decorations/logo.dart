@@ -53,7 +53,7 @@ class Logo extends StatelessWidget {
                     "Filmu Nams",
                     style: GoogleFonts.poppins(
                       color: Colors.white,
-                      fontSize: 27,
+                      fontSize: 25,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
