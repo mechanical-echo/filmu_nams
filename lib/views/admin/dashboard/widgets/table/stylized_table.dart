@@ -1,3 +1,4 @@
+import 'package:filmu_nams/assets/theme.dart';
 import 'package:flutter/material.dart';
 
 class StylizedTable extends StatelessWidget {
@@ -11,17 +12,7 @@ class StylizedTable extends StatelessWidget {
       constraints: const BoxConstraints(
         minWidth: 800, // Set minimum width for the table
       ),
-      decoration: BoxDecoration(
-        color: Theme.of(context).focusColor,
-        borderRadius: BorderRadius.circular(10),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withAlpha(50),
-            blurRadius: 10,
-            offset: Offset(0, 10),
-          ),
-        ],
-      ),
+      decoration: classicDecorationSharp,
       child: Table(
         border: TableBorder.all(
           color: Colors.white.withAlpha(20),

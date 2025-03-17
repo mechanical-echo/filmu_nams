@@ -1,8 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:filmu_nams/assets/input/text_input.dart';
+import 'package:filmu_nams/assets/theme.dart';
 import 'package:filmu_nams/controllers/movie_controller.dart';
 import 'package:filmu_nams/models/carousel_item.dart';
-import 'package:filmu_nams/views/admin/dashboard/widgets/expandable_view/expandable_view.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/table/stylized_table.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/table/stylized_table_header_cell.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/table/stylized_table_image_cell.dart';
@@ -75,132 +75,123 @@ class _HomepageCarouselState extends State<HomepageCarousel> {
 
   @override
   Widget build(BuildContext context) {
-    return ExpandableView(
-      title: "Sākuma lapas elementi",
-      child: Column(
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Column(
-                  children: [
-                    table(),
-                  ],
-                ),
-              ),
-              if (selectedDocId != null)
-                Container(
-                  width: 600,
-                  height: 300,
-                  margin: const EdgeInsets.symmetric(vertical: 20),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).focusColor,
-                    border: Border.all(color: Colors.white.withAlpha(20)),
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withAlpha(20),
-                        blurRadius: 10,
-                        offset: Offset(0, 10),
-                      ),
-                    ],
+    return Column(
+      children: [
+        AnimatedSize(
+          alignment: Alignment.centerLeft,
+          duration: const Duration(milliseconds: 550),
+          curve: Curves.easeOut,
+          child: IntrinsicWidth(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                table(),
+                if (selectedDocId != null)
+                  Container(
+                    width: 600,
+                    constraints: BoxConstraints(
+                      minHeight: 300,
+                      maxHeight: 485,
+                    ),
+                    margin: const EdgeInsets.symmetric(vertical: 20),
+                    decoration: classicDecorationSharp,
+                    child: isEditLoading
+                        ? Center(
+                            child: LoadingAnimationWidget.staggeredDotsWave(
+                            color: Colors.white,
+                            size: 100,
+                          ))
+                        : Column(
+                            children: [
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 10.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  spacing: 10, // Keep spacing parameter
+                                  children: [
+                                    Column(
+                                      mainAxisSize: MainAxisSize.max,
+                                      spacing: 20, // Keep spacing parameter
+                                      children: [
+                                        Text(
+                                          "Rediģēt elementu",
+                                          style: GoogleFonts.poppins(
+                                            color: Colors.white,
+                                            fontSize: 20,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 400,
+                                          child: TextInput(
+                                            controller: titleController,
+                                            hintText: "Ievadiet nosaukumu...",
+                                            labelText: "Nosaukums",
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 400,
+                                          child: TextInput(
+                                            controller: descriptionController,
+                                            hintText: "Ievadiet aprakstu...",
+                                            labelText: "Apraksts",
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    CachedNetworkImage(
+                                      imageUrl: imageUrl!,
+                                      placeholder: (context, url) =>
+                                          CircularProgressIndicator(),
+                                      height: 200,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 20.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  spacing: 20, // Keep spacing parameter
+                                  children: [
+                                    FilledButton(
+                                      onPressed: updateCarouselItem,
+                                      style: FilledButton.styleFrom(
+                                        fixedSize: Size(150, 30),
+                                      ),
+                                      child: Text(
+                                        "Saglabāt",
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                    ),
+                                    FilledButton(
+                                      onPressed: () {},
+                                      style: FilledButton.styleFrom(
+                                        fixedSize: Size(150, 30),
+                                      ),
+                                      child: Text(
+                                        "Dzēst",
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
                   ),
-                  child: isEditLoading
-                      ? Center(
-                          child: LoadingAnimationWidget.staggeredDotsWave(
-                          color: Colors.white,
-                          size: 100,
-                        ))
-                      : Column(
-                          children: [
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 10.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                spacing: 10,
-                                children: [
-                                  Column(
-                                    spacing: 20,
-                                    children: [
-                                      Text(
-                                        "Rediģēt elementu",
-                                        style: GoogleFonts.poppins(
-                                          color: Colors.white,
-                                          fontSize: 20,
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: 400,
-                                        child: TextInput(
-                                          controller: titleController,
-                                          hintText: "Ievadiet nosaukumu...",
-                                          labelText: "Nosaukums",
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: 400,
-                                        child: TextInput(
-                                          controller: descriptionController,
-                                          hintText: "Ievadiet aprakstu...",
-                                          labelText: "Apraksts",
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  CachedNetworkImage(
-                                    imageUrl: imageUrl!,
-                                    placeholder: (context, url) =>
-                                        CircularProgressIndicator(),
-                                    height: 200,
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 20.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                spacing: 20,
-                                children: [
-                                  FilledButton(
-                                    onPressed: updateCarouselItem,
-                                    style: FilledButton.styleFrom(
-                                      fixedSize: Size(150, 30),
-                                    ),
-                                    child: Text(
-                                      "Saglabāt",
-                                      style: TextStyle(fontSize: 16),
-                                    ),
-                                  ),
-                                  FilledButton(
-                                    onPressed: () {},
-                                    style: FilledButton.styleFrom(
-                                      fixedSize: Size(150, 30),
-                                    ),
-                                    child: Text(
-                                      "Dzēst",
-                                      style: TextStyle(fontSize: 16),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                ),
-            ],
-          ),
-          if (selectedDocId == null)
-            Text(
-              "Lūdzu izvēlieties elementu, lai rediģētu",
-              style: GoogleFonts.poppins(
-                color: Colors.white,
-              ),
+              ],
             ),
-        ],
-      ),
+          ),
+        ),
+        if (selectedDocId == null)
+          Text(
+            "Lūdzu izvēlieties elementu, lai rediģētu",
+            style: GoogleFonts.poppins(
+              color: Colors.white,
+            ),
+          ),
+      ],
     );
   }
 

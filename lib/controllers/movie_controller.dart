@@ -10,7 +10,7 @@ class MovieController {
     final response = await _firestore.collection('homescreen-carousel').get();
 
     return response.docs
-        .map((doc) => CarouselItemModel.fromMap(doc.data()))
+        .map((doc) => CarouselItemModel.fromMap(doc.data(), doc.id))
         .toList();
   }
 
