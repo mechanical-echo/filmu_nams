@@ -221,27 +221,27 @@ class _DatePickerState extends State<DatePicker> {
                 topLeft: Radius.circular(25),
               ),
             ),
-            child: Center(child: Text("Pr", style: bodyMedium)),
+            child: Center(child: Text("Pr", style: bodySmall)),
           ),
           Container(
             color: red002.withAlpha(200),
-            child: Center(child: Text("Ot", style: bodyMedium)),
+            child: Center(child: Text("Ot", style: bodySmall)),
           ),
           Container(
             color: red002.withAlpha(200),
-            child: Center(child: Text("Tr", style: bodyMedium)),
+            child: Center(child: Text("Tr", style: bodySmall)),
           ),
           Container(
             color: red002.withAlpha(200),
-            child: Center(child: Text("Ct", style: bodyMedium)),
+            child: Center(child: Text("Ct", style: bodySmall)),
           ),
           Container(
             color: red002.withAlpha(200),
-            child: Center(child: Text("Pt", style: bodyMedium)),
+            child: Center(child: Text("Pt", style: bodySmall)),
           ),
           Container(
             color: red002.withAlpha(200),
-            child: Center(child: Text("St", style: bodyMedium)),
+            child: Center(child: Text("St", style: bodySmall)),
           ),
           Container(
             padding: const EdgeInsets.only(right: 5),
@@ -251,7 +251,7 @@ class _DatePickerState extends State<DatePicker> {
                 topRight: Radius.circular(25),
               ),
             ),
-            child: Center(child: Text("Sv", style: bodyMedium)),
+            child: Center(child: Text("Sv", style: bodySmall)),
           ),
         ],
       ),
@@ -301,7 +301,7 @@ class DatePickerDay extends StatelessWidget {
         ),
         height: 20,
         width: 15,
-        child: Center(child: Text("${date.day}", style: bodyMedium)),
+        child: Center(child: Text("${date.day}", style: bodySmall)),
       ),
     );
   }

@@ -1,0 +1,241 @@
+import 'package:filmu_nams/assets/theme.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+class AdminSideBar extends StatelessWidget {
+  const AdminSideBar({
+    super.key,
+    required this.height,
+    required this.action,
+    required this.activePage,
+  });
+
+  final double height;
+  final Function(int) action;
+  final int activePage;
+
+  @override
+  Widget build(BuildContext context) {
+    final Uri url = Uri.parse(
+        'https://console.firebase.google.com/project/filmu-nams/overview');
+
+    Future<void> openLink() async {
+      if (!await launchUrl(url)) {
+        throw Exception('Could not launch $url');
+      }
+    }
+
+    void logout() {
+      FirebaseAuth.instance.signOut();
+    }
+
+    return Container(
+      height: height,
+      width: 300,
+      margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      decoration: classicDecorationDark,
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Column(
+            spacing: 10,
+            children: [
+              AdminLogo(),
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: 10),
+                child: Divider(
+                  color: smokeyWhite.withAlpha(100),
+                ),
+              ),
+              AdminSideBarButton(
+                title: 'Sākuma lapas elementi',
+                icon: Icons.home,
+                action: () => action(0),
+                active: activePage == 0,
+              ),
+              AdminSideBarButton(
+                title: 'Filmas',
+                icon: Icons.movie,
+                action: () => action(1),
+                active: activePage == 1,
+              ),
+              AdminSideBarButton(
+                title: 'Lietotāji',
+                icon: Icons.people,
+                action: () => action(2),
+                active: activePage == 2,
+              ),
+              AdminSideBarButton(
+                title: 'Piedāvājumi',
+                icon: Icons.percent,
+                action: () => action(3),
+                active: activePage == 3,
+              ),
+              AdminSideBarButton(
+                title: 'Promokodi',
+                icon: Icons.abc,
+                action: () => action(4),
+                active: activePage == 4,
+              ),
+              AdminSideBarButton(
+                title: 'Maksājumi',
+                icon: Icons.payments,
+                action: () => action(5),
+                active: activePage == 5,
+              ),
+              AdminSideBarButton(
+                title: 'Firebase',
+                icon: Icons.local_fire_department_sharp,
+                action: openLink,
+              ),
+            ],
+          ),
+          Positioned(
+            bottom: 0,
+            child: AdminSideBarButton(
+              title: 'Izlogoties',
+              icon: Icons.logout,
+              action: logout,
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class AdminLogo extends StatelessWidget {
+  const AdminLogo({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+      decoration: classicDecorationWhiteSharper,
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            spacing: 8,
+            children: [
+              Icon(
+                Icons.movie_filter,
+                color: red001,
+                size: 25,
+              ),
+              Text(
+                "Filmu Nams",
+                style: GoogleFonts.poppins(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: red001,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+          Text(
+            "Administrācijas panelis",
+            style: GoogleFonts.poppins(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: red002,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class AdminSideBarButton extends StatefulWidget {
+  const AdminSideBarButton({
+    super.key,
+    required this.title,
+    required this.icon,
+    required this.action,
+    this.active = false,
+  });
+
+  final String title;
+  final IconData icon;
+  final VoidCallback action;
+  final bool active;
+
+  @override
+  State<AdminSideBarButton> createState() => _AdminSideBarButtonState();
+}
+
+class _AdminSideBarButtonState extends State<AdminSideBarButton> {
+  double indent = 0;
+
+  void setIndent() {
+    setState(() {
+      indent = 20;
+    });
+  }
+
+  void removeIndent() {
+    setState(() {
+      indent = 0;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 500,
+      height: 50,
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          AnimatedPositioned(
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.easeOut,
+            left: indent + (widget.active ? 20 : 0),
+            child: MouseRegion(
+              cursor: SystemMouseCursors.click,
+              onEnter: (event) => setIndent(),
+              onExit: (event) => removeIndent(),
+              child: GestureDetector(
+                onTap: widget.action,
+                child: AnimatedContainer(
+                  width: 280,
+                  duration: const Duration(milliseconds: 150),
+                  curve: Curves.easeOut,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  decoration: classicDecorationWhiteSharper,
+                  child: Stack(
+                    alignment: Alignment.centerLeft,
+                    children: [
+                      Icon(
+                        widget.icon,
+                        size: 25,
+                        color: red001,
+                      ),
+                      SizedBox(
+                        width: 500,
+                        child: Text(
+                          widget.title,
+                          style: bodyMediumRed,
+                          textAlign: TextAlign.right,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

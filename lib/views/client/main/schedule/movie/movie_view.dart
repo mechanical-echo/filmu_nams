@@ -141,7 +141,7 @@ class _MovieViewState extends State<MovieView> {
       decoration: classicDecorationSharper,
       child: Text(
         text,
-        style: bodyMedium,
+        style: bodySmall,
       ),
     );
   }

@@ -186,7 +186,7 @@ class _HallSeatsState extends State<HallSeats> {
             child: DropdownButton(
               iconEnabledColor: Colors.white,
               underline: Container(),
-              style: bodyMedium,
+              style: bodySmall,
               items: List.generate(
                 rowAmount,
                 (index) => DropdownMenuItem(
@@ -212,7 +212,7 @@ class _HallSeatsState extends State<HallSeats> {
             child: DropdownButton(
               iconEnabledColor: Colors.white,
               underline: Container(),
-              style: bodyMedium,
+              style: bodySmall,
               items: List.generate(
                 seatAmountPerRow,
                 (index) => DropdownMenuItem(

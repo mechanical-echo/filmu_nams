@@ -132,10 +132,22 @@ Color red001 = Color.fromARGB(255, 102, 30, 23);
 Color red002 = Color.fromARGB(255, 119, 41, 32);
 Color red003 = Color.fromARGB(255, 178, 104, 96);
 
-TextStyle bodyMedium = GoogleFonts.poppins(
+TextStyle bodySmall = GoogleFonts.poppins(
   color: Colors.white,
   fontSize: 13,
   fontWeight: FontWeight.w600,
+);
+
+TextStyle bodyMedium = GoogleFonts.poppins(
+  color: Colors.white,
+  fontSize: 15,
+  fontWeight: FontWeight.w600,
+);
+
+TextStyle bodyMediumRed = GoogleFonts.poppins(
+  color: red001,
+  fontSize: 17,
+  fontWeight: FontWeight.w700,
 );
 
 TextStyle bodyLarge = GoogleFonts.poppins(
@@ -163,6 +175,13 @@ Border bottomBorder = Border(
   ),
 );
 
+Border bottomBorderDark = Border(
+  bottom: BorderSide(
+    color: red001.withAlpha(100),
+    width: 5,
+  ),
+);
+
 List<BoxShadow> cardShadow = [
   BoxShadow(
     color: Colors.black.withAlpha(50),
@@ -178,8 +197,43 @@ BoxDecoration classicDecoration = BoxDecoration(
   borderRadius: BorderRadius.circular(15),
 );
 
+BoxDecoration classicDecorationWhite = BoxDecoration(
+  color: smokeyWhite,
+  boxShadow: cardShadow,
+  border: bottomBorderDark,
+  borderRadius: BorderRadius.circular(15),
+);
+
+BoxDecoration classicDecorationDark = BoxDecoration(
+  color: red001,
+  boxShadow: cardShadow,
+  border: bottomBorder,
+  borderRadius: BorderRadius.circular(15),
+);
+
+BoxDecoration classicDecorationSharp = BoxDecoration(
+  color: red002,
+  boxShadow: cardShadow,
+  border: bottomBorder,
+  borderRadius: BorderRadius.circular(8),
+);
+
 BoxDecoration classicDecorationSharper = BoxDecoration(
   color: red002,
+  boxShadow: cardShadow,
+  border: bottomBorder,
+  borderRadius: BorderRadius.circular(5),
+);
+
+BoxDecoration classicDecorationWhiteSharper = BoxDecoration(
+  color: smokeyWhite,
+  boxShadow: cardShadow,
+  border: bottomBorderDark,
+  borderRadius: BorderRadius.circular(5),
+);
+
+BoxDecoration classicDecorationDarkSharper = BoxDecoration(
+  color: red001,
   boxShadow: cardShadow,
   border: bottomBorder,
   borderRadius: BorderRadius.circular(5),
