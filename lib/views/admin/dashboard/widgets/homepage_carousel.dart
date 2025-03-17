@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:filmu_nams/assets/input/text_input.dart';
 import 'package:filmu_nams/controllers/movie_controller.dart';
+import 'package:filmu_nams/models/carousel_item.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/expandable_view/expandable_view.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/table/stylized_table.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/table/stylized_table_header_cell.dart';
@@ -18,7 +19,7 @@ class HomepageCarousel extends StatefulWidget {
 }
 
 class _HomepageCarouselState extends State<HomepageCarousel> {
-  List<Map<String, dynamic>> carouselItems = [];
+  List<CarouselItemModel> carouselItems = [];
   String? selectedDocId;
   bool isEditing = false;
   bool isEditLoading = false;
@@ -36,10 +37,7 @@ class _HomepageCarouselState extends State<HomepageCarousel> {
     try {
       final response = await MovieController().getHomescreenCarousel();
       setState(() {
-        carouselItems = response
-            .map((item) =>
-                item.map((key, value) => MapEntry(key, value.toString())))
-            .toList();
+        carouselItems = response;
         isEditLoading = false;
       });
     } catch (e) {
@@ -54,11 +52,10 @@ class _HomepageCarouselState extends State<HomepageCarousel> {
     setState(() {
       selectedDocId = selectedDocId == docId ? null : docId;
       titleController.text =
-          carouselItems.firstWhere((item) => item['id'] == docId)['title'];
-      descriptionController.text = carouselItems
-          .firstWhere((item) => item['id'] == docId)['description'];
-      imageUrl =
-          carouselItems.firstWhere((item) => item['id'] == docId)['image-url'];
+          carouselItems.firstWhere((item) => item.id == docId).title;
+      descriptionController.text =
+          carouselItems.firstWhere((item) => item.id == docId).description;
+      imageUrl = carouselItems.firstWhere((item) => item.id == docId).imageUrl;
     });
   }
 
@@ -70,8 +67,7 @@ class _HomepageCarouselState extends State<HomepageCarousel> {
       selectedDocId!,
       titleController.text,
       descriptionController.text,
-      carouselItems
-          .firstWhere((item) => item['id'] == selectedDocId)['image-url'],
+      carouselItems.firstWhere((item) => item.id == selectedDocId).imageUrl,
     );
 
     fetchHomescreenCarouselFromFirebase();
@@ -248,7 +244,7 @@ class _HomepageCarouselState extends State<HomepageCarousel> {
         ),
         ...carouselItems.map(
           (item) {
-            final docId = item['id'];
+            final docId = item.id;
             final isSelected = selectedDocId == docId;
 
             return TableRow(
@@ -266,8 +262,7 @@ class _HomepageCarouselState extends State<HomepageCarousel> {
                     ),
                     child: GestureDetector(
                       onTap: () => _handleRowTap(docId),
-                      child:
-                          StylizedTableImageCell(imageUrl: item['image-url']),
+                      child: StylizedTableImageCell(imageUrl: item.imageUrl),
                     ),
                   ),
                 ),
@@ -283,7 +278,8 @@ class _HomepageCarouselState extends State<HomepageCarousel> {
                       onTap: () => _handleRowTap(docId),
                       behavior: HitTestBehavior.opaque,
                       child: StylizedTableTextCell(
-                          text: item['title'] ?? "Nav nosaukuma"),
+                        text: item.title,
+                      ),
                     ),
                   ),
                 ),
@@ -298,7 +294,8 @@ class _HomepageCarouselState extends State<HomepageCarousel> {
                       onTap: () => _handleRowTap(docId),
                       behavior: HitTestBehavior.opaque,
                       child: StylizedTableTextCell(
-                          text: item['description'] ?? "Nav apraksta"),
+                        text: item.description,
+                      ),
                     ),
                   ),
                 ),

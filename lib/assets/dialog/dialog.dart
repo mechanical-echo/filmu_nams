@@ -32,6 +32,7 @@ class StylizedDialog {
           content,
           textAlign: TextAlign.center,
         ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         backgroundColor: Theme.of(context).dialogBackgroundColor,
         titleTextStyle: GoogleFonts.poppins(
           color: Colors.white,

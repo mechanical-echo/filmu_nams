@@ -21,6 +21,18 @@ class ProfileImage extends StatelessWidget {
       height: width,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black26,
+            blurRadius: 0,
+            offset: const Offset(6, 8),
+          ),
+          BoxShadow(
+            color: Colors.white24,
+            blurRadius: 0,
+            offset: const Offset(-2, -2),
+          ),
+        ],
       ),
       child: user!.photoURL != null
           ? CachedNetworkImage(
