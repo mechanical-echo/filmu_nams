@@ -1,3 +1,4 @@
+import 'package:filmu_nams/assets/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -190,9 +191,11 @@ class _NotificationItemState extends State<NotificationItem> {
           width: width,
           decoration: BoxDecoration(
             color: widget.notification.state == NotificationState.unread
-                ? Theme.of(context).cardColor
-                : Theme.of(context).disabledColor,
-            borderRadius: BorderRadius.circular(10),
+                ? Theme.of(context).disabledColor
+                : Theme.of(context).cardColor,
+            boxShadow: cardShadow,
+            border: bottomBorder,
+            borderRadius: BorderRadius.circular(5),
           ),
           child: child,
         ),
