@@ -6,12 +6,21 @@ import 'package:filmu_nams/models/schedule.dart';
 class MovieController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  final String carouselCollection = 'homescreen-carousel';
+
   Future<List<CarouselItemModel>> getHomescreenCarousel() async {
-    final response = await _firestore.collection('homescreen-carousel').get();
+    final response = await _firestore.collection(carouselCollection).get();
 
     return response.docs
         .map((doc) => CarouselItemModel.fromMap(doc.data(), doc.id))
         .toList();
+  }
+
+  Future<CarouselItemModel> getCarouselItemById(String id) async {
+    final response =
+        await _firestore.collection(carouselCollection).doc(id).get();
+
+    return CarouselItemModel.fromMap(response.data()!, response.id);
   }
 
   Future<void> updateHomescreenCarousel(
@@ -20,7 +29,7 @@ class MovieController {
     String description,
     String imageUrl,
   ) async {
-    await _firestore.collection('homescreen-carousel').doc(id).update({
+    await _firestore.collection(carouselCollection).doc(id).update({
       'title': title,
       'description': description,
       'image-url': imageUrl,

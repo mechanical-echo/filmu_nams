@@ -9,16 +9,21 @@ class StylizedTable extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       constraints: const BoxConstraints(
-        minWidth: 800, // Set minimum width for the table
+        minWidth: 800,
+        maxWidth: 1200,
       ),
-      decoration: classicDecorationSharp,
-      child: Table(
-        border: TableBorder.all(
-          color: Colors.white.withAlpha(20),
-          borderRadius: BorderRadius.circular(10),
+      decoration: classicDecorationDark,
+      child: Container(
+        decoration: classicDecorationSharp,
+        child: Table(
+          border: TableBorder.all(
+            color: Colors.white.withAlpha(20),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          children: children,
         ),
-        children: children,
       ),
     );
   }

@@ -36,17 +36,12 @@ ThemeData theme = ThemeData(
   ),
   dialogBackgroundColor: Color.fromARGB(255, 44, 39, 39),
   filledButtonTheme: FilledButtonThemeData(
-    style: ButtonStyle(
-      textStyle: WidgetStatePropertyAll(GoogleFonts.poppins(
-        fontSize: 22,
-        fontWeight: FontWeight.bold,
-      )),
-      fixedSize: WidgetStatePropertyAll(Size(272, 50)),
-      backgroundColor: WidgetStatePropertyAll(Color.fromARGB(255, 151, 50, 39)),
-      shape: WidgetStatePropertyAll(
-        RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+    style: FilledButton.styleFrom(
+      textStyle: bodyLarge,
+      padding: const EdgeInsets.symmetric(horizontal: 55, vertical: 15),
+      backgroundColor: classicDecoration.color,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(5),
       ),
     ),
   ),
@@ -93,11 +88,10 @@ ThemeData theme = ThemeData(
     ),
   ),
   dividerTheme: DividerThemeData(
+    color: smokeyWhite.withAlpha(100),
+    indent: 0,
+    endIndent: 0,
     space: 0,
-    thickness: 2,
-    indent: 20,
-    endIndent: 20,
-    color: Color.fromARGB(255, 119, 41, 32),
   ),
   outlinedButtonTheme: OutlinedButtonThemeData(
     style: ButtonStyle(
@@ -156,14 +150,32 @@ TextStyle bodyLarge = GoogleFonts.poppins(
   fontWeight: FontWeight.w800,
 );
 
+TextStyle bodyLargeRed = GoogleFonts.poppins(
+  color: red001,
+  fontSize: 20,
+  fontWeight: FontWeight.w800,
+);
+
 TextStyle header1 = GoogleFonts.poppins(
   color: Colors.white,
   fontSize: 30,
   fontWeight: FontWeight.w800,
 );
 
+TextStyle header1Red = GoogleFonts.poppins(
+  color: red001,
+  fontSize: 30,
+  fontWeight: FontWeight.w800,
+);
+
 TextStyle header2 = GoogleFonts.poppins(
   color: Colors.white,
+  fontSize: 26,
+  fontWeight: FontWeight.w800,
+);
+
+TextStyle header2Red = GoogleFonts.poppins(
+  color: red001,
   fontSize: 26,
   fontWeight: FontWeight.w800,
 );
@@ -227,6 +239,20 @@ BoxDecoration classicDecorationSharper = BoxDecoration(
 
 BoxDecoration classicDecorationWhiteSharper = BoxDecoration(
   color: smokeyWhite,
+  boxShadow: cardShadow,
+  border: bottomBorderDark,
+  borderRadius: BorderRadius.circular(5),
+);
+
+BoxDecoration classicDecorationWhiteSharperHover = BoxDecoration(
+  color: smokeyWhite.withAlpha(200),
+  boxShadow: cardShadow,
+  border: bottomBorderDark,
+  borderRadius: BorderRadius.circular(5),
+);
+
+BoxDecoration classicDecorationWhiteSharperActive = BoxDecoration(
+  color: smokeyWhite.withAlpha(150),
   boxShadow: cardShadow,
   border: bottomBorderDark,
   borderRadius: BorderRadius.circular(5),

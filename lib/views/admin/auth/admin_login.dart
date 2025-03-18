@@ -1,4 +1,5 @@
 import 'package:filmu_nams/assets/decorations/background.dart';
+import 'package:filmu_nams/assets/dialog/dialog.dart';
 import 'package:filmu_nams/controllers/user_controller.dart';
 import 'package:filmu_nams/validators/validator.dart';
 import 'package:filmu_nams/views/client/auth/components/auth_form_container.dart';
@@ -135,18 +136,27 @@ class _LoginFormState extends State<LoginForm> {
       return;
     }
 
-    await FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        bool userIsAdmin = await UserController().userHasRole(user, "admin");
 
-    User? user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      bool userIsAdmin = await UserController().userHasRole(user, "admin");
-
-      if (!userIsAdmin) {
-        await FirebaseAuth.instance.signOut();
-        return;
+        if (!userIsAdmin) {
+          await FirebaseAuth.instance.signOut();
+          return;
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        StylizedDialog.alert(
+          context,
+          "Kļūda",
+          "Nepareizs lietotājvārds vai parole",
+        );
       }
     }
   }
