@@ -1,3 +1,4 @@
+import 'package:filmu_nams/assets/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -67,8 +68,8 @@ class _TextInputState extends State<TextInput> {
                 obscureText: _obscureText,
                 decoration: InputDecoration(
                   filled: true,
-                  hintText: widget.hintText ?? 'dro\$aParole1',
-                  labelText: widget.labelText ?? 'Parole',
+                  hintText: widget.hintText ?? '',
+                  labelText: widget.labelText ?? '',
                   suffixIcon: widget.obscureText
                       ? IconButton(
                           icon: Icon(
@@ -87,11 +88,7 @@ class _TextInputState extends State<TextInput> {
                   right: -23,
                   child: Text(
                     "*",
-                    style: GoogleFonts.poppins(
-                      color: Colors.red[700],
-                      fontWeight: FontWeight.bold,
-                      fontSize: 40,
-                    ),
+                    style: header1,
                   ),
                 ),
             ],

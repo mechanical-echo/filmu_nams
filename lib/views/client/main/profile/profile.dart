@@ -1,6 +1,7 @@
 import 'package:filmu_nams/assets/animations/carousel_switch.dart';
 import 'package:filmu_nams/assets/theme.dart';
 import 'package:filmu_nams/assets/widgets/profile_image.dart';
+import 'package:filmu_nams/views/admin/dashboard/widgets/stylized_button.dart';
 import 'package:filmu_nams/views/client/main/profile/profile_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -51,34 +52,35 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  Container profileMenu() {
-    return Container(
-      decoration: classicDecoration,
-      width: 350,
-      height: 420,
-      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 25),
-      child: Column(
-        children: [
-          Row(
-            spacing: 15,
-            children: [
-              ProfileImage(width: 120),
-              Expanded(
-                child: Text(
-                  user!.displayName!,
-                  style: header2,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
+  profileMenu() {
+    return IntrinsicHeight(
+      child: Container(
+        decoration: classicDecoration,
+        width: 350,
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 25),
+        child: Column(
+          children: [
+            Row(
+              spacing: 15,
+              children: [
+                ProfileImage(width: 120),
+                Expanded(
+                  child: Text(
+                    user!.displayName!,
+                    style: header2,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
-              ),
-            ],
-          ),
-          ...divider(),
-          button("Profils", Icons.person, () => switchView(1)),
-          button("Biļetes", Icons.payments_sharp, () {}),
-          button("Maksājumi", Icons.payment, () {}),
-          button("Iestatījumi", Icons.settings, () {}),
-        ],
+              ],
+            ),
+            ...divider(),
+            button("Profils", Icons.person, () => switchView(1)),
+            button("Biļetes", Icons.payments_sharp, () {}),
+            button("Maksājumi", Icons.payment, () {}),
+            button("Iestatījumi", Icons.settings, () {}),
+          ],
+        ),
       ),
     );
   }
@@ -97,22 +99,11 @@ class _ProfileState extends State<Profile> {
     VoidCallback onPressed,
   ) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 15),
-      child: FilledButton(
-        onPressed: onPressed,
-        style: FilledButton.styleFrom(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(5),
-          ),
-          fixedSize: Size(500, 30),
-        ),
-        child: Stack(
-          alignment: Alignment.centerRight,
-          children: [
-            Icon(icon, size: 25),
-            SizedBox(width: 500, child: Text(title)),
-          ],
-        ),
+      margin: const EdgeInsets.only(bottom: 10),
+      child: StylizedButton(
+        action: onPressed,
+        title: title,
+        icon: icon,
       ),
     );
   }

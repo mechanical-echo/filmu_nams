@@ -1,92 +1,21 @@
 import 'package:filmu_nams/assets/decorations/background.dart';
 import 'package:filmu_nams/assets/dialog/dialog.dart';
+import 'package:filmu_nams/assets/theme.dart';
 import 'package:filmu_nams/controllers/user_controller.dart';
 import 'package:filmu_nams/validators/validator.dart';
-import 'package:filmu_nams/views/client/auth/components/auth_form_container.dart';
-import 'package:filmu_nams/assets/input/filled_text_icon_button.dart';
 import 'package:filmu_nams/assets/input/text_input.dart';
+import 'package:filmu_nams/views/admin/dashboard/widgets/stylized_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
-class AdminLogin extends StatelessWidget {
+class AdminLogin extends StatefulWidget {
   const AdminLogin({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Background(
-      child: Wrapper(
-        child: Column(
-          spacing: 30,
-          children: [
-            WelcomeText(),
-            LoginForm(),
-          ],
-        ),
-      ),
-    );
-  }
+  State<AdminLogin> createState() => _AdminLoginState();
 }
 
-class Wrapper extends StatelessWidget {
-  const Wrapper({super.key, required this.child});
-
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: SizedBox(
-        width: 750,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Material(
-              type: MaterialType.transparency,
-              child: AuthFormContainer(
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                    top: 60.0,
-                    left: 40,
-                    right: 40,
-                  ),
-                  child: child,
-                ),
-              ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class WelcomeText extends StatelessWidget {
-  const WelcomeText({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      "Laipni lūdzam\n administrācijas panelī",
-      textAlign: TextAlign.center,
-      style: GoogleFonts.roboto(
-        color: Colors.white,
-        fontWeight: FontWeight.bold,
-        fontSize: 34,
-      ),
-    );
-  }
-}
-
-class LoginForm extends StatefulWidget {
-  const LoginForm({super.key});
-
-  @override
-  State<LoginForm> createState() => _LoginFormState();
-}
-
-class _LoginFormState extends State<LoginForm> {
+class _AdminLoginState extends State<AdminLogin> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
@@ -100,31 +29,105 @@ class _LoginFormState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 500,
-      child: Column(
-        spacing: 20,
+    return Scaffold(
+      body: Background(
+        child: Center(
+          child: AnimatedSize(
+            duration: Duration(milliseconds: 250),
+            curve: Curves.easeOut,
+            child: IntrinsicHeight(
+              child: Container(
+                decoration: classicDecorationDark,
+                padding:
+                    const EdgeInsets.symmetric(vertical: 30, horizontal: 40),
+                child: IntrinsicWidth(
+                  child: Row(
+                    spacing: 30,
+                    children: [
+                      buildWelcomeText(),
+                      buildLoginForm(),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildWelcomeText() {
+    return Expanded(
+      child: Container(
+        constraints: BoxConstraints(
+          maxWidth: 400,
+        ),
+        decoration: classicDecorationWhiteSharper,
+        padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+        child: Center(
+          child: Text(
+            "Laipni lūdzam administrācijas panelī",
+            textAlign: TextAlign.center,
+            style: header1Red,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildLoginForm() {
+    return Expanded(
+      child: Stack(
+        alignment: Alignment.bottomCenter,
         children: [
-          TextInput(
-            controller: emailController,
-            labelText: "E-pasts",
-            hintText: "Ievadiet e-pastu...",
-            error: emailError,
-            obligatory: true,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 10,
+            children: [
+              Row(
+                spacing: 10,
+                children: [
+                  Icon(Icons.email, size: 25, color: smokeyWhite),
+                  Text("E-pasts", style: bodyMedium),
+                ],
+              ),
+              SizedBox(
+                width: 500,
+                child: TextInput(
+                  controller: emailController,
+                  error: emailError,
+                  obligatory: true,
+                ),
+              ),
+              Row(
+                spacing: 10,
+                children: [
+                  Icon(Icons.password, size: 25, color: smokeyWhite),
+                  Text("Parole", style: bodyMedium),
+                ],
+              ),
+              SizedBox(
+                width: 500,
+                child: TextInput(
+                  controller: passwordController,
+                  obscureText: true,
+                  error: passwordError,
+                  obligatory: true,
+                ),
+              ),
+              SizedBox(height: 75),
+            ],
           ),
-          TextInput(
-            controller: passwordController,
-            labelText: "Parole",
-            hintText: "Ievadiet paroli...",
-            obscureText: true,
-            error: passwordError,
-            obligatory: true,
-          ),
-          FilledTextIconButton(
-            icon: Icons.login,
-            title: "Ielogoties",
-            onPressed: login,
-            paddingY: 20,
+          SizedBox(
+            width: 500,
+            child: IntrinsicHeight(
+              child: StylizedButton(
+                icon: Icons.login,
+                title: "Ielogoties",
+                action: login,
+              ),
+            ),
           ),
         ],
       ),

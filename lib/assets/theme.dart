@@ -126,8 +126,44 @@ Color red001 = Color.fromARGB(255, 102, 30, 23);
 Color red002 = Color.fromARGB(255, 119, 41, 32);
 Color red003 = Color.fromARGB(255, 178, 104, 96);
 
+FilledButtonThemeData bigRed = FilledButtonThemeData(
+  style: FilledButton.styleFrom(
+    textStyle: bodyLarge,
+    padding: const EdgeInsets.symmetric(horizontal: 55, vertical: 15),
+    backgroundColor: classicDecoration.color,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(5),
+    ),
+  ),
+);
+
+ButtonStyle mediumWhite = FilledButton.styleFrom(
+  textStyle: bodySmallRed,
+  foregroundColor: red001,
+  backgroundColor: classicDecorationWhite.color,
+  shape: RoundedRectangleBorder(
+    borderRadius: BorderRadius.circular(5),
+  ),
+);
+
+ButtonStyle smallWhite = FilledButton.styleFrom(
+  textStyle: bodySmallRed,
+  foregroundColor: red001,
+  backgroundColor: classicDecorationWhite.color,
+  fixedSize: Size(double.infinity, 30),
+  shape: RoundedRectangleBorder(
+    borderRadius: BorderRadius.circular(5),
+  ),
+);
+
 TextStyle bodySmall = GoogleFonts.poppins(
   color: Colors.white,
+  fontSize: 13,
+  fontWeight: FontWeight.w600,
+);
+
+TextStyle bodySmallRed = GoogleFonts.poppins(
+  color: red001,
   fontSize: 13,
   fontWeight: FontWeight.w600,
 );

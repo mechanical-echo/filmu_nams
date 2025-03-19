@@ -95,16 +95,24 @@ class UserController {
     }
   }
 
-  Future<UserCredential> signInWithGoogle() async {
-    final GoogleSignInAccount? user = await GoogleSignIn().signIn();
-    final GoogleSignInAuthentication auth = await user!.authentication;
+  Future<UserCredential?> signInWithGoogle() async {
+    try {
+      final GoogleSignInAccount? user = await GoogleSignIn().signIn();
+      if (user == null) {
+        throw Exception(["Google login failure"]);
+      }
+      final GoogleSignInAuthentication auth = await user.authentication;
 
-    final credential = GoogleAuthProvider.credential(
-      accessToken: auth.accessToken,
-      idToken: auth.idToken,
-    );
+      final credential = GoogleAuthProvider.credential(
+        accessToken: auth.accessToken,
+        idToken: auth.idToken,
+      );
 
-    return await _auth.signInWithCredential(credential);
+      return await _auth.signInWithCredential(credential);
+    } catch (exception) {
+      debugPrint("Error google login: ${exception.toString}");
+      return null;
+    }
   }
 }
 

@@ -1,10 +1,13 @@
+import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:filmu_nams/assets/dialog/dialog.dart';
 import 'package:filmu_nams/assets/theme.dart';
 import 'package:filmu_nams/controllers/movie_controller.dart';
 import 'package:filmu_nams/models/carousel_item.dart';
+import 'package:filmu_nams/views/admin/dashboard/widgets/manage_carousel_items/edit_carousel_item.dart/form_input.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/stylized_button.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class EditCarouselItem extends StatefulWidget {
@@ -26,8 +29,10 @@ class _EditCarouselItemState extends State<EditCarouselItem> {
 
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
+  ImagePicker imagePicker = ImagePicker();
 
   CarouselItemModel? data;
+  File? image;
   bool isLoading = true;
 
   Future<void> fetchItemData() async {
@@ -54,6 +59,7 @@ class _EditCarouselItemState extends State<EditCarouselItem> {
       isLoading = true;
     });
     try {
+      if (image != null) {}
       await MovieController().updateHomescreenCarousel(
         widget.id,
         titleController.text,
@@ -71,6 +77,13 @@ class _EditCarouselItemState extends State<EditCarouselItem> {
     });
 
     fetchItemData();
+  }
+
+  Future<void> _pickImage() async {
+    final pickedFile = await imagePicker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() => image = File(pickedFile.path));
+    }
   }
 
   @override
@@ -109,83 +122,25 @@ class _EditCarouselItemState extends State<EditCarouselItem> {
                             spacing: 15,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    decoration: classicDecorationWhiteSharper,
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 25,
-                                      vertical: 5,
-                                    ),
-                                    child: Text(
-                                      data!.title,
-                                      style: header2Red,
-                                    ),
-                                  ),
-                                  StylizedButton(
-                                    action: () => widget.action(0),
-                                    title: "Atpakaļ",
-                                    icon: Icons.chevron_left_rounded,
-                                    textStyle: header2Red,
-                                    iconSize: 35,
-                                  ),
-                                ],
-                              ),
+                              header(),
                               Divider(height: 20),
-                              Row(
-                                spacing: 10,
-                                children: [
-                                  Icon(
-                                    Icons.text_fields_rounded,
-                                    size: 25,
-                                    color: smokeyWhite,
-                                  ),
-                                  Text("Nosaukums", style: bodyLarge),
-                                ],
-                              ),
-                              TextFormField(
+                              FormInput(
+                                icon: Icons.text_fields_rounded,
+                                title: 'Nosaukums',
                                 controller: titleController,
+                                heightLines: 1,
                               ),
                               Container(),
-                              Row(
-                                spacing: 10,
-                                children: [
-                                  Icon(
-                                    Icons.text_snippet_rounded,
-                                    size: 25,
-                                    color: smokeyWhite,
-                                  ),
-                                  Text("Apraksts", style: bodyLarge),
-                                ],
-                              ),
-                              TextFormField(
+                              FormInput(
+                                icon: Icons.text_snippet_rounded,
+                                title: 'Apraksts',
                                 controller: descriptionController,
-                                keyboardType: TextInputType.multiline,
-                                minLines: 5,
-                                maxLines: 5,
+                                heightLines: 5,
                               ),
+                              // TODO: add toggle for a reference (movie or news) and reference dropdown
                             ],
                           ),
-                          IntrinsicHeight(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                StylizedButton(
-                                  action: updateCarouselItem,
-                                  title: "Saglabāt izmaiņas",
-                                  icon: Icons.save,
-                                ),
-                                StylizedButton(
-                                  action: () {},
-                                  title: "Dzēst elementu",
-                                  icon: Icons.delete_forever,
-                                ),
-                              ],
-                            ),
-                          ),
+                          buttonRow(),
                         ],
                       ),
                     ),
@@ -193,6 +148,53 @@ class _EditCarouselItemState extends State<EditCarouselItem> {
                 ],
               ),
             ),
+    );
+  }
+
+  Row header() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Container(
+          decoration: classicDecorationWhiteSharper,
+          padding: const EdgeInsets.symmetric(
+            horizontal: 25,
+            vertical: 5,
+          ),
+          child: Text(
+            data!.title,
+            style: header2Red,
+          ),
+        ),
+        StylizedButton(
+          action: () => widget.action(0),
+          title: "Atpakaļ",
+          icon: Icons.chevron_left_rounded,
+          textStyle: header2Red,
+          iconSize: 35,
+        ),
+      ],
+    );
+  }
+
+  IntrinsicHeight buttonRow() {
+    return IntrinsicHeight(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          StylizedButton(
+            action: updateCarouselItem,
+            title: "Saglabāt izmaiņas",
+            icon: Icons.save,
+          ),
+          StylizedButton(
+            action: () {},
+            title: "Dzēst elementu",
+            icon: Icons.delete_forever,
+          ),
+        ],
+      ),
     );
   }
 
@@ -212,13 +214,13 @@ class _EditCarouselItemState extends State<EditCarouselItem> {
               boxShadow: cardShadow,
             ),
             child: CachedNetworkImage(
-              imageUrl: data!.imageUrl,
+              imageUrl: image == null ? data!.imageUrl : image!.path,
               placeholder: (context, url) => loading(),
             ),
           ),
           SizedBox(height: 20),
           StylizedButton(
-            action: () {},
+            action: _pickImage,
             title: "Mainīt bildi",
             icon: Icons.image,
           ),

@@ -3,6 +3,7 @@ import 'package:filmu_nams/assets/decorations/background.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/admin_side_bar/admin_side_bar.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_carousel_items/edit_carousel_item.dart/edit_carousel_item.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_carousel_items/manage_carousel_items.dart';
+import 'package:filmu_nams/views/admin/dashboard/widgets/manage_movies/manage_movies.dart';
 import 'package:flutter/material.dart';
 
 class AdminDashboard extends StatefulWidget {
@@ -42,6 +43,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
 
     List<Widget> pages = [
       ManageCarouselItems(action: setPageToEdit),
+      ManageMovies(action: setPageToEdit),
       Container(width: 50, height: 50, color: Colors.red),
       Placeholder(),
       Container(width: 50, height: 50, color: Colors.yellow),
@@ -65,7 +67,10 @@ class _AdminDashboardState extends State<AdminDashboard> {
             ),
           ),
           AdminSideBar(
-              height: height, action: setCurrentPage, activePage: currentPage),
+            height: height,
+            action: setCurrentPage,
+            activePage: currentPage,
+          ),
         ],
       ),
     );

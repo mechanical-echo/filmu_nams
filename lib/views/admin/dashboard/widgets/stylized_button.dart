@@ -45,7 +45,7 @@ class _StylizedButtonState extends State<StylizedButton> {
 
   void onRelease() {
     setState(() {
-      decoration = classicDecorationWhiteSharperHover;
+      decoration = classicDecorationWhiteSharper;
     });
   }
 
@@ -59,7 +59,7 @@ class _StylizedButtonState extends State<StylizedButton> {
         onTapDown: (details) => onTap(),
         onTapUp: (details) => onRelease(),
         child: AnimatedContainer(
-          duration: Duration(milliseconds: 150),
+          duration: Duration(milliseconds: 50),
           decoration: decoration,
           padding: const EdgeInsets.symmetric(
             horizontal: 55,
