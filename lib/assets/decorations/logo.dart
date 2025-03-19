@@ -1,5 +1,5 @@
+import 'package:filmu_nams/assets/theme.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 class Logo extends StatelessWidget {
@@ -30,17 +30,7 @@ class Logo extends StatelessWidget {
             left: 10,
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              decoration: BoxDecoration(
-                color: Theme.of(context).focusColor,
-                borderRadius: BorderRadius.circular(8),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withAlpha(100),
-                    blurRadius: 8,
-                    offset: Offset(0, 4),
-                  ),
-                ],
-              ),
+              decoration: classicDecorationSharper,
               child: Row(
                 spacing: 10,
                 children: [
@@ -51,11 +41,7 @@ class Logo extends StatelessWidget {
                   ),
                   Text(
                     "Filmu Nams",
-                    style: GoogleFonts.poppins(
-                      color: Colors.white,
-                      fontSize: 25,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: header2,
                   ),
                 ],
               ),
@@ -63,27 +49,23 @@ class Logo extends StatelessWidget {
           ),
           Positioned(
             right: 10,
+            top: 15,
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              decoration: BoxDecoration(
-                color: Theme.of(context).focusColor,
-                borderRadius: BorderRadius.circular(8),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withAlpha(50),
-                    blurRadius: 10,
-                    offset: Offset(0, 4),
+              decoration: classicDecorationWhiteSharper,
+              child: Row(
+                spacing: 10,
+                children: [
+                  Icon(
+                    Icons.calendar_month,
+                    color: red001,
+                  ),
+                  Text(
+                    DateFormat('E\ndd.MM.', 'lv').format(DateTime.now()),
+                    style: bodySmallRed,
+                    textAlign: TextAlign.right,
                   ),
                 ],
-              ),
-              child: Text(
-                DateFormat('E dd.MM.', 'lv').format(DateTime.now()),
-                style: GoogleFonts.poppins(
-                    color: Theme.of(context)
-                        .bottomNavigationBarTheme
-                        .unselectedItemColor,
-                    fontSize: 17,
-                    fontWeight: FontWeight.bold),
               ),
             ),
           ),

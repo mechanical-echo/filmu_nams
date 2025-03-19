@@ -160,7 +160,7 @@ class _TicketBuyingFormState extends State<TicketBuyingForm> {
                                 child: DropdownButton(
                                   iconEnabledColor: Colors.white,
                                   underline: Container(),
-                                  style: bodyMedium,
+                                  style: bodySmall,
                                   items: timeList,
                                   onChanged: (value) {
                                     setState(() {

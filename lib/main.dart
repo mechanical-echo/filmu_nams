@@ -1,4 +1,4 @@
-import 'package:filmu_nams/views/admin/admin.dart';
+import 'package:filmu_nams/views/admin/auth/admin_auth.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -36,7 +36,7 @@ class App extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: theme,
-      home: kIsWeb ? Admin() : ClientApp(),
+      home: kIsWeb ? AdminAuth() : ClientApp(),
     );
   }
 }

@@ -6,12 +6,34 @@ import 'package:filmu_nams/models/schedule.dart';
 class MovieController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  final String carouselCollection = 'homescreen-carousel';
+
   Future<List<CarouselItemModel>> getHomescreenCarousel() async {
-    final response = await _firestore.collection('homescreen-carousel').get();
+    final response = await _firestore.collection(carouselCollection).get();
 
     return response.docs
-        .map((doc) => CarouselItemModel.fromMap(doc.data()))
+        .map((doc) => CarouselItemModel.fromMap(doc.data(), doc.id))
         .toList();
+  }
+
+  Future<CarouselItemModel> getCarouselItemById(String id) async {
+    final response =
+        await _firestore.collection(carouselCollection).doc(id).get();
+
+    return CarouselItemModel.fromMap(response.data()!, response.id);
+  }
+
+  Future<void> updateHomescreenCarousel(
+    String id,
+    String title,
+    String description,
+    String imageUrl,
+  ) async {
+    await _firestore.collection(carouselCollection).doc(id).update({
+      'title': title,
+      'description': description,
+      'image-url': imageUrl,
+    });
   }
 
   Future<List<MovieModel>> getAllMovies() async {
@@ -57,7 +79,9 @@ class MovieController {
 
   Future<List<ScheduleModel>> getAllSchedule() async {
     final response = await _firestore.collection('schedule').get();
-    final futures = response.docs.map((doc) => ScheduleModel.fromMapAsync(doc.data(), doc.id)).toList();
+    final futures = response.docs
+        .map((doc) => ScheduleModel.fromMapAsync(doc.data(), doc.id))
+        .toList();
     return await Future.wait(futures);
   }
 
@@ -66,8 +90,8 @@ class MovieController {
     List<ScheduleModel> scheduleList = [];
 
     for (var doc in qs.docs) {
-      final schedule =
-          await ScheduleModel.fromMapAsync(doc.data() as Map<String, dynamic>, doc.id);
+      final schedule = await ScheduleModel.fromMapAsync(
+          doc.data() as Map<String, dynamic>, doc.id);
       scheduleList.add(schedule);
     }
 

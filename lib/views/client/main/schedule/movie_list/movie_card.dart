@@ -221,7 +221,7 @@ class _MovieCardState extends State<MovieCard> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           SizedBox(width: 10),
-          Text(getDuration(), style: bodyMedium),
+          Text(getDuration(), style: bodySmall),
           Icon(Icons.access_time, size: 15, color: Colors.white),
         ],
       ),
@@ -235,7 +235,7 @@ class _MovieCardState extends State<MovieCard> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           SizedBox(width: 10),
-          Text(capitalize(widget.data.genre), style: bodyMedium),
+          Text(capitalize(widget.data.genre), style: bodySmall),
           Icon(Icons.movie, size: 15, color: Colors.white),
         ],
       ),
@@ -249,7 +249,7 @@ class _MovieCardState extends State<MovieCard> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           SizedBox(width: 10),
-          Text(widget.data.director, style: bodyMedium),
+          Text(widget.data.director, style: bodySmall),
           Icon(Icons.person, size: 15, color: Colors.white),
         ],
       ),
