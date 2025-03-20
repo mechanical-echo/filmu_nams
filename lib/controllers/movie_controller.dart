@@ -1,10 +1,14 @@
+import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:filmu_nams/models/carousel_item.dart';
 import 'package:filmu_nams/models/movie.dart';
 import 'package:filmu_nams/models/schedule.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
 
 class MovieController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseStorage _storage = FirebaseStorage.instance;
 
   final String carouselCollection = 'homescreen-carousel';
 
@@ -27,12 +31,18 @@ class MovieController {
     String id,
     String title,
     String description,
-    String imageUrl,
+    Uint8List? image,
+    String? url,
   ) async {
+    String? uploadResult;
+    if (image != null) {
+      uploadResult = await uploadCoverImage(id, image);
+    }
+
     await _firestore.collection(carouselCollection).doc(id).update({
       'title': title,
       'description': description,
-      'image-url': imageUrl,
+      'image-url': url ?? uploadResult,
     });
   }
 
@@ -96,5 +106,23 @@ class MovieController {
     }
 
     return scheduleList;
+  }
+
+  Future<String?> uploadCoverImage(
+    String userId,
+    Uint8List imageFileWeb,
+  ) async {
+    try {
+      Reference reference = _storage.ref().child('carousel_covers/$userId.jpg');
+
+      UploadTask uploadTask = reference.putData(imageFileWeb);
+
+      TaskSnapshot taskSnapshot = await uploadTask;
+
+      return await taskSnapshot.ref.getDownloadURL();
+    } catch (e) {
+      debugPrint('Image upload error: $e');
+      return null;
+    }
   }
 }

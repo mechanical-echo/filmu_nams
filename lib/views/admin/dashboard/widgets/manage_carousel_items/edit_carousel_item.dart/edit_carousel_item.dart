@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:typed_data';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:filmu_nams/assets/dialog/dialog.dart';
 import 'package:filmu_nams/assets/theme.dart';
@@ -8,6 +8,7 @@ import 'package:filmu_nams/views/admin/dashboard/widgets/manage_carousel_items/e
 import 'package:filmu_nams/views/admin/dashboard/widgets/stylized_button.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:image_picker_web/image_picker_web.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class EditCarouselItem extends StatefulWidget {
@@ -32,7 +33,7 @@ class _EditCarouselItemState extends State<EditCarouselItem> {
   ImagePicker imagePicker = ImagePicker();
 
   CarouselItemModel? data;
-  File? image;
+  Uint8List? image;
   bool isLoading = true;
 
   Future<void> fetchItemData() async {
@@ -59,12 +60,14 @@ class _EditCarouselItemState extends State<EditCarouselItem> {
       isLoading = true;
     });
     try {
-      if (image != null) {}
+      String? url = image == null ? data!.imageUrl : null;
+
       await MovieController().updateHomescreenCarousel(
         widget.id,
         titleController.text,
         descriptionController.text,
-        data!.imageUrl,
+        image,
+        url,
       );
     } catch (exception) {
       debugPrint(exception.toString());
@@ -80,9 +83,10 @@ class _EditCarouselItemState extends State<EditCarouselItem> {
   }
 
   Future<void> _pickImage() async {
-    final pickedFile = await imagePicker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() => image = File(pickedFile.path));
+    Uint8List? imageFromPicker = await ImagePickerWeb.getImageAsBytes();
+
+    if (imageFromPicker != null) {
+      setState(() => image = imageFromPicker);
     }
   }
 
@@ -208,15 +212,20 @@ class _EditCarouselItemState extends State<EditCarouselItem> {
       child: Column(
         children: [
           Container(
+            constraints: BoxConstraints(
+              maxHeight: 652,
+            ),
             clipBehavior: Clip.antiAlias,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(5),
               boxShadow: cardShadow,
             ),
-            child: CachedNetworkImage(
-              imageUrl: image == null ? data!.imageUrl : image!.path,
-              placeholder: (context, url) => loading(),
-            ),
+            child: image != null
+                ? Image.memory(image!)
+                : CachedNetworkImage(
+                    imageUrl: data!.imageUrl,
+                    placeholder: (context, url) => loading(),
+                  ),
           ),
           SizedBox(height: 20),
           StylizedButton(

@@ -4,6 +4,9 @@ import 'package:filmu_nams/views/admin/dashboard/widgets/admin_side_bar/admin_si
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_carousel_items/edit_carousel_item.dart/edit_carousel_item.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_carousel_items/manage_carousel_items.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_movies/manage_movies.dart';
+import 'package:filmu_nams/views/admin/dashboard/widgets/manage_users/add_user.dart';
+import 'package:filmu_nams/views/admin/dashboard/widgets/manage_users/edit_user.dart';
+import 'package:filmu_nams/views/admin/dashboard/widgets/manage_users/manage_users.dart';
 import 'package:flutter/material.dart';
 
 class AdminDashboard extends StatefulWidget {
@@ -14,7 +17,7 @@ class AdminDashboard extends StatefulWidget {
 }
 
 class _AdminDashboardState extends State<AdminDashboard> {
-  int currentPage = 0;
+  int currentPage = 3;
   String editingId = "";
   CarouselSwitchDirection direction = CarouselSwitchDirection.left;
 
@@ -45,11 +48,13 @@ class _AdminDashboardState extends State<AdminDashboard> {
       ManageCarouselItems(action: setPageToEdit),
       ManageMovies(action: setPageToEdit),
       Container(width: 50, height: 50, color: Colors.red),
-      Placeholder(),
+      ManageUsers(action: setPageToEdit),
       Container(width: 50, height: 50, color: Colors.yellow),
       Placeholder(),
       Container(width: 50, height: 50, color: Colors.lightBlue),
       EditCarouselItem(id: editingId, action: setCurrentPage),
+      EditUser(id: editingId, action: setCurrentPage),
+      AddUser(action: setCurrentPage),
     ];
 
     return Background(

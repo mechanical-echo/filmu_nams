@@ -8,12 +8,14 @@ class FormInput extends StatelessWidget {
     required this.title,
     required this.controller,
     required this.icon,
+    this.isPassword = false,
   });
 
   final int heightLines;
   final String title;
   final TextEditingController controller;
   final IconData icon;
+  final bool isPassword;
 
   @override
   Widget build(BuildContext context) {
@@ -33,9 +35,12 @@ class FormInput extends StatelessWidget {
         ),
         TextFormField(
           controller: controller,
-          keyboardType: TextInputType.multiline,
+          keyboardType: isPassword
+              ? TextInputType.visiblePassword
+              : TextInputType.multiline,
           minLines: heightLines,
           maxLines: heightLines,
+          obscureText: isPassword,
         ),
       ],
     );

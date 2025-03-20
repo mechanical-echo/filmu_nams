@@ -79,6 +79,7 @@ class _StylizedButtonState extends State<StylizedButton> {
                 child: Text(
                   widget.title,
                   style: widget.textStyle ?? bodyLargeRed,
+                  maxLines: 1,
                 ),
               ),
             ],
