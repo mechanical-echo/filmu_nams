@@ -8,7 +8,8 @@ import 'package:filmu_nams/views/admin/dashboard/widgets/manage_carousel_items/e
 import 'package:filmu_nams/views/admin/dashboard/widgets/stylized_button.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:image_picker_web/image_picker_web.dart';
+import 'dart:io';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class EditCarouselItem extends StatefulWidget {
@@ -83,10 +84,18 @@ class _EditCarouselItemState extends State<EditCarouselItem> {
   }
 
   Future<void> _pickImage() async {
-    Uint8List? imageFromPicker = await ImagePickerWeb.getImageAsBytes();
+    final ImagePicker picker = ImagePicker();
+    final XFile? pickedFile =
+        await picker.pickImage(source: ImageSource.gallery);
 
-    if (imageFromPicker != null) {
-      setState(() => image = imageFromPicker);
+    if (pickedFile != null && mounted) {
+      if (kIsWeb) {
+        final bytes = await pickedFile.readAsBytes();
+        setState(() => image = bytes);
+      } else {
+        final bytes = await File(pickedFile.path).readAsBytes();
+        setState(() => image = bytes);
+      }
     }
   }
 

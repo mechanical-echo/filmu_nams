@@ -1,8 +1,8 @@
 import 'package:filmu_nams/assets/theme.dart';
 import 'package:filmu_nams/controllers/movie_controller.dart';
 import 'package:filmu_nams/models/movie.dart';
+import 'package:filmu_nams/views/admin/dashboard/widgets/manage_movies/admin_movie_card.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_screen.dart';
-import 'package:filmu_nams/views/client/main/schedule/movie_list/movie_card.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
@@ -62,8 +62,9 @@ class _ManageMoviesState extends State<ManageMovies> {
     return (index) => Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
           decoration: classicDecorationSharp,
-          child: MovieCard(
+          child: AdminMovieCard(
             data: movies![index],
+            onEdit: (id) {},
             // customAction: (itemId) {
             //   widget.action(7, itemId);
             // },

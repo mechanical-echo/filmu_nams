@@ -5,7 +5,9 @@ import 'package:filmu_nams/controllers/user_controller.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_carousel_items/edit_carousel_item.dart/form_input.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/stylized_button.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker_web/image_picker_web.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class AddUser extends StatefulWidget {
@@ -77,10 +79,18 @@ class _AddUserState extends State<AddUser> {
   }
 
   Future<void> _pickImage() async {
-    Uint8List? imageFromPicker = await ImagePickerWeb.getImageAsBytes();
+    final ImagePicker picker = ImagePicker();
+    final XFile? pickedFile =
+        await picker.pickImage(source: ImageSource.gallery);
 
-    if (imageFromPicker != null && mounted) {
-      setState(() => image = imageFromPicker);
+    if (pickedFile != null && mounted) {
+      if (kIsWeb) {
+        final bytes = await pickedFile.readAsBytes();
+        setState(() => image = bytes);
+      } else {
+        final bytes = await File(pickedFile.path).readAsBytes();
+        setState(() => image = bytes);
+      }
     }
   }
 

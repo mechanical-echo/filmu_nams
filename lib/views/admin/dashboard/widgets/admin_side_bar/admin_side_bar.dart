@@ -31,81 +31,90 @@ class AdminSideBar extends StatelessWidget {
       FirebaseAuth.instance.signOut();
     }
 
+    bool isDrawer = Scaffold.of(context).hasDrawer;
+    double sidebarWidth = isDrawer ? double.infinity : 300;
+
     return Container(
       height: height,
-      width: 300,
-      margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+      width: sidebarWidth,
+      margin: isDrawer
+          ? EdgeInsets.zero
+          : const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-      decoration: classicDecorationDark,
-      child: Stack(
-        clipBehavior: Clip.none,
+      decoration: isDrawer ? null : classicDecorationDark,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        spacing: 10,
         children: [
-          Column(
-            spacing: 10,
-            children: [
-              AdminLogo(),
-              Container(
-                margin: const EdgeInsets.symmetric(vertical: 10),
-                child: Divider(
-                  color: smokeyWhite.withAlpha(100),
-                ),
-              ),
-              AdminSideBarButton(
-                title: 'Sākuma lapas elementi',
-                icon: Icons.home,
-                action: () => action(0),
-                active: activePage == 0,
-              ),
-              AdminSideBarButton(
-                title: 'Filmas',
-                icon: Icons.movie,
-                action: () => action(1),
-                active: activePage == 1,
-              ),
-              AdminSideBarButton(
-                title: 'Saraksts',
-                icon: Icons.list,
-                action: () => action(2),
-                active: activePage == 2,
-              ),
-              AdminSideBarButton(
-                title: 'Lietotāji',
-                icon: Icons.people,
-                action: () => action(3),
-                active: activePage == 3,
-              ),
-              AdminSideBarButton(
-                title: 'Piedāvājumi',
-                icon: Icons.percent,
-                action: () => action(4),
-                active: activePage == 4,
-              ),
-              AdminSideBarButton(
-                title: 'Promokodi',
-                icon: Icons.abc,
-                action: () => action(5),
-                active: activePage == 5,
-              ),
-              AdminSideBarButton(
-                title: 'Maksājumi',
-                icon: Icons.payments,
-                action: () => action(6),
-                active: activePage == 6,
-              ),
-              AdminSideBarButton(
-                title: 'Firebase',
-                icon: Icons.local_fire_department_sharp,
-                action: openLink,
-              ),
-            ],
-          ),
-          Positioned(
-            bottom: 0,
-            child: AdminSideBarButton(
-              title: 'Izlogoties',
-              icon: Icons.logout,
-              action: logout,
+          AdminLogo(),
+          Container(
+            margin: const EdgeInsets.symmetric(vertical: 10),
+            child: Divider(
+              color: smokeyWhite.withAlpha(100),
             ),
+          ),
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.only(bottom: 30),
+              child: Column(
+                spacing: 10,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  AdminSideBarButton(
+                    title: 'Sākuma lapas elementi',
+                    icon: Icons.home,
+                    action: () => action(0),
+                    active: activePage == 0,
+                  ),
+                  AdminSideBarButton(
+                    title: 'Filmas',
+                    icon: Icons.movie,
+                    action: () => action(1),
+                    active: activePage == 1,
+                  ),
+                  AdminSideBarButton(
+                    title: 'Saraksts',
+                    icon: Icons.list,
+                    action: () => action(2),
+                    active: activePage == 2,
+                  ),
+                  AdminSideBarButton(
+                    title: 'Lietotāji',
+                    icon: Icons.people,
+                    action: () => action(3),
+                    active: activePage == 3,
+                  ),
+                  AdminSideBarButton(
+                    title: 'Piedāvājumi',
+                    icon: Icons.percent,
+                    action: () => action(4),
+                    active: activePage == 4,
+                  ),
+                  AdminSideBarButton(
+                    title: 'Promokodi',
+                    icon: Icons.abc,
+                    action: () => action(5),
+                    active: activePage == 5,
+                  ),
+                  AdminSideBarButton(
+                    title: 'Maksājumi',
+                    icon: Icons.payments,
+                    action: () => action(6),
+                    active: activePage == 6,
+                  ),
+                  AdminSideBarButton(
+                    title: 'Firebase',
+                    icon: Icons.local_fire_department_sharp,
+                    action: openLink,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          AdminSideBarButton(
+            title: 'Izlogoties',
+            icon: Icons.logout,
+            action: logout,
           )
         ],
       ),
@@ -127,13 +136,13 @@ class AdminLogo extends StatelessWidget {
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            spacing: 8,
             children: [
               Icon(
                 Icons.movie_filter,
                 color: red001,
                 size: 25,
               ),
+              const SizedBox(width: 8),
               Text(
                 "Filmu Nams",
                 style: GoogleFonts.poppins(
@@ -195,8 +204,28 @@ class _AdminSideBarButtonState extends State<AdminSideBarButton> {
 
   @override
   Widget build(BuildContext context) {
+    bool isDrawer = Scaffold.of(context).hasDrawer;
+
+    if (isDrawer) {
+      // Simpler version for drawer
+      return ListTile(
+        leading: Icon(
+          widget.icon,
+          size: 25,
+          color: red001,
+        ),
+        title: Text(
+          widget.title,
+          style: bodyMediumRed,
+        ),
+        selected: widget.active,
+        onTap: widget.action,
+      );
+    }
+
+    // Original fancy version for sidebar
     return SizedBox(
-      width: 500,
+      width: double.infinity,
       height: 50,
       child: Stack(
         clipBehavior: Clip.none,

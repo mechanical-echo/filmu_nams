@@ -3,8 +3,8 @@ import 'package:filmu_nams/controllers/user_controller.dart';
 import 'package:filmu_nams/models/user.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_users/user_card/user_card.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/stylized_button.dart';
+import 'package:filmu_nams/views/admin/dashboard/widgets/manage_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class ManageUsers extends StatefulWidget {
   const ManageUsers({
@@ -49,61 +49,12 @@ class _ManageUsersState extends State<ManageUsers> {
       spacing: 10,
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        Container(
-          constraints: BoxConstraints(
-            maxWidth: 1300,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                decoration: classicDecorationSharper,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 25,
-                  vertical: 10,
-                ),
-                child: Text("Lietotāji", style: header1),
-              ),
-              Container(
-                decoration: classicDecorationSharper,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 25,
-                  vertical: 10,
-                ),
-                child: Text("Kopā: ${users.length}", style: header1),
-              ),
-            ],
-          ),
+        ManageScreen(
+          count: users.length,
+          isLoading: isLoading,
+          itemGenerator: generateCard,
+          title: "Lietotāji",
         ),
-        AnimatedSize(
-          alignment: Alignment.centerLeft,
-          duration: const Duration(milliseconds: 250),
-          curve: Curves.easeOut,
-          child: Container(
-            constraints: BoxConstraints(
-              maxHeight: 700,
-              maxWidth: 1300,
-            ),
-            decoration: classicDecorationDark,
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-            child: isLoading
-                ? Center(
-                    child: LoadingAnimationWidget.staggeredDotsWave(
-                      color: smokeyWhite,
-                      size: 100,
-                    ),
-                  )
-                : GridView.count(
-                    crossAxisCount: 3,
-                    childAspectRatio: 1.5,
-                    mainAxisSpacing: 15,
-                    crossAxisSpacing: 20,
-                    children: List.generate(
-                        users.length, (index) => generateCard(index)),
-                  ),
-          ),
-        ),
-        SizedBox(),
         IntrinsicWidth(
           child: StylizedButton(
             action: () => widget.action(9, ""),

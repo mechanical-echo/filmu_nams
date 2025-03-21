@@ -1,3 +1,4 @@
+import 'dart:typed_data';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:filmu_nams/assets/dialog/dialog.dart';
 import 'package:filmu_nams/assets/theme.dart';
@@ -5,9 +6,10 @@ import 'package:filmu_nams/controllers/user_controller.dart';
 import 'package:filmu_nams/models/user.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_carousel_items/edit_carousel_item.dart/form_input.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/stylized_button.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
-import 'package:image_picker_web/image_picker_web.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -144,10 +146,18 @@ class _EditUserState extends State<EditUser> {
   }
 
   Future<void> _pickImage() async {
-    Uint8List? imageFromPicker = await ImagePickerWeb.getImageAsBytes();
+    final ImagePicker picker = ImagePicker();
+    final XFile? pickedFile =
+        await picker.pickImage(source: ImageSource.gallery);
 
-    if (imageFromPicker != null) {
-      setState(() => image = imageFromPicker);
+    if (pickedFile != null && mounted) {
+      if (kIsWeb) {
+        final bytes = await pickedFile.readAsBytes();
+        setState(() => image = bytes);
+      } else {
+        final bytes = await File(pickedFile.path).readAsBytes();
+        setState(() => image = bytes);
+      }
     }
   }
 

@@ -1,5 +1,6 @@
 import 'package:filmu_nams/assets/animations/carousel_switch.dart';
 import 'package:filmu_nams/assets/decorations/background.dart';
+import 'package:filmu_nams/assets/theme.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/admin_side_bar/admin_side_bar.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_carousel_items/edit_carousel_item.dart/edit_carousel_item.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_carousel_items/manage_carousel_items.dart';
@@ -20,6 +21,8 @@ class _AdminDashboardState extends State<AdminDashboard> {
   int currentPage = 3;
   String editingId = "";
   CarouselSwitchDirection direction = CarouselSwitchDirection.left;
+  bool isSidebarVisible = true;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   void setCurrentPage(int newPageIndex) {
     setState(() {
@@ -27,6 +30,10 @@ class _AdminDashboardState extends State<AdminDashboard> {
           ? CarouselSwitchDirection.left
           : CarouselSwitchDirection.right;
       currentPage = newPageIndex;
+      // Close drawer when changing pages on mobile
+      if (_scaffoldKey.currentState?.isDrawerOpen ?? false) {
+        Navigator.of(context).pop();
+      }
     });
   }
 
@@ -37,12 +44,24 @@ class _AdminDashboardState extends State<AdminDashboard> {
           : CarouselSwitchDirection.right;
       currentPage = newPageIndex;
       editingId = id;
+      // Close drawer when changing pages on mobile
+      if (_scaffoldKey.currentState?.isDrawerOpen ?? false) {
+        Navigator.of(context).pop();
+      }
+    });
+  }
+
+  void toggleSidebar() {
+    setState(() {
+      isSidebarVisible = !isSidebarVisible;
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
+    bool isSmallScreen = width < 1200;
 
     List<Widget> pages = [
       ManageCarouselItems(action: setPageToEdit),
@@ -57,26 +76,65 @@ class _AdminDashboardState extends State<AdminDashboard> {
       AddUser(action: setCurrentPage),
     ];
 
-    return Background(
-      child: Row(
-        textDirection: TextDirection.rtl,
-        children: [
-          Expanded(
-            child: Center(
-              child: SingleChildScrollView(
-                child: CarouselSwitch(
-                  direction: direction,
-                  child: pages[currentPage],
-                ),
+    return Scaffold(
+      key: _scaffoldKey,
+      drawer: isSmallScreen
+          ? Drawer(
+              child: AdminSideBar(
+                height: height,
+                action: setCurrentPage,
+                activePage: currentPage,
+              ),
+            )
+          : null,
+      body: Background(
+        child: Row(
+          children: [
+            if (!isSmallScreen && isSidebarVisible)
+              AdminSideBar(
+                height: height,
+                action: setCurrentPage,
+                activePage: currentPage,
+              ),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (isSmallScreen)
+                    IntrinsicWidth(
+                      child: Container(
+                        margin: const EdgeInsets.all(16),
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                        decoration: classicDecorationDarkSharper,
+                        child: Row(
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.menu),
+                              color: smokeyWhite,
+                              onPressed: () {
+                                _scaffoldKey.currentState?.openDrawer();
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  Expanded(
+                    child: Center(
+                      child: SingleChildScrollView(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: CarouselSwitch(
+                          direction: direction,
+                          child: pages[currentPage],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-          ),
-          AdminSideBar(
-            height: height,
-            action: setCurrentPage,
-            activePage: currentPage,
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
