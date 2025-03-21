@@ -6,7 +6,7 @@ import 'package:filmu_nams/assets/input/outline_button_icon.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'dart:async'; // Import Timer class
+import 'dart:async';
 
 class EmailNotVerified extends StatefulWidget {
   const EmailNotVerified({super.key});
@@ -16,7 +16,7 @@ class EmailNotVerified extends StatefulWidget {
 }
 
 class _EmailNotVerifiedState extends State<EmailNotVerified> {
-  final user = FirebaseAuth.instance.currentUser; // Define user here
+  final user = FirebaseAuth.instance.currentUser;
   bool isButtonDisabled = false;
   int timerDuration = 30;
   Timer? timer;
@@ -92,9 +92,8 @@ class _EmailNotVerifiedState extends State<EmailNotVerified> {
                         FilledTextIconButton(
                           icon: Icons.mark_email_read_outlined,
                           title: "Nosūtīt saiti",
-                          onPressed: isButtonDisabled
-                              ? () {}
-                              : sendVerificationEmail, // Use a lambda function
+                          onPressed:
+                              isButtonDisabled ? () {} : sendVerificationEmail,
                           paddingY: 25,
                         ),
                         OutlineButtonIcon(
@@ -134,7 +133,7 @@ class _EmailNotVerifiedState extends State<EmailNotVerified> {
         setState(() {
           isButtonDisabled = false;
           timer.cancel();
-          timerDuration = 30; // Reset timer
+          timerDuration = 30;
         });
       }
     });

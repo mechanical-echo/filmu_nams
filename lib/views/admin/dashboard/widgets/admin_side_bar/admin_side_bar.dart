@@ -207,7 +207,6 @@ class _AdminSideBarButtonState extends State<AdminSideBarButton> {
     bool isDrawer = Scaffold.of(context).hasDrawer;
 
     if (isDrawer) {
-      // Simpler version for drawer
       return ListTile(
         leading: Icon(
           widget.icon,
@@ -223,7 +222,6 @@ class _AdminSideBarButtonState extends State<AdminSideBarButton> {
       );
     }
 
-    // Original fancy version for sidebar
     return SizedBox(
       width: double.infinity,
       height: 50,

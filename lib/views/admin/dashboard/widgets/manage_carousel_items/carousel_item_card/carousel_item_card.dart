@@ -23,9 +23,8 @@ class CarouselItemCard extends StatefulWidget {
 class _CarouselItemCardState extends State<CarouselItemCard> {
   @override
   Widget build(BuildContext context) {
-    // Use the base ItemCard with specific content for carousel items
     return ItemCard(
-      cardWidth: 365, // 175 (text) + 190 (poster)
+      cardWidth: 365,
       leftContent: _buildPoster(),
       titleWidget: _buildTitle(),
       detailsWidget: _buildDescription(),

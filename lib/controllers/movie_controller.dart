@@ -125,4 +125,93 @@ class MovieController {
       return null;
     }
   }
+
+  Future<void> updateMovie(
+    String id,
+    String title,
+    String description,
+    String director,
+    String genre,
+    String rating,
+    int duration,
+    List<String> actors,
+    Uint8List? posterImage,
+    Uint8List? heroImage,
+    String? posterUrl,
+    String? heroUrl,
+  ) async {
+    String? uploadedPosterUrl;
+    String? uploadedHeroUrl;
+
+    if (posterImage != null) {
+      uploadedPosterUrl = await uploadMovieImage(id, posterImage, 'poster');
+    }
+
+    if (heroImage != null) {
+      uploadedHeroUrl = await uploadMovieImage(id, heroImage, 'hero');
+    }
+
+    await _firestore.collection('movies').doc(id).update({
+      'title': title,
+      'description': description,
+      'director': director,
+      'genre': genre,
+      'rating': rating,
+      'duration': duration,
+      'actors': actors,
+      'poster-url': posterUrl ?? uploadedPosterUrl ?? '',
+      'hero-url': heroUrl ?? uploadedHeroUrl ?? '',
+    });
+  }
+
+  Future<void> deleteMovie(String id) async {
+    try {
+      DocumentReference movieRef = _firestore.collection('movies').doc(id);
+      QuerySnapshot scheduleQuery = await _firestore
+          .collection('schedule')
+          .where('movie', isEqualTo: movieRef)
+          .get();
+
+      WriteBatch batch = _firestore.batch();
+      for (var doc in scheduleQuery.docs) {
+        batch.delete(doc.reference);
+      }
+
+      batch.delete(movieRef);
+
+      await batch.commit();
+
+      try {
+        await _storage.ref().child('movie_posters/$id.jpg').delete();
+        await _storage.ref().child('movie_heroes/$id.jpg').delete();
+      } catch (e) {
+        debugPrint('Error deleting movie images: $e');
+      }
+    } catch (e) {
+      debugPrint('Error deleting movie: $e');
+      throw e;
+    }
+  }
+
+  Future<String?> uploadMovieImage(
+    String movieId,
+    Uint8List imageData,
+    String type,
+  ) async {
+    try {
+      final path = type == 'poster' ? 'movie_posters' : 'movie_heroes';
+      Reference reference = _storage.ref().child('$path/$movieId.jpg');
+
+      UploadTask uploadTask = reference.putData(
+        imageData,
+        SettableMetadata(contentType: 'image/jpeg'),
+      );
+
+      TaskSnapshot taskSnapshot = await uploadTask;
+      return await taskSnapshot.ref.getDownloadURL();
+    } catch (e) {
+      debugPrint('Movie image upload error: $e');
+      return null;
+    }
+  }
 }

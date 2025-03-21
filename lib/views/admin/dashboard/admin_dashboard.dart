@@ -4,6 +4,7 @@ import 'package:filmu_nams/assets/theme.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/admin_side_bar/admin_side_bar.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_carousel_items/edit_carousel_item.dart/edit_carousel_item.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_carousel_items/manage_carousel_items.dart';
+import 'package:filmu_nams/views/admin/dashboard/widgets/manage_movies/edit_movie.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_movies/manage_movies.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_users/add_user.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_users/edit_user.dart';
@@ -30,7 +31,6 @@ class _AdminDashboardState extends State<AdminDashboard> {
           ? CarouselSwitchDirection.left
           : CarouselSwitchDirection.right;
       currentPage = newPageIndex;
-      // Close drawer when changing pages on mobile
       if (_scaffoldKey.currentState?.isDrawerOpen ?? false) {
         Navigator.of(context).pop();
       }
@@ -44,7 +44,6 @@ class _AdminDashboardState extends State<AdminDashboard> {
           : CarouselSwitchDirection.right;
       currentPage = newPageIndex;
       editingId = id;
-      // Close drawer when changing pages on mobile
       if (_scaffoldKey.currentState?.isDrawerOpen ?? false) {
         Navigator.of(context).pop();
       }
@@ -74,6 +73,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
       EditCarouselItem(id: editingId, action: setCurrentPage),
       EditUser(id: editingId, action: setCurrentPage),
       AddUser(action: setCurrentPage),
+      EditMovie(id: editingId, action: setCurrentPage)
     ];
 
     return Scaffold(

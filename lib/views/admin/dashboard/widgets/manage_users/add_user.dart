@@ -58,7 +58,7 @@ class _AddUserState extends State<AddUser> {
         );
       } else {
         StylizedDialog.alert(context, "Veiksmīgi", "Lietotājs ir pievienots");
-        widget.action(3); // Return to users list
+        widget.action(3);
       }
     } catch (exception) {
       debugPrint(exception.toString());

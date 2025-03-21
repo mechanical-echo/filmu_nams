@@ -64,10 +64,9 @@ class _ManageMoviesState extends State<ManageMovies> {
           decoration: classicDecorationSharp,
           child: AdminMovieCard(
             data: movies![index],
-            onEdit: (id) {},
-            // customAction: (itemId) {
-            //   widget.action(7, itemId);
-            // },
+            onEdit: (itemId) {
+              widget.action(10, itemId);
+            },
           ),
         );
   }

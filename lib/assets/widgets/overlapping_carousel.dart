@@ -29,7 +29,6 @@ class _OverlappingCarouselState extends State<OverlappingCarousel> {
   double _currentPage = 0;
   static const int _infiniteOffset = 10000;
 
-  // Calculate dynamic values based on item count
   double get _viewportFraction {
     if (widget.items.length <= 1) return 1.0;
     if (widget.items.length == 2) return 0.7;
@@ -166,7 +165,7 @@ class _OverlappingCarouselState extends State<OverlappingCarousel> {
               Positioned.fill(
                 child: PageView.builder(
                   controller: _pageController,
-                  itemCount: null, // null for infinite scrolling
+                  itemCount: null,
                   itemBuilder: (context, index) => const SizedBox(),
                 ),
               ),

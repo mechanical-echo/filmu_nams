@@ -28,9 +28,8 @@ class _UserCardState extends State<UserCard> {
     final currentUserId = FirebaseAuth.instance.currentUser?.uid;
     final isCurrentUser = currentUserId == widget.data.id;
 
-    // Use the base ItemCard with specific content for user cards
     return ItemCard(
-      cardWidth: 360, // 170 (details) + 190 (user image)
+      cardWidth: 360,
       leftContent: _buildUserImage(),
       titleWidget: _buildUserName(),
       detailsWidget: _buildUserDetails(),
