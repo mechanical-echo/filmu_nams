@@ -13,8 +13,8 @@ class AdminSideBar extends StatelessWidget {
   });
 
   final double height;
-  final Function(int) action;
-  final int activePage;
+  final Function(String) action;
+  final String activePage;
 
   @override
   Widget build(BuildContext context) {
@@ -63,44 +63,44 @@ class AdminSideBar extends StatelessWidget {
                   AdminSideBarButton(
                     title: 'Sākuma lapas elementi',
                     icon: Icons.home,
-                    action: () => action(0),
-                    active: activePage == 0,
+                    action: () => action("mng_carousel"),
+                    active: activePage == "mng_carousel",
                   ),
                   AdminSideBarButton(
                     title: 'Filmas',
                     icon: Icons.movie,
-                    action: () => action(1),
-                    active: activePage == 1,
+                    action: () => action("mng_movies"),
+                    active: activePage == "mng_movies",
                   ),
                   AdminSideBarButton(
                     title: 'Saraksts',
                     icon: Icons.list,
-                    action: () => action(2),
-                    active: activePage == 2,
+                    action: () => action("mng_schedule"),
+                    active: activePage == "mng_schedule",
                   ),
                   AdminSideBarButton(
                     title: 'Lietotāji',
                     icon: Icons.people,
-                    action: () => action(3),
-                    active: activePage == 3,
+                    action: () => action("mng_users"),
+                    active: activePage == "mng_users",
                   ),
                   AdminSideBarButton(
                     title: 'Piedāvājumi',
                     icon: Icons.percent,
-                    action: () => action(4),
-                    active: activePage == 4,
+                    action: () => action("mng_offers"),
+                    active: activePage == "mng_offers",
                   ),
                   AdminSideBarButton(
                     title: 'Promokodi',
                     icon: Icons.abc,
-                    action: () => action(5),
-                    active: activePage == 5,
+                    action: () => action("mng_promos"),
+                    active: activePage == "mng_promos",
                   ),
                   AdminSideBarButton(
                     title: 'Maksājumi',
                     icon: Icons.payments,
-                    action: () => action(6),
-                    active: activePage == 6,
+                    action: () => action("mng_payments"),
+                    active: activePage == "mng_payments",
                   ),
                   AdminSideBarButton(
                     title: 'Firebase',

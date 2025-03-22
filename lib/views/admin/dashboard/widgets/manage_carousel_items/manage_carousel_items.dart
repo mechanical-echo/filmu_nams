@@ -11,7 +11,7 @@ class ManageCarouselItems extends StatefulWidget {
     required this.action,
   });
 
-  final Function(int, String) action;
+  final Function(String, String) action;
 
   @override
   State<ManageCarouselItems> createState() => _ManageCarouselItemsState();
@@ -64,7 +64,7 @@ class _ManageCarouselItemsState extends State<ManageCarouselItems> {
           child: CarouselItemCard(
             data: carouselItems[index],
             onEdit: (itemId) {
-              widget.action(7, itemId);
+              widget.action("edit_carousel", itemId);
             },
           ),
         );

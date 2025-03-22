@@ -12,7 +12,7 @@ class ManageUsers extends StatefulWidget {
     required this.action,
   });
 
-  final Function(int, String) action;
+  final Function(String, String) action;
 
   @override
   State<ManageUsers> createState() => _ManageUsersState();
@@ -57,7 +57,7 @@ class _ManageUsersState extends State<ManageUsers> {
         ),
         IntrinsicWidth(
           child: StylizedButton(
-            action: () => widget.action(9, ""),
+            action: () => widget.action("add_user", ""),
             title: "Pievienot lietotāju",
             icon: Icons.person_add,
           ),
@@ -73,7 +73,7 @@ class _ManageUsersState extends State<ManageUsers> {
       child: UserCard(
         data: users[index],
         onEdit: (userId) {
-          widget.action(8, userId);
+          widget.action("edit_user", userId);
         },
       ),
     );

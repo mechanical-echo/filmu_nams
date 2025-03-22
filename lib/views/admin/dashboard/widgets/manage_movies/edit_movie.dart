@@ -18,7 +18,7 @@ class EditMovie extends StatefulWidget {
   });
 
   final String id;
-  final Function(int) action;
+  final Function(String) action;
 
   @override
   State<EditMovie> createState() => _EditMovieState();
@@ -150,7 +150,7 @@ class _EditMovieState extends State<EditMovie> {
         await _movieController.deleteMovie(widget.id);
 
         if (mounted) {
-          widget.action(1);
+          widget.action("mng_movies");
         }
       }
     } catch (exception) {
@@ -251,7 +251,7 @@ class _EditMovieState extends State<EditMovie> {
             ),
           ),
           StylizedButton(
-            action: () => widget.action(1),
+            action: () => widget.action("mng_movies"),
             title: "Atpakaļ",
             icon: Icons.chevron_left_rounded,
             textStyle: header2Red,

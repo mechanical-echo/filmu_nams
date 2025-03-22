@@ -12,7 +12,7 @@ class ManageMovies extends StatefulWidget {
     required this.action,
   });
 
-  final Function(int, String) action;
+  final Function(String, String) action;
 
   @override
   State<ManageMovies> createState() => _ManageMoviesState();
@@ -65,7 +65,7 @@ class _ManageMoviesState extends State<ManageMovies> {
           child: AdminMovieCard(
             data: movies![index],
             onEdit: (itemId) {
-              widget.action(10, itemId);
+              widget.action("edit_movie", itemId);
             },
           ),
         );

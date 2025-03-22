@@ -19,34 +19,24 @@ class AdminDashboard extends StatefulWidget {
 }
 
 class _AdminDashboardState extends State<AdminDashboard> {
-  int currentPage = 3;
+  String currentPage = "mng_carousel";
   String editingId = "";
   CarouselSwitchDirection direction = CarouselSwitchDirection.left;
   bool isSidebarVisible = true;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  void setCurrentPage(int newPageIndex) {
+  void setCurrentPage(String pageId) {
     setState(() {
-      direction = newPageIndex > currentPage
-          ? CarouselSwitchDirection.left
-          : CarouselSwitchDirection.right;
-      currentPage = newPageIndex;
-      if (_scaffoldKey.currentState?.isDrawerOpen ?? false) {
-        Navigator.of(context).pop();
-      }
+      currentPage = pageId;
+      hideDrawer();
     });
   }
 
-  void setPageToEdit(int newPageIndex, String id) {
+  void setPageToEdit(String pageId, String id) {
     setState(() {
-      direction = newPageIndex > currentPage
-          ? CarouselSwitchDirection.left
-          : CarouselSwitchDirection.right;
-      currentPage = newPageIndex;
+      currentPage = pageId;
       editingId = id;
-      if (_scaffoldKey.currentState?.isDrawerOpen ?? false) {
-        Navigator.of(context).pop();
-      }
+      hideDrawer();
     });
   }
 
@@ -56,25 +46,38 @@ class _AdminDashboardState extends State<AdminDashboard> {
     });
   }
 
+  void hideDrawer() {
+    setState(() {
+      if (_scaffoldKey.currentState?.isDrawerOpen ?? false) {
+        Navigator.of(context).pop();
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     bool isSmallScreen = width < 1200;
 
-    List<Widget> pages = [
-      ManageCarouselItems(action: setPageToEdit),
-      ManageMovies(action: setPageToEdit),
-      Container(width: 50, height: 50, color: Colors.red),
-      ManageUsers(action: setPageToEdit),
-      Container(width: 50, height: 50, color: Colors.yellow),
-      Placeholder(),
-      Container(width: 50, height: 50, color: Colors.lightBlue),
-      EditCarouselItem(id: editingId, action: setCurrentPage),
-      EditUser(id: editingId, action: setCurrentPage),
-      AddUser(action: setCurrentPage),
-      EditMovie(id: editingId, action: setCurrentPage)
-    ];
+    Map<String, Widget> views = {
+      // manage views
+      "mng_carousel": ManageCarouselItems(action: setPageToEdit),
+      "mng_movies": ManageMovies(action: setPageToEdit),
+      "mng_schedule": Container(width: 50, height: 50, color: Colors.red),
+      "mng_users": ManageUsers(action: setPageToEdit),
+      "mng_offers": Container(width: 50, height: 50, color: Colors.yellow),
+      "mng_promos": Placeholder(),
+      "mng_payments": Container(width: 50, height: 50, color: Colors.lightBlue),
+
+      // edit views
+      "edit_carousel": EditCarouselItem(id: editingId, action: setCurrentPage),
+      "edit_movie": EditMovie(id: editingId, action: setCurrentPage),
+      "edit_user": EditUser(id: editingId, action: setCurrentPage),
+
+      // add views
+      "add_user": AddUser(action: setCurrentPage),
+    };
 
     return Scaffold(
       key: _scaffoldKey,
@@ -125,7 +128,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: CarouselSwitch(
                           direction: direction,
-                          child: pages[currentPage],
+                          child: views[currentPage]!,
                         ),
                       ),
                     ),

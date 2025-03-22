@@ -20,7 +20,7 @@ class EditCarouselItem extends StatefulWidget {
   });
 
   final String id;
-  final Function(int) action;
+  final Function(String) action;
 
   @override
   State<EditCarouselItem> createState() => _EditCarouselItemState();
@@ -181,7 +181,7 @@ class _EditCarouselItemState extends State<EditCarouselItem> {
           ),
         ),
         StylizedButton(
-          action: () => widget.action(0),
+          action: () => widget.action("mng_carousel"),
           title: "Atpakaļ",
           icon: Icons.chevron_left_rounded,
           textStyle: header2Red,
