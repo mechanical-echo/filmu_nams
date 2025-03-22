@@ -6,6 +6,9 @@ import 'package:filmu_nams/views/admin/dashboard/widgets/manage_carousel_items/e
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_carousel_items/manage_carousel_items.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_movies/edit_movie.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_movies/manage_movies.dart';
+import 'package:filmu_nams/views/admin/dashboard/widgets/manage_schedule/add_schedule.dart';
+import 'package:filmu_nams/views/admin/dashboard/widgets/manage_schedule/edit_schedule.dart';
+import 'package:filmu_nams/views/admin/dashboard/widgets/manage_schedule/manage_schedule.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_users/add_user.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_users/edit_user.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_users/manage_users.dart';
@@ -64,7 +67,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
       // manage views
       "mng_carousel": ManageCarouselItems(action: setPageToEdit),
       "mng_movies": ManageMovies(action: setPageToEdit),
-      "mng_schedule": Container(width: 50, height: 50, color: Colors.red),
+      "mng_schedule": ManageSchedule(action: setPageToEdit),
       "mng_users": ManageUsers(action: setPageToEdit),
       "mng_offers": Container(width: 50, height: 50, color: Colors.yellow),
       "mng_promos": Placeholder(),
@@ -73,10 +76,12 @@ class _AdminDashboardState extends State<AdminDashboard> {
       // edit views
       "edit_carousel": EditCarouselItem(id: editingId, action: setCurrentPage),
       "edit_movie": EditMovie(id: editingId, action: setCurrentPage),
+      "edit_schedule": EditSchedule(id: editingId, action: setCurrentPage),
       "edit_user": EditUser(id: editingId, action: setCurrentPage),
 
       // add views
       "add_user": AddUser(action: setCurrentPage),
+      "add_schedule": AddSchedule(action: setCurrentPage),
     };
 
     return Scaffold(

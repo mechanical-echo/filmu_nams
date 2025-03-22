@@ -30,7 +30,7 @@ class _ManageScreenState extends State<ManageScreen> {
     double calculatedHeight() => height * 0.7;
 
     double itemWidth = 400.0;
-    double itemHeight = 300.0;
+    double itemHeight = 320.0;
 
     int calculateItemsPerRow(double containerWidth) {
       int itemsPerRow = (containerWidth / (itemWidth + 20)).floor();

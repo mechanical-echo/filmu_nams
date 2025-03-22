@@ -73,10 +73,10 @@ class UserController {
         'createdAt': FieldValue.serverTimestamp(),
       });
 
-      await user.updateProfile(
-        displayName: name,
-        photoURL: imageUrl,
-      );
+      await user.updateDisplayName(name);
+      if (imageUrl != null) {
+        await user.updatePhotoURL(imageUrl);
+      }
 
       return RegistrationResponse(user: user);
     } on FirebaseAuthException catch (e) {
