@@ -84,7 +84,7 @@ class _FoldableDescriptionState extends State<FoldableDescription>
                         heightFactor: 1 - (0.78 * (1 - _clipAnimation.value)),
                         child: Text(
                           widget.data.description,
-                          style: bodyMedium,
+                          style: bodySmall,
                           textAlign: TextAlign.justify,
                         ),
                       ),

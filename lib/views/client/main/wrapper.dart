@@ -1,4 +1,5 @@
 import 'package:filmu_nams/views/client/main/home/home.dart';
+import 'package:filmu_nams/views/client/main/offers/offer_list_view.dart';
 import 'package:filmu_nams/views/client/main/notifications/notifications.dart';
 import 'package:filmu_nams/views/client/main/profile/profile.dart';
 import 'package:filmu_nams/assets/decorations/background.dart';
@@ -83,7 +84,7 @@ class _BodyState extends State<Body> {
   @override
   Widget build(BuildContext context) {
     List<Widget> pages = [
-      Placeholder(),
+      OffersList(),
       ScheduleAndMovies(),
       Home(),
       Notifications(),

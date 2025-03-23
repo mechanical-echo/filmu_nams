@@ -63,10 +63,11 @@ class _ScheduleWidgetState extends State<ScheduleWidget> {
   @override
   Widget build(BuildContext context) {
     return Stack(
+      alignment: Alignment.topCenter,
       children: [
         StylizedTabs(
           upsideDown: true,
-          fontSize: 20.5,
+          fontSize: 19.5,
           tabs: [
             StylizedTabPage(
               title: StylizedTabTitle.text("Šodien"),
@@ -117,7 +118,6 @@ class _ScheduleWidgetState extends State<ScheduleWidget> {
         AnimatedPositioned(
           duration: const Duration(milliseconds: 500),
           curve: Cubic(1, 0, 0, 1),
-          right: 50,
           top: isDatePickerOpen ? 50 : -400,
           child: AnimatedOpacity(
             duration: const Duration(milliseconds: 300),
@@ -215,7 +215,7 @@ class _ScheduleDateViewState extends State<ScheduleDateView> {
               : Center(
                   child: Text(
                     "Saraksts izvēlētājā dienā ir tūkšs",
-                    style: bodyMedium,
+                    style: bodySmall,
                   ),
                 ),
     );

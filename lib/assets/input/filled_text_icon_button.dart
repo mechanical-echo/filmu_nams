@@ -1,3 +1,4 @@
+import 'package:filmu_nams/views/admin/dashboard/widgets/stylized_button.dart';
 import 'package:flutter/material.dart';
 
 class FilledTextIconButton extends StatelessWidget {
@@ -18,20 +19,7 @@ class FilledTextIconButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: paddingY),
-      child: FilledButton(
-        onPressed: onPressed,
-        child: Stack(
-          alignment: Alignment.center,
-          fit: StackFit.expand,
-          children: [
-            Center(child: Text(title)),
-            Positioned(
-              left: 1,
-              child: Icon(icon, size: 30),
-            ),
-          ],
-        ),
-      ),
+      child: StylizedButton(action: onPressed, title: title),
     );
   }
 }

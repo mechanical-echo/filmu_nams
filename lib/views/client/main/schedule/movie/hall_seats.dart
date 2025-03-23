@@ -2,6 +2,7 @@ import 'package:filmu_nams/assets/dialog/dialog.dart';
 import 'package:filmu_nams/assets/theme.dart';
 import 'package:filmu_nams/controllers/promocode_controller.dart';
 import 'package:filmu_nams/models/promocode.dart';
+import 'package:filmu_nams/views/admin/dashboard/widgets/stylized_button.dart';
 import 'package:flutter/material.dart';
 
 class HallSeats extends StatefulWidget {
@@ -186,7 +187,7 @@ class _HallSeatsState extends State<HallSeats> {
             child: DropdownButton(
               iconEnabledColor: Colors.white,
               underline: Container(),
-              style: bodyMedium,
+              style: bodySmall,
               items: List.generate(
                 rowAmount,
                 (index) => DropdownMenuItem(
@@ -212,7 +213,7 @@ class _HallSeatsState extends State<HallSeats> {
             child: DropdownButton(
               iconEnabledColor: Colors.white,
               underline: Container(),
-              style: bodyMedium,
+              style: bodySmall,
               items: List.generate(
                 seatAmountPerRow,
                 (index) => DropdownMenuItem(
@@ -236,34 +237,11 @@ class _HallSeatsState extends State<HallSeats> {
 
   Padding submitButton() {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 35.0),
-      child: FilledButton(
-        onPressed: () {},
-        style: FilledButton.styleFrom(
-          fixedSize: Size(450, 30),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(5),
-          ),
-        ),
-        child: Stack(
-          clipBehavior: Clip.none,
-          alignment: Alignment.centerLeft,
-          children: [
-            Positioned(
-              child: Icon(
-                Icons.payment,
-                size: 30,
-                color: Colors.white,
-              ),
-            ),
-            Center(
-              child: Text(
-                "Apmaksāt",
-                style: bodyLarge,
-              ),
-            ),
-          ],
-        ),
+      padding: const EdgeInsets.only(bottom: 75.0),
+      child: StylizedButton(
+        action: () {},
+        title: "Apmaksāt",
+        icon: Icons.payment,
       ),
     );
   }
@@ -518,36 +496,14 @@ class _HallSeatsState extends State<HallSeats> {
               ),
             ),
           ),
-          FilledButton(
-            onPressed: () {
+          StylizedButton(
+            action: () {
               if (!chosenSeats.contains(selected())) {
                 addTicket();
               }
             },
-            style: FilledButton.styleFrom(
-              fixedSize: Size(350, 30),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(5),
-              ),
-            ),
-            child: Stack(
-              clipBehavior: Clip.none,
-              alignment: Alignment.centerLeft,
-              children: [
-                Positioned(
-                  child: Icon(
-                    Icons.add,
-                    size: 30,
-                  ),
-                ),
-                Center(
-                  child: Text(
-                    "Pievienot biļeti",
-                    style: bodyLarge,
-                  ),
-                ),
-              ],
-            ),
+            title: "Pievienot biļeti",
+            icon: Icons.add,
           ),
         ],
       ),

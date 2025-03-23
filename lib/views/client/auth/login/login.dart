@@ -1,11 +1,12 @@
 import 'package:filmu_nams/assets/dialog/dialog.dart';
+import 'package:filmu_nams/assets/theme.dart';
 import 'package:filmu_nams/controllers/user_controller.dart';
 import 'package:filmu_nams/enums/auth_error_codes.dart';
 import 'package:filmu_nams/assets/input/text_input.dart';
 import 'package:filmu_nams/validators/validator.dart';
+import 'package:filmu_nams/views/admin/dashboard/widgets/stylized_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class Login extends StatefulWidget {
@@ -146,15 +147,12 @@ class WelcomeText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(top: 25),
+      margin: const EdgeInsets.only(top: 25, bottom: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+      decoration: classicDecorationWhiteSharper,
       child: Text(
         'Laipni lūdzam!',
-        style: GoogleFonts.poppins(
-          color: Colors.white,
-          fontSize: 36,
-          fontWeight: FontWeight.w300,
-          decoration: TextDecoration.none,
-        ),
+        style: header1Red,
       ),
     );
   }
@@ -202,50 +200,50 @@ class LoginInputs extends StatelessWidget {
   }
 }
 
-class SocialLoginButtons extends StatelessWidget {
+class SocialLoginButtons extends StatefulWidget {
   const SocialLoginButtons({super.key});
+
+  @override
+  State<SocialLoginButtons> createState() => _SocialLoginButtonsState();
+}
+
+class _SocialLoginButtonsState extends State<SocialLoginButtons> {
+  void google() async {
+    final response = await UserController().signInWithGoogle();
+    if (response == null && mounted) {
+      StylizedDialog.alert(
+          context, "Kļūda", "Notikusi kļūda, meģinot ielogoties ar Google");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _SocialButton(
-          icon: 'assets/google.png',
-          onPressed: () => UserController().signInWithGoogle(),
+        socialButton(
+          'assets/google.png',
+          () => google(),
         ),
-        _SocialButton(
-          icon: 'assets/facebook.png',
-          onPressed: () {},
+        socialButton(
+          'assets/facebook.png',
+          () {},
         ),
       ],
     );
   }
-}
 
-class _SocialButton extends StatelessWidget {
-  final String icon;
-  final VoidCallback onPressed;
-
-  const _SocialButton({
-    required this.icon,
-    required this.onPressed,
-  });
-
-  @override
-  Widget build(BuildContext context) {
+  socialButton(String icon, VoidCallback onPressed) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 23, horizontal: 6),
-      decoration: BoxDecoration(
-        color: Color.fromARGB(255, 119, 41, 32),
-        shape: BoxShape.circle,
-      ),
+      margin: EdgeInsets.symmetric(vertical: 23, horizontal: 7),
+      padding: EdgeInsets.symmetric(horizontal: 20),
+      decoration: classicDecorationWhiteSharper,
       child: IconButton(
         onPressed: onPressed,
         icon: Image.asset(
           icon,
           width: 25,
-          color: Colors.white,
+          color: red001,
         ),
         iconSize: 48,
         padding: EdgeInsets.all(12),
@@ -273,11 +271,7 @@ class BottomActions extends StatelessWidget {
           children: [
             Text(
               "Nav konta?",
-              style: GoogleFonts.poppins(
-                color: Color.fromARGB(255, 167, 167, 167),
-                fontWeight: FontWeight.bold,
-                fontSize: 15,
-              ),
+              style: bodyMedium,
             ),
             TextButton(
               onPressed: () => onViewChange(1),
@@ -285,10 +279,11 @@ class BottomActions extends StatelessWidget {
             )
           ],
         ),
-        FilledButton(
-          onPressed: onSignIn,
-          child: Text(
-            "Ielogoties",
+        IntrinsicWidth(
+          child: StylizedButton(
+            action: onSignIn,
+            title: "Ielogoties",
+            icon: Icons.login,
           ),
         ),
       ],

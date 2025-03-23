@@ -11,9 +11,9 @@ class CarouselItemModel {
     required this.description,
   });
 
-  factory CarouselItemModel.fromMap(Map<String, dynamic> map) {
+  factory CarouselItemModel.fromMap(Map<String, dynamic> map, String id) {
     return CarouselItemModel(
-      id: map['id'] ?? '',
+      id: id,
       title: map['title'] ?? '',
       imageUrl: map['image-url'] ?? '',
       description: map['description'] ?? '',

@@ -1,3 +1,4 @@
+import 'package:filmu_nams/assets/theme.dart';
 import 'package:filmu_nams/views/client/auth/login/login.dart';
 import 'package:filmu_nams/views/client/auth/registration/registration.dart';
 import 'package:filmu_nams/assets/decorations/background.dart';
@@ -85,10 +86,7 @@ class FormContainer extends StatelessWidget {
       ),
       padding: const EdgeInsets.only(bottom: 25),
       width: width,
-      decoration: BoxDecoration(
-        color: Theme.of(context).dialogBackgroundColor,
-        borderRadius: BorderRadius.circular(24),
-      ),
+      decoration: classicDecorationDark,
       child: AnimatedSize(
         alignment: Alignment.topCenter,
         duration: const Duration(milliseconds: 350),

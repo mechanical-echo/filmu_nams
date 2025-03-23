@@ -145,7 +145,7 @@ class _DatePickerInputState extends State<DatePickerInput>
           child: Center(
             child: Text(
               formatDate(selectedDate),
-              style: bodyMedium,
+              style: bodySmall,
             ),
           ),
         ),

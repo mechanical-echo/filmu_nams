@@ -1,6 +1,8 @@
 import 'package:filmu_nams/assets/dialog/dialog.dart';
 import 'package:filmu_nams/assets/input/text_input.dart';
+import 'package:filmu_nams/assets/theme.dart';
 import 'package:filmu_nams/validators/validator.dart';
+import 'package:filmu_nams/views/admin/dashboard/widgets/stylized_button.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -138,14 +140,12 @@ class _StepTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(top: 25),
+      padding: const EdgeInsets.symmetric(horizontal: 65, vertical: 5),
+      decoration: classicDecorationWhiteSharper,
       child: Text(
-        'Prieks iepazīties!',
-        style: GoogleFonts.poppins(
-          color: Colors.white,
-          fontSize: 36,
-          fontWeight: FontWeight.w300,
-          decoration: TextDecoration.none,
-        ),
+        'Prieks\niepazīties!',
+        style: header2Red,
+        textAlign: TextAlign.center,
       ),
     );
   }
@@ -235,9 +235,12 @@ class _ActionButtons extends StatelessWidget {
             )
           ],
         ),
-        FilledButton(
-          onPressed: onNext,
-          child: const Text("Reģistrēties"),
+        IntrinsicWidth(
+          child: StylizedButton(
+            action: onNext,
+            title: "Reģistrēties",
+            icon: Icons.person_add_rounded,
+          ),
         ),
       ],
     );

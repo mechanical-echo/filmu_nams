@@ -36,17 +36,12 @@ ThemeData theme = ThemeData(
   ),
   dialogBackgroundColor: Color.fromARGB(255, 44, 39, 39),
   filledButtonTheme: FilledButtonThemeData(
-    style: ButtonStyle(
-      textStyle: WidgetStatePropertyAll(GoogleFonts.poppins(
-        fontSize: 22,
-        fontWeight: FontWeight.bold,
-      )),
-      fixedSize: WidgetStatePropertyAll(Size(272, 50)),
-      backgroundColor: WidgetStatePropertyAll(Color.fromARGB(255, 151, 50, 39)),
-      shape: WidgetStatePropertyAll(
-        RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+    style: FilledButton.styleFrom(
+      textStyle: bodyLarge,
+      padding: const EdgeInsets.symmetric(horizontal: 55, vertical: 15),
+      backgroundColor: classicDecoration.color,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(5),
       ),
     ),
   ),
@@ -93,11 +88,10 @@ ThemeData theme = ThemeData(
     ),
   ),
   dividerTheme: DividerThemeData(
+    color: smokeyWhite.withAlpha(100),
+    indent: 0,
+    endIndent: 0,
     space: 0,
-    thickness: 2,
-    indent: 20,
-    endIndent: 20,
-    color: Color.fromARGB(255, 119, 41, 32),
   ),
   outlinedButtonTheme: OutlinedButtonThemeData(
     style: ButtonStyle(
@@ -132,14 +126,68 @@ Color red001 = Color.fromARGB(255, 102, 30, 23);
 Color red002 = Color.fromARGB(255, 119, 41, 32);
 Color red003 = Color.fromARGB(255, 178, 104, 96);
 
-TextStyle bodyMedium = GoogleFonts.poppins(
+FilledButtonThemeData bigRed = FilledButtonThemeData(
+  style: FilledButton.styleFrom(
+    textStyle: bodyLarge,
+    padding: const EdgeInsets.symmetric(horizontal: 55, vertical: 15),
+    backgroundColor: classicDecoration.color,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(5),
+    ),
+  ),
+);
+
+ButtonStyle mediumWhite = FilledButton.styleFrom(
+  textStyle: bodySmallRed,
+  foregroundColor: red001,
+  backgroundColor: classicDecorationWhite.color,
+  shape: RoundedRectangleBorder(
+    borderRadius: BorderRadius.circular(5),
+  ),
+);
+
+ButtonStyle smallWhite = FilledButton.styleFrom(
+  textStyle: bodySmallRed,
+  foregroundColor: red001,
+  backgroundColor: classicDecorationWhite.color,
+  fixedSize: Size(double.infinity, 30),
+  shape: RoundedRectangleBorder(
+    borderRadius: BorderRadius.circular(5),
+  ),
+);
+
+TextStyle bodySmall = GoogleFonts.poppins(
   color: Colors.white,
   fontSize: 13,
   fontWeight: FontWeight.w600,
 );
 
+TextStyle bodySmallRed = GoogleFonts.poppins(
+  color: red001,
+  fontSize: 13,
+  fontWeight: FontWeight.w600,
+);
+
+TextStyle bodyMedium = GoogleFonts.poppins(
+  color: Colors.white,
+  fontSize: 15,
+  fontWeight: FontWeight.w600,
+);
+
+TextStyle bodyMediumRed = GoogleFonts.poppins(
+  color: red001,
+  fontSize: 17,
+  fontWeight: FontWeight.w700,
+);
+
 TextStyle bodyLarge = GoogleFonts.poppins(
   color: Colors.white,
+  fontSize: 20,
+  fontWeight: FontWeight.w800,
+);
+
+TextStyle bodyLargeRed = GoogleFonts.poppins(
+  color: red001,
   fontSize: 20,
   fontWeight: FontWeight.w800,
 );
@@ -150,8 +198,20 @@ TextStyle header1 = GoogleFonts.poppins(
   fontWeight: FontWeight.w800,
 );
 
+TextStyle header1Red = GoogleFonts.poppins(
+  color: red001,
+  fontSize: 30,
+  fontWeight: FontWeight.w800,
+);
+
 TextStyle header2 = GoogleFonts.poppins(
   color: Colors.white,
+  fontSize: 26,
+  fontWeight: FontWeight.w800,
+);
+
+TextStyle header2Red = GoogleFonts.poppins(
+  color: red001,
   fontSize: 26,
   fontWeight: FontWeight.w800,
 );
@@ -159,6 +219,13 @@ TextStyle header2 = GoogleFonts.poppins(
 Border bottomBorder = Border(
   bottom: BorderSide(
     color: Colors.white12,
+    width: 5,
+  ),
+);
+
+Border bottomBorderDark = Border(
+  bottom: BorderSide(
+    color: red001.withAlpha(100),
     width: 5,
   ),
 );
@@ -178,8 +245,57 @@ BoxDecoration classicDecoration = BoxDecoration(
   borderRadius: BorderRadius.circular(15),
 );
 
+BoxDecoration classicDecorationWhite = BoxDecoration(
+  color: smokeyWhite,
+  boxShadow: cardShadow,
+  border: bottomBorderDark,
+  borderRadius: BorderRadius.circular(15),
+);
+
+BoxDecoration classicDecorationDark = BoxDecoration(
+  color: red001,
+  boxShadow: cardShadow,
+  border: bottomBorder,
+  borderRadius: BorderRadius.circular(15),
+);
+
+BoxDecoration classicDecorationSharp = BoxDecoration(
+  color: red002,
+  boxShadow: cardShadow,
+  border: bottomBorder,
+  borderRadius: BorderRadius.circular(8),
+);
+
 BoxDecoration classicDecorationSharper = BoxDecoration(
   color: red002,
+  boxShadow: cardShadow,
+  border: bottomBorder,
+  borderRadius: BorderRadius.circular(5),
+);
+
+BoxDecoration classicDecorationWhiteSharper = BoxDecoration(
+  color: smokeyWhite,
+  boxShadow: cardShadow,
+  border: bottomBorderDark,
+  borderRadius: BorderRadius.circular(5),
+);
+
+BoxDecoration classicDecorationWhiteSharperHover = BoxDecoration(
+  color: smokeyWhite.withAlpha(200),
+  boxShadow: cardShadow,
+  border: bottomBorderDark,
+  borderRadius: BorderRadius.circular(5),
+);
+
+BoxDecoration classicDecorationWhiteSharperActive = BoxDecoration(
+  color: smokeyWhite.withAlpha(150),
+  boxShadow: cardShadow,
+  border: bottomBorderDark,
+  borderRadius: BorderRadius.circular(5),
+);
+
+BoxDecoration classicDecorationDarkSharper = BoxDecoration(
+  color: red001,
   boxShadow: cardShadow,
   border: bottomBorder,
   borderRadius: BorderRadius.circular(5),

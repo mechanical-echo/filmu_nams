@@ -1,5 +1,6 @@
 import 'package:filmu_nams/assets/theme.dart';
 import 'package:filmu_nams/assets/widgets/profile_image.dart';
+import 'package:filmu_nams/views/admin/dashboard/widgets/stylized_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -31,28 +32,33 @@ class _ProfileViewState extends State<ProfileView> {
     return Container(
       decoration: classicDecoration,
       width: 350,
-      height: 600,
+      constraints: BoxConstraints(
+        maxHeight: 500,
+      ),
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 25),
-      child: Column(
-        spacing: 15,
-        children: [
-          button("Atpakaļ", Icons.keyboard_return_rounded, widget.onPressed),
-          Divider(color: red003.withAlpha(100)),
-          ProfileImage(width: 100),
-          TextButton(
-            onPressed: () {},
-            child: Text(
-              "Mainīt profila attēlu",
-              style: TextStyle(color: red003),
+      child: SingleChildScrollView(
+        child: Column(
+          spacing: 15,
+          children: [
+            button("Atpakaļ", Icons.keyboard_return_rounded, widget.onPressed),
+            Divider(color: red003.withAlpha(100)),
+            ProfileImage(width: 100),
+            TextButton(
+              onPressed: () {},
+              child: Text(
+                "Mainīt profila attēlu",
+                style: TextStyle(color: red003),
+              ),
             ),
-          ),
-          inputField("Vārds", Icons.person_outline, nameCtrl),
-          inputField("E-pasts", Icons.email_outlined, emailCtrl),
-          // passwordField("Parole", Icons.lock_outline, passwordCtrl),
-          SizedBox(height: 10),
-          changePasswordButton(),
-          saveButton(),
-        ],
+            inputField("Vārds", Icons.person_outline, nameCtrl),
+            inputField("E-pasts", Icons.email_outlined, emailCtrl),
+            // passwordField("Parole", Icons.lock_outline, passwordCtrl),
+            SizedBox(),
+            saveButton(),
+            changePasswordButton(),
+            logout(),
+          ],
+        ),
       ),
     );
   }
@@ -108,20 +114,12 @@ class _ProfileViewState extends State<ProfileView> {
 
   Widget saveButton() {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 15),
+      margin: const EdgeInsets.only(left: 15, right: 15, bottom: 25),
       width: double.infinity,
-      child: FilledButton(
-        onPressed: () {},
-        style: FilledButton.styleFrom(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(5),
-          ),
-          padding: EdgeInsets.symmetric(vertical: 10),
-        ),
-        child: Text(
-          "Saglabāt izmaiņas",
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-        ),
+      child: StylizedButton(
+        action: () {},
+        title: "Saglabāt izmaiņas",
+        textStyle: bodyMediumRed,
       ),
     );
   }
@@ -130,20 +128,26 @@ class _ProfileViewState extends State<ProfileView> {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 15),
       width: double.infinity,
-      child: FilledButton(
-        onPressed: () {},
-        style: FilledButton.styleFrom(
-          backgroundColor: red001,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(5),
-          ),
-          padding: EdgeInsets.symmetric(vertical: 0),
-          fixedSize: Size(500, 10),
-        ),
-        child: Text(
-          "Mainīt paroli",
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-        ),
+      child: StylizedButton(
+        action: () {},
+        title: "Mainīt paroli",
+        textStyle: bodySmallRed,
+        icon: Icons.password,
+      ),
+    );
+  }
+
+  Widget logout() {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 15),
+      width: double.infinity,
+      child: StylizedButton(
+        action: () {
+          FirebaseAuth.instance.signOut();
+        },
+        title: "Izlogoties",
+        textStyle: bodySmallRed,
+        icon: Icons.logout,
       ),
     );
   }
@@ -154,22 +158,11 @@ class _ProfileViewState extends State<ProfileView> {
     VoidCallback onPressed,
   ) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 15),
-      child: FilledButton(
-        onPressed: onPressed,
-        style: FilledButton.styleFrom(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(5),
-          ),
-          fixedSize: Size(500, 30),
-        ),
-        child: Stack(
-          alignment: Alignment.centerRight,
-          children: [
-            Icon(icon, size: 25),
-            SizedBox(width: 500, child: Text(title)),
-          ],
-        ),
+      margin: const EdgeInsets.only(bottom: 10),
+      child: StylizedButton(
+        action: onPressed,
+        title: title,
+        icon: icon,
       ),
     );
   }
