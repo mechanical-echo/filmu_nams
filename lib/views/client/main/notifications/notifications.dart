@@ -1,4 +1,5 @@
 import 'package:filmu_nams/assets/theme.dart';
+import 'package:filmu_nams/views/admin/dashboard/widgets/stylized_button.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -222,35 +223,21 @@ class _NotificationItemState extends State<NotificationItem> {
     );
   }
 
-  FilledButton NotificationReadButton(BuildContext context) {
-    return FilledButton(
-      onPressed: _toggleRead,
-      style: FilledButton.styleFrom(
-        fixedSize: Size(200, 40),
-        backgroundColor: widget.notification.state == NotificationState.unread
-            ? Theme.of(context).focusColor
-            : Theme.of(context).disabledColor.withRed(100),
-      ),
-      child: Text(
-        "Atzimēt kā ${widget.notification.state == NotificationState.unread ? "izlasīto" : "neizlasīto"}",
-        style: GoogleFonts.poppins(fontSize: 15),
-      ),
+  NotificationReadButton(BuildContext context) {
+    return StylizedButton(
+      action: _toggleRead,
+      title: "Atzimēt kā ${widget.notification.state == NotificationState.unread ? "izlasīto" : "neizlasīto"}",
+      textStyle: bodySmallRed,
+      horizontalPadding: 15,
     );
   }
 
-  FilledButton NotificationDeleteButton(BuildContext context) {
-    return FilledButton(
-      onPressed: _onDelete,
-      style: FilledButton.styleFrom(
-        fixedSize: Size(140, 40),
-        backgroundColor: widget.notification.state == NotificationState.unread
-            ? Theme.of(context).focusColor
-            : Theme.of(context).disabledColor.withRed(100),
-      ),
-      child: Text(
-        "Dzest",
-        style: GoogleFonts.poppins(fontSize: 15),
-      ),
+  NotificationDeleteButton(BuildContext context) {
+    return StylizedButton(
+      action: _onDelete,
+      title: "Dzēst",
+      textStyle: bodySmallRed,
+      horizontalPadding: 15,
     );
   }
 

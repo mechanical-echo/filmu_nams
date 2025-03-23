@@ -9,6 +9,7 @@ class StylizedButton extends StatefulWidget {
     this.icon,
     this.textStyle,
     this.iconSize = 25,
+    this.horizontalPadding = 55,
   });
 
   final Function action;
@@ -16,6 +17,7 @@ class StylizedButton extends StatefulWidget {
   final IconData? icon;
   final TextStyle? textStyle;
   final double iconSize;
+  final double horizontalPadding;
 
   @override
   State<StylizedButton> createState() => _StylizedButtonState();
@@ -61,8 +63,8 @@ class _StylizedButtonState extends State<StylizedButton> {
         child: AnimatedContainer(
           duration: Duration(milliseconds: 50),
           decoration: decoration,
-          padding: const EdgeInsets.symmetric(
-            horizontal: 55,
+          padding: EdgeInsets.symmetric(
+            horizontal: widget.horizontalPadding,
             vertical: 5,
           ),
           child: Stack(
