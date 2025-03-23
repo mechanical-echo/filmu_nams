@@ -54,7 +54,7 @@ class _NavBarState extends State<NavBar> with SingleTickerProviderStateMixin {
       Icons.list,
       Icons.home,
       Icons.notifications,
-      Icons.people_alt,
+      Icons.person,
     ];
 
     return Container(
