@@ -61,6 +61,7 @@ class _OfferViewState extends State<OfferView> {
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
+      backgroundColor: classicDecorationDark.color,
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -85,7 +86,13 @@ class _OfferViewState extends State<OfferView> {
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(16),
-              color: red002,
+              margin: const EdgeInsets.only(
+                top: 16,
+                bottom: 10,
+                left: 25,
+                right: 25,
+              ),
+              decoration: classicDecoration,
               child: Text(
                 widget.data.title,
                 style: header1,
@@ -108,7 +115,7 @@ class _OfferViewState extends State<OfferView> {
                   bottom: 135,
                 ),
                 padding: const EdgeInsets.all(16),
-                decoration: classicDecorationDark,
+                decoration: classicDecoration,
                 child: promocode != null
                     ? Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
