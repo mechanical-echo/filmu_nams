@@ -7,7 +7,8 @@ import 'dart:io' show Platform;
 import 'firebase_options.dart';
 import 'package:filmu_nams/views/client/client.dart';
 import 'package:filmu_nams/views/client/auth/registration/registration_steps/registration_state.dart';
-import 'assets/theme.dart';
+import 'package:filmu_nams/providers/theme_provider.dart';
+import 'package:filmu_nams/providers/color_context.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,10 +22,24 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => RegistrationState()),
+        ChangeNotifierProvider(create: (context) => ThemeProvider()),
       ],
-      child: App(theme: theme),
+      child: const ThemedApp(),
     ),
   );
+}
+
+class ThemedApp extends StatelessWidget {
+  const ThemedApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    return ColorContext(
+      themeProvider: themeProvider,
+      child: App(theme: themeProvider.currentTheme),
+    );
+  }
 }
 
 class App extends StatelessWidget {

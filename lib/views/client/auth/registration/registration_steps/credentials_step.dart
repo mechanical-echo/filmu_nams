@@ -1,10 +1,10 @@
 import 'package:filmu_nams/assets/dialog/dialog.dart';
 import 'package:filmu_nams/assets/input/text_input.dart';
-import 'package:filmu_nams/assets/theme.dart';
 import 'package:filmu_nams/validators/validator.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/stylized_button.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../../../../providers/color_context.dart';
 
 class CredentialsStep extends StatefulWidget {
   final TextEditingController emailController;
@@ -138,13 +138,14 @@ class _StepTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = ColorContext.of(context);
     return Container(
       margin: const EdgeInsets.only(top: 25),
       padding: const EdgeInsets.symmetric(horizontal: 65, vertical: 5),
-      decoration: classicDecorationWhiteSharper,
+      decoration: colors.classicDecorationWhiteSharper,
       child: Text(
         'Prieks\niepazīties!',
-        style: header2Red,
+        style: colors.header2ThemeColor,
         textAlign: TextAlign.center,
       ),
     );
@@ -170,32 +171,64 @@ class _CredentialsForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = ColorContext.of(context);
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Container(
+          margin: const EdgeInsets.only(left: 35, top: 15),
+          child: Text(
+            "E-pasts",
+            style: GoogleFonts.poppins(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
         TextInput(
           obscureText: false,
-          labelText: "E-pasts",
           hintText: "epasts@epasts.lv",
-          icon: const Icon(Icons.email),
-          margin: const [25, 35, 25, 35],
+          icon: Icon(
+            Icons.email,
+            color: colors.color001,
+          ),
+          margin: [10, 35, 20, 35],
           controller: emailController,
           error: emailError,
           obligatory: true,
         ),
+        Container(
+          margin: const EdgeInsets.only(left: 35),
+          child: Text(
+            "Parole",
+            style: GoogleFonts.poppins(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
         TextInput(
           obscureText: true,
-          labelText: "Parole",
           hintText: "dro\$aParole1",
-          margin: const [0, 35, 25, 35],
+          margin: [10, 35, 20, 35],
           controller: passwordController,
           error: passwordError,
           obligatory: true,
         ),
+        Container(
+          margin: const EdgeInsets.only(left: 35),
+          child: Text(
+            "Parole atkārtoti",
+            style: GoogleFonts.poppins(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
         TextInput(
           obscureText: true,
-          labelText: "Parole atkārtoti",
           hintText: "dro\$aParole1",
-          margin: const [0, 35, 0, 35],
+          margin: const [10, 35, 0, 35],
           controller: passwordConfirmationController,
           error: passwordConfirmationError,
           obligatory: true,
@@ -224,7 +257,7 @@ class _ActionButtons extends StatelessWidget {
             Text(
               "Ir konts?",
               style: GoogleFonts.poppins(
-                color: const Color.fromARGB(255, 167, 167, 167),
+                color: Colors.white,
                 fontWeight: FontWeight.bold,
                 fontSize: 15,
               ),

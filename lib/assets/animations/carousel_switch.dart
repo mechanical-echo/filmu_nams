@@ -3,11 +3,16 @@ import 'package:flutter/material.dart';
 enum CarouselSwitchDirection { left, right }
 
 class CarouselSwitch extends StatelessWidget {
+  const CarouselSwitch({
+    super.key,
+    required this.child,
+    required this.direction,
+    this.alignment = AlignmentDirectional.topCenter,
+  });
+
   final Widget child;
   final CarouselSwitchDirection direction;
-
-  const CarouselSwitch(
-      {super.key, required this.child, required this.direction});
+  final AlignmentDirectional alignment;
 
   @override
   Widget build(BuildContext context) {
@@ -25,12 +30,15 @@ class CarouselSwitch extends StatelessWidget {
       duration: const Duration(milliseconds: 750),
       reverseDuration: const Duration(milliseconds: 500),
       layoutBuilder: (Widget? currentChild, List<Widget> previousChildren) {
-        return Stack(
-          alignment: AlignmentDirectional.center,
-          children: <Widget>[
-            ...previousChildren,
-            if (currentChild != null) currentChild,
-          ],
+        return SizedBox(
+          width: double.infinity,
+          child: Stack(
+            alignment: alignment,
+            children: <Widget>[
+              ...previousChildren,
+              if (currentChild != null) currentChild,
+            ],
+          ),
         );
       },
       transitionBuilder: (Widget child, Animation<double> animation) {

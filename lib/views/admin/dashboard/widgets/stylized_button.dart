@@ -1,4 +1,4 @@
-import 'package:filmu_nams/assets/theme.dart';
+import 'package:filmu_nams/providers/color_context.dart';
 import 'package:flutter/material.dart';
 
 class StylizedButton extends StatefulWidget {
@@ -24,44 +24,36 @@ class StylizedButton extends StatefulWidget {
 }
 
 class _StylizedButtonState extends State<StylizedButton> {
-  BoxDecoration decoration = classicDecorationWhiteSharper;
-
-  void onHover() {
-    setState(() {
-      decoration = classicDecorationWhiteSharperHover;
-    });
-  }
-
-  void onHoverEnd() {
-    setState(() {
-      decoration = classicDecorationWhiteSharper;
-    });
-  }
-
-  void onTap() {
-    setState(() {
-      decoration = classicDecorationWhiteSharperActive;
-      widget.action();
-    });
-  }
-
-  void onRelease() {
-    setState(() {
-      decoration = classicDecorationWhiteSharper;
-    });
-  }
+  late BoxDecoration decoration;
+  bool isHovered = false;
+  bool isPressed = false;
 
   @override
   Widget build(BuildContext context) {
+    final colors = ColorContext.of(context);
+
+    // Update decoration based on state
+    if (isPressed) {
+      decoration = colors.classicDecorationWhiteSharperActive;
+    } else if (isHovered) {
+      decoration = colors.classicDecorationWhiteSharperHover;
+    } else {
+      decoration = colors.classicDecorationWhiteSharper;
+    }
+
     return MouseRegion(
       cursor: SystemMouseCursors.click,
-      onEnter: (event) => onHover(),
-      onExit: (event) => onHoverEnd(),
+      onEnter: (event) => setState(() => isHovered = true),
+      onExit: (event) => setState(() => isHovered = false),
       child: GestureDetector(
-        onTapDown: (details) => onTap(),
-        onTapUp: (details) => onRelease(),
+        onTapDown: (details) => setState(() => isPressed = true),
+        onTapUp: (details) {
+          setState(() => isPressed = false);
+          widget.action();
+        },
+        onTapCancel: () => setState(() => isPressed = false),
         child: AnimatedContainer(
-          duration: Duration(milliseconds: 50),
+          duration: const Duration(milliseconds: 50),
           decoration: decoration,
           padding: EdgeInsets.symmetric(
             horizontal: widget.horizontalPadding,
@@ -74,13 +66,16 @@ class _StylizedButtonState extends State<StylizedButton> {
               if (widget.icon != null)
                 Positioned(
                   left: -40,
-                  child:
-                      Icon(widget.icon, color: red001, size: widget.iconSize),
+                  child: Icon(
+                      widget.icon,
+                      color: colors.color001,
+                      size: widget.iconSize
+                  ),
                 ),
               Center(
                 child: Text(
                   widget.title,
-                  style: widget.textStyle ?? bodyLargeRed,
+                  style: widget.textStyle ?? colors.bodyLargeThemeColor,
                   maxLines: 1,
                 ),
               ),

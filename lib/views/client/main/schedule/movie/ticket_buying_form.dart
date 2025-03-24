@@ -3,6 +3,7 @@ import 'package:filmu_nams/assets/widgets/date_picker/date_picker_input.dart';
 import 'package:filmu_nams/controllers/movie_controller.dart';
 import 'package:filmu_nams/models/movie.dart';
 import 'package:filmu_nams/models/schedule.dart';
+import 'package:filmu_nams/providers/color_context.dart';
 import 'package:filmu_nams/views/client/main/schedule/movie/hall_seats.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -101,22 +102,18 @@ class _TicketBuyingFormState extends State<TicketBuyingForm> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = ColorContext.of(context);
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15),
-          child: Divider(
-            color: smokeyWhite.withAlpha(20),
-          ),
-        ),
-        Padding(
           padding: const EdgeInsets.only(top: 10, bottom: 20),
           child: Text(
-              scheduleData == null ||
-                      (scheduleData!.isNotEmpty && availableDates.isNotEmpty)
-                  ? "Nopirkt biļeti"
-                  : "Nav pieejama saraksta",
-              style: header2),
+            scheduleData == null ||
+                    (scheduleData!.isNotEmpty && availableDates.isNotEmpty)
+                ? "Nopirkt biļeti"
+                : "Nav pieejama saraksta",
+            style: header2,
+          ),
         ),
         isLoading
             ? Center(
@@ -154,7 +151,7 @@ class _TicketBuyingFormState extends State<TicketBuyingForm> {
                               flex: 1,
                               child: Container(
                                 height: 50,
-                                decoration: classicDecorationSharper,
+                                decoration: colors.classicDecorationSharper,
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 20),
                                 child: DropdownButton(

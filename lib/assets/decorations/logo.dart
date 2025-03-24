@@ -2,12 +2,15 @@ import 'package:filmu_nams/assets/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../providers/color_context.dart';
+
 class Logo extends StatelessWidget {
   const Logo({super.key});
 
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
+    final colors = ColorContext.of(context);
 
     return Container(
       margin: const EdgeInsets.only(
@@ -30,7 +33,7 @@ class Logo extends StatelessWidget {
             left: 10,
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              decoration: classicDecorationSharper,
+              decoration: colors.classicDecorationSharper,
               child: Row(
                 spacing: 10,
                 children: [
@@ -52,17 +55,17 @@ class Logo extends StatelessWidget {
             top: 15,
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              decoration: classicDecorationWhiteSharper,
+              decoration: colors.classicDecorationWhiteSharper,
               child: Row(
                 spacing: 10,
                 children: [
                   Icon(
                     Icons.calendar_month,
-                    color: red001,
+                    color: colors.color001,
                   ),
                   Text(
                     DateFormat('E\ndd.MM.', 'lv').format(DateTime.now()),
-                    style: bodySmallRed,
+                    style: colors.bodySmallThemeColor,
                     textAlign: TextAlign.right,
                   ),
                 ],

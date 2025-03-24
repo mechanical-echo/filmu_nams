@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
+import '../../../../providers/color_context.dart';
+
 class OfferView extends StatefulWidget {
   const OfferView({
     super.key,
@@ -48,6 +50,7 @@ class _OfferViewState extends State<OfferView> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = ColorContext.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -55,13 +58,13 @@ class _OfferViewState extends State<OfferView> {
           style: bodyLarge,
         ),
         centerTitle: true,
-        backgroundColor: red001,
+        backgroundColor: colors.color002,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
-      backgroundColor: classicDecorationDark.color,
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -92,7 +95,7 @@ class _OfferViewState extends State<OfferView> {
                 left: 25,
                 right: 25,
               ),
-              decoration: classicDecoration,
+              decoration: colors.classicDecoration,
               child: Text(
                 widget.data.title,
                 style: header1,
@@ -100,10 +103,10 @@ class _OfferViewState extends State<OfferView> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 35),
               child: Text(
                 widget.data.description,
-                style: bodyMedium,
+                style: colors.bodyMediumThemeColor,
               ),
             ),
             if (widget.data.promocode != null)
@@ -115,60 +118,57 @@ class _OfferViewState extends State<OfferView> {
                   bottom: 135,
                 ),
                 padding: const EdgeInsets.all(16),
-                decoration: classicDecoration,
+                decoration: colors.classicDecoration,
                 child: promocode != null
-                    ? Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
+                    ? Stack(
+                        alignment: Alignment.topRight,
                         children: [
-                          Text(
-                            'Promokods:',
-                            style: bodyLarge,
-                            textAlign: TextAlign.center,
+                          Positioned(
+                            child: Icon(
+                              color: colors.smokeyWhite,
+                              Icons.local_offer_rounded,
+                              size: 35,
+                            ),
                           ),
-                          const SizedBox(height: 10),
-                          GestureDetector(
-                            onTap: () => copyToClipboard(context),
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 24,
-                                vertical: 12,
-                              ),
-                              decoration: classicDecorationWhiteSharper,
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            spacing: 16,
+                            children: [
+                              Column(
+                                spacing: 3,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    promocode!.name,
-                                    style: header2Red,
+                                    'Promokods:',
+                                    style: bodyLarge,
+                                    textAlign: TextAlign.center,
                                   ),
-                                  const SizedBox(width: 8),
-                                  Icon(
-                                    Icons.copy,
-                                    color: red001,
-                                    size: 20,
+                                  copyButton(context, colors),
+                                ],
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    promocode!.percents != null
+                                        ? 'Atlaide ${promocode!.percents}%'
+                                        : promocode!.amount != null
+                                            ? 'Atlaide ${promocode!.amount!.toStringAsFixed(2)}€'
+                                            : 'Atlaide',
+                                    style: bodyMedium,
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  Text(
+                                    'Nospiediet, lai kopētu',
+                                    style: TextStyle(
+                                      color: Colors.white70,
+                                      fontSize: 12,
+                                    ),
+                                    textAlign: TextAlign.center,
                                   ),
                                 ],
                               ),
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                          Text(
-                            promocode!.percents != null
-                                ? 'Atlaide ${promocode!.percents}%'
-                                : promocode!.amount != null
-                                    ? 'Atlaide ${promocode!.amount!.toStringAsFixed(2)}€'
-                                    : 'Atlaide',
-                            style: bodyMedium,
-                            textAlign: TextAlign.center,
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            'Nospiediet, lai kopētu',
-                            style: TextStyle(
-                              color: Colors.white70,
-                              fontSize: 12,
-                            ),
-                            textAlign: TextAlign.center,
+                            ],
                           ),
                         ],
                       )
@@ -180,6 +180,34 @@ class _OfferViewState extends State<OfferView> {
                         ),
                       ),
               ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  GestureDetector copyButton(BuildContext context, ColorContext colors) {
+    return GestureDetector(
+      onTap: () => copyToClipboard(context),
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 24,
+          vertical: 12,
+        ),
+        decoration: colors.classicDecorationWhiteSharper,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              promocode!.name,
+              style: colors.header2ThemeColor,
+            ),
+            const SizedBox(width: 8),
+            Icon(
+              Icons.copy,
+              color: colors.color001,
+              size: 20,
+            ),
           ],
         ),
       ),

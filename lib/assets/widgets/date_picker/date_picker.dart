@@ -1,4 +1,5 @@
 import 'package:filmu_nams/assets/theme.dart';
+import 'package:filmu_nams/providers/color_context.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -63,9 +64,11 @@ class _DatePickerState extends State<DatePicker> {
     final totalDays = daysFromPrevMonth + currentMonthDays;
     final daysFromNextMonth = (7 - (totalDays % 7)) % 7;
 
+    final colors = ColorContext.of(context);
+
     return Container(
       decoration: BoxDecoration(
-        color: red001,
+        color: colors.color001,
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
@@ -141,12 +144,13 @@ class _DatePickerState extends State<DatePicker> {
     int daysFromNextMonth,
     List<DateTime>? availableDates,
   ) {
+    final colors = ColorContext.of(context);
     return Container(
       margin: const EdgeInsets.only(left: 13, right: 10),
       height: 265,
       width: 375,
       decoration: BoxDecoration(
-        color: red002,
+        color: colors.color002,
         borderRadius: BorderRadius.circular(7),
       ),
       child: GridView.count(
@@ -202,6 +206,7 @@ class _DatePickerState extends State<DatePicker> {
   }
 
   Container weekDays() {
+    final colors = ColorContext.of(context);
     return Container(
       margin: const EdgeInsets.only(top: 10),
       width: 295,
@@ -216,7 +221,7 @@ class _DatePickerState extends State<DatePicker> {
           Container(
             padding: const EdgeInsets.only(left: 5),
             decoration: BoxDecoration(
-              color: red002.withAlpha(200),
+              color: colors.color002.withAlpha(200),
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(25),
               ),
@@ -224,29 +229,29 @@ class _DatePickerState extends State<DatePicker> {
             child: Center(child: Text("Pr", style: bodyMedium)),
           ),
           Container(
-            color: red002.withAlpha(200),
+            color: colors.color002.withAlpha(200),
             child: Center(child: Text("Ot", style: bodyMedium)),
           ),
           Container(
-            color: red002.withAlpha(200),
+            color: colors.color002.withAlpha(200),
             child: Center(child: Text("Tr", style: bodyMedium)),
           ),
           Container(
-            color: red002.withAlpha(200),
+            color: colors.color002.withAlpha(200),
             child: Center(child: Text("Ct", style: bodyMedium)),
           ),
           Container(
-            color: red002.withAlpha(200),
+            color: colors.color002.withAlpha(200),
             child: Center(child: Text("Pt", style: bodyMedium)),
           ),
           Container(
-            color: red002.withAlpha(200),
+            color: colors.color002.withAlpha(200),
             child: Center(child: Text("St", style: bodyMedium)),
           ),
           Container(
             padding: const EdgeInsets.only(right: 5),
             decoration: BoxDecoration(
-              color: red002.withAlpha(200),
+              color: colors.color002.withAlpha(200),
               borderRadius: BorderRadius.only(
                 topRight: Radius.circular(25),
               ),

@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:filmu_nams/assets/widgets/overlapping_carousel.dart';
 import 'package:filmu_nams/controllers/movie_controller.dart';
 import 'package:filmu_nams/models/carousel_item.dart';
+import 'package:filmu_nams/providers/color_context.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -53,6 +54,7 @@ class _HomeState extends State<Home> {
   Stack MovieItem(int index, bool isActive) {
     return Stack(
       clipBehavior: Clip.none,
+      alignment: Alignment.bottomCenter,
       children: [
         MovieItemContent(index),
         if (isActive) MovieItemText(index),
@@ -62,41 +64,42 @@ class _HomeState extends State<Home> {
 
   Positioned MovieItemText(int index) {
     return Positioned(
-      bottom: -170,
-      left: -25,
-      right: -25,
+      top: 340,
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        spacing: 10,
         children: [
           MovieItemTitle(index),
-          const SizedBox(height: 10),
           MovieItemDescription(index),
         ],
       ),
     );
   }
 
-  Text MovieItemDescription(int index) {
-    return Text(
-      movieData![index].description,
-      style: GoogleFonts.poppins(
-        fontSize: 16,
-        fontWeight: FontWeight.bold,
-        color: Color.fromARGB(255, 158, 158, 158),
+  MovieItemDescription(int index) {
+    return SizedBox(
+      width: 300,
+      child: Text(
+        movieData![index].description,
+        style: GoogleFonts.poppins(
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+          color: Color.fromARGB(255, 158, 158, 158),
+        ),
+        textAlign: TextAlign.center,
       ),
-      textAlign: TextAlign.center,
     );
   }
 
-  Text MovieItemTitle(int index) {
-    return Text(
-      movieData![index].title,
-      style: GoogleFonts.poppins(
-        fontSize: 24,
-        fontWeight: FontWeight.bold,
-        color: Colors.white,
+  MovieItemTitle(int index) {
+    final colors = ColorContext.of(context);
+    return Container(
+      decoration: colors.classicDecorationWhite,
+      padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 5),
+      child: Text(
+        movieData![index].title,
+        style: colors.header2ThemeColor,
+        textAlign: TextAlign.center,
       ),
-      textAlign: TextAlign.center,
     );
   }
 
@@ -104,21 +107,13 @@ class _HomeState extends State<Home> {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withAlpha(51),
-            blurRadius: 10,
-            spreadRadius: 2,
-            offset: const Offset(0, 4),
-          ),
-        ],
       ),
       child: Center(
         child: ClipRRect(
           borderRadius: BorderRadius.circular(3),
           child: CachedNetworkImage(
             imageUrl: movieData![index].imageUrl,
-            fit: BoxFit.cover,
+            fit: BoxFit.fill,
             placeholder: (context, url) => Container(
               color: Colors.grey[800],
               child: Center(

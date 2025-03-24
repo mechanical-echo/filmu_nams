@@ -2,6 +2,7 @@ import 'package:filmu_nams/assets/dialog/dialog.dart';
 import 'package:filmu_nams/assets/theme.dart';
 import 'package:filmu_nams/controllers/promocode_controller.dart';
 import 'package:filmu_nams/models/promocode.dart';
+import 'package:filmu_nams/providers/color_context.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/stylized_button.dart';
 import 'package:flutter/material.dart';
 
@@ -175,13 +176,14 @@ class _HallSeatsState extends State<HallSeats> {
   }
 
   Row selectSeatDropdowns() {
+    final colors = ColorContext.of(context);
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       spacing: 10,
       children: [
         Expanded(
           child: Container(
-            decoration: classicDecorationSharper,
+            decoration: colors.classicDecorationSharper,
             height: 50,
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: DropdownButton(
@@ -207,7 +209,7 @@ class _HallSeatsState extends State<HallSeats> {
         ),
         Expanded(
           child: Container(
-            decoration: classicDecorationSharper,
+            decoration: colors.classicDecorationSharper,
             height: 50,
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: DropdownButton(
@@ -472,8 +474,9 @@ class _HallSeatsState extends State<HallSeats> {
   }
 
   Container seatGrid() {
+    final colors = ColorContext.of(context);
     return Container(
-      decoration: classicDecorationSharper,
+      decoration: colors.classicDecorationSharper,
       padding: const EdgeInsets.all(15),
       child: Column(
         children: [
@@ -511,6 +514,7 @@ class _HallSeatsState extends State<HallSeats> {
   }
 
   seat(int? index) {
+    final colors = ColorContext.of(context);
     bool isSelected = index == selected();
     return GestureDetector(
       onTap: () {
@@ -520,12 +524,12 @@ class _HallSeatsState extends State<HallSeats> {
         duration: Duration(milliseconds: 200),
         decoration: BoxDecoration(
           color: isSelected && !chosenSeats.contains(index)
-              ? red003
+              ? colors.color003
               : chosenSeats.contains(index)
                   ? Colors.white24
-                  : red002,
+                  : colors.color002,
           border: Border.all(
-            color: red003,
+            color: colors.color003,
             width: 1,
           ),
           borderRadius: BorderRadius.circular(5),

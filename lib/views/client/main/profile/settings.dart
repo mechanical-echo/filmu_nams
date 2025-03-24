@@ -1,9 +1,11 @@
 import 'package:filmu_nams/assets/decorations/background.dart';
 import 'package:filmu_nams/assets/input/filled_text_icon_button.dart';
-import 'package:filmu_nams/assets/theme.dart';
+import 'package:filmu_nams/providers/color_context.dart';
+import 'package:filmu_nams/providers/theme_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -13,77 +15,69 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  bool _emailNotifications = true;
-  bool _pushNotifications = true;
-  bool _darkTheme = true;
   String _language = 'Latviešu';
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final colors = ColorContext.of(context);
+
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         centerTitle: true,
-        iconTheme: const IconThemeData(
-          color: Colors.white,
+        iconTheme: IconThemeData(
+          color: colors.color001,
         ),
-        title: Text(
-          'Iestatījumi',
-          textAlign: TextAlign.center,
-          style: GoogleFonts.poppins(
-            color: Colors.white,
-            fontSize: 24,
-            fontWeight: FontWeight.w300,
+        backgroundColor: Colors.transparent,
+        clipBehavior: Clip.none,
+        title: Container(
+          decoration: colors.classicDecorationDark,
+          padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 5),
+          child: Stack(
+            alignment: Alignment.centerLeft,
+            clipBehavior: Clip.none,
+            children: [
+              Positioned(
+                left: -35,
+                child: Icon(
+                  Icons.settings,
+                  color: Colors.white,
+                ),
+              ),
+              Text(
+                'Iestatījumi',
+                textAlign: TextAlign.center,
+                style: GoogleFonts.poppins(
+                  color: Colors.white,
+                  fontSize: 24,
+                  fontWeight: FontWeight.w300,
+                ),
+              ),
+            ],
           ),
         ),
       ),
       body: Background(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.only(left: 16.0, right: 16, top: 120),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildSectionHeader('Valoda'),
-                _buildLanguageSelector(),
-                _buildDivider(),
-                _buildSectionHeader('Paziņojumi'),
-                _buildSwitchTile('E-pasta paziņojumi', _emailNotifications,
-                    (value) {
-                  setState(() {
-                    _emailNotifications = value;
-                  });
-                }),
-                _buildSwitchTile('Push paziņojumi', _pushNotifications,
-                    (value) {
-                  setState(() {
-                    _pushNotifications = value;
-                  });
-                }),
-                _buildDivider(),
-                _buildSectionHeader('Izskats'),
-                _buildSwitchTile('Tumšais režīms', _darkTheme, (value) {
-                  setState(() {
-                    _darkTheme = value;
-                  });
-                }),
-                _buildDivider(),
-                _buildSectionHeader('Konta opcijas'),
-                _buildAccountButton('Profila detaļas', Icons.person, () {
-                  Navigator.pushNamed(context, '/profile/details');
-                }),
-                _buildAccountButton('Mainīt paroli', Icons.lock, () {
-                  // Navigate to password change screen
-                }),
-                _buildAccountButton('Privātuma iestatījumi', Icons.privacy_tip,
-                    () {
-                  // Navigate to privacy settings
-                }),
-                _buildDivider(),
-                _buildSectionHeader('Programma'),
-                _buildInfoTile('Versija', '1.0.0'),
-                _buildInfoTile('Izstrādātājs', 'Filmu Nams'),
-                _buildDivider(),
-                _buildLogoutButton(),
+                header('Valoda', colors),
+                languageSelector(colors),
+                divider(colors),
+                header('Tēma', colors),
+                themeSelector(themeProvider, colors),
+                divider(colors),
+                header('Informācija', colors),
+                info('Versija', '0.0.1', colors),
+                info('Izstrādātājs', 'Sofija Dišlovaja 4PT-1', colors),
+                divider(colors),
+                header('Konta opcijas', colors),
+                button('Mainīt paroli', Icons.lock, () {}, colors),
+                logout(),
               ],
             ),
           ),
@@ -92,36 +86,37 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  Widget _buildSectionHeader(String title) {
+  Widget header(String title, ColorContext colors) {
     return Padding(
       padding: const EdgeInsets.only(top: 16.0, bottom: 8.0, left: 4.0),
       child: Text(
         title,
-        style: header2,
+        style: colors.header2,
       ),
     );
   }
 
-  Widget _buildDivider() {
+  Widget divider(ColorContext colors) {
     return Divider(
-      color: red003.withAlpha(100),
+      color: colors.color003.withAlpha(100),
       thickness: 2,
       height: 32,
     );
   }
 
-  Widget _buildLanguageSelector() {
+  Widget languageSelector(ColorContext colors) {
+    final backgroundColor = colors.classicDecorationSharper.color!;
     return Container(
-      decoration: classicDecorationSharper,
+      decoration: colors.classicDecorationSharper,
       height: 50,
       padding: const EdgeInsets.symmetric(horizontal: 15),
       child: DropdownButton<String>(
-        iconEnabledColor: Colors.white,
+        iconEnabledColor: colors.textColorFor(backgroundColor),
         underline: Container(),
-        style: bodyMedium,
+        style: colors.bodyMediumFor(backgroundColor),
         value: _language,
         isExpanded: true,
-        dropdownColor: red002,
+        dropdownColor: colors.color002,
         items: ['Latviešu', 'English', 'Русский'].map((String value) {
           return DropdownMenuItem<String>(
             value: value,
@@ -137,27 +132,105 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  Widget _buildSwitchTile(String title, bool value, Function(bool) onChanged) {
-    return Container(
-      decoration: darkDecorationSharper,
-      margin: const EdgeInsets.symmetric(vertical: 4.0),
-      child: SwitchListTile(
-        title: Text(
-          title,
-          style: bodyMedium,
+  Widget themeSelector(ThemeProvider themeProvider, ColorContext colors) {
+    final backgroundColor = colors.classicDecorationSharper.color!;
+    return Column(
+      spacing: 15,
+      children: [
+        Container(
+          decoration: colors.classicDecorationSharper,
+          height: 50,
+          padding: const EdgeInsets.symmetric(horizontal: 15),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Pašreizējā tēma: ${themeProvider.getThemeName()}',
+                style: colors.bodyMediumFor(backgroundColor),
+              ),
+              Icon(
+                Icons.color_lens,
+                color: colors.textColorFor(backgroundColor),
+              ),
+            ],
+          ),
         ),
-        value: value,
-        onChanged: onChanged,
-        activeColor: red003,
-        activeTrackColor: red001,
-        inactiveThumbColor: Colors.grey,
-        inactiveTrackColor: Colors.grey[800],
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            circle(AppTheme.red, Colors.red, themeProvider, true),
+            circle(AppTheme.green, Colors.green, themeProvider, true),
+            circle(AppTheme.blue, Colors.blue, themeProvider, false),
+            circle(AppTheme.purple, Colors.purple, themeProvider, false),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget circle(
+      AppTheme theme, Color color, ThemeProvider themeProvider, bool isDark) {
+    final bool isSelected = themeProvider.currentThemeEnum == theme;
+
+    return GestureDetector(
+      onTap: () => themeProvider.setTheme(theme),
+      child: Container(
+        width: 60,
+        height: 60,
+        clipBehavior: Clip.antiAlias,
+        decoration: BoxDecoration(
+          color: color,
+          shape: BoxShape.circle,
+          border: Border.all(
+            color: isSelected ? Colors.white : Colors.transparent,
+            width: 3,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.3),
+              blurRadius: 5,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Positioned(
+              left: -23,
+              top: -23,
+              child: Transform.rotate(
+                angle: 0.785398,
+                child: Container(
+                  color: isDark ? Colors.black : Colors.white,
+                  width: 60,
+                  height: 60,
+                ),
+              ),
+            ),
+            if (isSelected)
+              Center(
+                child: Container(
+                  padding: const EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                    color: color,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.check,
+                    color: Colors.white,
+                    size: 30,
+                  ),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildAccountButton(
-      String title, IconData icon, VoidCallback onPressed) {
+  Widget button(String title, IconData icon, VoidCallback onPressed,
+      ColorContext colors) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 4.0),
       width: double.infinity,
@@ -179,7 +252,7 @@ class _SettingsPageState extends State<SettingsPage> {
             Center(
               child: Text(
                 title,
-                style: bodyMedium,
+                style: colors.bodyMedium,
               ),
             ),
           ],
@@ -188,22 +261,89 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  Widget _buildInfoTile(String title, String value) {
-    return Container(
-      decoration: darkDecorationSharper,
-      margin: const EdgeInsets.symmetric(vertical: 4.0),
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(title, style: bodyMedium),
-          Text(value, style: bodyMedium.copyWith(color: red003)),
-        ],
+  Widget info(String title, String value, ColorContext colors) {
+    return GestureDetector(
+      onTap: title == "Izstrādātājs" ? () => _showDeveloperDialog() : null,
+      child: Container(
+        decoration: colors.darkDecorationSharper,
+        margin: const EdgeInsets.symmetric(vertical: 4.0),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(title, style: colors.bodyMedium),
+            Text(value,
+                style: colors.bodyMedium.copyWith(color: colors.color003)),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildLogoutButton() {
+  void _showDeveloperDialog() {
+    final colors = ColorContext.of(context);
+
+    showGeneralDialog(
+      context: context,
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          backgroundColor: Theme.of(context).dialogBackgroundColor,
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: colors.color003.withOpacity(0.5),
+                width: 2,
+              ),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Image.asset(
+                    "assets/Maxwell.gif",
+                    height: 200,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                FilledButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text("Ok!"),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        return ScaleTransition(
+          scale: Tween<double>(begin: 0.5, end: 1.0).animate(
+            CurvedAnimation(
+              parent: animation,
+              curve: Curves.elasticOut,
+            ),
+          ),
+          child: FadeTransition(
+            opacity: animation,
+            child: child,
+          ),
+        );
+      },
+      transitionDuration: const Duration(milliseconds: 800),
+      barrierDismissible: true,
+      barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
+      barrierColor: Colors.black87,
+    );
+  }
+
+  Widget logout() {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 16.0),
       child: FilledTextIconButton(
@@ -211,6 +351,9 @@ class _SettingsPageState extends State<SettingsPage> {
         title: "Izlogoties",
         onPressed: () async {
           await FirebaseAuth.instance.signOut();
+          if (mounted) {
+            Navigator.of(context).pop();
+          }
         },
         paddingY: 8,
       ),

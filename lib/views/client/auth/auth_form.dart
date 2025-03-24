@@ -6,6 +6,8 @@ import 'package:filmu_nams/assets/decorations/big_logo.dart';
 import 'package:filmu_nams/assets/animations/carousel_switch.dart';
 import 'package:flutter/material.dart';
 
+import '../../../providers/color_context.dart';
+
 class AuthForm extends StatefulWidget {
   const AuthForm({super.key});
 
@@ -75,7 +77,7 @@ class FormContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
-
+    final colors = ColorContext.of(context);
     return Container(
       clipBehavior: Clip.hardEdge,
       margin: EdgeInsets.only(
@@ -86,7 +88,7 @@ class FormContainer extends StatelessWidget {
       ),
       padding: const EdgeInsets.only(bottom: 25),
       width: width,
-      decoration: classicDecorationDark,
+      decoration: colors.classicDecorationDark,
       child: AnimatedSize(
         alignment: Alignment.topCenter,
         duration: const Duration(milliseconds: 350),

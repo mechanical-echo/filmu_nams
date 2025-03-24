@@ -2,6 +2,8 @@ import 'package:filmu_nams/assets/theme.dart';
 import 'package:filmu_nams/models/movie.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../../providers/color_context.dart';
+
 class FoldableDescription extends StatefulWidget {
   const FoldableDescription({
     super.key,
@@ -51,6 +53,7 @@ class _FoldableDescriptionState extends State<FoldableDescription>
 
   @override
   Widget build(BuildContext context) {
+    final colors = ColorContext.of(context);
     return GestureDetector(
       onTap: _toggleDescription,
       child: Stack(
@@ -61,19 +64,13 @@ class _FoldableDescriptionState extends State<FoldableDescription>
             animation: _clipAnimation,
             builder: (context, child) {
               return Container(
-                margin: const EdgeInsets.only(
-                  left: 25,
-                  right: 25,
-                  top: 10,
-                  bottom: 15,
-                ),
                 padding: const EdgeInsets.only(
                   left: 35,
                   right: 35,
                   top: 15,
                   bottom: 35,
                 ),
-                decoration: mediumDarkDecorationSharper,
+                decoration: colors.classicDecorationSharp,
                 child: Stack(
                   alignment: Alignment.bottomCenter,
                   clipBehavior: Clip.none,

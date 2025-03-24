@@ -1,3 +1,4 @@
+import 'package:filmu_nams/providers/color_context.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:filmu_nams/assets/theme.dart';
@@ -132,6 +133,7 @@ class _DatePickerInputState extends State<DatePickerInput>
 
   @override
   Widget build(BuildContext context) {
+    final colors = ColorContext.of(context);
     return CompositedTransformTarget(
       link: _layerLink,
       child: GestureDetector(
@@ -140,8 +142,9 @@ class _DatePickerInputState extends State<DatePickerInput>
           padding: widget.padding,
           width: widget.width,
           height: widget.height,
-          decoration:
-              widget.sharp ? classicDecorationSharper : classicDecoration,
+          decoration: widget.sharp
+              ? colors.classicDecorationSharper
+              : colors.classicDecoration,
           child: Center(
             child: Text(
               formatDate(selectedDate),

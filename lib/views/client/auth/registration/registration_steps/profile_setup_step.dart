@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'package:filmu_nams/controllers/user_controller.dart';
+import 'package:filmu_nams/providers/color_context.dart';
+import 'package:filmu_nams/views/admin/dashboard/widgets/stylized_button.dart';
 import 'package:filmu_nams/views/client/auth/registration/registration_steps/registration_state.dart';
 import 'package:filmu_nams/assets/dialog/dialog.dart';
 import 'package:filmu_nams/enums/auth_error_codes.dart';
@@ -147,11 +149,15 @@ class _NavigationButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FilledTextIconButton(
-      icon: Icons.keyboard_return,
-      title: "Atpakaļ",
-      onPressed: onPressed,
-      paddingY: 25,
+    return Container(
+      margin: const EdgeInsets.only(top: 20, bottom: 10),
+      child: IntrinsicWidth(
+        child: StylizedButton(
+          icon: Icons.keyboard_return,
+          title: "Atpakaļ",
+          action: onPressed,
+        ),
+      ),
     );
   }
 }
@@ -230,11 +236,11 @@ class _NameInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = ColorContext.of(context);
     return TextInput(
       obscureText: false,
-      labelText: "Vārds",
-      hintText: "Jānis",
-      icon: const Icon(Icons.person),
+      hintText: "Jānis Bērziņš",
+      icon: Icon(Icons.person, color: colors.color001),
       margin: const [25, 35, 25, 35],
       controller: controller,
       error: error,

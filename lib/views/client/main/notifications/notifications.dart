@@ -1,4 +1,5 @@
 import 'package:filmu_nams/assets/theme.dart';
+import 'package:filmu_nams/providers/color_context.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/stylized_button.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -161,7 +162,7 @@ class _NotificationItemState extends State<NotificationItem> {
     return Text(
       widget.notification.message,
       style: GoogleFonts.poppins(
-        color: Colors.grey[500],
+        color: Colors.white,
         fontSize: 16,
       ),
       maxLines: isExpanded ? null : 2,
@@ -174,6 +175,7 @@ class _NotificationItemState extends State<NotificationItem> {
     BuildContext context,
     Widget child,
   ) {
+    final colors = ColorContext.of(context);
     return AnimatedSize(
       duration: const Duration(milliseconds: 400),
       alignment: Alignment.topCenter,
@@ -190,14 +192,9 @@ class _NotificationItemState extends State<NotificationItem> {
             right: 16,
           ),
           width: width,
-          decoration: BoxDecoration(
-            color: widget.notification.state == NotificationState.unread
-                ? Theme.of(context).disabledColor
-                : Theme.of(context).cardColor,
-            boxShadow: cardShadow,
-            border: bottomBorder,
-            borderRadius: BorderRadius.circular(5),
-          ),
+          decoration: widget.notification.state == NotificationState.unread
+              ? colors.classicDecoration
+              : colors.classicDecorationDark,
           child: child,
         ),
       ),
@@ -226,7 +223,8 @@ class _NotificationItemState extends State<NotificationItem> {
   NotificationReadButton(BuildContext context) {
     return StylizedButton(
       action: _toggleRead,
-      title: "Atzimēt kā ${widget.notification.state == NotificationState.unread ? "izlasīto" : "neizlasīto"}",
+      title:
+          "Atzimēt kā ${widget.notification.state == NotificationState.unread ? "izlasīto" : "neizlasīto"}",
       textStyle: bodySmallRed,
       horizontalPadding: 15,
     );

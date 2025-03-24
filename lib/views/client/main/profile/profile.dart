@@ -1,8 +1,9 @@
 import 'package:filmu_nams/assets/animations/carousel_switch.dart';
-import 'package:filmu_nams/assets/theme.dart';
 import 'package:filmu_nams/assets/widgets/profile_image.dart';
+import 'package:filmu_nams/providers/color_context.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/stylized_button.dart';
 import 'package:filmu_nams/views/client/main/profile/profile_view.dart';
+import 'package:filmu_nams/views/client/main/profile/settings.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -15,18 +16,6 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
   User? user = FirebaseAuth.instance.currentUser;
-
-  List<Widget> views = [];
-
-  @override
-  void initState() {
-    super.initState();
-    views = [
-      profileMenu(),
-      ProfileView(onPressed: () => switchView(0)),
-    ];
-  }
-
   int currentView = 0;
   CarouselSwitchDirection direction = CarouselSwitchDirection.left;
 
@@ -41,8 +30,14 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
+    final List<Widget> views = [
+      profileMenu(context),
+      ProfileView(onPressed: () => switchView(0)),
+    ];
+
     return Center(
       child: CarouselSwitch(
+        alignment: AlignmentDirectional.center,
         direction: direction,
         child: KeyedSubtree(
           key: ValueKey(currentView),
@@ -52,10 +47,12 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  profileMenu() {
+  Widget profileMenu(BuildContext context) {
+    final colors = ColorContext.of(context);
+
     return IntrinsicHeight(
       child: Container(
-        decoration: classicDecoration,
+        decoration: colors.classicDecoration,
         width: 350,
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 25),
         child: Column(
@@ -67,33 +64,38 @@ class _ProfileState extends State<Profile> {
                 Expanded(
                   child: Text(
                     user!.displayName!,
-                    style: header2,
+                    style: colors.bodyLargeFor(colors.color002),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ],
             ),
-            ...divider(),
+            ...divider(colors),
             button("Profils", Icons.person, () => switchView(1)),
             button("Biļetes", Icons.payments_sharp, () {}),
             button("Maksājumi", Icons.payment, () {}),
-            button("Iestatījumi", Icons.settings, () {}),
+            button("Iestatījumi", Icons.settings, () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SettingsPage()),
+              );
+            }),
           ],
         ),
       ),
     );
   }
 
-  divider() {
+  List<Widget> divider(ColorContext colors) {
     return [
-      SizedBox(height: 25),
-      Divider(color: red003.withAlpha(100)),
-      SizedBox(height: 25)
+      const SizedBox(height: 25),
+      Divider(color: colors.color003.withAlpha(100)),
+      const SizedBox(height: 25)
     ];
   }
 
-  button(
+  Widget button(
     String title,
     IconData icon,
     VoidCallback onPressed,

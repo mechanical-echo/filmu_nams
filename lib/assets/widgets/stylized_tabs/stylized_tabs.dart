@@ -47,18 +47,10 @@ class _StylizedTabsState extends State<StylizedTabs> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      verticalDirection: VerticalDirection.up,
+      mainAxisSize: MainAxisSize.min,
       children: [
-        CarouselSwitch(
-          direction: currentIndex < previousIndex
-              ? CarouselSwitchDirection.right
-              : CarouselSwitchDirection.left,
-          child: KeyedSubtree(
-            key: ValueKey(currentIndex),
-            child: widget.tabs[currentIndex].child,
-          ),
-        ),
         Container(
+          width: 340,
           decoration: BoxDecoration(
             boxShadow: [
               BoxShadow(
@@ -72,15 +64,29 @@ class _StylizedTabsState extends State<StylizedTabs> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: List.generate(
               widget.tabs.length,
-              (index) => StylizedTab(
-                isLast: index == widget.tabs.length - 1,
-                title: widget.tabs[index].title,
-                isActive: index == currentIndex,
-                index: index,
-                upsideDown: widget.upsideDown,
-                fontSize: widget.fontSize,
-                onTap: () => _handleTap(index),
+              (index) => Expanded(
+                child: StylizedTab(
+                  isLast: index == widget.tabs.length - 1,
+                  title: widget.tabs[index].title,
+                  isActive: index == currentIndex,
+                  index: index,
+                  upsideDown: widget.upsideDown,
+                  fontSize: widget.fontSize,
+                  onTap: () => _handleTap(index),
+                ),
               ),
+            ),
+          ),
+        ),
+        Flexible(
+          fit: FlexFit.loose,
+          child: CarouselSwitch(
+            direction: currentIndex < previousIndex
+                ? CarouselSwitchDirection.right
+                : CarouselSwitchDirection.left,
+            child: KeyedSubtree(
+              key: ValueKey(currentIndex),
+              child: widget.tabs[currentIndex].child,
             ),
           ),
         ),

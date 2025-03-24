@@ -1,3 +1,4 @@
+import 'package:filmu_nams/providers/color_context.dart';
 import 'package:flutter/material.dart';
 import 'package:pattern_background/pattern_background.dart';
 
@@ -10,6 +11,7 @@ class Background extends StatelessWidget {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
+    final colors = ColorContext.of(context);
 
     return Stack(
       children: [
@@ -17,7 +19,15 @@ class Background extends StatelessWidget {
         Container(
           decoration: BoxDecoration(
               gradient: LinearGradient(
-                  colors: [Color.fromARGB(255, 34, 5, 6), Colors.black],
+                  colors: colors.isLightTheme
+                      ? [
+                          Colors.white,
+                          Colors.white,
+                        ]
+                      : [
+                          colors.color001.darker(),
+                          Colors.black,
+                        ],
                   begin: Alignment.bottomCenter,
                   end: Alignment.topCenter)),
         ),
@@ -26,12 +36,35 @@ class Background extends StatelessWidget {
         CustomPaint(
             size: Size(width, height),
             painter: DotPainter(
-              dotColor: Colors.black,
+              dotColor: colors.isLightTheme
+                  ? Colors.black.withAlpha(9)
+                  : Colors.black,
               dotRadius: 4,
               spacing: 10,
             )),
         child
       ],
     );
+  }
+}
+
+extension ColorExtension on Color {
+  Color darker([double amount = 0.1]) {
+    assert(amount >= 0 && amount <= 1);
+
+    final hsl = HSLColor.fromColor(this);
+    final hslDark = hsl.withLightness((hsl.lightness - amount).clamp(0.0, 1.0));
+
+    return hslDark.toColor();
+  }
+
+  Color lighter([double amount = 0.1]) {
+    assert(amount >= 0 && amount <= 1);
+
+    final hsl = HSLColor.fromColor(this);
+    final hslLight =
+        hsl.withLightness((hsl.lightness + amount).clamp(0.0, 1.0));
+
+    return hslLight.toColor();
   }
 }

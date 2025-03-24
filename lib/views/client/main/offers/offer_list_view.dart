@@ -6,6 +6,8 @@ import 'package:filmu_nams/views/client/main/offers/offer_detail_view.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
+import '../../../../providers/color_context.dart';
+
 class OffersList extends StatefulWidget {
   const OffersList({super.key});
 
@@ -88,12 +90,13 @@ class OfferCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = ColorContext.of(context);
     return GestureDetector(
       onTap: () => openOfferView(context),
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
         decoration: BoxDecoration(
-          color: red002,
+          color: colors.color002,
           borderRadius: BorderRadius.circular(10),
           boxShadow: [
             BoxShadow(
@@ -121,7 +124,7 @@ class OfferCard extends StatelessWidget {
                   child: Center(
                     child: LoadingAnimationWidget.staggeredDotsWave(
                       size: 50,
-                      color: Theme.of(context).focusColor,
+                      color: colors.color003,
                     ),
                   ),
                 ),
@@ -158,12 +161,13 @@ class OfferCard extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 10, vertical: 4),
-                      decoration: classicDecorationWhiteSharper,
+                      decoration: colors.classicDecorationWhiteSharper,
                       child: Row(
                         children: [
-                          Icon(Icons.local_offer, color: red001, size: 16),
+                          Icon(Icons.local_offer,
+                              color: colors.color001, size: 16),
                           const SizedBox(width: 4),
-                          Text("Promokods", style: bodySmallRed),
+                          Text("Promokods", style: colors.bodySmallThemeColor),
                         ],
                       ),
                     ),
@@ -171,7 +175,7 @@ class OfferCard extends StatelessWidget {
                   FilledButton(
                     onPressed: () => openOfferView(context),
                     style: FilledButton.styleFrom(
-                      backgroundColor: red003,
+                      backgroundColor: colors.color003,
                       padding: const EdgeInsets.symmetric(
                           horizontal: 16, vertical: 8),
                     ),

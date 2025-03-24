@@ -1,5 +1,6 @@
 import 'package:filmu_nams/assets/theme.dart';
 import 'package:filmu_nams/assets/widgets/profile_image.dart';
+import 'package:filmu_nams/providers/color_context.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/stylized_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -29,11 +30,14 @@ class _ProfileViewState extends State<ProfileView> {
 
   @override
   Widget build(BuildContext context) {
+    double height = MediaQuery.of(context).size.height;
+    final colors = ColorContext.of(context);
+
     return Container(
-      decoration: classicDecoration,
+      decoration: colors.classicDecoration,
       width: 350,
       constraints: BoxConstraints(
-        maxHeight: 500,
+        maxHeight: height * 0.65,
       ),
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 25),
       child: SingleChildScrollView(
@@ -41,22 +45,19 @@ class _ProfileViewState extends State<ProfileView> {
           spacing: 15,
           children: [
             button("Atpakaļ", Icons.keyboard_return_rounded, widget.onPressed),
-            Divider(color: red003.withAlpha(100)),
+            Divider(color: colors.color003.withAlpha(100)),
             ProfileImage(width: 100),
             TextButton(
               onPressed: () {},
               child: Text(
                 "Mainīt profila attēlu",
-                style: TextStyle(color: red003),
+                style: TextStyle(color: colors.color003),
               ),
             ),
             inputField("Vārds", Icons.person_outline, nameCtrl),
             inputField("E-pasts", Icons.email_outlined, emailCtrl),
-            // passwordField("Parole", Icons.lock_outline, passwordCtrl),
             SizedBox(),
             saveButton(),
-            changePasswordButton(),
-            logout(),
           ],
         ),
       ),
@@ -64,13 +65,14 @@ class _ProfileViewState extends State<ProfileView> {
   }
 
   Widget inputField(String hint, IconData icon, TextEditingController ctrl) {
+    final colors = ColorContext.of(context);
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 15),
       child: TextField(
         controller: ctrl,
         decoration: InputDecoration(
           hintText: hint,
-          prefixIcon: Icon(icon, color: red003),
+          prefixIcon: Icon(icon, color: colors.color003),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(5),
           ),
@@ -82,44 +84,21 @@ class _ProfileViewState extends State<ProfileView> {
   bool isObscure = true;
 
   void toggleObscure() {
-    debugPrint("rererer");
     setState(() {
       isObscure = !isObscure;
     });
   }
 
-  Widget passwordField(String hint, IconData icon, TextEditingController ctrl) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 15),
-      child: TextField(
-        controller: ctrl,
-        obscureText: isObscure,
-        decoration: InputDecoration(
-          hintText: hint,
-          suffixIcon: IconButton(
-            icon: Icon(
-              isObscure ? Icons.visibility_off : Icons.visibility,
-              color: red003,
-            ),
-            onPressed: toggleObscure,
-          ),
-          prefixIcon: Icon(icon, color: red003),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(5),
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget saveButton() {
+    final colors = ColorContext.of(context);
     return Container(
       margin: const EdgeInsets.only(left: 15, right: 15, bottom: 25),
       width: double.infinity,
       child: StylizedButton(
         action: () {},
         title: "Saglabāt izmaiņas",
-        textStyle: bodyMediumRed,
+        icon: Icons.save,
+        textStyle: colors.bodyMediumThemeColor,
       ),
     );
   }

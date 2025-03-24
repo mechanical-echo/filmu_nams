@@ -1,12 +1,11 @@
-import 'package:filmu_nams/assets/theme.dart';
 import 'package:filmu_nams/assets/widgets/stylized_tabs/stylized_tab.dart';
 import 'package:filmu_nams/assets/widgets/stylized_tabs/stylized_tabs.dart';
 import 'package:filmu_nams/controllers/movie_controller.dart';
 import 'package:filmu_nams/models/schedule.dart';
 import 'package:filmu_nams/assets/widgets/date_picker/date_picker.dart';
+import 'package:filmu_nams/providers/color_context.dart';
 import 'package:filmu_nams/views/client/main/schedule/movie_list/movie_card.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class ScheduleWidget extends StatefulWidget {
@@ -62,74 +61,59 @@ class _ScheduleWidgetState extends State<ScheduleWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.topCenter,
-      children: [
-        StylizedTabs(
-          upsideDown: true,
-          fontSize: 19.5,
-          tabs: [
-            StylizedTabPage(
-              title: StylizedTabTitle.text("Šodien"),
-              child: ScheduleDateView(date: today()),
-              onTap: closeDatePicker,
-            ),
-            StylizedTabPage(
-              title: StylizedTabTitle.text("Rīt"),
-              child: ScheduleDateView(date: tomorrow()),
-              onTap: closeDatePicker,
-            ),
-            StylizedTabPage(
-              title: StylizedTabTitle.text("Pārīt"),
-              child: ScheduleDateView(date: dayAfterTomorrow()),
-              onTap: closeDatePicker,
-            ),
-            StylizedTabPage(
-              title: StylizedTabTitle.icon(Icons.calendar_month),
-              child: Column(
-                children: [
-                  if (datePickerSelectedDate != null)
-                    Container(
-                      margin: const EdgeInsets.symmetric(vertical: 10),
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      decoration: BoxDecoration(
-                        color: red002,
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      child: Text(
-                        DateFormat(DateFormat.ABBR_MONTH_DAY, 'lv')
-                            .format(datePickerSelectedDate!),
-                        style: bodyLarge,
-                      ),
-                    ),
-                  ScheduleDateView(
-                    date: datePickerSelectedDate,
-                  ),
-                ],
+    return SizedBox(
+      height: MediaQuery.of(context).size.height - 425,
+      child: Stack(
+        alignment: Alignment.topCenter,
+        children: [
+          StylizedTabs(
+            upsideDown: true,
+            fontSize: 19.5,
+            tabs: [
+              StylizedTabPage(
+                title: StylizedTabTitle.text("Šodien"),
+                child: ScheduleDateView(date: today()),
+                onTap: closeDatePicker,
               ),
-              onTap: () {
-                setState(() {
-                  isDatePickerOpen = true;
-                });
-              },
-            ),
-          ],
-        ),
-        AnimatedPositioned(
-          duration: const Duration(milliseconds: 500),
-          curve: Cubic(1, 0, 0, 1),
-          top: isDatePickerOpen ? 50 : -400,
-          child: AnimatedOpacity(
-            duration: const Duration(milliseconds: 300),
+              StylizedTabPage(
+                title: StylizedTabTitle.text("Rīt"),
+                child: ScheduleDateView(date: tomorrow()),
+                onTap: closeDatePicker,
+              ),
+              StylizedTabPage(
+                title: StylizedTabTitle.text("Pārīt"),
+                child: ScheduleDateView(date: dayAfterTomorrow()),
+                onTap: closeDatePicker,
+              ),
+              StylizedTabPage(
+                title: StylizedTabTitle.icon(Icons.calendar_month),
+                child: ScheduleDateView(
+                  date: datePickerSelectedDate,
+                ),
+                onTap: () {
+                  setState(() {
+                    isDatePickerOpen = true;
+                  });
+                },
+              ),
+            ],
+          ),
+          AnimatedPositioned(
+            duration: const Duration(milliseconds: 500),
             curve: Cubic(1, 0, 0, 1),
-            opacity: isDatePickerOpen ? 1.0 : 0.0,
-            child: DatePicker(
-              onDateSelected: onDateSelected,
-              availableDates: availableDates,
+            top: isDatePickerOpen ? 50 : -400,
+            child: AnimatedOpacity(
+              duration: const Duration(milliseconds: 300),
+              curve: Cubic(1, 0, 0, 1),
+              opacity: isDatePickerOpen ? 1.0 : 0.0,
+              child: DatePicker(
+                onDateSelected: onDateSelected,
+                availableDates: availableDates,
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
@@ -192,32 +176,31 @@ class _ScheduleDateViewState extends State<ScheduleDateView> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: MediaQuery.of(context).size.height - 425,
-      child: isLoading
-          ? LoadingAnimationWidget.staggeredDotsWave(
-              color: Colors.white, size: 100)
-          : scheduleData != null && scheduleData!.isNotEmpty
-              ? GridView.count(
-                  padding: const EdgeInsets.only(top: 10, bottom: 70),
-                  crossAxisCount: 1,
-                  childAspectRatio: 1.5,
-                  mainAxisSpacing: 10,
-                  children: List.generate(
-                    scheduleData!.length,
-                    (index) => MovieCard(
-                      data: scheduleData![index].movie,
-                      time: scheduleData![index].time.toDate(),
-                      hall: scheduleData![index].hall,
-                    ),
-                  ),
-                )
-              : Center(
-                  child: Text(
-                    "Saraksts izvēlētājā dienā ir tūkšs",
-                    style: bodySmall,
+    final colors = ColorContext.of(context);
+
+    return isLoading
+        ? LoadingAnimationWidget.staggeredDotsWave(
+            color: Colors.white, size: 100)
+        : scheduleData != null && scheduleData!.isNotEmpty
+            ? GridView.count(
+                padding: const EdgeInsets.only(top: 10, bottom: 70),
+                crossAxisCount: 1,
+                childAspectRatio: 1.5,
+                mainAxisSpacing: 10,
+                children: List.generate(
+                  scheduleData!.length,
+                  (index) => MovieCard(
+                    data: scheduleData![index].movie,
+                    time: scheduleData![index].time.toDate(),
+                    hall: scheduleData![index].hall,
                   ),
                 ),
-    );
+              )
+            : Center(
+                child: Text(
+                  "Saraksts izvēlētājā dienā ir tūkšs",
+                  style: colors.bodySmallThemeColor,
+                ),
+              );
   }
 }

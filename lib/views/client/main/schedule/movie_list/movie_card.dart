@@ -7,6 +7,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
+import '../../../../../providers/color_context.dart';
+
 class MovieCard extends StatefulWidget {
   const MovieCard({
     super.key,
@@ -34,7 +36,7 @@ class _MovieCardState extends State<MovieCard> {
   Widget build(BuildContext context) {
     final double topMargin = widget.data.title.length > 12 ? 88 : 75;
     final double bottomMargin = widget.data.title.length > 12 ? 63 : 70;
-
+    final colors = ColorContext.of(context);
     return Container(
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
@@ -54,9 +56,7 @@ class _MovieCardState extends State<MovieCard> {
                   top: topMargin,
                 ),
                 decoration: BoxDecoration(
-                  color: Theme.of(context)
-                      .bottomNavigationBarTheme
-                      .backgroundColor,
+                  color: colors.color001,
                   borderRadius: BorderRadius.only(
                     topRight: Radius.circular(10),
                     bottomRight: Radius.circular(10),
@@ -143,6 +143,7 @@ class _MovieCardState extends State<MovieCard> {
   }
 
   Container rating(BuildContext context) {
+    final colors = ColorContext.of(context);
     return Container(
       margin: const EdgeInsets.only(
         top: 10,
@@ -160,7 +161,7 @@ class _MovieCardState extends State<MovieCard> {
             offset: const Offset(-5, 0),
           )
         ],
-        color: red002,
+        color: colors.color002,
       ),
       child: Text(
         widget.data.rating,
@@ -169,6 +170,7 @@ class _MovieCardState extends State<MovieCard> {
   }
 
   scheduledTime(BuildContext context) {
+    final colors = ColorContext.of(context);
     return Positioned(
       bottom: 0,
       left: 0,
@@ -189,7 +191,7 @@ class _MovieCardState extends State<MovieCard> {
               offset: const Offset(5, 5),
             )
           ],
-          color: red002,
+          color: colors.color002,
         ),
         child: Text(
           '${getTime()}  -  ${widget.hall}. Zāle',
@@ -199,6 +201,7 @@ class _MovieCardState extends State<MovieCard> {
   }
 
   title() {
+    final colors = ColorContext.of(context);
     return TextContainer(
       Text(
         widget.data.title,
@@ -206,7 +209,7 @@ class _MovieCardState extends State<MovieCard> {
         textAlign: TextAlign.center,
         overflow: TextOverflow.ellipsis,
         style: GoogleFonts.poppins(
-          color: red002,
+          color: colors.color002,
           fontSize: widget.data.title.length > 12 ? 17 : 25,
           fontWeight: FontWeight.w700,
         ),
@@ -216,6 +219,7 @@ class _MovieCardState extends State<MovieCard> {
   }
 
   duration() {
+    final colors = ColorContext.of(context);
     return TextContainer(
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -225,11 +229,12 @@ class _MovieCardState extends State<MovieCard> {
           Icon(Icons.access_time, size: 15, color: Colors.white),
         ],
       ),
-      red002,
+      colors.color002,
     );
   }
 
   genre() {
+    final colors = ColorContext.of(context);
     return TextContainer(
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -239,11 +244,12 @@ class _MovieCardState extends State<MovieCard> {
           Icon(Icons.movie, size: 15, color: Colors.white),
         ],
       ),
-      red002,
+      colors.color002,
     );
   }
 
   director() {
+    final colors = ColorContext.of(context);
     return TextContainer(
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -253,11 +259,12 @@ class _MovieCardState extends State<MovieCard> {
           Icon(Icons.person, size: 15, color: Colors.white),
         ],
       ),
-      red002,
+      colors.color002,
     );
   }
 
   button() {
+    final colors = ColorContext.of(context);
     return Container(
       decoration: BoxDecoration(
         boxShadow: [
@@ -272,7 +279,7 @@ class _MovieCardState extends State<MovieCard> {
         onPressed: openMovieView,
         style: FilledButton.styleFrom(
           padding: const EdgeInsets.all(0),
-          backgroundColor: red002,
+          backgroundColor: colors.color002,
           fixedSize: Size(108, 10),
         ),
         child: Text(widget.time != null ? "Nopirkt biļeti" : "Vairāk",

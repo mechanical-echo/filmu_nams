@@ -4,7 +4,10 @@ import 'package:filmu_nams/models/movie.dart';
 import 'package:filmu_nams/views/client/main/schedule/movie/foldable_description.dart';
 import 'package:filmu_nams/views/client/main/schedule/movie/ticket_buying_form.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+
+import '../../../../../providers/color_context.dart';
 
 class MovieView extends StatefulWidget {
   const MovieView({
@@ -40,8 +43,6 @@ class MovieView extends StatefulWidget {
 class _MovieViewState extends State<MovieView> {
   String getDuration(int dur) => '${dur ~/ 60}h ${dur % 60}m';
 
-  String formatTitle(String s) => s.replaceFirst(':', ':\n');
-
   double headerHeight = 250;
 
   final double minHeaderHeight = 100;
@@ -51,17 +52,17 @@ class _MovieViewState extends State<MovieView> {
   @override
   void initState() {
     super.initState();
-    _scrollController.addListener(_onScroll);
+    _scrollController.addListener(onScroll);
   }
 
   @override
   void dispose() {
-    _scrollController.removeListener(_onScroll);
+    _scrollController.removeListener(onScroll);
     _scrollController.dispose();
     super.dispose();
   }
 
-  void _onScroll() {
+  void onScroll() {
     double offset = _scrollController.offset;
 
     /* Commented this out for now because it randomly throws an error 
@@ -76,11 +77,11 @@ class _MovieViewState extends State<MovieView> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-
+    final colors = ColorContext.of(context);
     return Container(
       clipBehavior: Clip.hardEdge,
       decoration: BoxDecoration(
-        color: red001,
+        color: colors.color001,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(25)),
       ),
       width: width,
@@ -95,32 +96,85 @@ class _MovieViewState extends State<MovieView> {
           Expanded(
             child: NotificationListener<ScrollNotification>(
               onNotification: (scrollNotification) {
-                _onScroll();
+                onScroll();
                 return true;
               },
               child: SingleChildScrollView(
                 controller: _scrollController,
-                padding: const EdgeInsets.only(bottom: 35, top: 10),
+                padding: const EdgeInsets.only(
+                  bottom: 35,
+                  top: 20,
+                  left: 20,
+                  right: 20,
+                ),
                 child: Column(
+                  spacing: 10,
                   children: [
-                    title(),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 25,
-                        vertical: 4,
-                      ),
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          spacing: 15,
-                          children: List.generate(
-                            widget.data.actors.length,
-                            (index) => badge(widget.data.actors[index]),
-                          ),
-                        ),
-                      ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      spacing: 15,
+                      children: [
+                        Expanded(child: title()),
+                        badges(),
+                      ],
                     ),
+                    divider(colors),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      spacing: 5,
+                      children: [
+                        Column(
+                          spacing: 7,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              " Žanrs",
+                              style: GoogleFonts.poppins(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            badge(
+                              GenreName[widget.data.genre]!,
+                              TextAlign.center,
+                            ),
+                          ],
+                        ),
+                        Column(
+                          spacing: 7,
+                          children: [
+                            Text(
+                              "Režisors",
+                              style: GoogleFonts.poppins(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            badge(widget.data.director, TextAlign.center),
+                          ],
+                        ),
+                        Column(
+                          spacing: 7,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              "Ilgums ",
+                              style: GoogleFonts.poppins(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            badge(
+                              getDuration(widget.data.duration),
+                              TextAlign.center,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    divider(colors),
                     FoldableDescription(data: widget.data),
+                    divider(colors),
                     TicketBuyingForm(movieData: widget.data),
                   ],
                 ),
@@ -132,16 +186,38 @@ class _MovieViewState extends State<MovieView> {
     );
   }
 
-  Container badge(String text) {
+  badges() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      spacing: 5,
+      children: List.generate(
+        widget.data.actors.length,
+        (index) => badge(widget.data.actors[index], TextAlign.right),
+      ),
+    );
+  }
+
+  Widget divider(ColorContext colors) {
+    return Divider(
+      color: colors.color003.withAlpha(100),
+      thickness: 2,
+      height: 32,
+    );
+  }
+
+  badge(String text, TextAlign align) {
+    final colors = ColorContext.of(context);
     return Container(
       padding: const EdgeInsets.symmetric(
-        vertical: 7,
+        vertical: 3,
         horizontal: 15,
       ),
-      decoration: classicDecorationSharper,
+      width: 120,
+      decoration: colors.classicDecorationSharper,
       child: Text(
         text,
         style: bodySmall,
+        textAlign: align,
       ),
     );
   }
@@ -172,22 +248,6 @@ class _MovieViewState extends State<MovieView> {
             onPressed: () => Navigator.of(context).pop(),
           ),
         ),
-        Positioned(
-          bottom: calculatePadding(headerHeight),
-          child: Container(
-            clipBehavior: Clip.none,
-            margin: const EdgeInsets.symmetric(horizontal: 25),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              spacing: 5,
-              children: [
-                badge(GenreName[widget.data.genre]!),
-                badge(widget.data.director),
-                badge(getDuration(widget.data.duration)),
-              ],
-            ),
-          ),
-        ),
       ],
     );
   }
@@ -204,19 +264,21 @@ class _MovieViewState extends State<MovieView> {
   }
 
   Container title() {
+    final colors = ColorContext.of(context);
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-      padding: const EdgeInsets.symmetric(horizontal: 55, vertical: 10),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        border: bottomBorder,
-        boxShadow: cardShadow,
-        color: red002,
+      constraints: BoxConstraints(
+        minHeight: 100,
       ),
-      child: Text(
-        formatTitle(widget.data.title),
-        style: bodyLarge,
-        textAlign: TextAlign.center,
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      decoration: colors.classicDecorationWhiteSharper,
+      child: Center(
+        child: Text(
+          widget.data.title,
+          style: widget.data.title.length > 14
+              ? colors.header2ThemeColor
+              : colors.header1ThemeColor,
+          textAlign: TextAlign.center,
+        ),
       ),
     );
   }

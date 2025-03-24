@@ -1,4 +1,5 @@
 import 'package:filmu_nams/assets/theme.dart';
+import 'package:filmu_nams/providers/color_context.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -47,6 +48,7 @@ class _TextInputState extends State<TextInput> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = ColorContext.of(context);
     return Container(
       margin: EdgeInsets.only(
         top: widget.margin[0],
@@ -62,9 +64,7 @@ class _TextInputState extends State<TextInput> {
               TextFormField(
                 controller: widget.controller,
                 cursorColor: const Color.fromARGB(255, 123, 123, 123),
-                style: const TextStyle(
-                  color: Colors.white,
-                ),
+                style: colors.bodySmall,
                 obscureText: _obscureText,
                 decoration: InputDecoration(
                   filled: true,
@@ -76,6 +76,7 @@ class _TextInputState extends State<TextInput> {
                             _obscureText
                                 ? Icons.visibility
                                 : Icons.visibility_off,
+                            color: colors.color001,
                           ),
                           onPressed: _toggle,
                         )
