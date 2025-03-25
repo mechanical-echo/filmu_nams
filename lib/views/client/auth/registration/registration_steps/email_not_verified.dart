@@ -1,11 +1,10 @@
+import 'package:filmu_nams/providers/color_context.dart';
+import 'package:filmu_nams/views/admin/dashboard/widgets/stylized_button.dart';
 import 'package:filmu_nams/views/client/auth/components/auth_form_container.dart';
 import 'package:filmu_nams/assets/decorations/background.dart';
 import 'package:filmu_nams/assets/decorations/big_logo.dart';
-import 'package:filmu_nams/assets/input/filled_text_icon_button.dart';
-import 'package:filmu_nams/assets/input/outline_button_icon.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'dart:async';
 
 class EmailNotVerified extends StatefulWidget {
@@ -30,7 +29,7 @@ class _EmailNotVerifiedState extends State<EmailNotVerified> {
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
-
+    final colors = ColorContext.of(context);
     return Scaffold(
       body: Background(
         child: Column(
@@ -44,6 +43,7 @@ class _EmailNotVerifiedState extends State<EmailNotVerified> {
                   right: 35,
                 ),
                 child: Column(
+                  spacing: 20,
                   children: [
                     Row(
                       children: [
@@ -58,48 +58,40 @@ class _EmailNotVerifiedState extends State<EmailNotVerified> {
                         Expanded(
                           child: Text(
                             "Jūsu e-pasts nav verificēts!",
-                            style: GoogleFonts.poppins(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 25,
-                            ),
+                            style: colors.bodyLargeThemeColor,
                           ),
                         ),
                       ],
                     ),
-                    SizedBox(
-                      height: 13,
-                    ),
                     Text(
                       "Lūdzu, nospiediet pogu lejā, lai nosūtīt saiti verificēšanai uz Jūsu e-pasta adresi un atgriezieties pēc e-pasta verifikācijas",
-                      style: GoogleFonts.poppins(
-                        color: Colors.white,
-                        fontSize: 17,
-                      ),
+                      style: colors.bodyMedium,
                       textAlign: TextAlign.center,
                     ),
-                    SizedBox(
-                      height: 13,
-                    ),
-                    Text(
-                      user?.email ?? "",
-                      style: GoogleFonts.poppins(
-                        color: Colors.white54,
+                    Container(
+                      decoration: colors.classicDecorationWhiteSharper,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 25,
+                        vertical: 5,
+                      ),
+                      child: Text(
+                        user?.email ?? "",
+                        style: colors.bodySmall,
                       ),
                     ),
                     Column(
+                      spacing: 10,
                       children: [
-                        FilledTextIconButton(
+                        StylizedButton(
                           icon: Icons.mark_email_read_outlined,
                           title: "Nosūtīt saiti",
-                          onPressed:
+                          action:
                               isButtonDisabled ? () {} : sendVerificationEmail,
-                          paddingY: 25,
                         ),
-                        OutlineButtonIcon(
+                        StylizedButton(
                           title: "Izlogoties",
                           icon: Icons.logout,
-                          onPressed: logout,
+                          action: logout,
                         ),
                       ],
                     ),

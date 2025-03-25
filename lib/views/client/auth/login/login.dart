@@ -237,7 +237,9 @@ class SocialLoginButtons extends StatelessWidget {
       children: [
         _SocialButton(
           icon: 'assets/google.png',
-          onPressed: () => UserController().signInWithGoogle(),
+          onPressed: () async {
+            await UserController().signInWithGoogle();
+          },
         ),
         _SocialButton(
           icon: 'assets/facebook.png',

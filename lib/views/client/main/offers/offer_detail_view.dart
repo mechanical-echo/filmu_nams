@@ -64,7 +64,7 @@ class _OfferViewState extends State<OfferView> {
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: colors.isLightTheme ? Colors.white : colors.color001,
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -106,7 +106,9 @@ class _OfferViewState extends State<OfferView> {
               padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 35),
               child: Text(
                 widget.data.description,
-                style: colors.bodyMediumThemeColor,
+                style: colors.isLightTheme
+                    ? colors.bodyMediumThemeColor
+                    : colors.bodyMedium,
               ),
             ),
             if (widget.data.promocode != null)

@@ -60,27 +60,50 @@ class UserController {
 
       if (user == null) return null;
 
-      String? imageUrl;
-      if (profileImage != null) {
-        imageUrl = await uploadProfileImage(user.uid, profileImage, null);
-      }
+      UserDocumentPayload payload = UserDocumentPayload(
+        name: name,
+        email: email,
+        profileImage: profileImage,
+      );
 
-      await _firestore.collection('users').doc(user.uid).set({
-        'name': name,
-        'email': email,
-        'profileImageUrl': imageUrl,
-        'role': 'user',
-        'createdAt': FieldValue.serverTimestamp(),
-      });
-
-      await user.updateDisplayName(name);
-      if (imageUrl != null) {
-        await user.updatePhotoURL(imageUrl);
-      }
+      await createUserDocument(user, payload);
 
       return RegistrationResponse(user: user);
     } on FirebaseAuthException catch (e) {
       return RegistrationResponse(errorMessage: e.code);
+    }
+  }
+
+  Future<void> createUserDocument(
+    User user,
+    UserDocumentPayload payload,
+  ) async {
+    String uid = user.uid;
+
+    final existingDoc = await _firestore.collection('users').doc(uid).get();
+
+    if (existingDoc.exists) {
+      return;
+    }
+
+    String? imageUrl =
+        payload.profileImage is String ? payload.profileImage : null;
+
+    if (payload.profileImage != null && payload.profileImage is File) {
+      imageUrl = await uploadProfileImage(uid, payload.profileImage, null);
+    }
+
+    await _firestore.collection('users').doc(uid).set({
+      'name': payload.name,
+      'email': payload.email,
+      'profileImageUrl': imageUrl,
+      'role': UserRolesEnum.user,
+      'createdAt': FieldValue.serverTimestamp(),
+    });
+
+    await user.updateDisplayName(payload.name);
+    if (imageUrl != null) {
+      await user.updatePhotoURL(imageUrl);
     }
   }
 
@@ -113,7 +136,7 @@ class UserController {
     }
   }
 
-  Future<UserCredential?> signInWithGoogle() async {
+  Future<RegistrationResponse> signInWithGoogle() async {
     try {
       final GoogleSignInAccount? user = await GoogleSignIn().signIn();
       if (user == null) {
@@ -126,10 +149,18 @@ class UserController {
         idToken: auth.idToken,
       );
 
-      return await _auth.signInWithCredential(credential);
+      UserDocumentPayload payload = UserDocumentPayload(
+        name: user.displayName ?? '',
+        email: user.email,
+        profileImage: user.photoUrl,
+      );
+
+      await _auth.signInWithCredential(credential);
+      await createUserDocument(_auth.currentUser!, payload);
+      return RegistrationResponse(user: _auth.currentUser);
     } catch (exception) {
-      debugPrint("Error google login: ${exception.toString}");
-      return null;
+      debugPrint("Error google login: ${exception.toString()}");
+      return RegistrationResponse(errorMessage: "Google login failure");
     }
   }
 
@@ -285,4 +316,21 @@ class RegistrationResponse {
     this.errorMessage,
     this.user,
   });
+}
+
+class UserDocumentPayload {
+  final String name;
+  final String email;
+  final dynamic profileImage;
+
+  UserDocumentPayload({
+    this.name = '',
+    this.email = '',
+    this.profileImage,
+  });
+}
+
+class UserRolesEnum {
+  static const String admin = 'admin';
+  static const String user = 'user';
 }
