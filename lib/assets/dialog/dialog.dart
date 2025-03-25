@@ -1,8 +1,10 @@
+import 'package:filmu_nams/providers/color_context.dart';
+import 'package:filmu_nams/views/admin/dashboard/widgets/stylized_button.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class StylizedDialog {
   static void alert(BuildContext context, String title, String content) {
+    final colors = ColorContext.of(context);
     showGeneralDialog(
       context: context,
       pageBuilder: (context, animation, secondaryAnimation) => AlertDialog(
@@ -34,22 +36,14 @@ class StylizedDialog {
         ),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         backgroundColor: Theme.of(context).dialogBackgroundColor,
-        titleTextStyle: GoogleFonts.poppins(
-          color: Colors.white,
-          fontSize: 24,
-          fontWeight: FontWeight.bold,
-        ),
-        contentTextStyle: GoogleFonts.poppins(
-          color: Colors.white,
-          fontSize: 18,
-          fontWeight: FontWeight.normal,
-        ),
+        titleTextStyle: colors.header2ThemeColor,
+        contentTextStyle: colors.bodyMedium,
         actions: [
-          FilledButton(
-            onPressed: () {
+          StylizedButton(
+            action: () {
               Navigator.of(context).pop();
             },
-            child: Text('OK'),
+            title: 'Ok!',
           ),
         ],
       ),

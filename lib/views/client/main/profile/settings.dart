@@ -158,10 +158,10 @@ class _SettingsPageState extends State<SettingsPage> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            circle(AppTheme.red, Colors.red, themeProvider, true),
-            circle(AppTheme.green, Colors.green, themeProvider, true),
-            circle(AppTheme.blue, Colors.blue, themeProvider, false),
-            circle(AppTheme.purple, Colors.purple, themeProvider, false),
+            circle(AppTheme.redDark, Colors.red, themeProvider, true),
+            circle(AppTheme.blueDark, Colors.blue, themeProvider, true),
+            circle(AppTheme.redLight, Colors.red, themeProvider, false),
+            circle(AppTheme.blueLight, Colors.blue, themeProvider, false),
           ],
         ),
       ],

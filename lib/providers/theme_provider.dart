@@ -3,10 +3,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 enum AppTheme {
-  red,
-  blue,
-  purple,
-  green,
+  redDark,
+  redLight,
+  blueDark,
+  blueLight,
 }
 
 class ThemeColors {
@@ -28,7 +28,7 @@ class ThemeColors {
 class ThemeProvider extends ChangeNotifier {
   static const String _themeKey = 'selected_theme';
   late SharedPreferences _prefs;
-  AppTheme _currentTheme = AppTheme.red;
+  AppTheme _currentTheme = AppTheme.redDark;
 
   ThemeProvider() {
     _loadTheme();
@@ -40,7 +40,7 @@ class ThemeProvider extends ChangeNotifier {
     if (savedTheme != null) {
       _currentTheme = AppTheme.values.firstWhere(
         (theme) => theme.toString() == savedTheme,
-        orElse: () => AppTheme.red,
+        orElse: () => AppTheme.redDark,
       );
       notifyListeners();
     }
@@ -54,7 +54,7 @@ class ThemeProvider extends ChangeNotifier {
 
   ThemeColors get colors {
     switch (_currentTheme) {
-      case AppTheme.red:
+      case AppTheme.redDark:
         return const ThemeColors(
           color001: Color.fromARGB(255, 102, 30, 23),
           color002: Color.fromARGB(255, 119, 41, 32),
@@ -62,29 +62,29 @@ class ThemeProvider extends ChangeNotifier {
           smokeyWhite: Color.fromARGB(255, 248, 237, 237),
           isLightTheme: false,
         );
-      case AppTheme.blue:
+      case AppTheme.blueDark:
+        return const ThemeColors(
+          color001: Color.fromARGB(255, 61, 90, 167),
+          color002: Color.fromARGB(255, 82, 125, 212),
+          color003: Color.fromARGB(255, 140, 178, 255),
+          smokeyWhite: Color.fromARGB(255, 237, 241, 248),
+          isLightTheme: false,
+        );
+      case AppTheme.redLight:
+        return const ThemeColors(
+          color001: Color.fromARGB(255, 102, 30, 23),
+          color002: Color.fromARGB(255, 119, 41, 32),
+          color003: Color.fromARGB(255, 178, 104, 96),
+          smokeyWhite: Color.fromARGB(255, 248, 237, 237),
+          isLightTheme: true,
+        );
+      case AppTheme.blueLight:
         return const ThemeColors(
           color001: Color.fromARGB(255, 61, 90, 167),
           color002: Color.fromARGB(255, 82, 125, 212),
           color003: Color.fromARGB(255, 140, 178, 255),
           smokeyWhite: Color.fromARGB(255, 237, 241, 248),
           isLightTheme: true,
-        );
-      case AppTheme.purple:
-        return const ThemeColors(
-          color001: Color.fromARGB(255, 120, 71, 138),
-          color002: Color.fromARGB(255, 149, 95, 175),
-          color003: Color.fromARGB(255, 183, 128, 214),
-          smokeyWhite: Color.fromARGB(255, 243, 237, 248),
-          isLightTheme: true,
-        );
-      case AppTheme.green:
-        return const ThemeColors(
-          color001: Color.fromARGB(255, 23, 102, 44),
-          color002: Color.fromARGB(255, 32, 119, 65),
-          color003: Color.fromARGB(255, 96, 178, 127),
-          smokeyWhite: Color.fromARGB(255, 237, 248, 240),
-          isLightTheme: false,
         );
     }
   }
@@ -257,7 +257,7 @@ class ThemeProvider extends ChangeNotifier {
 
   ThemeData get currentTheme {
     switch (_currentTheme) {
-      case AppTheme.red:
+      case AppTheme.redDark:
         return _buildTheme(
           seedColor: const Color.fromARGB(255, 87, 33, 27),
           primary: const Color.fromARGB(255, 123, 29, 29),
@@ -265,7 +265,7 @@ class ThemeProvider extends ChangeNotifier {
           buttonColor: colors.color002,
           accentColor: colors.color003,
         );
-      case AppTheme.blue:
+      case AppTheme.blueDark:
         return _buildTheme(
           seedColor: const Color.fromARGB(255, 27, 54, 87),
           primary: const Color.fromARGB(255, 29, 69, 123),
@@ -273,18 +273,18 @@ class ThemeProvider extends ChangeNotifier {
           buttonColor: colors.color002,
           accentColor: colors.color003,
         );
-      case AppTheme.purple:
+      case AppTheme.redLight:
         return _buildTheme(
-          seedColor: const Color.fromARGB(255, 66, 27, 87),
-          primary: const Color.fromARGB(255, 97, 29, 123),
+          seedColor: const Color.fromARGB(255, 87, 33, 27),
+          primary: const Color.fromARGB(255, 123, 29, 29),
           baseColor: colors.color001,
           buttonColor: colors.color002,
           accentColor: colors.color003,
         );
-      case AppTheme.green:
+      case AppTheme.blueLight:
         return _buildTheme(
-          seedColor: const Color.fromARGB(255, 27, 87, 50),
-          primary: const Color.fromARGB(255, 29, 123, 70),
+          seedColor: const Color.fromARGB(255, 27, 54, 87),
+          primary: const Color.fromARGB(255, 29, 69, 123),
           baseColor: colors.color001,
           buttonColor: colors.color002,
           accentColor: colors.color003,
@@ -437,14 +437,14 @@ class ThemeProvider extends ChangeNotifier {
 
   String getThemeName() {
     switch (_currentTheme) {
-      case AppTheme.red:
-        return 'Sarkana';
-      case AppTheme.blue:
-        return 'Zila';
-      case AppTheme.purple:
-        return 'Violeta';
-      case AppTheme.green:
-        return 'Zaļa';
+      case AppTheme.redDark:
+        return 'Sarkana/tumša';
+      case AppTheme.blueDark:
+        return 'Zila/tumša';
+      case AppTheme.redLight:
+        return 'Sarkana/gaiša';
+      case AppTheme.blueLight:
+        return 'Zila/gaiša';
     }
   }
 

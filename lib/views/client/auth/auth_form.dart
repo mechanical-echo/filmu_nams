@@ -1,4 +1,3 @@
-import 'package:filmu_nams/assets/theme.dart';
 import 'package:filmu_nams/views/client/auth/login/login.dart';
 import 'package:filmu_nams/views/client/auth/registration/registration.dart';
 import 'package:filmu_nams/assets/decorations/background.dart';
