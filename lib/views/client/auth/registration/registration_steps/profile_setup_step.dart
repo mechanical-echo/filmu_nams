@@ -5,7 +5,6 @@ import 'package:filmu_nams/views/admin/dashboard/widgets/stylized_button.dart';
 import 'package:filmu_nams/views/client/auth/registration/registration_steps/registration_state.dart';
 import 'package:filmu_nams/assets/dialog/dialog.dart';
 import 'package:filmu_nams/enums/auth_error_codes.dart';
-import 'package:filmu_nams/assets/input/filled_text_icon_button.dart';
 import 'package:filmu_nams/assets/input/text_input.dart';
 import 'package:filmu_nams/validators/validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';

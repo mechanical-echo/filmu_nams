@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 enum AppTheme {
   red,
@@ -25,7 +26,29 @@ class ThemeColors {
 }
 
 class ThemeProvider extends ChangeNotifier {
+  static const String _themeKey = 'selected_theme';
+  late SharedPreferences _prefs;
   AppTheme _currentTheme = AppTheme.red;
+
+  ThemeProvider() {
+    _loadTheme();
+  }
+
+  Future<void> _loadTheme() async {
+    _prefs = await SharedPreferences.getInstance();
+    final savedTheme = _prefs.getString(_themeKey);
+    if (savedTheme != null) {
+      _currentTheme = AppTheme.values.firstWhere(
+        (theme) => theme.toString() == savedTheme,
+        orElse: () => AppTheme.red,
+      );
+      notifyListeners();
+    }
+  }
+
+  Future<void> _saveTheme(AppTheme theme) async {
+    await _prefs.setString(_themeKey, theme.toString());
+  }
 
   AppTheme get currentThemeEnum => _currentTheme;
 
@@ -428,6 +451,7 @@ class ThemeProvider extends ChangeNotifier {
   void setTheme(AppTheme theme) {
     if (_currentTheme != theme) {
       _currentTheme = theme;
+      _saveTheme(theme);
       notifyListeners();
     }
   }
