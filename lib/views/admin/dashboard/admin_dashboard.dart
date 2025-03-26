@@ -97,13 +97,8 @@ class _AdminDashboardState extends State<AdminDashboard> {
           : null,
       body: Background(
         child: Row(
+          textDirection: TextDirection.rtl,
           children: [
-            if (!isSmallScreen && isSidebarVisible)
-              AdminSideBar(
-                height: height,
-                action: setCurrentPage,
-                activePage: currentPage,
-              ),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -133,6 +128,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: CarouselSwitch(
                           direction: direction,
+                          alignment: AlignmentDirectional.center,
                           child: views[currentPage]!,
                         ),
                       ),
@@ -141,6 +137,12 @@ class _AdminDashboardState extends State<AdminDashboard> {
                 ],
               ),
             ),
+            if (!isSmallScreen && isSidebarVisible)
+              AdminSideBar(
+                height: height,
+                action: setCurrentPage,
+                activePage: currentPage,
+              ),
           ],
         ),
       ),

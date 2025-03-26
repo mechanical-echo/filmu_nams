@@ -62,7 +62,7 @@ class _ScheduleWidgetState extends State<ScheduleWidget> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: MediaQuery.of(context).size.height - 425,
+      height: MediaQuery.of(context).size.height * 0.65,
       child: Stack(
         alignment: Alignment.topCenter,
         children: [

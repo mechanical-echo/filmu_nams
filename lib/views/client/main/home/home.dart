@@ -51,18 +51,16 @@ class _HomeState extends State<Home> {
     fetchHomescreenCarouselFromFirebase();
   }
 
-  Stack MovieItem(int index, bool isActive) {
-    return Stack(
-      clipBehavior: Clip.none,
-      alignment: Alignment.bottomCenter,
+  MovieItem(int index, bool isActive) {
+    return Column(
       children: [
-        MovieItemContent(index),
-        if (isActive) MovieItemText(index),
+        movieItemContent(index),
+        // if (isActive) movieItemText(index), //TODO rework the way description shows
       ],
     );
   }
 
-  Positioned MovieItemText(int index) {
+  Positioned movieItemText(int index) {
     return Positioned(
       top: 340,
       child: Column(
@@ -103,31 +101,29 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Container MovieItemContent(int index) {
+  Container movieItemContent(int index) {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(8),
       ),
-      child: Center(
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(3),
-          child: CachedNetworkImage(
-            imageUrl: movieData![index].imageUrl,
-            fit: BoxFit.fill,
-            placeholder: (context, url) => Container(
-              color: Colors.grey[800],
-              child: Center(
-                child: LoadingAnimationWidget.staggeredDotsWave(
-                  size: 50,
-                  color: Theme.of(context).focusColor,
-                ),
-              ),
-            ),
-            errorWidget: (context, url, error) => Container(
-              color: Colors.grey[800],
-              child: const Icon(Icons.error, color: Colors.white),
+      width: 190,
+      height: 300,
+      clipBehavior: Clip.antiAlias,
+      child: CachedNetworkImage(
+        imageUrl: movieData![index].imageUrl,
+        fit: BoxFit.fill,
+        placeholder: (context, url) => Container(
+          color: Colors.grey[800],
+          child: Center(
+            child: LoadingAnimationWidget.staggeredDotsWave(
+              size: 50,
+              color: Theme.of(context).focusColor,
             ),
           ),
+        ),
+        errorWidget: (context, url, error) => Container(
+          color: Colors.grey[800],
+          child: const Icon(Icons.error, color: Colors.white),
         ),
       ),
     );
@@ -153,25 +149,23 @@ class _HomeState extends State<Home> {
       );
     }
 
-    return Center(
-      child: Column(
-        children: [
-          const SizedBox(height: 240),
-          OverlappingCarousel(
-            items: carouselItems!,
-            itemWidth: width * 0.55,
-            itemHeight: height * 0.33,
-            scaleFactor: 0.85,
-            horizontalSpace: 10,
-            spacingFactor: 0.75,
-            onPageChanged: (index) {
-              setState(() {
-                _activeIndex = index;
-              });
-            },
-          ),
-        ],
-      ),
+    final colors = ColorContext.of(context);
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.only(top: 240),
+        child: OverlappingCarousel(
+          items: carouselItems!,
+          itemWidth: 190,
+          itemHeight: 300,
+          scaleFactor: 0.85,
+          horizontalSpace: 10,
+          spacingFactor: 0.75,
+          onPageChanged: (index) {
+            setState(() {
+              _activeIndex = index;
+            });
+          },
+        ),
     );
   }
 }

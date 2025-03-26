@@ -150,16 +150,11 @@ class WelcomeText extends StatelessWidget {
     final colors = ColorContext.of(context);
     return Container(
       margin: const EdgeInsets.only(top: 25, bottom: 10),
-      decoration: colors.classicDecorationSharp,
-      padding: const EdgeInsets.symmetric(horizontal: 25),
+      decoration: colors.classicDecorationWhiteSharper,
+      padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 5),
       child: Text(
         'Laipni lūdzam!',
-        style: GoogleFonts.poppins(
-          color: Colors.white,
-          fontSize: 36,
-          fontWeight: FontWeight.w300,
-          decoration: TextDecoration.none,
-        ),
+        style: colors.header1ThemeColor
       ),
     );
   }
@@ -243,7 +238,9 @@ class SocialLoginButtons extends StatelessWidget {
         ),
         _SocialButton(
           icon: 'assets/facebook.png',
-          onPressed: () {},
+          onPressed: () async {
+            await UserController().signInWithFacebook();
+          },
         ),
       ],
     );

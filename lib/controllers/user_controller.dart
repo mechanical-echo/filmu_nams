@@ -6,6 +6,7 @@ import 'package:filmu_nams/models/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class UserController {
@@ -304,6 +305,28 @@ class UserController {
     } catch (e) {
       debugPrint('Image delete error: $e');
       return null;
+    }
+  }
+
+  Future<RegistrationResponse> signInWithFacebook() async {
+    try {
+      final LoginResult loginResult = await FacebookAuth.instance.login();
+      final OAuthCredential facebookAuthCredential =
+          FacebookAuthProvider.credential(loginResult.accessToken!.tokenString);
+
+      await _auth.signInWithCredential(facebookAuthCredential);
+      await createUserDocument(
+          _auth.currentUser!,
+          UserDocumentPayload(
+            name: _auth.currentUser!.displayName ?? '',
+            email: _auth.currentUser!.email ?? '',
+            profileImage: _auth.currentUser!.photoURL,
+          ));
+
+      return RegistrationResponse(user: _auth.currentUser);
+    } catch (exception) {
+      debugPrint("Error facebook login: ${exception.toString()}");
+      return RegistrationResponse(errorMessage: "Facebook login failure");
     }
   }
 }

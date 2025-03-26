@@ -84,18 +84,17 @@ class _EditCarouselItemState extends State<EditCarouselItem> {
   }
 
   Future<void> _pickImage() async {
-    final ImagePicker picker = ImagePicker();
-    final XFile? pickedFile =
-        await picker.pickImage(source: ImageSource.gallery);
+    try {
+      final ImagePicker picker = ImagePicker();
+      final XFile? pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
-    if (pickedFile != null && mounted) {
-      if (kIsWeb) {
+      if (pickedFile != null && mounted) {
         final bytes = await pickedFile.readAsBytes();
         setState(() => image = bytes);
-      } else {
-        final bytes = await File(pickedFile.path).readAsBytes();
-        setState(() => image = bytes);
       }
+    } catch (e) {
+      print('Error picking image: $e');
+      StylizedDialog.alert(context, "Kļūda", "Neizdēvas uztaisīt elementu: ${e.toString()}");
     }
   }
 

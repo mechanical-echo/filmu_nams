@@ -1,0 +1,2 @@
+/Users/sofiadyshlovaya/Documents/Projects/filmu_nams/android/app/.cxx/Debug/jl1n6no7/x86_64/CMakeFiles/edit_cache.dir
+/Users/sofiadyshlovaya/Documents/Projects/filmu_nams/android/app/.cxx/Debug/jl1n6no7/x86_64/CMakeFiles/rebuild_cache.dir

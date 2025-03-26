@@ -34,6 +34,9 @@ target 'Runner' do
   pod 'FirebaseFirestore', 
     :git => 'https://github.com/invertase/firestore-ios-sdk-frameworks.git', 
     :tag => '11.8.0'
+  
+
+  pod 'FBSDKLoginKit'
 
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
   target 'RunnerTests' do
