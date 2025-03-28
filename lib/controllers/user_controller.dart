@@ -122,7 +122,6 @@ class UserController {
       Reference reference = _storage.ref().child('profile_images/$userId.jpg');
 
       UploadTask? uploadTask;
-      debugPrint("here");
       if (imageFileWeb != null) {
         uploadTask = reference.putData(imageFileWeb);
       } else if (imageFile != null) {
@@ -217,8 +216,10 @@ class UserController {
       };
 
       if (profileImage != null || profileImageWeb != null) {
-        String? imageUrl =
-            await uploadProfileImage(uid, profileImage, profileImageWeb);
+        String? imageUrl = await uploadProfileImage(uid, profileImage, profileImageWeb);
+        if (profileImage != null) {
+          await _auth.currentUser?.updatePhotoURL(imageUrl);
+        }
         if (imageUrl != null) {
           updateData['profileImageUrl'] = imageUrl;
         }
@@ -414,6 +415,15 @@ class UserController {
     } catch (e) {
       debugPrint('Error during Facebook sign in: $e');
     }
+  }
+
+  Future<void> updateOwnProfile(
+      String name,
+      String email,
+      File? profileImage,
+  ) async {
+    String uid = _auth.currentUser!.uid;
+    await updateUser(uid, name, email, UserRolesEnum.user, profileImage, null);
   }
 }
 

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -7,9 +9,11 @@ class ProfileImage extends StatelessWidget {
   ProfileImage({
     super.key,
     required this.width,
+    this.customImage,
   });
 
   final double width;
+  final File? customImage;
 
   final user = FirebaseAuth.instance.currentUser;
 
@@ -48,11 +52,16 @@ class ProfileImage extends StatelessWidget {
                 ),
               ),
             )
-          : Icon(
-              Icons.person,
-              size: 85,
-              color: Colors.white,
-            ),
+          : customImage != null
+              ? Image.file(
+                  customImage!,
+                  fit: BoxFit.cover,
+                )
+              : Icon(
+                  Icons.person,
+                  size: 85,
+                  color: Colors.white,
+                ),
     );
   }
 }
