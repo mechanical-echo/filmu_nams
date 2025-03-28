@@ -1,7 +1,10 @@
+import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:crypto/crypto.dart';
 import 'package:filmu_nams/models/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -68,6 +71,8 @@ class UserController {
       );
 
       await createUserDocument(user, payload);
+
+      _auth.signOut();
 
       return RegistrationResponse(user: user);
     } on FirebaseAuthException catch (e) {
@@ -308,25 +313,46 @@ class UserController {
     }
   }
 
-  Future<RegistrationResponse> signInWithFacebook() async {
-    try {
-      final LoginResult loginResult = await FacebookAuth.instance.login();
-      final OAuthCredential facebookAuthCredential =
-          FacebookAuthProvider.credential(loginResult.accessToken!.tokenString);
+  String sha256ofString(String input) {
+    final bytes = utf8.encode(input);
+    final digest = sha256.convert(bytes);
+    return digest.toString();
+  }
 
-      await _auth.signInWithCredential(facebookAuthCredential);
-      await createUserDocument(
-          _auth.currentUser!,
-          UserDocumentPayload(
-            name: _auth.currentUser!.displayName ?? '',
-            email: _auth.currentUser!.email ?? '',
-            profileImage: _auth.currentUser!.photoURL,
-          ));
+  String generateNonce([int length = 32]) {
+    final charset = '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-.';
+    final random = Random.secure();
+    return List.generate(length, (_) => charset[random.nextInt(charset.length)]).join();
+  }
 
-      return RegistrationResponse(user: _auth.currentUser);
-    } catch (exception) {
-      debugPrint("Error facebook login: ${exception.toString()}");
-      return RegistrationResponse(errorMessage: "Facebook login failure");
+  Future<void> signInWithFacebook() async {
+    final rawNonce = generateNonce();
+    final nonce = sha256ofString(rawNonce);
+
+    final result = await FacebookAuth.instance.login(
+      loginBehavior: LoginBehavior.nativeWithFallback,
+      nonce: nonce,
+    );
+
+    if (result.status == LoginStatus.success) {
+      debugPrint('${await FacebookAuth.instance.getUserData()}');
+      final token = result.accessToken as LimitedToken;
+      OAuthCredential credential = OAuthCredential(
+        providerId: 'facebook.com',
+        signInMethod: 'oauth',
+        idToken: token.tokenString,
+        rawNonce: rawNonce,
+      );
+      final response = await FirebaseAuth.instance.signInWithCredential(credential);
+      final user = response.user;
+
+      UserDocumentPayload payload = UserDocumentPayload(
+        name: user!.displayName!,
+        email: user.email!,
+        profileImage: user.photoURL,
+      );
+
+      await createUserDocument(user, payload);
     }
   }
 }

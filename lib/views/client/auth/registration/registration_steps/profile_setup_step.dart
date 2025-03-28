@@ -109,8 +109,11 @@ class _ProfileSetupStepState extends State<ProfileSetupStep> {
         setState(() => _isLoading = false);
         Provider.of<RegistrationState>(context, listen: false)
             .setRegistrationComplete(true);
+        await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: widget.emailController.text,
+          password: widget.passwordController.text,
+        );
       } else {
-        await FirebaseAuth.instance.signOut();
         setState(() => _isLoading = false);
         StylizedDialog.alert(
           context,

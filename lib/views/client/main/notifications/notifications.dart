@@ -1,4 +1,3 @@
-import 'package:filmu_nams/assets/theme.dart';
 import 'package:filmu_nams/providers/color_context.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/stylized_button.dart';
 import 'package:flutter/material.dart';
@@ -221,20 +220,22 @@ class _NotificationItemState extends State<NotificationItem> {
   }
 
   NotificationReadButton(BuildContext context) {
+    final colors = ColorContext.of(context);
     return StylizedButton(
       action: _toggleRead,
       title:
           "Atzimēt kā ${widget.notification.state == NotificationState.unread ? "izlasīto" : "neizlasīto"}",
-      textStyle: bodySmallRed,
+      textStyle: colors.bodySmallThemeColor,
       horizontalPadding: 15,
     );
   }
 
   NotificationDeleteButton(BuildContext context) {
+    final colors = ColorContext.of(context);
     return StylizedButton(
       action: _onDelete,
       title: "Dzēst",
-      textStyle: bodySmallRed,
+      textStyle: colors.bodySmallThemeColor,
       horizontalPadding: 15,
     );
   }
