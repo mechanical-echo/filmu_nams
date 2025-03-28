@@ -1,14 +1,12 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
+import 'package:filmu_nams/controllers/notification_controller.dart';
 import 'package:filmu_nams/stripe_options.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:filmu_nams/assets/dialog/dialog.dart';
 
 class PaymentController {
   final String _paymentApiUrl = "https://api.stripe.com/v1/payment_intents";
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<void> initStripe() async {
     try {
@@ -111,11 +109,7 @@ class PaymentController {
   }
 
   void _showPaymentSuccess(BuildContext context) {
-    StylizedDialog.alert(
-      context,
-      "Maksājums veiksmīgs",
-      "Jūsu maksājums ir veiksmīgi apstrādāts. Biļetes ir pieejāmas profila sadaļā.",
-    );
+    NotificationController().showNotification(1, "Maksājums veiksmīgs", "Jūsu maksājums ir veiksmīgi apstrādāts. Biļetes ir pieejāmas profila sadaļā.");
   }
 
   void _showPaymentError(BuildContext context, String message) {
@@ -124,26 +118,5 @@ class PaymentController {
       "Maksājuma kļūda",
       message,
     );
-  }
-
-  Future<void> createTickets(String id, List<Map<String, int>> seats) async {
-    try {
-      final user = FirebaseAuth.instance.currentUser;
-      final userRef = _firestore.collection('users').doc(user!.uid);
-      final scheduleRef = _firestore.collection('schedule').doc(id);
-
-      for (var seat in seats) {
-        await _firestore.collection('tickets').add({
-          'schedule': scheduleRef,
-          'userId': userRef,
-          'seat': {
-            'row': seat['row'],
-            'seat': seat['seat'],
-          },
-        });
-      }
-    } catch (e) {
-      debugPrint('Error creating tickets: $e');
-    }
   }
 }

@@ -1,7 +1,9 @@
+import 'package:confetti/confetti.dart';
 import 'package:filmu_nams/assets/dialog/dialog.dart';
 import 'package:filmu_nams/assets/theme.dart';
 import 'package:filmu_nams/controllers/payment_controller.dart';
 import 'package:filmu_nams/controllers/promocode_controller.dart';
+import 'package:filmu_nams/controllers/ticket_controller.dart';
 import 'package:filmu_nams/models/promocode.dart';
 import 'package:filmu_nams/providers/color_context.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/stylized_button.dart';
@@ -30,12 +32,12 @@ class _HallSeatsState extends State<HallSeats> {
   int? selectedSeatIndex = 0;
 
   List<int?> chosenSeats = [];
+  List<int?> takenSeats = [];
+
   bool isProcessingPayment = false;
+  bool isLoading = false;
 
   String? currentScheduleId;
-
-  int getRowFromIndex(int? index) => index! ~/ seatAmountPerRow;
-  int getColFromIndex(int? index) => index! % seatAmountPerRow;
 
   PromocodeModel? submittedPromocode;
 
@@ -44,6 +46,10 @@ class _HallSeatsState extends State<HallSeats> {
   }
 
   TextEditingController promocodeController = TextEditingController();
+
+  int getRowFromIndex(int? index) => index! ~/ seatAmountPerRow;
+
+  int getColFromIndex(int? index) => index! % seatAmountPerRow;
 
   void selectSeat(int? index) {
     setState(() {
@@ -58,10 +64,25 @@ class _HallSeatsState extends State<HallSeats> {
     });
   }
 
+  Future<void> getTakenSeats() async {
+    setState(() {
+      isLoading = true;
+    });
+    final takenSeatsIndexes =
+        await TicketController().getTakenSeatsByScheduleId(currentScheduleId!);
+    setState(() {
+      takenSeats = takenSeatsIndexes;
+      isLoading = false;
+    });
+
+    selectFirstAvailableSeat();
+  }
+
   @override
   void initState() {
     super.initState();
     currentScheduleId = widget.scheduleId;
+    getTakenSeats();
   }
 
   @override
@@ -83,17 +104,47 @@ class _HallSeatsState extends State<HallSeats> {
       chosenSeats.remove(chosenSeats[index]);
     });
   }
+  final confettiController = ConfettiController();
+
+  @override
+  void dispose() {
+    super.dispose();
+    confettiController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      spacing: 10,
+    return Stack(
       children: [
-        selectSeatDropdowns(),
-        seatGrid(),
-        ticketTable(),
-        if (chosenSeats.isNotEmpty) promocodeInput(),
-        submitButton(),
+        Column(
+          spacing: 10,
+          children: [
+            selectSeatDropdowns(),
+            seatGrid(),
+            ticketTable(),
+            if (chosenSeats.isNotEmpty) promocodeInput(),
+            submitButton(),
+          ],
+        ),
+        Align(
+          alignment: Alignment.center,
+          child: ConfettiWidget(
+            confettiController: confettiController,
+            blastDirectionality: BlastDirectionality.explosive,
+            emissionFrequency: 0.05,
+            numberOfParticles: 50,
+            maxBlastForce: 5,
+            minBlastForce: 2,
+            gravity: 0.1,
+            shouldLoop: false,
+            colors: const [
+              Colors.blue,
+              Colors.pink,
+              Colors.purple,
+              Colors.red,
+            ],
+          ),
+        ),
       ],
     );
   }
@@ -167,7 +218,7 @@ class _HallSeatsState extends State<HallSeats> {
   }
 
   double getTicketPrice() {
-    return 4.0; // Base price per ticket
+    return 4.0;
   }
 
   double getTotalPrice() {
@@ -176,8 +227,8 @@ class _HallSeatsState extends State<HallSeats> {
 
     final discount = submittedPromocode != null
         ? submittedPromocode!.amount != null
-        ? submittedPromocode!.amount!
-        : (totalBeforeDiscount * (submittedPromocode!.percents ?? 0) / 100)
+            ? submittedPromocode!.amount!
+            : (totalBeforeDiscount * (submittedPromocode!.percents ?? 0) / 100)
         : 0;
 
     return totalBeforeDiscount - discount;
@@ -204,7 +255,7 @@ class _HallSeatsState extends State<HallSeats> {
               style: bodySmall,
               items: List.generate(
                 rowAmount,
-                    (index) => DropdownMenuItem(
+                (index) => DropdownMenuItem(
                   value: index,
                   child: Text("Rinda: ${index + 1}"),
                 ),
@@ -230,7 +281,7 @@ class _HallSeatsState extends State<HallSeats> {
               style: bodySmall,
               items: List.generate(
                 seatAmountPerRow,
-                    (index) => DropdownMenuItem(
+                (index) => DropdownMenuItem(
                   value: index,
                   child: Text("Vieta: ${index + 1}"),
                 ),
@@ -255,20 +306,20 @@ class _HallSeatsState extends State<HallSeats> {
       child: isProcessingPayment
           ? CircularProgressIndicator()
           : StylizedButton(
-        action: () {
-          if (chosenSeats.isNotEmpty) {
-            processPayment(context);
-          } else {
-            StylizedDialog.alert(
-              context,
-              "Kļūda",
-              "Lūdzu, izvēlieties vismaz vienu vietu",
-            );
-          }
-        },
-        title: "Apmaksāt",
-        icon: Icons.payment,
-      ),
+              action: () {
+                if (chosenSeats.isNotEmpty) {
+                  processPayment(context);
+                } else {
+                  StylizedDialog.alert(
+                    context,
+                    "Kļūda",
+                    "Lūdzu, izvēlieties vismaz vienu vietu",
+                  );
+                }
+              },
+              title: "Apmaksāt",
+              icon: Icons.payment,
+            ),
     );
   }
 
@@ -298,11 +349,13 @@ class _HallSeatsState extends State<HallSeats> {
 
     try {
       final totalAmount = getTotalPrice();
-      final seats = chosenSeats.map((seatIndex) =>
-      "R${getRowFromIndex(seatIndex) + 1}-V${getColFromIndex(seatIndex) + 1}"
-      ).join(", ");
+      final seats = chosenSeats
+          .map((seatIndex) =>
+              "R${getRowFromIndex(seatIndex) + 1}-V${getColFromIndex(seatIndex) + 1}")
+          .join(", ");
 
-      final description = "Filmu Nams biļetes, ${widget.hallId}. zāle, vietas: $seats";
+      final description =
+          "Filmu Nams biļetes, ${widget.hallId}. zāle, vietas: $seats";
 
       final success = await PaymentController().processPayment(
         context: context,
@@ -313,15 +366,7 @@ class _HallSeatsState extends State<HallSeats> {
       );
 
       if (success) {
-        // Save tickets to database or perform other post-payment actions
         saveTickets();
-
-        // Clear selected seats after successful payment
-        setState(() {
-          chosenSeats = [];
-          submittedPromocode = null;
-          promocodeController.clear();
-        });
       }
     } catch (e) {
       debugPrint('Payment error: $e');
@@ -339,15 +384,51 @@ class _HallSeatsState extends State<HallSeats> {
     }
   }
 
+  int? findFirstAvailableSeat() {
+    for (int i = 0; i < rowAmount * seatAmountPerRow; i++) {
+      if (!takenSeats.contains(i) && !chosenSeats.contains(i)) {
+        return i;
+      }
+    }
+    return null;
+  }
+
+  void selectFirstAvailableSeat() {
+    int? availableSeat = findFirstAvailableSeat();
+    if (availableSeat != null) {
+      setState(() {
+        selectedRowIndex = getRowFromIndex(availableSeat);
+        selectedSeatIndex = getColFromIndex(availableSeat);
+      });
+    }
+  }
+
   Future<void> saveTickets() async {
     List<Map<String, int>> payload;
 
-    payload = chosenSeats.map((seatIndex) => {
-      "row": getRowFromIndex(seatIndex) + 1,
-      "seat": getColFromIndex(seatIndex) + 1,
-    }).toList();
-
-    await PaymentController().createTickets(currentScheduleId!, payload);
+    payload = chosenSeats
+        .map((seatIndex) => {
+              "row": getRowFromIndex(seatIndex),
+              "seat": getColFromIndex(seatIndex),
+            })
+        .toList();
+    try {
+      await TicketController().createTickets(currentScheduleId!, payload);
+      for (var seat in chosenSeats) {
+        setState(() {
+          takenSeats.add(seat);
+        });
+      }
+      setState(() {
+        chosenSeats = [];
+        submittedPromocode = null;
+        promocodeController.clear();
+      });
+      selectFirstAvailableSeat();
+      confettiController.play();
+    } catch (e) {
+      debugPrint('Error saving tickets: $e');
+    }
   }
 
   Container ticketTable() {
@@ -414,7 +495,7 @@ class _HallSeatsState extends State<HallSeats> {
                 ),
                 ...List.generate(
                   chosenSeats.length,
-                      (index) => ticketRow(index),
+                  (index) => ticketRow(index),
                 ),
                 if (submittedPromocode != null) promocodeRow(),
               ],
@@ -589,18 +670,20 @@ class _HallSeatsState extends State<HallSeats> {
           ),
           SizedBox(
             height: 220,
-            child: GridView.count(
-              physics: NeverScrollableScrollPhysics(),
-              crossAxisCount: 10,
-              mainAxisSpacing: 5,
-              crossAxisSpacing: 5,
-              childAspectRatio: 0.8,
-              padding: const EdgeInsets.all(0),
-              children: List.generate(
-                50,
-                    (index) => seat(49 - index),
-              ),
-            ),
+            child: isLoading
+                ? Center(child: CircularProgressIndicator())
+                : GridView.count(
+                    physics: NeverScrollableScrollPhysics(),
+                    crossAxisCount: 10,
+                    mainAxisSpacing: 5,
+                    crossAxisSpacing: 5,
+                    childAspectRatio: 0.8,
+                    padding: const EdgeInsets.all(0),
+                    children: List.generate(
+                      50,
+                      (index) => seat(49 - index),
+                    ),
+                  ),
           ),
           StylizedButton(
             action: () {
@@ -621,22 +704,33 @@ class _HallSeatsState extends State<HallSeats> {
     bool isSelected = index == selected();
     return GestureDetector(
       onTap: () {
-        selectSeat(index);
+        if (!takenSeats.contains(index)) {
+          selectSeat(index);
+        }
       },
       child: AnimatedContainer(
         duration: Duration(milliseconds: 200),
-        decoration: BoxDecoration(
-          color: isSelected && !chosenSeats.contains(index)
-              ? colors.color003
-              : chosenSeats.contains(index)
-              ? Colors.white24
-              : colors.color002,
-          border: Border.all(
-            color: colors.color003,
-            width: 1,
-          ),
-          borderRadius: BorderRadius.circular(5),
-        ),
+        decoration: takenSeats.contains(index)
+            ? classicDecorationDarkSharper
+            : BoxDecoration(
+                color: isSelected && !chosenSeats.contains(index)
+                    ? colors.color003
+                    : chosenSeats.contains(index)
+                        ? Colors.white24
+                        : colors.color002,
+                border: Border.all(
+                  color: colors.color003,
+                  width: 1,
+                ),
+                borderRadius: BorderRadius.circular(5),
+              ),
+        child: takenSeats.contains(index)
+            ? Icon(
+                Icons.close,
+                size: 25,
+                color: Colors.white24,
+              )
+            : null,
       ),
     );
   }

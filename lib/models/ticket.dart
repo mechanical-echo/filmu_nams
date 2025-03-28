@@ -4,10 +4,14 @@ import 'package:filmu_nams/models/user.dart';
 class TicketModel {
   ScheduleModel schedule;
   UserModel user;
+  String id;
+  Map<String, dynamic> seat;
 
   TicketModel({
+    required this.id,
     required this.schedule,
     required this.user,
+    required this.seat,
   });
 
   static Future<TicketModel> fromMapAsync(
@@ -30,6 +34,8 @@ class TicketModel {
     return TicketModel(
       schedule: schedule,
       user: user,
+      id: id,
+      seat: map['seat'],
     );
   }
 }
