@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="com_facebook_button_background_color_focused_disabled">#3C5A99</color>
+    <color name="com_facebook_button_background_color_focused">#3B5998</color>
+    <color name="com_facebook_button_border_color_focused">#2D4272</color>
+
+    <color name="com_facebook_blue">#1877F2</color>
+    <color name="com_facebook_primary_button_text_color">#FFFFFF</color>
+    <color name="com_facebook_primary_button_disabled_text_color">#A4A9B7</color>
+    <color name="com_facebook_device_auth_text">#90949C</color>
+</resources>

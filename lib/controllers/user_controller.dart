@@ -326,6 +326,14 @@ class UserController {
   }
 
   Future<void> signInWithFacebook() async {
+    if (Platform.isIOS) {
+      return signInWithFacebookIOS();
+    } else {
+      return signInWithFacebookAndroid();
+    }
+  }
+
+  Future<void> signInWithFacebookIOS() async {
     final rawNonce = generateNonce();
     final nonce = sha256ofString(rawNonce);
 
@@ -353,6 +361,58 @@ class UserController {
       );
 
       await createUserDocument(user, payload);
+    }
+  }
+
+  Future<void> signInWithFacebookAndroid() async {
+    try {
+      final rawNonce = generateNonce();
+      final nonce = sha256ofString(rawNonce);
+
+      final LoginResult result = await FacebookAuth.instance.login(
+        loginBehavior: LoginBehavior.nativeWithFallback,
+        permissions: ['email', 'public_profile'],
+      );
+
+      if (result.status == LoginStatus.success) {
+        final userData = await FacebookAuth.instance.getUserData();
+        debugPrint('Facebook user data: $userData');
+
+        final accessToken = result.accessToken?.tokenString;
+
+        if (accessToken == null) {
+          throw FirebaseAuthException(
+            code: 'facebook-auth-token-null',
+            message: 'Facebook access token is null',
+          );
+        }
+
+        final facebookAuthCredential = FacebookAuthProvider.credential(accessToken);
+
+        final userCredential = await FirebaseAuth.instance.signInWithCredential(
+            facebookAuthCredential
+        );
+
+        final user = userCredential.user;
+        if (user != null && user.email != null && user.displayName != null) {
+          UserDocumentPayload payload = UserDocumentPayload(
+            name: user.displayName!,
+            email: user.email!,
+            profileImage: user.photoURL,
+          );
+
+          await createUserDocument(user, payload);
+        } else {
+          debugPrint('User data incomplete: ${user?.displayName}, ${user?.email}');
+        }
+      } else {
+        debugPrint('Facebook login failed: ${result.status.toString()}');
+        if (result.message != null) {
+          debugPrint('Facebook login error message: ${result.message}');
+        }
+      }
+    } catch (e) {
+      debugPrint('Error during Facebook sign in: $e');
     }
   }
 }
