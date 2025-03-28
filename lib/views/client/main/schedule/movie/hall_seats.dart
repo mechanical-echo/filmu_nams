@@ -1,9 +1,11 @@
 import 'package:filmu_nams/assets/dialog/dialog.dart';
 import 'package:filmu_nams/assets/theme.dart';
+import 'package:filmu_nams/controllers/payment_controller.dart';
 import 'package:filmu_nams/controllers/promocode_controller.dart';
 import 'package:filmu_nams/models/promocode.dart';
 import 'package:filmu_nams/providers/color_context.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/stylized_button.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class HallSeats extends StatefulWidget {
@@ -28,6 +30,7 @@ class _HallSeatsState extends State<HallSeats> {
   int? selectedSeatIndex = 0;
 
   List<int?> chosenSeats = [];
+  bool isProcessingPayment = false;
 
   String? currentScheduleId;
 
@@ -163,16 +166,25 @@ class _HallSeatsState extends State<HallSeats> {
     );
   }
 
-  String getSum() {
-    final ticketPrice = 4;
+  double getTicketPrice() {
+    return 4.0; // Base price per ticket
+  }
 
-    final sale = submittedPromocode != null
+  double getTotalPrice() {
+    final ticketPrice = getTicketPrice();
+    final totalBeforeDiscount = chosenSeats.length * ticketPrice;
+
+    final discount = submittedPromocode != null
         ? submittedPromocode!.amount != null
-            ? submittedPromocode!.amount!
-            : (ticketPrice * (submittedPromocode!.percents ?? 0) / 100)
+        ? submittedPromocode!.amount!
+        : (totalBeforeDiscount * (submittedPromocode!.percents ?? 0) / 100)
         : 0;
 
-    return "${(chosenSeats.length * ticketPrice - sale).toStringAsFixed(2)}€";
+    return totalBeforeDiscount - discount;
+  }
+
+  String getSum() {
+    return "${getTotalPrice().toStringAsFixed(2)}€";
   }
 
   Row selectSeatDropdowns() {
@@ -192,7 +204,7 @@ class _HallSeatsState extends State<HallSeats> {
               style: bodySmall,
               items: List.generate(
                 rowAmount,
-                (index) => DropdownMenuItem(
+                    (index) => DropdownMenuItem(
                   value: index,
                   child: Text("Rinda: ${index + 1}"),
                 ),
@@ -218,7 +230,7 @@ class _HallSeatsState extends State<HallSeats> {
               style: bodySmall,
               items: List.generate(
                 seatAmountPerRow,
-                (index) => DropdownMenuItem(
+                    (index) => DropdownMenuItem(
                   value: index,
                   child: Text("Vieta: ${index + 1}"),
                 ),
@@ -240,12 +252,102 @@ class _HallSeatsState extends State<HallSeats> {
   Padding submitButton() {
     return Padding(
       padding: const EdgeInsets.only(bottom: 75.0),
-      child: StylizedButton(
-        action: () {},
+      child: isProcessingPayment
+          ? CircularProgressIndicator()
+          : StylizedButton(
+        action: () {
+          if (chosenSeats.isNotEmpty) {
+            processPayment(context);
+          } else {
+            StylizedDialog.alert(
+              context,
+              "Kļūda",
+              "Lūdzu, izvēlieties vismaz vienu vietu",
+            );
+          }
+        },
         title: "Apmaksāt",
         icon: Icons.payment,
       ),
     );
+  }
+
+  Future<void> processPayment(BuildContext context) async {
+    if (chosenSeats.isEmpty) {
+      StylizedDialog.alert(
+        context,
+        "Kļūda",
+        "Lūdzu, izvēlieties vismaz vienu vietu",
+      );
+      return;
+    }
+
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      StylizedDialog.alert(
+        context,
+        "Kļūda",
+        "Lūdzu, ielogojieties, lai veiktu pirkumu",
+      );
+      return;
+    }
+
+    setState(() {
+      isProcessingPayment = true;
+    });
+
+    try {
+      final totalAmount = getTotalPrice();
+      final seats = chosenSeats.map((seatIndex) =>
+      "R${getRowFromIndex(seatIndex) + 1}-V${getColFromIndex(seatIndex) + 1}"
+      ).join(", ");
+
+      final description = "Filmu Nams biļetes, ${widget.hallId}. zāle, vietas: $seats";
+
+      final success = await PaymentController().processPayment(
+        context: context,
+        amount: totalAmount,
+        currency: 'eur',
+        description: description,
+        customerEmail: user.email,
+      );
+
+      if (success) {
+        // Save tickets to database or perform other post-payment actions
+        saveTickets();
+
+        // Clear selected seats after successful payment
+        setState(() {
+          chosenSeats = [];
+          submittedPromocode = null;
+          promocodeController.clear();
+        });
+      }
+    } catch (e) {
+      debugPrint('Payment error: $e');
+      StylizedDialog.alert(
+        context,
+        "Maksājuma kļūda",
+        "Neizdevās apstrādāt maksājumu. Lūdzu, mēģiniet vēlāk.",
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          isProcessingPayment = false;
+        });
+      }
+    }
+  }
+
+  Future<void> saveTickets() async {
+    List<Map<String, int>> payload;
+
+    payload = chosenSeats.map((seatIndex) => {
+      "row": getRowFromIndex(seatIndex) + 1,
+      "seat": getColFromIndex(seatIndex) + 1,
+    }).toList();
+
+    await PaymentController().createTickets(currentScheduleId!, payload);
   }
 
   Container ticketTable() {
@@ -312,7 +414,7 @@ class _HallSeatsState extends State<HallSeats> {
                 ),
                 ...List.generate(
                   chosenSeats.length,
-                  (index) => ticketRow(index),
+                      (index) => ticketRow(index),
                 ),
                 if (submittedPromocode != null) promocodeRow(),
               ],
@@ -410,11 +512,12 @@ class _HallSeatsState extends State<HallSeats> {
   }
 
   String getPromocodeSale() {
-    final ticketPrice = 4;
+    final ticketPrice = getTicketPrice();
+    final totalBeforeDiscount = chosenSeats.length * ticketPrice;
 
     return submittedPromocode!.amount != null
         ? "-${submittedPromocode!.amount!.toStringAsFixed(2).replaceAll('.', ',')}€"
-        : "-${(ticketPrice * (submittedPromocode!.percents ?? 0) / 100).toStringAsFixed(2).replaceAll('.', ',')}€";
+        : "-${(totalBeforeDiscount * (submittedPromocode!.percents ?? 0) / 100).toStringAsFixed(2).replaceAll('.', ',')}€";
   }
 
   TableRow ticketRow(int index) {
@@ -449,7 +552,7 @@ class _HallSeatsState extends State<HallSeats> {
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 12.0),
           child: Text(
-            "4,00€",
+            "${getTicketPrice().toStringAsFixed(2)}€",
             style: TextStyle(
               fontWeight: FontWeight.bold,
               color: smokeyWhite,
@@ -495,7 +598,7 @@ class _HallSeatsState extends State<HallSeats> {
               padding: const EdgeInsets.all(0),
               children: List.generate(
                 50,
-                (index) => seat(49 - index),
+                    (index) => seat(49 - index),
               ),
             ),
           ),
@@ -526,8 +629,8 @@ class _HallSeatsState extends State<HallSeats> {
           color: isSelected && !chosenSeats.contains(index)
               ? colors.color003
               : chosenSeats.contains(index)
-                  ? Colors.white24
-                  : colors.color002,
+              ? Colors.white24
+              : colors.color002,
           border: Border.all(
             color: colors.color003,
             width: 1,

@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
+import '../../../../controllers/notification_controller.dart';
+
 enum NotificationState { read, unread, deleted }
 
 enum NotificationType { payment, reminder, other }
@@ -157,15 +159,27 @@ class _NotificationItemState extends State<NotificationItem> {
     );
   }
 
-  Text NotificationTitle() {
-    return Text(
-      widget.notification.message,
-      style: GoogleFonts.poppins(
-        color: Colors.white,
-        fontSize: 16,
-      ),
-      maxLines: isExpanded ? null : 2,
-      overflow: isExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
+  NotificationTitle() {
+    return Column(
+      children: [
+        Text(
+          widget.notification.message,
+          style: GoogleFonts.poppins(
+            color: Colors.white,
+            fontSize: 16,
+          ),
+          maxLines: isExpanded ? null : 2,
+          overflow: isExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
+        ),
+        TextButton(
+          onPressed: () {
+            NotificationController().showNotification(
+                1, widget.notification.title, widget.notification.message);
+          },
+          child: Text("test"),
+        ),
+
+      ],
     );
   }
 
