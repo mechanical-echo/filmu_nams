@@ -65,9 +65,9 @@ class _SettingsPageState extends State<SettingsPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                header('Valoda', colors),
-                languageSelector(colors),
-                divider(colors),
+                // header('Valoda', colors),
+                // languageSelector(colors),
+                // divider(colors),
                 header('Tēma', colors),
                 themeSelector(themeProvider, colors),
                 divider(colors),
@@ -229,8 +229,12 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  Widget button(String title, IconData icon, VoidCallback onPressed,
-      ColorContext colors) {
+  Widget button(
+      String title,
+      IconData icon,
+      VoidCallback onPressed,
+      ColorContext colors,
+    ) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 4.0),
       width: double.infinity,
@@ -252,7 +256,10 @@ class _SettingsPageState extends State<SettingsPage> {
             Center(
               child: Text(
                 title,
-                style: colors.bodyMedium,
+                style: TextStyle(
+                  color: colors.smokeyWhite,
+                  fontSize: 15
+                ),
               ),
             ),
           ],

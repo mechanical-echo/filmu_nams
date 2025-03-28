@@ -82,8 +82,10 @@ class _OverlappingCarouselState extends State<OverlappingCarousel> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Container(
+      width: MediaQuery.of(context).size.width,
       height: widget.itemHeight,
+      decoration: BoxDecoration(),
       child: LayoutBuilder(
         builder: (context, constraints) {
           final currentIndex = _currentPage.floor();
@@ -109,63 +111,62 @@ class _OverlappingCarouselState extends State<OverlappingCarousel> {
             clipBehavior: Clip.none,
             alignment: Alignment.center,
             children: [
-              ...indices.map((index) => Builder(
-                    builder: (context) {
-                      final wrappedIndex = _getWrappedIndex(index);
-                      double difference = index - _currentPage;
-                      double scale =
-                          1 - (difference.abs() * (1 - _dynamicScale));
+              ...indices.map(
+                (index) => Builder(
+                  builder: (context) {
+                    final wrappedIndex = _getWrappedIndex(index);
+                    double difference = index - _currentPage;
+                    double scale = 1 - (difference.abs() * (1 - _dynamicScale));
 
-                      double translateX =
-                          difference * widget.itemWidth * _dynamicSpacingFactor;
+                    double translateX =
+                        difference * widget.itemWidth * _dynamicSpacingFactor;
 
-                      int darkness =
-                          (difference.abs() * 70).clamp(0, 255).toInt();
+                    int darkness =
+                        (difference.abs() * 170).clamp(0, 255).toInt();
 
-                      return Positioned(
-                        left: constraints.maxWidth / 2 -
-                            widget.itemWidth / 2 +
-                            translateX,
-                        child: Transform.translate(
-                          offset: Offset(
-                            0,
-                            -15 * (1 - difference.abs().clamp(0, 1)),
-                          ),
-                          child: Transform.rotate(
-                            angle: difference * 0.1,
-                            child: Transform.scale(
-                              scale: scale,
-                              child: Stack(
-                                children: [
-                                  Container(
-                                    width: widget.itemWidth,
-                                    height: widget.itemHeight,
-                                    margin: const EdgeInsets.symmetric(
-                                        horizontal: 5),
-                                    child: widget.items[wrappedIndex],
+                    return Positioned(
+                      left: constraints.maxWidth / 2 -
+                          widget.itemWidth / 2 +
+                          translateX,
+                      child: Transform.translate(
+                        offset: Offset(
+                          0,
+                          -15 * (1 - difference.abs().clamp(0, 1)),
+                        ),
+                        child: Transform.rotate(
+                          angle: difference * 0.1,
+                          child: Transform.scale(
+                            scale: scale,
+                            child: Stack(
+                              children: [
+                                Container(
+                                  width: widget.itemWidth,
+                                  height: widget.itemHeight,
+                                  child: widget.items[wrappedIndex],
+                                ),
+                                Container(
+                                  width: widget.itemWidth,
+                                  height: widget.itemHeight,
+                                  margin:
+                                      const EdgeInsets.symmetric(horizontal: 5),
+                                  decoration: BoxDecoration(
+                                    color: Colors.black.withAlpha(darkness),
+                                    borderRadius: BorderRadius.circular(16),
                                   ),
-                                  Container(
-                                    width: widget.itemWidth,
-                                    height: widget.itemHeight,
-                                    margin: const EdgeInsets.symmetric(
-                                        horizontal: 5),
-                                    decoration: BoxDecoration(
-                                      color: Colors.black.withAlpha(darkness),
-                                      borderRadius: BorderRadius.circular(16),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
-                      );
-                    },
-                  )),
+                      ),
+                    );
+                  },
+                ),
+              ),
               Positioned.fill(
                 child: PageView.builder(
                   controller: _pageController,
-                  itemCount: null,
+                  itemCount: null, // Infinite scrolling
                   itemBuilder: (context, index) => const SizedBox(),
                 ),
               ),

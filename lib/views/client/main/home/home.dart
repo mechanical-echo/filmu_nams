@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:filmu_nams/assets/theme.dart';
 import 'package:filmu_nams/assets/widgets/overlapping_carousel.dart';
 import 'package:filmu_nams/controllers/movie_controller.dart';
 import 'package:filmu_nams/models/carousel_item.dart';
@@ -52,88 +53,151 @@ class _HomeState extends State<Home> {
   }
 
   MovieItem(int index, bool isActive) {
-    return Column(
-      children: [
-        movieItemContent(index),
-        // if (isActive) movieItemText(index), //TODO rework the way description shows
-      ],
-    );
-  }
-
-  Positioned movieItemText(int index) {
-    return Positioned(
-      top: 340,
-      child: Column(
-        spacing: 10,
+    return Container(
+      clipBehavior: Clip.none,
+      child: Stack(
+        fit: StackFit.expand,
+        clipBehavior: Clip.none,
+        alignment: Alignment.topCenter,
         children: [
-          MovieItemTitle(index),
-          MovieItemDescription(index),
+          if (isActive)
+            Positioned(
+              top: 420,
+              child: MovieItemDescription(index),
+            ),
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: cardShadow,
+            ),
+            clipBehavior: Clip.antiAlias,
+            margin: const EdgeInsets.only(bottom: 2),
+            child: image(index),
+          ),
+          if (isActive)
+            Positioned(
+              bottom: 10,
+              left: 10,
+              right: 10,
+              child: MovieItemTitle(index),
+            ),
         ],
       ),
     );
   }
 
-  MovieItemDescription(int index) {
-    return SizedBox(
-      width: 300,
-      child: Text(
-        movieData![index].description,
-        style: GoogleFonts.poppins(
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-          color: Color.fromARGB(255, 158, 158, 158),
+  CachedNetworkImage image(int index) {
+    return CachedNetworkImage(
+      imageUrl: movieData![index].imageUrl,
+      fit: BoxFit.cover,
+      placeholder: (context, url) => Container(
+        color: Colors.grey[800],
+        child: Center(
+          child: LoadingAnimationWidget.staggeredDotsWave(
+            size: 50,
+            color: Theme.of(context).focusColor,
+          ),
         ),
-        textAlign: TextAlign.center,
+      ),
+      errorWidget: (context, url, error) => Container(
+        color: Colors.grey[800],
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.broken_image_rounded,
+                color: Colors.white70,
+                size: 40,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Attēlu neizdevās ielādēt',
+                style: TextStyle(
+                  color: Colors.white70,
+                  fontSize: 12,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
 
-  MovieItemTitle(int index) {
+  Widget MovieItemDescription(int index) {
     final colors = ColorContext.of(context);
     return Container(
-      decoration: colors.classicDecorationWhite,
-      padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 5),
-      child: Text(
-        movieData![index].title,
-        style: colors.header2ThemeColor,
-        textAlign: TextAlign.center,
+      decoration: colors.classicDecorationWhiteSharper,
+      padding: const EdgeInsets.all(15),
+      constraints: BoxConstraints(
+        minHeight: 150,
+      ),
+      width: 450,
+      child: Center(
+        child: Text(
+          movieData![index].description,
+          style: colors.bodyMediumThemeColor,
+          textAlign: TextAlign.center,
+        ),
       ),
     );
   }
 
-  Container movieItemContent(int index) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
-      ),
-      width: 190,
-      height: 300,
-      clipBehavior: Clip.antiAlias,
-      child: CachedNetworkImage(
-        imageUrl: movieData![index].imageUrl,
-        fit: BoxFit.fill,
-        placeholder: (context, url) => Container(
-          color: Colors.grey[800],
+  Widget MovieItemTitle(int index) {
+    final colors = ColorContext.of(context);
+    return Center(
+      child: FittedBox(
+        fit: BoxFit.none,
+        child: Container(
+          width: 320,
+          decoration: colors.classicDecorationDarkSharper,
+          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 5),
           child: Center(
-            child: LoadingAnimationWidget.staggeredDotsWave(
-              size: 50,
-              color: Theme.of(context).focusColor,
+            child: Text(
+              movieData![index].title,
+              style: GoogleFonts.poppins(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 19,
+              ),
+              textAlign: TextAlign.center,
             ),
           ),
         ),
-        errorWidget: (context, url, error) => Container(
-          color: Colors.grey[800],
-          child: const Icon(Icons.error, color: Colors.white),
-        ),
+      ),
+    );
+  }
+
+  dots() {
+    final colors = ColorContext.of(context);
+    return IntrinsicWidth(
+      child: Container(
+        decoration: colors.classicDecorationSharp,
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+        child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children:
+                List.generate(carouselItems!.length, (index) => dot(index))),
+      ),
+    );
+  }
+
+  dot(int index) {
+    return Container(
+      width: 8,
+      height: 8,
+      margin: const EdgeInsets.symmetric(horizontal: 5),
+      decoration: BoxDecoration(
+        color: index == _activeIndex ? Colors.white : Colors.white30,
+        shape: BoxShape.circle,
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
-
     if (isLoading) {
       return Center(
         child: LoadingAnimationWidget.staggeredDotsWave(
@@ -145,19 +209,22 @@ class _HomeState extends State<Home> {
 
     if (movieData == null || carouselItems == null || movieData!.isEmpty) {
       return const Center(
-        child: Text('No movies available'),
+        child: Text('Nav datu, lai attēlotu'),
       );
     }
 
-    final colors = ColorContext.of(context);
-
     return SingleChildScrollView(
-      padding: const EdgeInsets.only(top: 240),
-        child: OverlappingCarousel(
+      padding: const EdgeInsets.only(top: 165, bottom: 250),
+        child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      spacing: 25,
+      children: [
+        dots(),
+        OverlappingCarousel(
           items: carouselItems!,
-          itemWidth: 190,
-          itemHeight: 300,
-          scaleFactor: 0.85,
+          itemWidth: 350,
+          itemHeight: 400,
+          scaleFactor: 0.95,
           horizontalSpace: 10,
           spacingFactor: 0.75,
           onPageChanged: (index) {
@@ -166,6 +233,8 @@ class _HomeState extends State<Home> {
             });
           },
         ),
-    );
+        SizedBox(height: 80),
+      ],
+    ));
   }
 }
