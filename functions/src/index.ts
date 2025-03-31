@@ -12,7 +12,7 @@ interface MakeAdminData {
 }
 
 interface SetupAdminData {
-  uid?: string;
+  uid: string;
 }
 
 /**
@@ -84,10 +84,9 @@ export const makeUserAdminCallable = functions.https.onCall(
   }
 );
 
-export const setupFirstAdmin = functions.https.onCall(
+export const setupAdmin = functions.https.onCall(
   async (request: functions.https.CallableRequest<SetupAdminData>) => {
-    const uid = "oesNuGKMxoR3jSbRyGJsMPaDdJ82";
-    const result = await makeUserAdmin(uid);
+    const result = await makeUserAdmin(request.data.uid);
     return result;
   }
 );

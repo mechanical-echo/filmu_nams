@@ -1,6 +1,7 @@
 import 'package:filmu_nams/controllers/notification_controller.dart';
 import 'package:filmu_nams/views/admin/auth/admin_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -26,15 +27,19 @@ void main() async {
 
   await PaymentController().initStripe();
 
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (context) => RegistrationState()),
-        ChangeNotifierProvider(create: (context) => ThemeProvider()),
-      ],
-      child: const ThemedApp(),
-    ),
-  );
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+  ]).then((_) {
+    runApp(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (context) => RegistrationState()),
+          ChangeNotifierProvider(create: (context) => ThemeProvider()),
+        ],
+        child: const ThemedApp(),
+      ),
+    );
+  });
 }
 
 class ThemedApp extends StatelessWidget {

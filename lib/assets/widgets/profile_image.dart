@@ -38,7 +38,7 @@ class ProfileImage extends StatelessWidget {
           ),
         ],
       ),
-      child: user!.photoURL != null
+      child: user!.photoURL != null && customImage == null
           ? CachedNetworkImage(
               imageUrl: user!.photoURL!,
               fit: BoxFit.cover,

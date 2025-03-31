@@ -282,7 +282,12 @@ class UserController {
   Future<Map<String, dynamic>> deleteUser(String uid) async {
     try {
       Map<String, dynamic> result = await deleteUserFromAuth(uid);
-      await deleteProfileImageFromStorage(uid);
+      final user = await _firestore.collection('users').doc(uid).get();
+
+      if (user.data()!['profileImageUrl'] != null) {
+        await deleteProfileImageFromStorage(uid);
+      }
+
       if (result['success']) {
         try {
           await _firestore.collection('users').doc(uid).delete();
