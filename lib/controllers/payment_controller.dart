@@ -84,22 +84,19 @@ class PaymentController {
       }
 
       final Dio dio = Dio();
-      final response = await dio.post(
-          _paymentApiUrl,
+      final response = await dio.post(_paymentApiUrl,
           data: body,
           options: Options(
             contentType: Headers.formUrlEncodedContentType,
-            headers: {
-              'Authorization': 'Bearer ${StripeOptions().sk()}'
-            },
-          )
-      );
+            headers: {'Authorization': 'Bearer ${StripeOptions().sk()}'},
+          ));
 
       if (response.statusCode == 200) {
         debugPrint('Payment intent created successfully');
         return response.data;
       } else {
-        debugPrint('Failed to create payment intent: ${response.statusCode} - ${response.data}');
+        debugPrint(
+            'Failed to create payment intent: ${response.statusCode} - ${response.data}');
         return null;
       }
     } catch (e) {
@@ -109,7 +106,13 @@ class PaymentController {
   }
 
   void _showPaymentSuccess(BuildContext context) {
-    NotificationController().showNotification(1, "Maksājums veiksmīgs", "Jūsu maksājums ir veiksmīgi apstrādāts. Biļetes ir pieejāmas profila sadaļā.");
+    NotificationController().showNotification(
+      1,
+      "Maksājums veiksmīgs",
+      "Jūsu maksājums ir veiksmīgi apstrādāts. Biļetes ir pieejāmas profila sadaļā.",
+      "Jūsu maksājums ir veiksmīgi apstrādāts. Biļetes uz filmu ir pieejāmas profila sadaļā. Paldies, ka izvēlējāties mūs!\nAr cieņu, Filmu Nams",
+      NotificationTypeEnum.payment,
+    );
   }
 
   void _showPaymentError(BuildContext context, String message) {
