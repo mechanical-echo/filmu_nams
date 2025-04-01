@@ -62,7 +62,7 @@ class _HomeState extends State<Home> {
         children: [
           if (isActive)
             Positioned(
-              top: 420,
+              top: 450,
               child: MovieItemDescription(index),
             ),
           Container(
@@ -129,16 +129,16 @@ class _HomeState extends State<Home> {
   Widget MovieItemDescription(int index) {
     final colors = ColorContext.of(context);
     return Container(
-      decoration: colors.classicDecorationWhiteSharper,
+      decoration: colors.darkDecoration,
       padding: const EdgeInsets.all(15),
       constraints: BoxConstraints(
-        minHeight: 150,
+        minHeight: 100,
       ),
-      width: 450,
+      width: 410,
       child: Center(
         child: Text(
           movieData![index].description,
-          style: colors.bodyMediumThemeColor,
+          style: colors.bodyMedium,
           textAlign: TextAlign.center,
         ),
       ),
@@ -174,7 +174,7 @@ class _HomeState extends State<Home> {
     final colors = ColorContext.of(context);
     return IntrinsicWidth(
       child: Container(
-        decoration: colors.classicDecorationSharp,
+        decoration: colors.darkDecoration,
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
         child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -214,10 +214,10 @@ class _HomeState extends State<Home> {
     }
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.only(top: 165, bottom: 250),
+      padding: const EdgeInsets.only(top: 170, bottom: 250),
         child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
-      spacing: 25,
+      spacing: 20,
       children: [
         dots(),
         OverlappingCarousel(

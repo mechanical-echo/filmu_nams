@@ -8,6 +8,7 @@ enum FirebaseAuthErrorCode {
   userDisabled,
   tooManyRequests,
   networkRequestFailed,
+  requiresRecentLogin,
   unknownError,
 }
 
@@ -33,6 +34,8 @@ extension FirebaseAuthErrorCodeExtension on FirebaseAuthErrorCode {
         return 'Pārāk daudz pieprasījumu. Lūdzu, mēģiniet vēlāk.';
       case FirebaseAuthErrorCode.networkRequestFailed:
         return 'Problēmas ar interneta savienojumu.';
+      case FirebaseAuthErrorCode.requiresRecentLogin:
+        return 'Šai darbībai nepieciešama nesena autentifikācija. Lūdzu, pierakstieties no jauna.';
       case FirebaseAuthErrorCode.unknownError:
         return 'Nezināma kļūda.';
     }
@@ -59,7 +62,15 @@ getFirebaseAuthErrorCode(String? code) {
       return FirebaseAuthErrorCode.tooManyRequests.message;
     case "network-request-failed":
       return FirebaseAuthErrorCode.networkRequestFailed.message;
+    case "requires-recent-login":
+      return FirebaseAuthErrorCode.requiresRecentLogin.message;
     default:
       return FirebaseAuthErrorCode.unknownError.message;
+  }
+}
+
+class AuthErrorCodes {
+  static String getMessage(String code) {
+    return getFirebaseAuthErrorCode(code);
   }
 }

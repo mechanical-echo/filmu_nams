@@ -2,6 +2,7 @@ import 'package:filmu_nams/assets/decorations/background.dart';
 import 'package:filmu_nams/assets/input/filled_text_icon_button.dart';
 import 'package:filmu_nams/providers/color_context.dart';
 import 'package:filmu_nams/providers/theme_provider.dart';
+import 'package:filmu_nams/views/client/main/profile/password_change.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -76,7 +77,12 @@ class _SettingsPageState extends State<SettingsPage> {
                 info('Izstrādātājs', 'Sofija Dišlovaja 4PT-1', colors),
                 divider(colors),
                 header('Konta opcijas', colors),
-                button('Mainīt paroli', Icons.lock, () {}, colors),
+                button('Mainīt paroli', Icons.lock, () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => PasswordChangePage()),
+                  );
+                }, colors),
                 logout(),
               ],
             ),
