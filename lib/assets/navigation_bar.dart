@@ -1,3 +1,4 @@
+import 'package:filmu_nams/providers/color_context.dart';
 import 'package:flutter/material.dart';
 
 class NavBar extends StatefulWidget {
@@ -56,18 +57,26 @@ class _NavBarState extends State<NavBar> with SingleTickerProviderStateMixin {
       Icons.notifications,
       Icons.person,
     ];
-
+    final colors = ColorContext.of(context);
     return Container(
-      padding: const EdgeInsets.only(bottom: 45, left: 10, right: 10),
       color: Colors.transparent,
       child: Stack(
         clipBehavior: Clip.none,
         children: [
           Container(
-            height: 80,
+            height: 110,
             decoration: BoxDecoration(
               color: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(50),
+                topRight: Radius.circular(50),
+              ),
+              border: Border(
+                top: BorderSide(
+                  color: Colors.white12,
+                  width: 6,
+                )
+              ),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withAlpha(100),
@@ -117,7 +126,7 @@ class _NavBarState extends State<NavBar> with SingleTickerProviderStateMixin {
                             scale: scale,
                             child: Container(
                               margin: EdgeInsets.only(
-                                bottom: 18 * animation.value,
+                                bottom: 15 * animation.value + 15,
                                 left: animation.value * 10,
                                 right: animation.value * 10,
                               ),

@@ -4,6 +4,7 @@ import 'package:filmu_nams/providers/color_context.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/stylized_button.dart';
 import 'package:filmu_nams/views/client/main/profile/profile_view.dart';
 import 'package:filmu_nams/views/client/main/profile/settings.dart';
+import 'package:filmu_nams/views/client/main/profile/tickets/tickets_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -73,7 +74,12 @@ class _ProfileState extends State<Profile> {
             ),
             ...divider(colors),
             button("Profils", Icons.person, () => switchView(1)),
-            button("Biļetes", Icons.payments_sharp, () {}),
+            button("Biļetes", Icons.confirmation_number, () {
+              Navigator.push(
+                context, 
+                MaterialPageRoute(builder: (context) => TicketsView()),
+              );
+            }),
             button("Maksājumi", Icons.payment, () {}),
             button("Iestatījumi", Icons.settings, () {
               Navigator.push(
