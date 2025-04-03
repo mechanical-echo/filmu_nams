@@ -1,6 +1,7 @@
 import 'package:filmu_nams/assets/animations/carousel_switch.dart';
 import 'package:filmu_nams/assets/widgets/stylized_tabs/stylized_tab.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class StylizedTabPage {
   const StylizedTabPage({
@@ -19,7 +20,7 @@ class StylizedTabs extends StatefulWidget {
     super.key,
     required this.tabs,
     this.upsideDown = false,
-    this.fontSize = 24,
+    this.fontSize = 16,
   });
 
   final List<StylizedTabPage> tabs;
@@ -30,9 +31,26 @@ class StylizedTabs extends StatefulWidget {
   State<StylizedTabs> createState() => _StylizedTabsState();
 }
 
-class _StylizedTabsState extends State<StylizedTabs> {
+class _StylizedTabsState extends State<StylizedTabs>
+    with SingleTickerProviderStateMixin {
   int currentIndex = 0;
   int previousIndex = 0;
+  late AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 300),
+      vsync: this,
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   void _handleTap(int index) {
     if (widget.tabs[index].onTap != null) {
@@ -41,6 +59,7 @@ class _StylizedTabsState extends State<StylizedTabs> {
     setState(() {
       previousIndex = currentIndex;
       currentIndex = index;
+      _controller.forward(from: 0.0);
     });
   }
 
@@ -50,34 +69,74 @@ class _StylizedTabsState extends State<StylizedTabs> {
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-          width: 340,
+          margin: const EdgeInsets.symmetric(horizontal: 16),
           decoration: BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withAlpha(100),
-                blurRadius: 10,
-                offset: const Offset(0, 10),
-              ),
-            ],
+            color: Colors.white.withOpacity(0.05),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: Colors.white.withOpacity(0.1),
+              width: 1,
+            ),
           ),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: List.generate(
               widget.tabs.length,
               (index) => Expanded(
-                child: StylizedTab(
-                  isLast: index == widget.tabs.length - 1,
-                  title: widget.tabs[index].title,
-                  isActive: index == currentIndex,
-                  index: index,
-                  upsideDown: widget.upsideDown,
-                  fontSize: widget.fontSize,
+                child: GestureDetector(
                   onTap: () => _handleTap(index),
+                  child: AnimatedBuilder(
+                    animation: _controller,
+                    builder: (context, child) {
+                      final isActive = index == currentIndex;
+                      final wasActive = index == previousIndex;
+                      final progress = isActive
+                          ? _controller.value
+                          : (wasActive ? 1 - _controller.value : 0.0);
+
+                      return Container(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        decoration: BoxDecoration(
+                          color: isActive
+                              ? Colors.white.withOpacity(0.1)
+                              : Colors.transparent,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Center(
+                          child: widget.tabs[index].title.isIcon
+                              ? Icon(
+                                  widget.tabs[index].title.value as IconData,
+                                  color: Color.lerp(
+                                    Colors.white.withOpacity(0.5),
+                                    Colors.white,
+                                    progress,
+                                  ),
+                                  size: widget.fontSize + 9,
+                                )
+                              : Text(
+                                  widget.tabs[index].title.value as String,
+                                  style: GoogleFonts.poppins(
+                                    color: Color.lerp(
+                                      Colors.white.withOpacity(0.5),
+                                      Colors.white,
+                                      progress,
+                                    ),
+                                    fontSize: widget.fontSize,
+                                    fontWeight: isActive
+                                        ? FontWeight.w600
+                                        : FontWeight.normal,
+                                  ),
+                                ),
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ),
             ),
           ),
         ),
+        const SizedBox(height: 16),
         Flexible(
           fit: FlexFit.loose,
           child: CarouselSwitch(

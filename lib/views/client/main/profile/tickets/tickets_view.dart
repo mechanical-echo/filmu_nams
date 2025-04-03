@@ -1,6 +1,4 @@
 import 'package:filmu_nams/assets/decorations/background.dart';
-import 'package:filmu_nams/assets/widgets/stylized_tabs/stylized_tab.dart';
-import 'package:filmu_nams/assets/widgets/stylized_tabs/stylized_tabs.dart';
 import 'package:filmu_nams/controllers/ticket_controller.dart';
 import 'package:filmu_nams/models/ticket.dart';
 import 'package:filmu_nams/providers/color_context.dart';
@@ -8,6 +6,7 @@ import 'package:filmu_nams/views/client/main/profile/tickets/ticket_card.dart';
 import 'package:filmu_nams/views/client/main/profile/tickets/ticket_detail_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class TicketsView extends StatefulWidget {
   const TicketsView({super.key});
@@ -16,16 +15,25 @@ class TicketsView extends StatefulWidget {
   State<TicketsView> createState() => _TicketsViewState();
 }
 
-class _TicketsViewState extends State<TicketsView> {
+class _TicketsViewState extends State<TicketsView>
+    with SingleTickerProviderStateMixin {
   final TicketController _ticketController = TicketController();
   List<TicketModel> _tickets = [];
   bool isLoading = true;
   String errorMessage = '';
+  late TabController _tabController;
 
   @override
   void initState() {
     super.initState();
+    _tabController = TabController(length: 3, vsync: this);
     _loadTickets();
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 
   Future<void> _loadTickets() async {
@@ -57,129 +65,109 @@ class _TicketsViewState extends State<TicketsView> {
       appBar: AppBar(
         centerTitle: true,
         iconTheme: IconThemeData(
-          color: colors.color001,
+          color: colors.primary,
         ),
         backgroundColor: Colors.transparent,
         clipBehavior: Clip.none,
-        title: title(colors),
+        title: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 5),
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.05),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: Colors.white.withOpacity(0.1),
+              width: 1,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2),
+                blurRadius: 20,
+                offset: const Offset(0, 10),
+              ),
+            ],
+          ),
+          child: Stack(
+            alignment: Alignment.centerLeft,
+            clipBehavior: Clip.none,
+            children: [
+              Positioned(
+                left: -35,
+                child: Icon(
+                  Icons.confirmation_number,
+                  color: Colors.white.withOpacity(0.9),
+                ),
+              ),
+              Text(
+                'Manas biļetes',
+                textAlign: TextAlign.center,
+                style: GoogleFonts.poppins(
+                  color: Colors.white.withOpacity(0.9),
+                  fontSize: 24,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
       body: Background(
-        child: body(),
-      ),
-    );
-  }
-
-  Container title(ColorContext colors) {
-    return Container(
-      decoration: colors.classicDecorationDark,
-      padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 5),
-      margin: const EdgeInsets.only(bottom: 5),
-      child: Stack(
-        alignment: Alignment.centerLeft,
-        clipBehavior: Clip.none,
-        children: [
-          Positioned(
-            left: -35,
-            child: Icon(
-              Icons.confirmation_number,
-              color: Colors.white,
-            ),
-          ),
-          Text(
-            'Manas biļetes',
-            textAlign: TextAlign.center,
-            style: GoogleFonts.poppins(
-              color: Colors.white,
-              fontSize: 24,
-              fontWeight: FontWeight.w300,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget body() {
-    if (isLoading) {
-      return const Center(child: CircularProgressIndicator());
-    }
-
-    if (errorMessage.isNotEmpty) {
-      return Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              errorMessage,
-              style: TextStyle(color: Colors.red[300]),
-              textAlign: TextAlign.center,
+            Container(
+              margin: const EdgeInsets.only(top: 120),
+              child: TabBar(
+                controller: _tabController,
+                tabs: [
+                  Tab(
+                    child: Text(
+                      'Tuvākie',
+                      style: GoogleFonts.poppins(
+                        color: Colors.white.withOpacity(0.9),
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  Tab(
+                    child: Text(
+                      'Izmantotie',
+                      style: GoogleFonts.poppins(
+                        color: Colors.white.withOpacity(0.9),
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  Tab(
+                    child: Text(
+                      'Novecojušie',
+                      style: GoogleFonts.poppins(
+                        color: Colors.white.withOpacity(0.9),
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ],
+                indicatorColor: Colors.white,
+                indicatorWeight: 2,
+                labelColor: Colors.white,
+                unselectedLabelColor: Colors.white.withOpacity(0.5),
+                dividerColor: Colors.transparent,
+              ),
             ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: _loadTickets,
-              child: const Text('Mēģināt vēlreiz'),
+            Expanded(
+              child: TabBarView(
+                controller: _tabController,
+                children: [
+                  _buildTicketList(_filterUpcomingTickets()),
+                  _buildTicketList(_filterUsedTickets()),
+                  _buildTicketList(_filterExpiredTickets()),
+                ],
+              ),
             ),
           ],
         ),
-      );
-    }
-
-    if (_tickets.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(
-              Icons.confirmation_number_outlined,
-              size: 64,
-              color: Colors.grey,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'Nav iegādātu biļešu',
-              style: TextStyle(
-                color: Colors.grey[400],
-                fontSize: 18,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Iegādājies biļeti, lai to redzētu šeit',
-              style: TextStyle(
-                color: Colors.grey[400],
-                fontSize: 14,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-      );
-    }
-
-    // Filter tickets by status
-    List<TicketModel> usedTickets = _filterUsedTickets();
-    List<TicketModel> upcomingTickets = _filterUpcomingTickets();
-    List<TicketModel> expiredTickets = _filterExpiredTickets();
-
-    final colors = ColorContext.of(context);
-    return Container(
-      margin: const EdgeInsets.only(top: 126),
-      child: StylizedTabs(
-        fontSize: 14,
-        tabs: [
-          StylizedTabPage(
-            title: StylizedTabTitle.text("Tuvākie"),
-            child: _ticketListView(upcomingTickets),
-          ),
-          StylizedTabPage(
-            title: StylizedTabTitle.text("Izmantotie"),
-            child: _ticketListView(usedTickets),
-          ),
-          StylizedTabPage(
-            title: StylizedTabTitle.text("Novecojušie"),
-            child: _ticketListView(expiredTickets),
-          ),
-        ],
       ),
     );
   }
@@ -204,38 +192,109 @@ class _TicketsViewState extends State<TicketsView> {
     }).toList();
   }
 
-  Widget _ticketListView(List<TicketModel> tickets) {
-    if (tickets.isEmpty) {
+  Widget _buildTicketList(List<TicketModel> tickets) {
+    if (isLoading) {
       return Center(
-        child: Padding(
-          padding: const EdgeInsets.only(top: 32.0),
-          child: Text(
-            'Nav biļešu šajā kategorijā',
-            style: TextStyle(
-              color: Colors.grey[400],
-              fontSize: 16,
-            ),
-          ),
+        child: LoadingAnimationWidget.stretchedDots(
+          color: Colors.white,
+          size: 50,
         ),
       );
     }
 
-    return Padding(
-      padding: const EdgeInsets.only(top: 16.0),
-      child: ListView.builder(
-        padding: const EdgeInsets.only(
-          right: 16,
-          bottom: 50,
-          left: 16,
+    if (errorMessage.isNotEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              errorMessage,
+              style: GoogleFonts.poppins(
+                color: Colors.red[300],
+                fontSize: 16,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
+            Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: _loadTickets,
+                borderRadius: BorderRadius.circular(12),
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.05),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: Colors.white.withOpacity(0.1),
+                      width: 1,
+                    ),
+                  ),
+                  child: Text(
+                    'Mēģināt vēlreiz',
+                    style: GoogleFonts.poppins(
+                      color: Colors.white.withOpacity(0.9),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
-        itemCount: tickets.length,
-        itemBuilder: (context, index) {
-          return TicketCard(
-            ticket: tickets[index],
-            onTap: () => _showTicketDetail(tickets[index]),
-          );
-        },
+      );
+    }
+
+    if (tickets.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.confirmation_number_outlined,
+              size: 64,
+              color: Colors.white.withOpacity(0.3),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Nav biļešu šajā kategorijā',
+              style: GoogleFonts.poppins(
+                color: Colors.white.withOpacity(0.5),
+                fontSize: 18,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Iegādājies biļeti, lai to redzētu šeit',
+              style: GoogleFonts.poppins(
+                color: Colors.white.withOpacity(0.3),
+                fontSize: 14,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      );
+    }
+
+    return ListView.builder(
+      padding: const EdgeInsets.only(
+        top: 16,
+        right: 16,
+        bottom: 50,
+        left: 16,
       ),
+      itemCount: tickets.length,
+      itemBuilder: (context, index) {
+        return TicketCard(
+          ticket: tickets[index],
+          onTap: () => _showTicketDetail(tickets[index]),
+        );
+      },
     );
   }
 

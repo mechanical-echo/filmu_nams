@@ -1,7 +1,7 @@
 import 'package:filmu_nams/assets/dialog/dialog.dart';
-import 'package:filmu_nams/assets/input/text_input.dart';
+import 'package:filmu_nams/assets/components/form_input.dart';
+import 'package:filmu_nams/assets/components/auth_container.dart';
 import 'package:filmu_nams/validators/validator.dart';
-import 'package:filmu_nams/views/admin/dashboard/widgets/stylized_button.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../../../providers/color_context.dart';
@@ -38,22 +38,88 @@ class _CredentialsStepState extends State<CredentialsStep> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return AuthContainer(
+      title: 'Reģistrācija',
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const _StepTitle(),
-          _CredentialsForm(
-            emailController: widget.emailController,
-            passwordController: widget.passwordController,
-            passwordConfirmationController:
-                widget.passwordConfirmationController,
-            emailError: emailError,
-            passwordError: passwordError,
-            passwordConfirmationError: passwordConfirmationError,
+          const SizedBox(height: 20),
+          Text(
+            'Izveidot kontu',
+            style: GoogleFonts.poppins(
+              color: Colors.white,
+              fontSize: 18,
+              fontWeight: FontWeight.w500,
+            ),
+            textAlign: TextAlign.center,
           ),
-          _ActionButtons(
-            onViewChange: widget.onViewChange,
-            onNext: _validateAndProceed,
+          const SizedBox(height: 30),
+          FormInput(
+            controller: widget.emailController,
+            hintText: "epasts@epasts.lv",
+            icon: Icons.email,
+            error: emailError,
+            obligatory: true,
+            keyboardType: TextInputType.emailAddress,
+          ),
+          const SizedBox(height: 20),
+          FormInput(
+            controller: widget.passwordController,
+            hintText: "dro\$aParole1",
+            icon: Icons.lock,
+            obscureText: true,
+            error: passwordError,
+            obligatory: true,
+          ),
+          const SizedBox(height: 20),
+          FormInput(
+            controller: widget.passwordConfirmationController,
+            hintText: "dro\$aParole1",
+            icon: Icons.lock,
+            obscureText: true,
+            error: passwordConfirmationError,
+            obligatory: true,
+          ),
+          const SizedBox(height: 30),
+          ElevatedButton(
+            onPressed: _validateAndProceed,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.white,
+              foregroundColor: Colors.black,
+              padding: const EdgeInsets.symmetric(vertical: 15),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            child: Text(
+              'Turpināt',
+              style: GoogleFonts.poppins(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
+      ),
+      bottomAction: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            "Jau ir konts?",
+            style: GoogleFonts.poppins(
+              color: Colors.white,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          TextButton(
+            onPressed: () => widget.onViewChange(0),
+            child: Text(
+              "Ielogoties",
+              style: GoogleFonts.poppins(
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
           ),
         ],
       ),
@@ -130,152 +196,5 @@ class _CredentialsStepState extends State<CredentialsStep> {
       return false;
     }
     return true;
-  }
-}
-
-class _StepTitle extends StatelessWidget {
-  const _StepTitle();
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = ColorContext.of(context);
-    return Container(
-      margin: const EdgeInsets.only(top: 25),
-      padding: const EdgeInsets.symmetric(horizontal: 65, vertical: 5),
-      decoration: colors.classicDecorationWhiteSharper,
-      child: Text(
-        'Prieks\niepazīties!',
-        style: colors.header2ThemeColor,
-        textAlign: TextAlign.center,
-      ),
-    );
-  }
-}
-
-class _CredentialsForm extends StatelessWidget {
-  final TextEditingController emailController;
-  final TextEditingController passwordController;
-  final TextEditingController passwordConfirmationController;
-  final String? emailError;
-  final String? passwordError;
-  final String? passwordConfirmationError;
-
-  const _CredentialsForm({
-    required this.emailController,
-    required this.passwordController,
-    required this.passwordConfirmationController,
-    this.emailError,
-    this.passwordError,
-    this.passwordConfirmationError,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = ColorContext.of(context);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          margin: const EdgeInsets.only(left: 35, top: 15),
-          child: Text(
-            "E-pasts",
-            style: GoogleFonts.poppins(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-        TextInput(
-          obscureText: false,
-          hintText: "epasts@epasts.lv",
-          icon: Icon(
-            Icons.email,
-            color: colors.color001,
-          ),
-          margin: [10, 35, 20, 35],
-          controller: emailController,
-          error: emailError,
-          obligatory: true,
-        ),
-        Container(
-          margin: const EdgeInsets.only(left: 35),
-          child: Text(
-            "Parole",
-            style: GoogleFonts.poppins(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-        TextInput(
-          obscureText: true,
-          hintText: "dro\$aParole1",
-          margin: [10, 35, 20, 35],
-          controller: passwordController,
-          error: passwordError,
-          obligatory: true,
-        ),
-        Container(
-          margin: const EdgeInsets.only(left: 35),
-          child: Text(
-            "Parole atkārtoti",
-            style: GoogleFonts.poppins(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-        TextInput(
-          obscureText: true,
-          hintText: "dro\$aParole1",
-          margin: const [10, 35, 0, 35],
-          controller: passwordConfirmationController,
-          error: passwordConfirmationError,
-          obligatory: true,
-        ),
-      ],
-    );
-  }
-}
-
-class _ActionButtons extends StatelessWidget {
-  final Function(int) onViewChange;
-  final VoidCallback onNext;
-
-  const _ActionButtons({
-    required this.onViewChange,
-    required this.onNext,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              "Ir konts?",
-              style: GoogleFonts.poppins(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 15,
-              ),
-            ),
-            TextButton(
-              onPressed: () => onViewChange(0),
-              child: const Text("Ielogoties"),
-            )
-          ],
-        ),
-        IntrinsicWidth(
-          child: StylizedButton(
-            action: onNext,
-            title: "Reģistrēties",
-            icon: Icons.person_add_rounded,
-          ),
-        ),
-      ],
-    );
   }
 }

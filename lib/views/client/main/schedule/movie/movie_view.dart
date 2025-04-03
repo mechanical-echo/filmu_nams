@@ -7,8 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
-import '../../../../../providers/color_context.dart';
-
 class MovieView extends StatefulWidget {
   const MovieView({
     super.key,
@@ -17,165 +15,238 @@ class MovieView extends StatefulWidget {
 
   final MovieModel data;
 
-  static void show(BuildContext context, MovieModel data) {
-    final animationController = AnimationController(
-      duration: const Duration(milliseconds: 600),
-      vsync: Navigator.of(context),
-    );
-
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(25),
-        ),
-      ),
-      transitionAnimationController: animationController,
-      builder: (context) => MovieView(data: data),
-    );
-  }
-
   @override
   State<MovieView> createState() => _MovieViewState();
 }
 
-class _MovieViewState extends State<MovieView> {
-  String getDuration(int dur) => '${dur ~/ 60}h ${dur % 60}m';
-
-  double headerHeight = 250;
-
-  final double minHeaderHeight = 100;
-
-  final ScrollController _scrollController = ScrollController();
+class _MovieViewState extends State<MovieView>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+  late Animation<double> _fadeAnimation;
+  late Animation<Offset> _slideAnimation;
 
   @override
   void initState() {
     super.initState();
-    _scrollController.addListener(onScroll);
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 500),
+      vsync: this,
+    );
+
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _animationController,
+        curve: Curves.easeOut,
+      ),
+    );
+
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(0, 0.1),
+      end: Offset.zero,
+    ).animate(
+      CurvedAnimation(
+        parent: _animationController,
+        curve: Curves.easeOut,
+      ),
+    );
+
+    _animationController.forward();
   }
 
   @override
   void dispose() {
-    _scrollController.removeListener(onScroll);
-    _scrollController.dispose();
+    _animationController.dispose();
     super.dispose();
   }
 
-  void onScroll() {
-    double offset = _scrollController.offset;
-
-    /* Commented this out for now because it randomly throws an error 
-      TODO: fix header crashing an app on scroll */
-
-    setState(() {
-      headerHeight = (250 - (offset * 0.5)).clamp(minHeaderHeight, 250);
-    });
+  String getDuration() {
+    final hours = widget.data.duration ~/ 60;
+    final minutes = widget.data.duration % 60;
+    return '${hours}h ${minutes}m';
   }
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
-    final colors = ColorContext.of(context);
-    return Container(
-      clipBehavior: Clip.hardEdge,
-      decoration: BoxDecoration(
-        color: colors.color001,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(25)),
-      ),
-      width: width,
-      height: height * 0.82,
-      child: Column(
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: Stack(
         children: [
-          SizedBox(
-            width: width,
-            height: headerHeight,
-            child: header(context),
-          ),
-          Expanded(
-            child: NotificationListener<ScrollNotification>(
-              onNotification: (scrollNotification) {
-                onScroll();
-                return true;
-              },
-              child: SingleChildScrollView(
-                controller: _scrollController,
-                padding: const EdgeInsets.only(
-                  bottom: 35,
-                  top: 20,
-                  left: 20,
-                  right: 20,
+          // Background image
+          Positioned.fill(
+            child: CachedNetworkImage(
+              imageUrl: widget.data.heroUrl,
+              fit: BoxFit.cover,
+              placeholder: (context, url) => Center(
+                child: LoadingAnimationWidget.staggeredDotsWave(
+                  color: Colors.white,
+                  size: 50,
                 ),
-                child: Column(
-                  spacing: 10,
-                  children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      spacing: 15,
-                      children: [
-                        Expanded(child: title()),
-                        badges(),
+              ),
+              errorWidget: (context, url, error) => Container(
+                color: Colors.grey[900],
+                child: const Icon(
+                  Icons.movie,
+                  color: Colors.white,
+                  size: 50,
+                ),
+              ),
+            ),
+          ),
+
+          // Gradient overlay
+          Positioned.fill(
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.black.withOpacity(0.3),
+                    Colors.black.withOpacity(0.7),
+                    Colors.black,
+                  ],
+                  stops: const [0.0, 0.5, 1.0],
+                ),
+              ),
+            ),
+          ),
+
+          // Content
+          SafeArea(
+            child: FadeTransition(
+              opacity: _fadeAnimation,
+              child: SlideTransition(
+                position: _slideAnimation,
+                child: CustomScrollView(
+                  slivers: [
+                    // App bar
+                    SliverAppBar(
+                      backgroundColor: Colors.transparent,
+                      elevation: 0,
+                      leading: IconButton(
+                        icon: const Icon(Icons.arrow_back, color: Colors.white),
+                        onPressed: () => Navigator.of(context).pop(),
+                      ),
+                      actions: [
+                        Container(
+                          margin: const EdgeInsets.only(right: 16),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 6,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(
+                                Icons.star,
+                                color: Colors.amber,
+                                size: 16,
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                widget.data.rating,
+                                style: GoogleFonts.poppins(
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
-                    divider(colors),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      spacing: 5,
-                      children: [
-                        Column(
-                          spacing: 7,
+
+                    // Movie content
+                    SliverToBoxAdapter(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            // Title
                             Text(
-                              " Žanrs",
+                              widget.data.title,
                               style: GoogleFonts.poppins(
                                 color: Colors.white,
+                                fontSize: 32,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            badge(
-                              GenreName[widget.data.genre]!,
-                              TextAlign.center,
+                            const SizedBox(height: 16),
+
+                            // Movie details
+                            Row(
+                              children: [
+                                _buildDetailChip(
+                                  Icons.access_time,
+                                  getDuration(),
+                                ),
+                                const SizedBox(width: 8),
+                                _buildDetailChip(
+                                  Icons.movie,
+                                  GenreName[widget.data.genre] ??
+                                      widget.data.genre,
+                                ),
+                                const SizedBox(width: 8),
+                                _buildDetailChip(
+                                  Icons.person,
+                                  widget.data.director,
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                        Column(
-                          spacing: 7,
-                          children: [
+                            const SizedBox(height: 24),
+
+                            // Description
+                            FoldableDescription(data: widget.data),
+                            const SizedBox(height: 24),
+
+                            // Cast
                             Text(
-                              "Režisors",
+                              'Aktieri',
                               style: GoogleFonts.poppins(
                                 color: Colors.white,
+                                fontSize: 20,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            badge(widget.data.director, TextAlign.center),
+                            const SizedBox(height: 8),
+                            Wrap(
+                              spacing: 8,
+                              runSpacing: 8,
+                              children: widget.data.actors.map((actor) {
+                                return Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 6,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withOpacity(0.1),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: Text(
+                                    actor,
+                                    style: GoogleFonts.poppins(
+                                      color: Colors.white.withOpacity(0.8),
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                );
+                              }).toList(),
+                            ),
+                            const SizedBox(height: 24),
+
+                            // Ticket buying form
+                            TicketBuyingForm(movieData: widget.data),
+                            const SizedBox(height: 32),
                           ],
                         ),
-                        Column(
-                          spacing: 7,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(
-                              "Ilgums ",
-                              style: GoogleFonts.poppins(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            badge(
-                              getDuration(widget.data.duration),
-                              TextAlign.center,
-                            ),
-                          ],
-                        ),
-                      ],
+                      ),
                     ),
-                    divider(colors),
-                    FoldableDescription(data: widget.data),
-                    divider(colors),
-                    TicketBuyingForm(movieData: widget.data),
                   ],
                 ),
               ),
@@ -186,99 +257,30 @@ class _MovieViewState extends State<MovieView> {
     );
   }
 
-  badges() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      spacing: 5,
-      children: List.generate(
-        widget.data.actors.length,
-        (index) => badge(widget.data.actors[index], TextAlign.right),
-      ),
-    );
-  }
-
-  Widget divider(ColorContext colors) {
-    return Divider(
-      color: colors.color003.withAlpha(100),
-      thickness: 2,
-      height: 32,
-    );
-  }
-
-  badge(String text, TextAlign align) {
-    final colors = ColorContext.of(context);
+  Widget _buildDetailChip(IconData icon, String label) {
     return Container(
-      padding: const EdgeInsets.symmetric(
-        vertical: 3,
-        horizontal: 15,
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(20),
       ),
-      width: 120,
-      decoration: colors.classicDecorationSharper,
-      child: Text(
-        text,
-        style: bodySmall,
-        textAlign: align,
-      ),
-    );
-  }
-
-  Widget header(BuildContext context) {
-    return Stack(
-      alignment: Alignment.topCenter,
-      children: [
-        SizedBox(
-          width: double.infinity,
-          height: headerHeight,
-          child: CachedNetworkImage(
-            imageUrl: widget.data.heroUrl,
-            fit: BoxFit.cover,
-            placeholder: (context, url) => Center(
-              child: LoadingAnimationWidget.staggeredDotsWave(
-                color: Colors.white,
-                size: 100,
-              ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            icon,
+            color: Colors.white.withOpacity(0.8),
+            size: 16,
+          ),
+          const SizedBox(width: 4),
+          Text(
+            label,
+            style: GoogleFonts.poppins(
+              color: Colors.white.withOpacity(0.8),
+              fontSize: 14,
             ),
           ),
-        ),
-        Positioned(
-          top: 10,
-          right: 10,
-          child: IconButton(
-            icon: const Icon(Icons.close, color: Colors.white),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-        ),
-      ],
-    );
-  }
-
-  double calculatePadding(double headerHeight) {
-    double minHeight = 50;
-    double maxHeight = 250;
-    double startPadding = -105;
-    double endPadding = 15;
-
-    return startPadding +
-        ((headerHeight - minHeight) / (maxHeight - minHeight)) *
-            (endPadding - startPadding);
-  }
-
-  Container title() {
-    final colors = ColorContext.of(context);
-    return Container(
-      constraints: BoxConstraints(
-        minHeight: 100,
-      ),
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      decoration: colors.classicDecorationWhiteSharper,
-      child: Center(
-        child: Text(
-          widget.data.title,
-          style: widget.data.title.length > 14
-              ? colors.header2ThemeColor
-              : colors.header1ThemeColor,
-          textAlign: TextAlign.center,
-        ),
+        ],
       ),
     );
   }

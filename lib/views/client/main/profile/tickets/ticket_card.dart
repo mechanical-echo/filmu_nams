@@ -3,6 +3,7 @@ import 'package:filmu_nams/assets/theme.dart';
 import 'package:filmu_nams/models/ticket.dart';
 import 'package:filmu_nams/providers/color_context.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
@@ -20,99 +21,156 @@ class TicketCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = ColorContext.of(context);
     final DateTime movieTime = ticket.schedule.time.toDate();
+    final bool isExpired = movieTime.isBefore(DateTime.now());
 
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 16),
-        decoration: colors.classicDecorationDarkSharper,
-        clipBehavior: Clip.antiAlias,
-        child: Row(
-          children: [
-            SizedBox(
-              width: 130,
-              height: 190,
-              child: CachedNetworkImage(
-                imageUrl: ticket.schedule.movie.posterUrl,
-                fit: BoxFit.cover,
-                placeholder: (context, url) => Center(
-                  child: LoadingAnimationWidget.staggeredDotsWave(
-                    color: Colors.white,
-                    size: 50,
-                  ),
-                ),
-                errorWidget: (context, url, error) => Container(
-                  color: Colors.grey[800],
-                  child: const Icon(Icons.error, color: Colors.white),
-                ),
-              ),
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          margin: const EdgeInsets.only(bottom: 16),
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.03),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: Colors.white.withOpacity(0.1),
+              width: 1,
             ),
-
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(12),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      decoration: colors.classicDecorationSharper,
-                      child: Text(
-                        ticket.schedule.movie.title,
-                        style: bodyLarge,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2),
+                blurRadius: 10,
+                offset: const Offset(0, 5),
+              ),
+            ],
+          ),
+          child: Column(
+            children: [
+              // Movie poster and title section
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Movie poster
+                  ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(16),
+                      bottomRight: Radius.circular(16),
+                    ),
+                    child: CachedNetworkImage(
+                      imageUrl: ticket.schedule.movie.posterUrl,
+                      width: 100,
+                      height: 150,
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) => Container(
+                        width: 100,
+                        height: 150,
+                        color: Colors.white.withOpacity(0.05),
+                        child: Center(
+                          child: LoadingAnimationWidget.stretchedDots(
+                            color: Colors.white,
+                            size: 30,
+                          ),
+                        ),
+                      ),
+                      errorWidget: (context, url, error) => Container(
+                        width: 100,
+                        height: 150,
+                        color: Colors.white.withOpacity(0.05),
+                        child: Icon(
+                          Icons.movie_outlined,
+                          color: Colors.white.withOpacity(0.3),
+                          size: 40,
+                        ),
                       ),
                     ),
-                    const SizedBox(height: 8),
-                    _buildDetailRow(
-                      context,
-                      Icons.calendar_today,
-                      DateFormat('dd.MM.yyyy').format(movieTime),
+                  ),
+                  // Movie title and details
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            ticket.schedule.movie.title,
+                            style: GoogleFonts.poppins(
+                              color: Colors.white.withOpacity(0.9),
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          const SizedBox(height: 8),
+                          _buildDetailRow(
+                            Icons.calendar_today,
+                            DateFormat('dd.MM.yyyy').format(movieTime),
+                          ),
+                          _buildDetailRow(
+                            Icons.access_time,
+                            DateFormat('HH:mm').format(movieTime),
+                          ),
+                          _buildDetailRow(
+                            Icons.chair,
+                            "Rinda: ${ticket.seat['row'] + 1}, Vieta: ${ticket.seat['seat'] + 1}",
+                          ),
+                          _buildDetailRow(
+                            Icons.meeting_room,
+                            "${ticket.schedule.hall}. zāle",
+                          ),
+                        ],
+                      ),
                     ),
-                    _buildDetailRow(
-                      context,
-                      Icons.access_time,
-                      DateFormat('HH:mm').format(movieTime),
-                    ),
-                    _buildDetailRow(
-                      context,
-                      Icons.chair,
-                      "Rinda: ${ticket.seat['row'] + 1}, Vieta: ${ticket.seat['seat'] + 1}",
-                    ),
-                    _buildDetailRow(
-                      context,
-                      Icons.meeting_room,
-                      "${ticket.schedule.hall}. zāle",
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ),
-          ],
+              // Status indicator
+              if (isExpired)
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  decoration: BoxDecoration(
+                    color: Colors.red.withOpacity(0.1),
+                    borderRadius: const BorderRadius.only(
+                      bottomLeft: Radius.circular(16),
+                      bottomRight: Radius.circular(16),
+                    ),
+                  ),
+                  child: Center(
+                    child: Text(
+                      'Novecojusi',
+                      style: GoogleFonts.poppins(
+                        color: Colors.red[300],
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildDetailRow(BuildContext context, IconData icon, String text) {
-    final colors = ColorContext.of(context);
-
+  Widget _buildDetailRow(IconData icon, String text) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 4),
       child: Row(
-        spacing: 8,
         children: [
           Icon(
             icon,
             size: 16,
-            color: colors.color003,
+            color: Colors.white.withOpacity(0.5),
           ),
+          const SizedBox(width: 8),
           Expanded(
             child: Text(
               text,
-              style: TextStyle(
-                color: Colors.white,
+              style: GoogleFonts.poppins(
+                color: Colors.white.withOpacity(0.7),
                 fontSize: 14,
               ),
               maxLines: 1,

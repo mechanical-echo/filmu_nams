@@ -1,6 +1,6 @@
-import 'package:filmu_nams/assets/theme.dart';
-import 'package:filmu_nams/providers/color_context.dart';
+import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 class DatePicker extends StatefulWidget {
@@ -17,13 +17,43 @@ class DatePicker extends StatefulWidget {
   State<DatePicker> createState() => _DatePickerState();
 }
 
-class _DatePickerState extends State<DatePicker> {
+class _DatePickerState extends State<DatePicker>
+    with SingleTickerProviderStateMixin {
   late DateTime selectedDate;
+  late AnimationController _controller;
+  late Animation<double> _fadeAnimation;
+  late Animation<Offset> _slideAnimation;
 
   @override
   void initState() {
     super.initState();
     selectedDate = DateTime.now();
+
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 300),
+      vsync: this,
+    );
+
+    _fadeAnimation = CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeOut,
+    );
+
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(0, -0.1),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeOut,
+    ));
+
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   void previousMonth() {
@@ -54,150 +84,172 @@ class _DatePickerState extends State<DatePicker> {
       30,
       31
     ];
-
     final firstDay = DateTime(selectedDate.year, selectedDate.month, 1);
     final lastDayPrevMonth = DateTime(selectedDate.year, selectedDate.month, 0);
-
     final daysFromPrevMonth = firstDay.weekday - 1;
-
     final currentMonthDays = monthDays[selectedDate.month - 1];
     final totalDays = daysFromPrevMonth + currentMonthDays;
     final daysFromNextMonth = (7 - (totalDays % 7)) % 7;
 
-    final colors = ColorContext.of(context);
-
-    return Container(
-      decoration: BoxDecoration(
-        color: colors.color001,
-        borderRadius: BorderRadius.circular(10),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withAlpha(120),
-            blurRadius: 7,
-            offset: const Offset(0, 7),
-          )
-        ],
-        border: Border(
-          bottom: BorderSide(color: Colors.white12, width: 5),
-        ),
-      ),
-      height: 350,
-      width: 330,
-      padding: const EdgeInsets.only(top: 10),
-      child: Column(
-        children: [
-          header(),
-          weekDays(),
-          month(
-            daysFromPrevMonth,
-            lastDayPrevMonth,
-            currentMonthDays,
-            daysFromNextMonth,
-            widget.availableDates,
+    return FadeTransition(
+      opacity: _fadeAnimation,
+      child: SlideTransition(
+        position: _slideAnimation,
+        child: Container(
+          decoration: BoxDecoration(
+            color: const Color(0xFF1A1A1A),
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.3),
+                blurRadius: 20,
+                offset: const Offset(0, 10),
+              ),
+            ],
+            border: Border.all(
+              color: Colors.white.withOpacity(0.1),
+              width: 1,
+            ),
           ),
-        ],
+          height: 400,
+          width: 350,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+              child: Column(
+                children: [
+                  _buildHeader(),
+                  _buildWeekDays(),
+                  _buildMonth(
+                    daysFromPrevMonth,
+                    lastDayPrevMonth,
+                    currentMonthDays,
+                    daysFromNextMonth,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
 
-  Stack header() {
-    return Stack(
-      children: [
-        Positioned(
-          left: 10,
-          top: -10,
-          child: IconButton(
+  Widget _buildHeader() {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+      decoration: BoxDecoration(
+        color: Colors.black.withOpacity(0.3),
+        border: Border(
+          bottom: BorderSide(
+            color: Colors.white.withOpacity(0.1),
+            width: 1,
+          ),
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          IconButton(
             onPressed: previousMonth,
             icon: Icon(
               Icons.chevron_left_rounded,
-              color: Colors.white,
-              size: 30,
+              color: Colors.white.withOpacity(0.9),
+              size: 28,
             ),
           ),
-        ),
-        Positioned(
-          right: 10,
-          top: -10,
-          child: IconButton(
+          Text(
+            "${DateFormat(DateFormat.YEAR).format(selectedDate)} ${capitalize(DateFormat(DateFormat.STANDALONE_MONTH, 'lv').format(selectedDate))}",
+            style: GoogleFonts.poppins(
+              color: Colors.white,
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 0.5,
+            ),
+          ),
+          IconButton(
             onPressed: nextMonth,
             icon: Icon(
               Icons.chevron_right_rounded,
-              color: Colors.white,
-              size: 30,
+              color: Colors.white.withOpacity(0.9),
+              size: 28,
             ),
           ),
-        ),
-        Center(
-          child: Text(
-            "${DateFormat(DateFormat.YEAR).format(selectedDate)} ${capitalize(DateFormat(DateFormat.STANDALONE_MONTH, 'lv').format(selectedDate))}",
-            style: bodyLarge,
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
-  Container month(
+  Widget _buildWeekDays() {
+    final weekDays = ['Pr', 'Ot', 'Tr', 'Ct', 'Pt', 'St', 'Sv'];
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: weekDays
+            .map((day) => SizedBox(
+                  width: 40,
+                  child: Text(
+                    day,
+                    style: GoogleFonts.poppins(
+                      color: Colors.white.withOpacity(0.5),
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ))
+            .toList(),
+      ),
+    );
+  }
+
+  Widget _buildMonth(
     int daysFromPrevMonth,
     DateTime lastDayPrevMonth,
     int currentMonthDays,
     int daysFromNextMonth,
-    List<DateTime>? availableDates,
   ) {
-    final colors = ColorContext.of(context);
-    return Container(
-      margin: const EdgeInsets.only(left: 13, right: 10),
-      height: 265,
-      width: 375,
-      decoration: BoxDecoration(
-        color: colors.color002,
-        borderRadius: BorderRadius.circular(7),
-      ),
+    return Expanded(
       child: GridView.count(
         physics: const NeverScrollableScrollPhysics(),
-        padding: const EdgeInsets.all(5),
+        padding: const EdgeInsets.all(16),
         crossAxisCount: 7,
-        mainAxisSpacing: 2,
-        crossAxisSpacing: 2,
+        mainAxisSpacing: 8,
+        crossAxisSpacing: 8,
         children: [
           ...List.generate(
             daysFromPrevMonth,
-            (index) => DatePickerDay(
+            (index) => _buildDay(
               date: DateTime(
                 selectedDate.year,
                 selectedDate.month - 1,
                 lastDayPrevMonth.day - daysFromPrevMonth + index + 1,
               ),
-              disabled: true,
-              currentMonth: false,
+              isCurrentMonth: false,
             ),
           ),
           ...List.generate(
             currentMonthDays,
-            (index) => DatePickerDay(
+            (index) => _buildDay(
               date: DateTime(
                 selectedDate.year,
                 selectedDate.month,
                 index + 1,
               ),
-              disabled: availableDates != null
-                  ? !availableDates.any((available) =>
-                      available.year == selectedDate.year &&
-                      available.month == selectedDate.month &&
-                      available.day == (index + 1))
-                  : false,
+              isCurrentMonth: true,
             ),
           ),
           ...List.generate(
             daysFromNextMonth,
-            (index) => DatePickerDay(
+            (index) => _buildDay(
               date: DateTime(
                 selectedDate.year,
                 selectedDate.month + 1,
                 index + 1,
               ),
-              disabled: true,
-              currentMonth: false,
+              isCurrentMonth: false,
             ),
           ),
         ],
@@ -205,109 +257,48 @@ class _DatePickerState extends State<DatePicker> {
     );
   }
 
-  Container weekDays() {
-    final colors = ColorContext.of(context);
-    return Container(
-      margin: const EdgeInsets.only(top: 10),
-      width: 295,
-      height: 20,
-      child: GridView.count(
-        crossAxisCount: 7,
-        padding: const EdgeInsets.all(0),
-        mainAxisSpacing: 5,
-        crossAxisSpacing: 2,
-        childAspectRatio: 2,
-        children: [
-          Container(
-            padding: const EdgeInsets.only(left: 5),
-            decoration: BoxDecoration(
-              color: colors.color002.withAlpha(200),
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(25),
-              ),
+  Widget _buildDay({
+    required DateTime date,
+    required bool isCurrentMonth,
+  }) {
+    final isToday = date.day == DateTime.now().day &&
+        date.month == DateTime.now().month &&
+        date.year == DateTime.now().year;
+
+    final isAvailable = widget.availableDates == null ||
+        widget.availableDates!.any((d) =>
+            d.day == date.day && d.month == date.month && d.year == date.year);
+
+    final isEnabled = isCurrentMonth && isAvailable;
+
+    return GestureDetector(
+      onTap: isEnabled ? () => widget.onDateSelected(date) : null,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        decoration: BoxDecoration(
+          color: isToday
+              ? const Color(0xFF2A2A2A)
+              : isEnabled
+                  ? Colors.white.withOpacity(0.05)
+                  : Colors.transparent,
+          borderRadius: BorderRadius.circular(10),
+          border: isToday
+              ? Border.all(color: const Color(0xFF3A3A3A), width: 1)
+              : null,
+        ),
+        child: Center(
+          child: Text(
+            "${date.day}",
+            style: GoogleFonts.poppins(
+              color: isEnabled ? Colors.white : Colors.white.withOpacity(0.3),
+              fontSize: 14,
+              fontWeight: isToday ? FontWeight.w600 : FontWeight.w400,
             ),
-            child: Center(child: Text("Pr", style: bodyMedium)),
           ),
-          Container(
-            color: colors.color002.withAlpha(200),
-            child: Center(child: Text("Ot", style: bodyMedium)),
-          ),
-          Container(
-            color: colors.color002.withAlpha(200),
-            child: Center(child: Text("Tr", style: bodyMedium)),
-          ),
-          Container(
-            color: colors.color002.withAlpha(200),
-            child: Center(child: Text("Ct", style: bodyMedium)),
-          ),
-          Container(
-            color: colors.color002.withAlpha(200),
-            child: Center(child: Text("Pt", style: bodyMedium)),
-          ),
-          Container(
-            color: colors.color002.withAlpha(200),
-            child: Center(child: Text("St", style: bodyMedium)),
-          ),
-          Container(
-            padding: const EdgeInsets.only(right: 5),
-            decoration: BoxDecoration(
-              color: colors.color002.withAlpha(200),
-              borderRadius: BorderRadius.only(
-                topRight: Radius.circular(25),
-              ),
-            ),
-            child: Center(child: Text("Sv", style: bodyMedium)),
-          ),
-        ],
+        ),
       ),
     );
   }
 
   String capitalize(String s) => s[0].toUpperCase() + s.substring(1);
-}
-
-class DatePickerDay extends StatelessWidget {
-  const DatePickerDay({
-    super.key,
-    required this.date,
-    this.disabled = false,
-    this.currentMonth = true,
-  });
-
-  final DateTime date;
-  final bool disabled;
-  final bool currentMonth;
-
-  @override
-  Widget build(BuildContext context) {
-    bool isToday =
-        date.day == DateTime.now().day && date.month == DateTime.now().month;
-
-    return GestureDetector(
-      onTap: disabled
-          ? null
-          : () {
-              final datePicker =
-                  context.findAncestorWidgetOfExactType<DatePicker>();
-              datePicker?.onDateSelected(date);
-            },
-      child: Container(
-        decoration: BoxDecoration(
-          color: disabled
-              ? currentMonth
-                  ? Colors.white.withAlpha(15)
-                  : Colors.black12
-              : Colors.white.withAlpha(80),
-          borderRadius: BorderRadius.circular(5),
-          border: Border.all(
-            width: .45,
-            color: smokeyWhite.withAlpha(isToday ? 135 : 0),
-          ),
-        ),
-        height: 20,
-        width: 15,
-        child: Center(child: Text("${date.day}", style: bodyMedium)),
-      ),
-    );
-  }
 }

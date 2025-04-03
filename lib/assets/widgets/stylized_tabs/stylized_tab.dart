@@ -111,7 +111,9 @@ class _StylizedTabState extends State<StylizedTab>
             child: widget.title.isIcon
                 ? Icon(
                     widget.title.value as IconData,
-                    color: widget.isActive ? Colors.white : colors.color003,
+                    color: widget.isActive
+                        ? Colors.white
+                        : colors.onSurfaceVariant,
                     size: widget.fontSize + 9,
                   )
                 : Text(

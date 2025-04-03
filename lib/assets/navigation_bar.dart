@@ -57,38 +57,42 @@ class _NavBarState extends State<NavBar> with SingleTickerProviderStateMixin {
       Icons.notifications,
       Icons.person,
     ];
-    final colors = ColorContext.of(context);
+
+    List<String> labels = [
+      'Piedāvājumi',
+      'Saraksts',
+      'Sākums',
+      'Paziņojumi',
+      'Profils',
+    ];
+
     return Container(
       color: Colors.transparent,
       child: Stack(
         clipBehavior: Clip.none,
         children: [
           Container(
-            height: 110,
+            height: 85,
+            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: BoxDecoration(
-              color: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(50),
-                topRight: Radius.circular(50),
-              ),
-              border: Border(
-                top: BorderSide(
-                  color: Colors.white12,
-                  width: 6,
-                )
+              color: Colors.black.withOpacity(0.3),
+              borderRadius: BorderRadius.circular(25),
+              border: Border.all(
+                color: Colors.white.withOpacity(0.1),
+                width: 1,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withAlpha(100),
-                  blurRadius: 10,
-                  offset: const Offset(0, -8),
+                  color: Colors.black.withOpacity(0.2),
+                  blurRadius: 20,
+                  offset: const Offset(0, 5),
                 ),
               ],
             ),
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 8),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: List.generate(
                   icons.length,
                   (index) {
@@ -100,14 +104,14 @@ class _NavBarState extends State<NavBar> with SingleTickerProviderStateMixin {
                       animation = Tween<double>(begin: 0.0, end: 1.0).animate(
                         CurvedAnimation(
                           parent: _controller,
-                          curve: Cubic(.21, .88, 1, .93),
+                          curve: Curves.easeOutCubic,
                         ),
                       );
                     } else if (wasSelected) {
                       animation = Tween<double>(begin: 1.0, end: 0.0).animate(
                         CurvedAnimation(
                           parent: _controller,
-                          curve: Cubic(.21, .88, 1, .93),
+                          curve: Curves.easeOutCubic,
                         ),
                       );
                     } else {
@@ -117,48 +121,51 @@ class _NavBarState extends State<NavBar> with SingleTickerProviderStateMixin {
                     return AnimatedBuilder(
                       animation: animation,
                       builder: (context, child) {
-                        final verticalOffset = -10 * animation.value;
-                        final scale = 1.0 + (0.25 * animation.value);
+                        final scale = 1.0 + (0.1 * animation.value);
+                        final opacity = 0.5 + (0.5 * animation.value);
 
-                        return Transform.translate(
-                          offset: Offset(0, verticalOffset),
-                          child: Transform.scale(
-                            scale: scale,
-                            child: Container(
-                              margin: EdgeInsets.only(
-                                bottom: 15 * animation.value + 15,
-                                left: animation.value * 10,
-                                right: animation.value * 10,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Theme.of(context).focusColor,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withAlpha(60),
-                                    blurRadius: 3,
-                                    offset: const Offset(0, 6),
+                        return GestureDetector(
+                          onTap: () => widget.onPageChanged(index),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 6),
+                            decoration: BoxDecoration(
+                              color: isSelected
+                                  ? Colors.white.withOpacity(0.1)
+                                  : Colors.transparent,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Transform.scale(
+                                  scale: scale,
+                                  child: Icon(
+                                    icons[index],
+                                    color: Color.lerp(
+                                      Colors.white.withOpacity(0.5),
+                                      Colors.white,
+                                      opacity,
+                                    ),
+                                    size: 22,
                                   ),
-                                ],
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: IconButton(
-                                icon: Icon(
-                                  icons[index],
-                                  color: Color.lerp(
-                                    Theme.of(context)
-                                        .bottomNavigationBarTheme
-                                        .unselectedItemColor,
-                                    Theme.of(context)
-                                        .bottomNavigationBarTheme
-                                        .selectedItemColor,
-                                    animation.value,
-                                  ),
-                                  size: 40 + (5 * animation.value),
                                 ),
-                                onPressed: () {
-                                  widget.onPageChanged(index);
-                                },
-                              ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  labels[index],
+                                  style: TextStyle(
+                                    color: Color.lerp(
+                                      Colors.white.withOpacity(0.5),
+                                      Colors.white,
+                                      opacity,
+                                    ),
+                                    fontSize: 10,
+                                    fontWeight: isSelected
+                                        ? FontWeight.bold
+                                        : FontWeight.normal,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         );

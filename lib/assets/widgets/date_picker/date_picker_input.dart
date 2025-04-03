@@ -1,7 +1,6 @@
-import 'package:filmu_nams/providers/color_context.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:filmu_nams/assets/theme.dart';
 import 'package:filmu_nams/assets/widgets/date_picker/date_picker.dart';
 
 class DatePickerInput extends StatefulWidget {
@@ -30,12 +29,12 @@ class DatePickerInput extends StatefulWidget {
 
 class _DatePickerInputState extends State<DatePickerInput>
     with SingleTickerProviderStateMixin {
-  late DateTime selectedDate;
   OverlayEntry? _overlayEntry;
   final LayerLink _layerLink = LayerLink();
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
+  late DateTime selectedDate;
 
   @override
   void initState() {
@@ -79,7 +78,9 @@ class _DatePickerInputState extends State<DatePickerInput>
             child: GestureDetector(
               behavior: HitTestBehavior.opaque,
               onTap: _removeOverlay,
-              child: Container(),
+              child: Container(
+                color: Colors.black.withOpacity(0.5),
+              ),
             ),
           ),
           Positioned(
@@ -133,22 +134,52 @@ class _DatePickerInputState extends State<DatePickerInput>
 
   @override
   Widget build(BuildContext context) {
-    final colors = ColorContext.of(context);
     return CompositedTransformTarget(
       link: _layerLink,
-      child: GestureDetector(
-        onTap: _showOverlay,
-        child: Container(
-          padding: widget.padding,
-          width: widget.width,
-          height: widget.height,
-          decoration: widget.sharp
-              ? colors.classicDecorationSharper
-              : colors.classicDecoration,
-          child: Center(
-            child: Text(
-              formatDate(selectedDate),
-              style: bodySmall,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: _showOverlay,
+          borderRadius: BorderRadius.circular(12),
+          child: Container(
+            padding: widget.padding,
+            width: widget.width,
+            height: widget.height,
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.05),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: Colors.white.withOpacity(0.1),
+                width: 1,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Text(
+                    formatDate(selectedDate),
+                    style: GoogleFonts.poppins(
+                      color: Colors.white.withOpacity(0.9),
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                Icon(
+                  Icons.calendar_today,
+                  color: Colors.white.withOpacity(0.7),
+                  size: 18,
+                ),
+              ],
             ),
           ),
         ),

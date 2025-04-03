@@ -60,27 +60,64 @@ class _HomeState extends State<Home> {
         clipBehavior: Clip.none,
         alignment: Alignment.topCenter,
         children: [
-          if (isActive)
-            Positioned(
-              top: 450,
-              child: MovieItemDescription(index),
-            ),
           Container(
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: cardShadow,
+              borderRadius: BorderRadius.circular(24),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.3),
+                  blurRadius: 15,
+                  offset: const Offset(0, 5),
+                ),
+              ],
             ),
             clipBehavior: Clip.antiAlias,
-            margin: const EdgeInsets.only(bottom: 2),
+            margin: const EdgeInsets.symmetric(horizontal: 8),
             child: image(index),
           ),
-          if (isActive)
+          if (isActive) ...[
             Positioned(
-              bottom: 10,
-              left: 10,
-              right: 10,
-              child: MovieItemTitle(index),
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.transparent,
+                      Colors.black.withOpacity(0.8),
+                    ],
+                  ),
+                ),
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      movieData![index].title,
+                      style: GoogleFonts.poppins(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 24,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      movieData![index].description,
+                      style: GoogleFonts.poppins(
+                        color: Colors.white.withOpacity(0.9),
+                        fontSize: 14,
+                      ),
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              ),
             ),
+          ],
         ],
       ),
     );
@@ -126,72 +163,25 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget MovieItemDescription(int index) {
-    final colors = ColorContext.of(context);
+  dots() {
     return Container(
-      decoration: colors.darkDecoration,
-      padding: const EdgeInsets.all(15),
-      constraints: BoxConstraints(
-        minHeight: 100,
-      ),
-      width: 410,
-      child: Center(
-        child: Text(
-          movieData![index].description,
-          style: colors.bodyMedium,
-          textAlign: TextAlign.center,
-        ),
-      ),
-    );
-  }
-
-  Widget MovieItemTitle(int index) {
-    final colors = ColorContext.of(context);
-    return Center(
-      child: FittedBox(
-        fit: BoxFit.none,
-        child: Container(
-          width: 320,
-          decoration: colors.classicDecorationDarkSharper,
-          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 5),
-          child: Center(
-            child: Text(
-              movieData![index].title,
-              style: GoogleFonts.poppins(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 19,
-              ),
-              textAlign: TextAlign.center,
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: List.generate(
+          carouselItems!.length,
+          (index) => Container(
+            width: 8,
+            height: 8,
+            margin: const EdgeInsets.symmetric(horizontal: 4),
+            decoration: BoxDecoration(
+              color: index == _activeIndex
+                  ? Colors.white
+                  : Colors.white.withOpacity(0.3),
+              shape: BoxShape.circle,
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  dots() {
-    final colors = ColorContext.of(context);
-    return IntrinsicWidth(
-      child: Container(
-        decoration: colors.darkDecoration,
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-        child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children:
-                List.generate(carouselItems!.length, (index) => dot(index))),
-      ),
-    );
-  }
-
-  dot(int index) {
-    return Container(
-      width: 8,
-      height: 8,
-      margin: const EdgeInsets.symmetric(horizontal: 5),
-      decoration: BoxDecoration(
-        color: index == _activeIndex ? Colors.white : Colors.white30,
-        shape: BoxShape.circle,
       ),
     );
   }
@@ -208,33 +198,74 @@ class _HomeState extends State<Home> {
     }
 
     if (movieData == null || carouselItems == null || movieData!.isEmpty) {
-      return const Center(
-        child: Text('Nav datu, lai attēlotu'),
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.movie,
+              size: 64,
+              color: Colors.white.withOpacity(0.5),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Nav datu, lai attēlotu',
+              style: TextStyle(
+                color: Colors.white.withOpacity(0.5),
+                fontSize: 16,
+              ),
+            ),
+          ],
+        ),
       );
     }
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.only(top: 170, bottom: 250),
-        child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      spacing: 20,
-      children: [
-        dots(),
-        OverlappingCarousel(
-          items: carouselItems!,
-          itemWidth: 350,
-          itemHeight: 400,
-          scaleFactor: 0.95,
-          horizontalSpace: 10,
-          spacingFactor: 0.75,
-          onPageChanged: (index) {
-            setState(() {
-              _activeIndex = index;
-            });
-          },
-        ),
-        SizedBox(height: 80),
-      ],
-    ));
+      padding: const EdgeInsets.only(top: 40, bottom: 20),
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Sveicināti Filmā Nams',
+                  style: GoogleFonts.poppins(
+                    color: Colors.white,
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Atrastie jaunākie filmu piedāvājumi',
+                  style: GoogleFonts.poppins(
+                    color: Colors.white.withOpacity(0.7),
+                    fontSize: 16,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 24),
+          dots(),
+          const SizedBox(height: 16),
+          OverlappingCarousel(
+            items: carouselItems!,
+            itemWidth: 350,
+            itemHeight: 500,
+            scaleFactor: 0.95,
+            horizontalSpace: 10,
+            spacingFactor: 0.75,
+            onPageChanged: (index) {
+              setState(() {
+                _activeIndex = index;
+              });
+            },
+          ),
+        ],
+      ),
+    );
   }
 }

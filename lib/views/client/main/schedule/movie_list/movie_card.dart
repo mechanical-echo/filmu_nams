@@ -9,7 +9,7 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import '../../../../../providers/color_context.dart';
 
-class MovieCard extends StatefulWidget {
+class MovieCard extends StatelessWidget {
   const MovieCard({
     super.key,
     required this.data,
@@ -21,293 +21,192 @@ class MovieCard extends StatefulWidget {
   final DateTime? time;
   final int? hall;
 
-  @override
-  State<MovieCard> createState() => _MovieCardState();
-}
+  String getDuration() {
+    final hours = data.duration ~/ 60;
+    final minutes = data.duration % 60;
+    return '${hours}h ${minutes}m';
+  }
 
-class _MovieCardState extends State<MovieCard> {
-  void openMovieView() {
-    setState(() {
-      MovieView.show(context, widget.data);
-    });
+  String getTime() {
+    if (time == null) return '';
+    return '${time!.hour.toString().padLeft(2, '0')}:${time!.minute.toString().padLeft(2, '0')}';
+  }
+
+  String capitalize(String text) {
+    return text[0].toUpperCase() + text.substring(1);
   }
 
   @override
   Widget build(BuildContext context) {
-    final double topMargin = widget.data.title.length > 12 ? 88 : 75;
-    final double bottomMargin = widget.data.title.length > 12 ? 63 : 70;
-    final colors = ColorContext.of(context);
-    return Container(
-      clipBehavior: Clip.antiAlias,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Row(
-        textDirection: TextDirection.rtl,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Stack(
-            clipBehavior: Clip.none,
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => MovieView(data: data),
+          ),
+        );
+      },
+      child: Container(
+        height: 200,
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(16),
+          child: Stack(
             children: [
-              Container(
-                width: 180,
-                margin: EdgeInsets.only(
-                  bottom: bottomMargin,
-                  top: topMargin,
-                ),
-                decoration: BoxDecoration(
-                  color: colors.color001,
-                  borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(10),
-                    bottomRight: Radius.circular(10),
+              // Background image
+              Positioned.fill(
+                child: CachedNetworkImage(
+                  imageUrl: data.posterUrl,
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) => Center(
+                    child: LoadingAnimationWidget.staggeredDotsWave(
+                      color: Colors.white,
+                      size: 50,
+                    ),
+                  ),
+                  errorWidget: (context, url, error) => Container(
+                    color: Colors.grey[900],
+                    child: const Icon(
+                      Icons.movie,
+                      color: Colors.white,
+                      size: 50,
+                    ),
                   ),
                 ),
               ),
-              Positioned(
-                left: 0,
-                top: 10,
-                right: -10,
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 20),
-                      child: title(),
+
+              // Gradient overlay
+              Positioned.fill(
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Colors.transparent,
+                        Colors.black.withOpacity(0.7),
+                      ],
                     ),
-                    duration(),
-                    genre(),
-                    director(),
+                  ),
+                ),
+              ),
+
+              // Content
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Rating badge
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(
+                            Icons.star,
+                            color: Colors.amber,
+                            size: 16,
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            data.rating.toString(),
+                            style: GoogleFonts.poppins(
+                              color: Colors.white,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+
+                    // Title
+                    Text(
+                      data.title,
+                      style: GoogleFonts.poppins(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 8),
+
+                    // Movie details
+                    Row(
+                      children: [
+                        _buildDetailChip(
+                          Icons.access_time,
+                          getDuration(),
+                        ),
+                        const SizedBox(width: 8),
+                        _buildDetailChip(
+                          Icons.movie,
+                          capitalize(data.genre),
+                        ),
+                        if (time != null) ...[
+                          const SizedBox(width: 8),
+                          _buildDetailChip(
+                            Icons.calendar_today,
+                            '${getTime()} - ${hall}. Zāle',
+                          ),
+                        ],
+                      ],
+                    ),
                   ],
                 ),
               ),
-              Positioned(
-                bottom: 5,
-                left: -10,
-                right: 0,
-                child: button(),
-              ),
             ],
           ),
-          Container(
-            decoration: BoxDecoration(
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withAlpha(150),
-                  blurRadius: 15,
-                  offset: const Offset(5, 0),
-                ),
-              ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDetailChip(IconData icon, String label) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            icon,
+            color: Colors.white.withOpacity(0.8),
+            size: 14,
+          ),
+          const SizedBox(width: 4),
+          Text(
+            label,
+            style: GoogleFonts.poppins(
+              color: Colors.white.withOpacity(0.8),
+              fontSize: 12,
             ),
-            child: Stack(
-              alignment: Alignment.topRight,
-              children: [
-                poster(),
-                rating(context),
-                if (widget.time != null) scheduledTime(context)
-              ],
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-  String capitalize(String s) => s[0].toUpperCase() + s.substring(1);
-
-  String getDuration() =>
-      '${widget.data.duration ~/ 60}h ${widget.data.duration % 60}min';
-
-  String getTime() =>
-      intl.DateFormat(intl.DateFormat.HOUR24_MINUTE).format(widget.time!);
-
-  Container poster() {
-    return Container(
-      clipBehavior: Clip.antiAlias,
-      width: 190,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(10),
-          bottomLeft: Radius.circular(10),
-        ),
-      ),
-      child: CachedNetworkImage(
-        imageUrl: widget.data.posterUrl,
-        fit: BoxFit.cover,
-        placeholder: (context, url) => Center(
-          child: LoadingAnimationWidget.staggeredDotsWave(
-            color: Colors.white,
-            size: 100,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Container rating(BuildContext context) {
-    final colors = ColorContext.of(context);
-    return Container(
-      margin: const EdgeInsets.only(
-        top: 10,
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(10),
-          bottomLeft: Radius.circular(10),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withAlpha(100),
-            blurRadius: 10,
-            offset: const Offset(-5, 0),
-          )
-        ],
-        color: colors.color002,
-      ),
-      child: Text(
-        widget.data.rating,
-      ),
-    );
-  }
-
-  scheduledTime(BuildContext context) {
-    final colors = ColorContext.of(context);
-    return Positioned(
-      bottom: 0,
-      left: 0,
-      child: Container(
-        margin: const EdgeInsets.only(
-          bottom: 15,
-        ),
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.only(
-            topRight: Radius.circular(10),
-            bottomRight: Radius.circular(10),
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withAlpha(250),
-              blurRadius: 15,
-              offset: const Offset(5, 5),
-            )
-          ],
-          color: colors.color002,
-        ),
-        child: Text(
-          '${getTime()}  -  ${widget.hall}. Zāle',
-        ),
-      ),
-    );
-  }
-
-  title() {
-    final colors = ColorContext.of(context);
-    return TextContainer(
-      Text(
-        widget.data.title,
-        maxLines: 2,
-        textAlign: TextAlign.center,
-        overflow: TextOverflow.ellipsis,
-        style: GoogleFonts.poppins(
-          color: colors.color002,
-          fontSize: widget.data.title.length > 12 ? 17 : 25,
-          fontWeight: FontWeight.w700,
-        ),
-      ),
-      smokeyWhite,
-    );
-  }
-
-  duration() {
-    final colors = ColorContext.of(context);
-    return TextContainer(
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          SizedBox(width: 10),
-          Text(getDuration(), style: bodySmall),
-          Icon(Icons.access_time, size: 15, color: Colors.white),
-        ],
-      ),
-      colors.color002,
-    );
-  }
-
-  genre() {
-    final colors = ColorContext.of(context);
-    return TextContainer(
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          SizedBox(width: 10),
-          Text(capitalize(widget.data.genre), style: bodySmall),
-          Icon(Icons.movie, size: 15, color: Colors.white),
-        ],
-      ),
-      colors.color002,
-    );
-  }
-
-  director() {
-    final colors = ColorContext.of(context);
-    return TextContainer(
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          SizedBox(width: 10),
-          Text(widget.data.director, style: bodySmall),
-          Icon(Icons.person, size: 15, color: Colors.white),
-        ],
-      ),
-      colors.color002,
-    );
-  }
-
-  button() {
-    final colors = ColorContext.of(context);
-    return Container(
-      decoration: BoxDecoration(
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withAlpha(30),
-            blurRadius: 5,
-            offset: const Offset(0, 3),
           ),
         ],
       ),
-      child: FilledButton(
-        onPressed: openMovieView,
-        style: FilledButton.styleFrom(
-          padding: const EdgeInsets.all(0),
-          backgroundColor: colors.color002,
-          fixedSize: Size(108, 10),
-        ),
-        child: Text(widget.time != null ? "Nopirkt biļeti" : "Vairāk",
-            style: bodyLarge),
-      ),
-    );
-  }
-
-  TextContainer(text, Color color) {
-    return Container(
-      width: 206,
-      margin: const EdgeInsets.symmetric(vertical: 5),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.only(
-          topRight: Radius.circular(5),
-          bottomRight: Radius.circular(5),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withAlpha(60),
-            blurRadius: 8,
-            offset: const Offset(0, 7),
-          ),
-        ],
-      ),
-      child: text,
     );
   }
 }

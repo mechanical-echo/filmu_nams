@@ -2,9 +2,9 @@ import 'package:filmu_nams/assets/decorations/background.dart';
 import 'package:filmu_nams/views/admin/auth/admin_login.dart';
 import 'package:filmu_nams/controllers/user_controller.dart';
 import 'package:filmu_nams/views/admin/dashboard/admin_dashboard.dart';
+import 'package:filmu_nams/assets/components/loading_indicator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class AdminAuth extends StatelessWidget {
   const AdminAuth({super.key});
@@ -32,9 +32,9 @@ class AdminAuth extends StatelessWidget {
                   child: Center(
                     child: SizedBox(
                       height: height * 0.5,
-                      child: LoadingAnimationWidget.stretchedDots(
+                      child: const LoadingIndicator(
+                        type: LoadingAnimationType.stretchedDots,
                         size: 100,
-                        color: Theme.of(context).focusColor,
                       ),
                     ),
                   ),

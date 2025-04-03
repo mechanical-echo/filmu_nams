@@ -199,7 +199,7 @@ class _ScheduleDateViewState extends State<ScheduleDateView> {
             : Center(
                 child: Text(
                   "Saraksts izvēlētājā dienā ir tūkšs",
-                  style: colors.bodySmallThemeColor,
+                  style: colors.bodySmall,
                 ),
               );
   }

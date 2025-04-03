@@ -1,68 +1,108 @@
-import 'package:filmu_nams/providers/color_context.dart';
-import 'package:filmu_nams/views/admin/dashboard/widgets/stylized_button.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class StylizedDialog {
   static void alert(BuildContext context, String title, String content) {
-    final colors = ColorContext.of(context);
     showGeneralDialog(
       context: context,
-      pageBuilder: (context, animation, secondaryAnimation) => AlertDialog(
-        title: Stack(
-          children: [
-            Positioned(
-              left: 0,
-              child: Icon(
-                Icons.error,
-                color: Theme.of(context)
-                    .filledButtonTheme
-                    .style
-                    ?.backgroundColor
-                    ?.resolve({WidgetState.pressed}),
-                size: 30,
-              ),
+      pageBuilder: (context, animation, secondaryAnimation) => Dialog(
+        backgroundColor: Colors.transparent,
+        child: Container(
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: const Color(0xFF1A1A1A),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: Colors.white.withOpacity(0.1),
+              width: 1,
             ),
-            Center(
-              child: Text(
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2),
+                blurRadius: 20,
+                spreadRadius: 5,
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  Icons.error_outline,
+                  color: Colors.white.withOpacity(0.9),
+                  size: 32,
+                ),
+              ),
+              const SizedBox(height: 16),
+              Text(
                 title,
+                style: GoogleFonts.poppins(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                ),
                 textAlign: TextAlign.center,
               ),
-            ),
-          ],
-        ),
-        content: Text(
-          content,
-          textAlign: TextAlign.center,
-        ),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        backgroundColor: Theme.of(context).dialogBackgroundColor,
-        titleTextStyle: colors.header2ThemeColor,
-        contentTextStyle: colors.bodyMedium,
-        actions: [
-          StylizedButton(
-            action: () {
-              Navigator.of(context).pop();
-            },
-            title: 'Ok!',
+              const SizedBox(height: 8),
+              Text(
+                content,
+                style: GoogleFonts.poppins(
+                  color: Colors.white.withOpacity(0.7),
+                  fontSize: 14,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 24),
+              Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () => Navigator.of(context).pop(),
+                  borderRadius: BorderRadius.circular(12),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 12,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      'Ok!',
+                      style: GoogleFonts.poppins(
+                        color: Colors.white.withOpacity(0.9),
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
       transitionBuilder: (context, animation, secondaryAnimation, child) {
         return FadeTransition(
           opacity: animation,
-          child: SlideTransition(
-            position: Tween<Offset>(
-              begin: const Offset(0.0, 0.15),
-              end: Offset.zero,
-            ).animate(CurvedAnimation(
-              parent: animation,
-              curve: Curves.easeInOut,
-            )),
+          child: ScaleTransition(
+            scale: Tween<double>(begin: 0.8, end: 1.0).animate(
+              CurvedAnimation(
+                parent: animation,
+                curve: Curves.easeOutBack,
+              ),
+            ),
             child: child,
           ),
         );
       },
-      transitionDuration: const Duration(milliseconds: 350),
+      transitionDuration: const Duration(milliseconds: 400),
     );
   }
 }

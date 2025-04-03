@@ -1,13 +1,11 @@
 import 'dart:io';
 
 import 'package:filmu_nams/assets/dialog/dialog.dart';
-import 'package:filmu_nams/assets/theme.dart';
 import 'package:filmu_nams/assets/widgets/profile_image.dart';
 import 'package:filmu_nams/controllers/user_controller.dart';
-import 'package:filmu_nams/providers/color_context.dart';
-import 'package:filmu_nams/views/admin/dashboard/widgets/stylized_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
@@ -30,13 +28,11 @@ class _ProfileViewState extends State<ProfileView> {
   User? user = FirebaseAuth.instance.currentUser;
 
   bool isLoading = false;
-
   File? image;
 
   @override
   void initState() {
     super.initState();
-
     nameCtrl.text = user!.displayName ?? '';
     emailCtrl.text = user!.email ?? '';
   }
@@ -49,7 +45,6 @@ class _ProfileViewState extends State<ProfileView> {
     try {
       await user!.updateDisplayName(nameCtrl.text);
       await user?.verifyBeforeUpdateEmail(emailCtrl.text);
-
       await userController.updateOwnProfile(
           nameCtrl.text, emailCtrl.text, image);
     } catch (e) {
@@ -74,120 +69,235 @@ class _ProfileViewState extends State<ProfileView> {
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
-    final colors = ColorContext.of(context);
 
     return Container(
-      decoration: colors.classicDecoration,
       width: 350,
       constraints: BoxConstraints(
         maxHeight: height * 0.65,
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 25),
-      child: isLoading ? Center(child: LoadingAnimationWidget.staggeredDotsWave(color: Colors.white, size: 50),) : SingleChildScrollView(
-        child: Column(
-          spacing: 15,
-          children: [
-            button("Atpakaļ", Icons.keyboard_return_rounded, widget.onPressed),
-            Divider(color: colors.color003.withAlpha(100)),
-            ProfileImage(
-              width: 100,
-              customImage: image,
-            ),
-            TextButton(
-              onPressed: pickImage,
-              child: Text(
-                "Mainīt profila attēlu",
-                style: TextStyle(color: colors.color003),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.05),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: Colors.white.withOpacity(0.1),
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
+        ],
+      ),
+      child: isLoading
+          ? Center(
+              child: LoadingAnimationWidget.staggeredDotsWave(
+                color: Colors.white,
+                size: 50,
+              ),
+            )
+          : SingleChildScrollView(
+              child: Column(
+                children: [
+                  _buildBackButton(),
+                  const SizedBox(height: 20),
+                  _buildProfileImage(),
+                  const SizedBox(height: 20),
+                  _buildInputFields(),
+                  const SizedBox(height: 30),
+                  _buildSaveButton(),
+                ],
               ),
             ),
-            inputField("Vārds", Icons.person_outline, nameCtrl),
-            inputField("E-pasts", Icons.email_outlined, emailCtrl),
-            SizedBox(),
-            saveButton(),
-          ],
-        ),
-      ),
     );
   }
 
-  Widget inputField(String hint, IconData icon, TextEditingController ctrl) {
-    final colors = ColorContext.of(context);
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 15),
-      child: TextField(
-        controller: ctrl,
-        decoration: InputDecoration(
-          hintText: hint,
-          prefixIcon: Icon(icon, color: colors.color003),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(5),
+  Widget _buildBackButton() {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: widget.onPressed,
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.03),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: Colors.white.withOpacity(0.05),
+              width: 1,
+            ),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.arrow_back_ios_rounded,
+                color: Colors.white.withOpacity(0.7),
+                size: 20,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                "Atpakaļ",
+                style: GoogleFonts.poppins(
+                  color: Colors.white.withOpacity(0.9),
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
           ),
         ),
       ),
     );
   }
 
-  bool isObscure = true;
-
-  void toggleObscure() {
-    setState(() {
-      isObscure = !isObscure;
-    });
-  }
-
-  Widget saveButton() {
-    final colors = ColorContext.of(context);
-    return Container(
-      margin: const EdgeInsets.only(left: 15, right: 15, bottom: 25),
-      width: double.infinity,
-      child: StylizedButton(
-        action: submit,
-        title: "Saglabāt izmaiņas",
-        icon: Icons.save,
-        textStyle: colors.bodyMediumThemeColor,
-      ),
+  Widget _buildProfileImage() {
+    return Column(
+      children: [
+        ProfileImage(
+          width: 120,
+          customImage: image,
+        ),
+        const SizedBox(height: 15),
+        Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: pickImage,
+            borderRadius: BorderRadius.circular(12),
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.03),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: Colors.white.withOpacity(0.05),
+                  width: 1,
+                ),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.image_outlined,
+                    color: Colors.white.withOpacity(0.7),
+                    size: 20,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    "Mainīt profila attēlu",
+                    style: GoogleFonts.poppins(
+                      color: Colors.white.withOpacity(0.9),
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
-  Widget changePasswordButton() {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 15),
-      width: double.infinity,
-      child: StylizedButton(
-        action: () {},
-        title: "Mainīt paroli",
-        textStyle: bodySmallRed,
-        icon: Icons.password,
-      ),
+  Widget _buildInputFields() {
+    return Column(
+      children: [
+        _buildInputField("Vārds", Icons.person_outline, nameCtrl),
+        const SizedBox(height: 15),
+        _buildInputField("E-pasts", Icons.email_outlined, emailCtrl),
+      ],
     );
   }
 
-  Widget logout() {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 15),
-      width: double.infinity,
-      child: StylizedButton(
-        action: () {
-          FirebaseAuth.instance.signOut();
-        },
-        title: "Izlogoties",
-        textStyle: bodySmallRed,
-        icon: Icons.logout,
-      ),
-    );
-  }
-
-  button(
-    String title,
+  Widget _buildInputField(
+    String hint,
     IconData icon,
-    VoidCallback onPressed,
+    TextEditingController ctrl,
   ) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 10),
-      child: StylizedButton(
-        action: onPressed,
-        title: title,
-        icon: icon,
+    return TextField(
+      controller: ctrl,
+      style: GoogleFonts.poppins(
+        color: Colors.white.withOpacity(0.9),
+        fontSize: 14,
+      ),
+      decoration: InputDecoration(
+        hintText: hint,
+        hintStyle: GoogleFonts.poppins(
+          color: Colors.white.withOpacity(0.5),
+          fontSize: 14,
+        ),
+        prefixIcon: Icon(
+          icon,
+          color: Colors.white.withOpacity(0.7),
+        ),
+        filled: true,
+        fillColor: Colors.white.withOpacity(0.03),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(
+            color: Colors.white.withOpacity(0.1),
+            width: 1,
+          ),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(
+            color: Colors.white.withOpacity(0.1),
+            width: 1,
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(
+            color: Colors.white.withOpacity(0.2),
+            width: 1,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSaveButton() {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: submit,
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(vertical: 15),
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: Colors.white.withOpacity(0.2),
+              width: 1,
+            ),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.save_outlined,
+                color: Colors.white.withOpacity(0.9),
+                size: 20,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                "Saglabāt izmaiņas",
+                style: GoogleFonts.poppins(
+                  color: Colors.white.withOpacity(0.9),
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

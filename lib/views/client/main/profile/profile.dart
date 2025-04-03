@@ -1,12 +1,11 @@
 import 'package:filmu_nams/assets/animations/carousel_switch.dart';
 import 'package:filmu_nams/assets/widgets/profile_image.dart';
-import 'package:filmu_nams/providers/color_context.dart';
-import 'package:filmu_nams/views/admin/dashboard/widgets/stylized_button.dart';
 import 'package:filmu_nams/views/client/main/profile/profile_view.dart';
 import 'package:filmu_nams/views/client/main/profile/settings.dart';
 import 'package:filmu_nams/views/client/main/profile/tickets/tickets_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -49,69 +48,132 @@ class _ProfileState extends State<Profile> {
   }
 
   Widget profileMenu(BuildContext context) {
-    final colors = ColorContext.of(context);
-
-    return IntrinsicHeight(
-      child: Container(
-        decoration: colors.classicDecoration,
-        width: 350,
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 25),
-        child: Column(
-          children: [
-            Row(
-              spacing: 15,
-              children: [
-                ProfileImage(width: 120),
-                Expanded(
-                  child: Text(
-                    user!.displayName!,
-                    style: colors.bodyLargeFor(colors.color002),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
+    return Container(
+      width: 350,
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.05),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: Colors.white.withOpacity(0.1),
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              ProfileImage(width: 100),
+              const SizedBox(width: 20),
+              Expanded(
+                child: Text(
+                  user!.displayName!,
+                  style: GoogleFonts.poppins(
+                    color: Colors.white.withOpacity(0.9),
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
                   ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                 ),
-              ],
-            ),
-            ...divider(colors),
-            button("Profils", Icons.person, () => switchView(1)),
-            button("Biļetes", Icons.confirmation_number, () {
-              Navigator.push(
-                context, 
-                MaterialPageRoute(builder: (context) => TicketsView()),
-              );
-            }),
-            button("Maksājumi", Icons.payment, () {}),
-            button("Iestatījumi", Icons.settings, () {
+              ),
+            ],
+          ),
+          const SizedBox(height: 30),
+          Divider(
+            color: Colors.white.withOpacity(0.1),
+            height: 1,
+          ),
+          const SizedBox(height: 30),
+          _buildMenuButton(
+            "Profils",
+            Icons.person_outline,
+            () => switchView(1),
+          ),
+          _buildMenuButton(
+            "Biļetes",
+            Icons.confirmation_number_outlined,
+            () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => SettingsPage()),
+                MaterialPageRoute(builder: (context) => const TicketsView()),
               );
-            }),
-          ],
-        ),
+            },
+          ),
+          _buildMenuButton(
+            "Maksājumi",
+            Icons.payment_outlined,
+            () {},
+          ),
+          _buildMenuButton(
+            "Iestatījumi",
+            Icons.settings_outlined,
+            () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const SettingsPage()),
+              );
+            },
+          ),
+        ],
       ),
     );
   }
 
-  List<Widget> divider(ColorContext colors) {
-    return [
-      const SizedBox(height: 25),
-      Divider(color: colors.color003.withAlpha(100)),
-      const SizedBox(height: 25)
-    ];
-  }
-
-  Widget button(
+  Widget _buildMenuButton(
     String title,
     IconData icon,
     VoidCallback onPressed,
   ) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 10),
-      child: StylizedButton(
-        action: onPressed,
-        title: title,
-        icon: icon,
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onPressed,
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+          margin: const EdgeInsets.only(bottom: 10),
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.03),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: Colors.white.withOpacity(0.05),
+              width: 1,
+            ),
+          ),
+          child: Row(
+            children: [
+              Icon(
+                icon,
+                color: Colors.white.withOpacity(0.7),
+                size: 24,
+              ),
+              const SizedBox(width: 15),
+              Text(
+                title,
+                style: GoogleFonts.poppins(
+                  color: Colors.white.withOpacity(0.9),
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const Spacer(),
+              Icon(
+                Icons.arrow_forward_ios_rounded,
+                color: Colors.white.withOpacity(0.5),
+                size: 16,
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

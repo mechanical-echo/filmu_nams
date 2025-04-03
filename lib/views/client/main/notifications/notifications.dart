@@ -1,6 +1,6 @@
 import 'package:filmu_nams/models/notification.dart';
-import 'package:filmu_nams/providers/color_context.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../../../controllers/notification_controller.dart';
 import 'notification_item.dart';
 
@@ -59,31 +59,58 @@ class _NotificationsState extends State<Notifications> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = ColorContext.of(context);
-    return Padding(
-      padding: const EdgeInsets.only(top: 110.0, bottom: 125),
-      child: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.only(top: 100.0),
-          child: notifications.isNotEmpty
-              ? Column(
-            children: List.generate(
-              notifications.length,
-                  (index) => NotificationItem(
-                notification: notifications[index],
-                onDelete: fetchNotifications,
-              ),
-            ),
-          )
-              : Center(
-            child: Text(
-              "Nav paziņojumu",
-              style: colors.bodyMedium,
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 16),
+          Text(
+            'Paziņojumi',
+            style: GoogleFonts.poppins(
+              color: Colors.white,
+              fontSize: 24,
+              fontWeight: FontWeight.w600,
             ),
           ),
-        ),
+          const SizedBox(height: 24),
+          Expanded(
+            child: notifications.isNotEmpty
+                ? ListView.builder(
+                    itemCount: notifications.length,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 16),
+                        child: NotificationItem(
+                          notification: notifications[index],
+                          onDelete: fetchNotifications,
+                        ),
+                      );
+                    },
+                  )
+                : Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.notifications_none,
+                          size: 64,
+                          color: Colors.white.withOpacity(0.3),
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          'Nav paziņojumu',
+                          style: GoogleFonts.poppins(
+                            color: Colors.white.withOpacity(0.5),
+                            fontSize: 16,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+          ),
+        ],
       ),
     );
   }
 }
-

@@ -1,13 +1,12 @@
-import 'package:filmu_nams/assets/theme.dart';
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:filmu_nams/assets/widgets/date_picker/date_picker_input.dart';
 import 'package:filmu_nams/controllers/movie_controller.dart';
 import 'package:filmu_nams/models/movie.dart';
 import 'package:filmu_nams/models/schedule.dart';
-import 'package:filmu_nams/providers/color_context.dart';
 import 'package:filmu_nams/views/client/main/schedule/movie/hall_seats.dart';
-import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class TicketBuyingForm extends StatefulWidget {
   const TicketBuyingForm({
@@ -27,9 +26,14 @@ class _TicketBuyingFormState extends State<TicketBuyingForm> {
   List<DateTime> availableDates = [];
 
   bool isLoading = true;
-
   DateTime? selectedDate;
   String? selectedId;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchScheduleDataForMovie();
+  }
 
   Future<void> fetchScheduleDataForMovie() async {
     final response =
@@ -38,9 +42,7 @@ class _TicketBuyingFormState extends State<TicketBuyingForm> {
       scheduleData = response;
       isLoading = false;
 
-      if (response.isEmpty) {
-        return;
-      }
+      if (response.isEmpty) return;
 
       for (var date in scheduleData!) {
         if (date.time.toDate().isAfter(DateTime.now())) {
@@ -48,19 +50,11 @@ class _TicketBuyingFormState extends State<TicketBuyingForm> {
         }
       }
 
-      if (availableDates.isEmpty) {
-        return;
-      }
+      if (availableDates.isEmpty) return;
 
       selectedDate = availableDates[0];
       getDropdownList();
     });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    fetchScheduleDataForMovie();
   }
 
   bool isSameDate(dateA, dateB) =>
@@ -72,7 +66,6 @@ class _TicketBuyingFormState extends State<TicketBuyingForm> {
     List<DropdownMenuItem<String>> list = [];
     for (var schedule in scheduleData!) {
       DateTime date = schedule.time.toDate();
-
       if (!isSameDate(date, selectedDate)) continue;
 
       list.add(DropdownMenuItem(
@@ -82,7 +75,7 @@ class _TicketBuyingFormState extends State<TicketBuyingForm> {
     }
     setState(() {
       timeList = list;
-      selectedId = list[0].value;
+      selectedId = list.isNotEmpty ? list[0].value : null;
     });
   }
 
@@ -102,35 +95,67 @@ class _TicketBuyingFormState extends State<TicketBuyingForm> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = ColorContext.of(context);
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(top: 10, bottom: 20),
-          child: Text(
-            scheduleData == null ||
-                    (scheduleData!.isNotEmpty && availableDates.isNotEmpty)
-                ? "Nopirkt biļeti"
-                : "Nav pieejama saraksta",
-            style: header2,
-          ),
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.black.withOpacity(0.3),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: Colors.white.withOpacity(0.1),
+          width: 1,
         ),
-        isLoading
-            ? Center(
-                child: LoadingAnimationWidget.staggeredDotsWave(
-                  color: Colors.white,
-                  size: 100,
-                ),
-              )
-            : scheduleData!.isNotEmpty && availableDates.isNotEmpty
-                ? Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+      ),
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(24),
+            child: Text(
+              scheduleData == null ||
+                      (scheduleData!.isNotEmpty && availableDates.isNotEmpty)
+                  ? "Nopirkt biļeti"
+                  : "Nav pieejama saraksta",
+              style: GoogleFonts.poppins(
+                color: Colors.white,
+                fontSize: 24,
+                fontWeight: FontWeight.w600,
+                letterSpacing: 0.5,
+              ),
+            ),
+          ),
+          if (isLoading)
+            Center(
+              child: LoadingAnimationWidget.staggeredDotsWave(
+                color: Colors.white,
+                size: 40,
+              ),
+            )
+          else if (scheduleData!.isNotEmpty && availableDates.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Column(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.05),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: Colors.white.withOpacity(0.1),
+                        width: 1,
+                      ),
+                    ),
                     child: Column(
-                      spacing: 10,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        Text(
+                          'Izvēlieties datumu un laiku',
+                          style: GoogleFonts.poppins(
+                            color: Colors.white.withOpacity(0.7),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          spacing: 10,
                           children: [
                             Expanded(
                               flex: 2,
@@ -147,39 +172,62 @@ class _TicketBuyingFormState extends State<TicketBuyingForm> {
                                 initialValue: selectedDate,
                               ),
                             ),
+                            const SizedBox(width: 12),
                             Expanded(
-                              flex: 1,
                               child: Container(
                                 height: 50,
-                                decoration: colors.classicDecorationSharper,
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFF2A2A2A),
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(
+                                    color: Colors.white.withOpacity(0.1),
+                                    width: 1,
+                                  ),
+                                ),
                                 padding:
-                                    const EdgeInsets.symmetric(horizontal: 20),
-                                child: DropdownButton(
-                                  iconEnabledColor: Colors.white,
-                                  underline: Container(),
-                                  style: bodySmall,
-                                  items: timeList,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      selectedId = value;
-                                    });
-                                  },
-                                  value: selectedId,
-                                  isExpanded: true,
+                                    const EdgeInsets.symmetric(horizontal: 12),
+                                child: DropdownButtonHideUnderline(
+                                  child: DropdownButton(
+                                    icon: Icon(
+                                      Icons.arrow_drop_down_rounded,
+                                      color: Colors.white.withOpacity(0.7),
+                                      size: 24,
+                                    ),
+                                    style: GoogleFonts.poppins(
+                                      color: Colors.white,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                    items: timeList,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        selectedId = value as String?;
+                                      });
+                                    },
+                                    value: selectedId,
+                                    isExpanded: true,
+                                    dropdownColor: const Color(0xFF2A2A2A),
+                                  ),
                                 ),
                               ),
                             ),
                           ],
                         ),
-                        HallSeats(
-                          scheduleId: selectedId ?? "",
-                          hallId: getHall(),
-                        )
                       ],
                     ),
-                  )
-                : Container(),
-      ],
+                  ),
+                  const SizedBox(height: 24),
+                  if (selectedId != null)
+                    HallSeats(
+                      scheduleId: selectedId!,
+                      hallId: getHall(),
+                    ),
+                ],
+              ),
+            ),
+          const SizedBox(height: 24),
+        ],
+      ),
     );
   }
 }

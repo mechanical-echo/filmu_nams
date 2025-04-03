@@ -50,7 +50,12 @@ class ThemedApp extends StatelessWidget {
     final themeProvider = Provider.of<ThemeProvider>(context);
     return ColorContext(
       themeProvider: themeProvider,
-      child: App(theme: themeProvider.currentTheme),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: themeProvider.currentTheme,
+        home:
+            Platform.isWindows || Platform.isMacOS ? AdminAuth() : ClientApp(),
+      ),
     );
   }
 }

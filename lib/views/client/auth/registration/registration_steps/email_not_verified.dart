@@ -58,7 +58,9 @@ class _EmailNotVerifiedState extends State<EmailNotVerified> {
                         Expanded(
                           child: Text(
                             "Jūsu e-pasts nav verificēts!",
-                            style: colors.bodyLargeThemeColor,
+                            style: colors.titleLarge.copyWith(
+                              color: colors.primary,
+                            ),
                           ),
                         ),
                       ],
@@ -69,7 +71,9 @@ class _EmailNotVerifiedState extends State<EmailNotVerified> {
                       textAlign: TextAlign.center,
                     ),
                     Container(
-                      decoration: colors.classicDecorationWhiteSharper,
+                      decoration: colors.cardDecoration.copyWith(
+                        color: colors.surfaceVariant,
+                      ),
                       padding: const EdgeInsets.symmetric(
                         horizontal: 25,
                         vertical: 5,

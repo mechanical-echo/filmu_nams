@@ -1,13 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:filmu_nams/assets/dialog/dialog.dart';
-import 'package:filmu_nams/assets/theme.dart';
 import 'package:filmu_nams/models/offer.dart';
 import 'package:filmu_nams/models/promocode.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-
-import '../../../../providers/color_context.dart';
 
 class OfferView extends StatefulWidget {
   const OfferView({
@@ -21,9 +19,13 @@ class OfferView extends StatefulWidget {
   State<OfferView> createState() => _OfferViewState();
 }
 
-class _OfferViewState extends State<OfferView> {
+class _OfferViewState extends State<OfferView>
+    with SingleTickerProviderStateMixin {
   PromocodeModel? promocode;
   bool isLoadingPromocode = false;
+  late AnimationController _controller;
+  late Animation<double> _fadeAnimation;
+  late Animation<Offset> _slideAnimation;
 
   @override
   void initState() {
@@ -33,6 +35,36 @@ class _OfferViewState extends State<OfferView> {
         promocode = widget.data.promocode;
       });
     }
+
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 500),
+      vsync: this,
+    );
+
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.easeOut,
+      ),
+    );
+
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(0, 0.1),
+      end: Offset.zero,
+    ).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.easeOut,
+      ),
+    );
+
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   Future<void> copyToClipboard(BuildContext context) async {
@@ -50,168 +82,240 @@ class _OfferViewState extends State<OfferView> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = ColorContext.of(context);
     return Scaffold(
+      backgroundColor: Colors.black,
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: Text(
-          'Piedāvājums',
-          style: bodyLarge,
-        ),
-        centerTitle: true,
-        backgroundColor: colors.color002,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Colors.black.withOpacity(0.5),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: const Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            ),
+          ),
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
-      backgroundColor: colors.isLightTheme ? Colors.white : colors.color001,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(
-              width: double.infinity,
-              height: 250,
+      body: Stack(
+        children: [
+          // Background Image
+          Positioned.fill(
+            child: Hero(
+              tag: 'offer_image_${widget.data.id}',
               child: CachedNetworkImage(
                 imageUrl: widget.data.imageUrl,
                 fit: BoxFit.cover,
-                placeholder: (context, url) => Center(
-                  child: LoadingAnimationWidget.staggeredDotsWave(
-                    color: Theme.of(context).focusColor,
-                    size: 50,
+                placeholder: (context, url) => Container(
+                  color: Colors.grey[900],
+                  child: Center(
+                    child: LoadingAnimationWidget.staggeredDotsWave(
+                      size: 50,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
                 errorWidget: (context, url, error) => Container(
-                  color: Colors.grey[800],
-                  child: const Icon(Icons.error, color: Colors.white, size: 50),
+                  color: Colors.grey[900],
+                  child: const Icon(
+                    Icons.error,
+                    color: Colors.white,
+                    size: 50,
+                  ),
                 ),
               ),
             ),
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(16),
-              margin: const EdgeInsets.only(
-                top: 16,
-                bottom: 10,
-                left: 25,
-                right: 25,
-              ),
-              decoration: colors.classicDecoration,
-              child: Text(
-                widget.data.title,
-                style: header1,
-                textAlign: TextAlign.center,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 35),
-              child: Text(
-                widget.data.description,
-                style: colors.isLightTheme
-                    ? colors.bodyMediumThemeColor
-                    : colors.bodyMedium,
-              ),
-            ),
-            if (widget.data.promocode != null)
-              Container(
-                margin: const EdgeInsets.only(
-                  top: 16,
-                  left: 16,
-                  right: 16,
-                  bottom: 135,
+          ),
+          // Gradient Overlay
+          Positioned.fill(
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.transparent,
+                    Colors.black.withOpacity(0.5),
+                    Colors.black.withOpacity(0.8),
+                    Colors.black,
+                  ],
+                  stops: const [0.0, 0.3, 0.5, 0.8],
                 ),
-                padding: const EdgeInsets.all(16),
-                decoration: colors.classicDecoration,
-                child: promocode != null
-                    ? Stack(
-                        alignment: Alignment.topRight,
-                        children: [
-                          Positioned(
-                            child: Icon(
-                              color: colors.smokeyWhite,
-                              Icons.local_offer_rounded,
-                              size: 35,
-                            ),
-                          ),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            spacing: 16,
-                            children: [
-                              Column(
-                                spacing: 3,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Promokods:',
-                                    style: bodyLarge,
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  copyButton(context, colors),
-                                ],
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Text(
-                                    promocode!.percents != null
-                                        ? 'Atlaide ${promocode!.percents}%'
-                                        : promocode!.amount != null
-                                            ? 'Atlaide ${promocode!.amount!.toStringAsFixed(2)}€'
-                                            : 'Atlaide',
-                                    style: bodyMedium,
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  Text(
-                                    'Nospiediet, lai kopētu',
-                                    style: TextStyle(
-                                      color: Colors.white70,
-                                      fontSize: 12,
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ],
-                      )
-                    : Center(
+              ),
+            ),
+          ),
+          // Content
+          SafeArea(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 200),
+                    // Title
+                    FadeTransition(
+                      opacity: _fadeAnimation,
+                      child: SlideTransition(
+                        position: _slideAnimation,
                         child: Text(
-                          'Diemžēl promokods šobrīd nav pieejams',
-                          style: bodyMedium,
-                          textAlign: TextAlign.center,
+                          widget.data.title,
+                          style: GoogleFonts.poppins(
+                            color: Colors.white,
+                            fontSize: 32,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
+                    ),
+                    const SizedBox(height: 24),
+                    // Description
+                    FadeTransition(
+                      opacity: _fadeAnimation,
+                      child: SlideTransition(
+                        position: _slideAnimation,
+                        child: Text(
+                          widget.data.description,
+                          style: GoogleFonts.poppins(
+                            color: Colors.white.withOpacity(0.8),
+                            fontSize: 16,
+                            height: 1.6,
+                          ),
+                        ),
+                      ),
+                    ),
+                    if (widget.data.promocode != null) ...[
+                      const SizedBox(height: 32),
+                      // Promocode Section
+                      FadeTransition(
+                        opacity: _fadeAnimation,
+                        child: SlideTransition(
+                          position: _slideAnimation,
+                          child: Container(
+                            padding: const EdgeInsets.all(24),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(
+                                color: Colors.white.withOpacity(0.1),
+                                width: 1,
+                              ),
+                            ),
+                            child: promocode != null
+                                ? Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Icon(
+                                            Icons.local_offer,
+                                            color:
+                                                Colors.white.withOpacity(0.8),
+                                            size: 24,
+                                          ),
+                                          const SizedBox(width: 12),
+                                          Text(
+                                            'Promokods',
+                                            style: GoogleFonts.poppins(
+                                              color: Colors.white,
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 16),
+                                      GestureDetector(
+                                        onTap: () => copyToClipboard(context),
+                                        child: Container(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 20,
+                                            vertical: 12,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color:
+                                                Colors.white.withOpacity(0.1),
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                            border: Border.all(
+                                              color:
+                                                  Colors.white.withOpacity(0.1),
+                                              width: 1,
+                                            ),
+                                          ),
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Text(
+                                                promocode!.name,
+                                                style: GoogleFonts.poppins(
+                                                  color: Colors.white,
+                                                  fontSize: 24,
+                                                  fontWeight: FontWeight.w600,
+                                                  letterSpacing: 1.2,
+                                                ),
+                                              ),
+                                              const SizedBox(width: 12),
+                                              Icon(
+                                                Icons.copy,
+                                                color: Colors.white
+                                                    .withOpacity(0.8),
+                                                size: 20,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(height: 16),
+                                      Text(
+                                        promocode!.percents != null
+                                            ? 'Atlaide ${promocode!.percents}%'
+                                            : promocode!.amount != null
+                                                ? 'Atlaide ${promocode!.amount!.toStringAsFixed(2)}€'
+                                                : 'Atlaide',
+                                        style: GoogleFonts.poppins(
+                                          color: Colors.white.withOpacity(0.8),
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Text(
+                                        'Nospiediet, lai kopētu',
+                                        style: GoogleFonts.poppins(
+                                          color: Colors.white.withOpacity(0.5),
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                : Center(
+                                    child: Text(
+                                      'Diemžēl promokods šobrīd nav pieejams',
+                                      style: GoogleFonts.poppins(
+                                        color: Colors.white.withOpacity(0.8),
+                                        fontSize: 16,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                          ),
+                        ),
+                      ),
+                    ],
+                    const SizedBox(height: 32),
+                  ],
+                ),
               ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  GestureDetector copyButton(BuildContext context, ColorContext colors) {
-    return GestureDetector(
-      onTap: () => copyToClipboard(context),
-      child: Container(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 24,
-          vertical: 12,
-        ),
-        decoration: colors.classicDecorationWhiteSharper,
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              promocode!.name,
-              style: colors.header2ThemeColor,
             ),
-            const SizedBox(width: 8),
-            Icon(
-              Icons.copy,
-              color: colors.color001,
-              size: 20,
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

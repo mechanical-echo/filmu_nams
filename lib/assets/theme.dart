@@ -10,6 +10,7 @@ ThemeData theme = ThemeData(
     secondaryContainer: Color.fromARGB(255, 87, 33, 27),
     surface: Color.fromARGB(255, 123, 29, 29),
     onSurface: Colors.white,
+    brightness: Brightness.dark,
   ),
   primarySwatch: Colors.red,
   primaryColor: Color.fromARGB(255, 102, 30, 23),
@@ -28,6 +29,7 @@ ThemeData theme = ThemeData(
           fontWeight: FontWeight.bold)),
   appBarTheme: AppBarTheme(
     backgroundColor: Color.fromARGB(255, 123, 29, 29),
+    foregroundColor: Colors.white,
   ),
   textSelectionTheme: TextSelectionThemeData(
     selectionColor: Color.fromARGB(255, 123, 29, 29),
@@ -40,58 +42,11 @@ ThemeData theme = ThemeData(
       textStyle: bodyLarge,
       padding: const EdgeInsets.symmetric(horizontal: 55, vertical: 15),
       backgroundColor: classicDecoration.color,
+      foregroundColor: Colors.white,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(5),
       ),
     ),
-  ),
-  textButtonTheme: TextButtonThemeData(
-    style: ButtonStyle(
-      foregroundColor: WidgetStatePropertyAll(
-        Color.fromARGB(255, 151, 50, 39),
-      ),
-      padding: WidgetStatePropertyAll(
-        EdgeInsets.symmetric(horizontal: 6),
-      ),
-      overlayColor: WidgetStatePropertyAll(Color.fromARGB(50, 151, 50, 39)),
-      textStyle: WidgetStatePropertyAll(
-        GoogleFonts.poppins(
-          fontSize: 15,
-          decoration: TextDecoration.underline,
-          decorationColor: Color.fromARGB(255, 151, 50, 39),
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    ),
-  ),
-  inputDecorationTheme: InputDecorationTheme(
-    floatingLabelBehavior: FloatingLabelBehavior.always,
-    fillColor: Colors.black26,
-    filled: true,
-    floatingLabelStyle: GoogleFonts.poppins(color: Colors.white, fontSize: 20),
-    border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(5),
-      borderSide: BorderSide(color: Colors.red, width: 4),
-    ),
-    hintStyle: GoogleFonts.poppins(
-        fontWeight: FontWeight.w200, color: Color.fromARGB(255, 123, 123, 123)),
-    suffixIconColor: Color.fromARGB(255, 123, 123, 123),
-    enabledBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(5),
-      borderSide:
-          BorderSide(color: Color.fromARGB(255, 123, 123, 123), width: 0),
-    ),
-    focusedBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(5),
-      borderSide:
-          BorderSide(color: Color.fromARGB(255, 123, 123, 123), width: 1),
-    ),
-  ),
-  dividerTheme: DividerThemeData(
-    color: smokeyWhite.withAlpha(100),
-    indent: 0,
-    endIndent: 0,
-    space: 0,
   ),
   outlinedButtonTheme: OutlinedButtonThemeData(
     style: ButtonStyle(
@@ -104,9 +59,13 @@ ThemeData theme = ThemeData(
       ),
       shape: WidgetStatePropertyAll(
         RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(
-            13,
-          ),
+          borderRadius: BorderRadius.circular(13),
+        ),
+      ),
+      side: WidgetStatePropertyAll(
+        BorderSide(
+          color: Colors.white,
+          width: 2,
         ),
       ),
       iconColor: WidgetStatePropertyAll(Colors.white),
@@ -117,6 +76,7 @@ ThemeData theme = ThemeData(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(5),
       ),
+      foregroundColor: Colors.white,
     ),
   ),
 );
@@ -131,6 +91,7 @@ FilledButtonThemeData bigRed = FilledButtonThemeData(
     textStyle: bodyLarge,
     padding: const EdgeInsets.symmetric(horizontal: 55, vertical: 15),
     backgroundColor: classicDecoration.color,
+    foregroundColor: Colors.white,
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(5),
     ),

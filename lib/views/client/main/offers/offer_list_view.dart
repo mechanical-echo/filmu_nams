@@ -4,6 +4,7 @@ import 'package:filmu_nams/controllers/offer_controller.dart';
 import 'package:filmu_nams/models/offer.dart';
 import 'package:filmu_nams/views/client/main/offers/offer_detail_view.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import '../../../../providers/color_context.dart';
@@ -43,29 +44,77 @@ class _OffersListState extends State<OffersList> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 170.0, bottom: 105),
-      child: SizedBox(
-        height: MediaQuery.of(context).size.height - 275,
-        child: isLoading
-            ? Center(
-                child: LoadingAnimationWidget.staggeredDotsWave(
-                    color: Colors.white, size: 100))
-            : offerData != null && offerData!.isNotEmpty
-                ? ListView.builder(
-                    padding: const EdgeInsets.only(top: 10, bottom: 70),
-                    itemCount: offerData!.length,
-                    itemBuilder: (context, index) {
-                      return OfferCard(
-                        data: offerData![index],
-                      );
-                    },
-                  )
-                : Center(
-                    child: Text(
-                      "Nav pieejamu piedāvājumu",
-                      style: bodyMedium,
-                    ),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header
+          Padding(
+            padding: const EdgeInsets.only(top: 16, bottom: 24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Piedāvājumi',
+                  style: GoogleFonts.poppins(
+                    color: Colors.white,
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
                   ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Īpašie piedāvājumi un akcijas',
+                  style: GoogleFonts.poppins(
+                    color: Colors.white.withOpacity(0.7),
+                    fontSize: 16,
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // Offers list
+          Expanded(
+            child: isLoading
+                ? Center(
+                    child: LoadingAnimationWidget.staggeredDotsWave(
+                      color: Colors.white,
+                      size: 50,
+                    ),
+                  )
+                : offerData != null && offerData!.isNotEmpty
+                    ? ListView.builder(
+                        padding: const EdgeInsets.only(bottom: 16),
+                        itemCount: offerData!.length,
+                        itemBuilder: (context, index) {
+                          return OfferCard(
+                            data: offerData![index],
+                          );
+                        },
+                      )
+                    : Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.local_offer_outlined,
+                              color: Colors.white.withOpacity(0.5),
+                              size: 64,
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              "Nav pieejamu piedāvājumu",
+                              style: GoogleFonts.poppins(
+                                color: Colors.white.withOpacity(0.7),
+                                fontSize: 16,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+          ),
+        ],
       ),
     );
   }
@@ -90,96 +139,144 @@ class OfferCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = ColorContext.of(context);
     return GestureDetector(
       onTap: () => openOfferView(context),
       child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+        margin: const EdgeInsets.only(bottom: 16),
         decoration: BoxDecoration(
-          color: colors.color002,
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withAlpha(100),
-              blurRadius: 8,
-              offset: const Offset(0, 4),
-            ),
-          ],
+          color: Colors.white.withOpacity(0.05),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: Colors.white.withOpacity(0.1),
+            width: 1,
+          ),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Image
             ClipRRect(
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(10),
-                topRight: Radius.circular(10),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(16),
               ),
-              child: CachedNetworkImage(
-                imageUrl: data.imageUrl,
-                height: 200,
-                width: double.infinity,
-                fit: BoxFit.cover,
-                placeholder: (context, url) => Container(
-                  color: Colors.grey[800],
-                  child: Center(
-                    child: LoadingAnimationWidget.staggeredDotsWave(
+              child: AspectRatio(
+                aspectRatio: 16 / 9,
+                child: CachedNetworkImage(
+                  imageUrl: data.imageUrl,
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) => Container(
+                    color: Colors.grey[900],
+                    child: Center(
+                      child: LoadingAnimationWidget.staggeredDotsWave(
+                        size: 50,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  errorWidget: (context, url, error) => Container(
+                    color: Colors.grey[900],
+                    child: const Icon(
+                      Icons.error,
+                      color: Colors.white,
                       size: 50,
-                      color: colors.color003,
                     ),
                   ),
                 ),
-                errorWidget: (context, url, error) => Container(
-                  color: Colors.grey[800],
-                  child: const Icon(Icons.error, color: Colors.white),
-                ),
               ),
             ),
+
+            // Content
             Padding(
-              padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-              child: Text(
-                data.title,
-                style: header2,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-              child: Text(
-                data.description,
-                style: bodySmall,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(right: 16, left: 16, bottom: 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (data.promocode != null)
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 4),
-                      decoration: colors.classicDecorationWhiteSharper,
-                      child: Row(
-                        children: [
-                          Icon(Icons.local_offer,
-                              color: colors.color001, size: 16),
-                          const SizedBox(width: 4),
-                          Text("Promokods", style: colors.bodySmallThemeColor),
-                        ],
+                  // Title
+                  Text(
+                    data.title,
+                    style: GoogleFonts.poppins(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 8),
+
+                  // Description
+                  Text(
+                    data.description,
+                    style: GoogleFonts.poppins(
+                      color: Colors.white.withOpacity(0.7),
+                      fontSize: 14,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Footer
+                  Row(
+                    children: [
+                      if (data.promocode != null)
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 6,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.local_offer,
+                                color: Colors.white.withOpacity(0.8),
+                                size: 16,
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                "Promokods",
+                                style: GoogleFonts.poppins(
+                                  color: Colors.white.withOpacity(0.8),
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      const Spacer(),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Row(
+                          children: [
+                            Text(
+                              "Lasīt vairāk",
+                              style: GoogleFonts.poppins(
+                                color: Colors.white,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            const SizedBox(width: 4),
+                            Icon(
+                              Icons.arrow_forward,
+                              color: Colors.white.withOpacity(0.8),
+                              size: 16,
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  Spacer(),
-                  FilledButton(
-                    onPressed: () => openOfferView(context),
-                    style: FilledButton.styleFrom(
-                      backgroundColor: colors.color003,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 8),
-                    ),
-                    child: Text("Lasīt vairāk", style: bodySmall),
+                    ],
                   ),
                 ],
               ),

@@ -54,14 +54,70 @@ class Base extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBodyBehindAppBar: true,
+      backgroundColor: Colors.transparent,
       extendBody: true,
+      extendBodyBehindAppBar: true,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(200),
-        child: Logo(),
+        preferredSize: const Size.fromHeight(60),
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Colors.black,
+                Colors.black.withOpacity(0.8),
+                Colors.transparent,
+              ],
+              stops: const [0.0, 0.7, 1.0],
+            ),
+          ),
+          child: const SafeArea(
+            bottom: false,
+            child: Logo(),
+          ),
+        ),
       ),
-      body: body,
-      bottomNavigationBar: bottomNavigationBar,
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          // Background layer
+          const Positioned.fill(
+            child: Background(
+              child: SizedBox.expand(),
+            ),
+          ),
+          // Gradient overlay
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.transparent,
+                  Colors.black.withOpacity(0.5),
+                  Colors.black,
+                ],
+                stops: const [0.0, 0.7, 0.9],
+              ),
+            ),
+          ),
+          // Content layer
+          Column(
+            children: [
+              Expanded(
+                child: SafeArea(
+                  child: body,
+                ),
+              ),
+              SafeArea(
+                top: false,
+                child: bottomNavigationBar,
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
@@ -91,13 +147,11 @@ class _BodyState extends State<Body> {
       Profile(),
     ];
 
-    return Background(
-      child: CarouselSwitch(
-        direction: widget.currentPageIndex > widget.previousPageIndex
-            ? CarouselSwitchDirection.left
-            : CarouselSwitchDirection.right,
-        child: pages[widget.currentPageIndex],
-      ),
+    return CarouselSwitch(
+      direction: widget.currentPageIndex > widget.previousPageIndex
+          ? CarouselSwitchDirection.left
+          : CarouselSwitchDirection.right,
+      child: pages[widget.currentPageIndex],
     );
   }
 }

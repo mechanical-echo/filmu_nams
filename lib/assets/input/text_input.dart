@@ -76,7 +76,7 @@ class _TextInputState extends State<TextInput> {
                             _obscureText
                                 ? Icons.visibility
                                 : Icons.visibility_off,
-                            color: colors.color001,
+                            color: colors.primary,
                           ),
                           onPressed: _toggle,
                         )

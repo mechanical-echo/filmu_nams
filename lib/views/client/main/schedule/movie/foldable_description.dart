@@ -1,6 +1,7 @@
 import 'package:filmu_nams/assets/theme.dart';
 import 'package:filmu_nams/models/movie.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../../providers/color_context.dart';
 
@@ -19,7 +20,8 @@ class FoldableDescription extends StatefulWidget {
 class _FoldableDescriptionState extends State<FoldableDescription>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
-  late Animation<double> _clipAnimation;
+  late Animation<double> _heightAnimation;
+  late Animation<double> _rotationAnimation;
   bool isOpen = false;
 
   @override
@@ -30,7 +32,14 @@ class _FoldableDescriptionState extends State<FoldableDescription>
       vsync: this,
     );
 
-    _clipAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+    _heightAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _animationController,
+        curve: Curves.easeInOut,
+      ),
+    );
+
+    _rotationAnimation = Tween<double>(begin: 0.0, end: 0.5).animate(
       CurvedAnimation(
         parent: _animationController,
         curve: Curves.easeInOut,
@@ -53,66 +62,53 @@ class _FoldableDescriptionState extends State<FoldableDescription>
 
   @override
   Widget build(BuildContext context) {
-    final colors = ColorContext.of(context);
-    return GestureDetector(
-      onTap: _toggleDescription,
-      child: Stack(
-        alignment: Alignment.bottomRight,
-        clipBehavior: Clip.none,
-        children: [
-          AnimatedBuilder(
-            animation: _clipAnimation,
-            builder: (context, child) {
-              return Container(
-                padding: const EdgeInsets.only(
-                  left: 35,
-                  right: 35,
-                  top: 15,
-                  bottom: 35,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Header
+        GestureDetector(
+          onTap: _toggleDescription,
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            child: Row(
+              children: [
+                Text(
+                  'Apraksts',
+                  style: GoogleFonts.poppins(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-                decoration: colors.classicDecorationSharp,
-                child: Stack(
-                  alignment: Alignment.bottomCenter,
-                  clipBehavior: Clip.none,
-                  children: [
-                    ClipRect(
-                      child: Align(
-                        alignment: Alignment.topCenter,
-                        heightFactor: 1 - (0.78 * (1 - _clipAnimation.value)),
-                        child: Text(
-                          widget.data.description,
-                          style: bodySmall,
-                          textAlign: TextAlign.justify,
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      bottom: -30,
-                      child: AnimatedBuilder(
-                        animation: _animationController,
-                        builder: (context, child) {
-                          return Transform.rotate(
-                            angle: _animationController.value *
-                                    (270 - 90) *
-                                    3.1415927 /
-                                    180 +
-                                (90 * 3.1415927 / 180),
-                            child: Icon(
-                              Icons.chevron_right,
-                              size: 25,
-                              color: Colors.white,
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ],
+                const Spacer(),
+                RotationTransition(
+                  turns: _rotationAnimation,
+                  child: const Icon(
+                    Icons.expand_more,
+                    color: Colors.white,
+                  ),
                 ),
-              );
-            },
+              ],
+            ),
           ),
-        ],
-      ),
+        ),
+
+        // Description content
+        SizeTransition(
+          sizeFactor: _heightAnimation,
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            child: Text(
+              widget.data.description,
+              style: GoogleFonts.poppins(
+                color: Colors.white.withOpacity(0.8),
+                fontSize: 16,
+                height: 1.5,
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

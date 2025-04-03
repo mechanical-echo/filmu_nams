@@ -1,14 +1,12 @@
 import 'package:confetti/confetti.dart';
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:filmu_nams/assets/dialog/dialog.dart';
-import 'package:filmu_nams/assets/theme.dart';
 import 'package:filmu_nams/controllers/payment_controller.dart';
 import 'package:filmu_nams/controllers/promocode_controller.dart';
 import 'package:filmu_nams/controllers/ticket_controller.dart';
 import 'package:filmu_nams/models/promocode.dart';
-import 'package:filmu_nams/providers/color_context.dart';
-import 'package:filmu_nams/views/admin/dashboard/widgets/stylized_button.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 
 class HallSeats extends StatefulWidget {
   const HallSeats({
@@ -38,17 +36,40 @@ class _HallSeatsState extends State<HallSeats> {
   bool isLoading = false;
 
   String? currentScheduleId;
-
   PromocodeModel? submittedPromocode;
+  final TextEditingController promocodeController = TextEditingController();
+  final confettiController = ConfettiController();
 
-  int? selected() {
-    return seatAmountPerRow * selectedRowIndex! + selectedSeatIndex!;
+  @override
+  void initState() {
+    super.initState();
+    currentScheduleId = widget.scheduleId;
+    getTakenSeats();
   }
 
-  TextEditingController promocodeController = TextEditingController();
+  @override
+  void dispose() {
+    confettiController.dispose();
+    promocodeController.dispose();
+    super.dispose();
+  }
 
+  @override
+  void didUpdateWidget(HallSeats oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.scheduleId != widget.scheduleId) {
+      setState(() {
+        selectedRowIndex = 0;
+        selectedSeatIndex = 0;
+        chosenSeats = [];
+        currentScheduleId = widget.scheduleId;
+      });
+      getTakenSeats();
+    }
+  }
+
+  int? selected() => seatAmountPerRow * selectedRowIndex! + selectedSeatIndex!;
   int getRowFromIndex(int? index) => index! ~/ seatAmountPerRow;
-
   int getColFromIndex(int? index) => index! % seatAmountPerRow;
 
   void selectSeat(int? index) {
@@ -64,6 +85,12 @@ class _HallSeatsState extends State<HallSeats> {
     });
   }
 
+  void removeTicket(int index) {
+    setState(() {
+      chosenSeats.remove(chosenSeats[index]);
+    });
+  }
+
   Future<void> getTakenSeats() async {
     setState(() {
       isLoading = true;
@@ -74,79 +101,611 @@ class _HallSeatsState extends State<HallSeats> {
       takenSeats = takenSeatsIndexes;
       isLoading = false;
     });
-
     selectFirstAvailableSeat();
   }
 
   @override
-  void initState() {
-    super.initState();
-    currentScheduleId = widget.scheduleId;
-    getTakenSeats();
-  }
-
-  @override
-  void didUpdateWidget(HallSeats oldWidget) {
-    super.didUpdateWidget(oldWidget);
-
-    if (oldWidget.scheduleId != widget.scheduleId) {
-      setState(() {
-        selectedRowIndex = 0;
-        selectedSeatIndex = 0;
-        chosenSeats = [];
-        currentScheduleId = widget.scheduleId;
-      });
-    }
-  }
-
-  void removeTicket(int index) {
-    setState(() {
-      chosenSeats.remove(chosenSeats[index]);
-    });
-  }
-  final confettiController = ConfettiController();
-
-  @override
-  void dispose() {
-    super.dispose();
-    confettiController.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Column(
-          spacing: 10,
-          children: [
-            selectSeatDropdowns(),
-            seatGrid(),
-            ticketTable(),
-            if (chosenSeats.isNotEmpty) promocodeInput(),
-            submitButton(),
-          ],
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.05),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: Colors.white.withOpacity(0.1),
+          width: 1,
         ),
-        Align(
-          alignment: Alignment.center,
-          child: ConfettiWidget(
-            confettiController: confettiController,
-            blastDirectionality: BlastDirectionality.explosive,
-            emissionFrequency: 0.05,
-            numberOfParticles: 50,
-            maxBlastForce: 5,
-            minBlastForce: 2,
-            gravity: 0.1,
-            shouldLoop: false,
-            colors: const [
-              Colors.blue,
-              Colors.pink,
-              Colors.purple,
-              Colors.red,
+      ),
+      child: Stack(
+        children: [
+          Column(
+            children: [
+              _buildHeader(),
+              _buildSeatGrid(),
+              if (chosenSeats.isNotEmpty) ...[
+                _buildTicketTable(),
+                if (submittedPromocode == null) _buildPromocodeInput(),
+              ],
+              _buildSubmitButton(),
             ],
+          ),
+          Align(
+            alignment: Alignment.center,
+            child: ConfettiWidget(
+              confettiController: confettiController,
+              blastDirectionality: BlastDirectionality.explosive,
+              emissionFrequency: 0.05,
+              numberOfParticles: 50,
+              maxBlastForce: 5,
+              minBlastForce: 2,
+              gravity: 0.1,
+              shouldLoop: false,
+              colors: const [
+                Colors.blue,
+                Colors.pink,
+                Colors.purple,
+                Colors.red
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHeader() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(
+            color: Colors.white.withOpacity(0.1),
+            width: 1,
+          ),
+        ),
+      ),
+      child: Row(
+        children: [
+          Icon(
+            Icons.movie_creation_outlined,
+            color: Colors.white.withOpacity(0.7),
+            size: 24,
+          ),
+          const SizedBox(width: 12),
+          Text(
+            "${widget.hallId}. Zāle",
+            style: GoogleFonts.poppins(
+              color: Colors.white,
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSeatGrid() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        children: [
+          if (isLoading)
+            const Center(child: CircularProgressIndicator())
+          else ...[
+            Container(
+              height: 220,
+              decoration: BoxDecoration(
+                color: Colors.black.withOpacity(0.3),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              padding: const EdgeInsets.all(16),
+              child: GridView.count(
+                physics: const NeverScrollableScrollPhysics(),
+                crossAxisCount: 10,
+                mainAxisSpacing: 8,
+                crossAxisSpacing: 8,
+                childAspectRatio: 0.8,
+                children: List.generate(50, (index) => _buildSeat(49 - index)),
+              ),
+            ),
+            const SizedBox(height: 16),
+            _buildLegend(),
+            const SizedBox(height: 16),
+            _buildAddTicketButton(),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLegend() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        _buildLegendItem('Pieejams', Colors.white.withOpacity(0.05)),
+        const SizedBox(width: 16),
+        _buildLegendItem('Aizņemts', Colors.white.withOpacity(0.2),
+            icon: Icons.close),
+        const SizedBox(width: 16),
+        _buildLegendItem('Izvēlēts', const Color(0xFF2A2A2A)),
+      ],
+    );
+  }
+
+  Widget _buildLegendItem(String text, Color color, {IconData? icon}) {
+    return Row(
+      children: [
+        Container(
+          width: 24,
+          height: 24,
+          decoration: BoxDecoration(
+            color: color,
+            borderRadius: BorderRadius.circular(4),
+            border: Border.all(
+              color: Colors.white.withOpacity(0.1),
+              width: 1,
+            ),
+          ),
+          child: icon != null
+              ? Icon(icon, size: 16, color: Colors.white.withOpacity(0.5))
+              : null,
+        ),
+        const SizedBox(width: 8),
+        Text(
+          text,
+          style: GoogleFonts.poppins(
+            color: Colors.white.withOpacity(0.7),
+            fontSize: 14,
           ),
         ),
       ],
     );
+  }
+
+  Widget _buildSeat(int? index) {
+    final bool isSelected = index == selected();
+    final bool isTaken = takenSeats.contains(index);
+    final bool isChosen = chosenSeats.contains(index);
+
+    return GestureDetector(
+      onTap: () {
+        if (!isTaken) {
+          selectSeat(index);
+        }
+      },
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        decoration: BoxDecoration(
+          color: isTaken
+              ? Colors.white.withOpacity(0.2)
+              : isSelected && !isChosen
+                  ? const Color(0xFF2A2A2A)
+                  : isChosen
+                      ? Colors.white.withOpacity(0.1)
+                      : Colors.white.withOpacity(0.05),
+          borderRadius: BorderRadius.circular(4),
+          border: Border.all(
+            color: isSelected || isChosen
+                ? Colors.white.withOpacity(0.3)
+                : Colors.white.withOpacity(0.1),
+            width: 1,
+          ),
+        ),
+        child: isTaken
+            ? Icon(
+                Icons.close,
+                size: 16,
+                color: Colors.white.withOpacity(0.5),
+              )
+            : null,
+      ),
+    );
+  }
+
+  Widget _buildAddTicketButton() {
+    return TextButton(
+      onPressed: () {
+        if (!chosenSeats.contains(selected())) {
+          addTicket();
+        }
+      },
+      style: TextButton.styleFrom(
+        backgroundColor: const Color(0xFF2A2A2A),
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.add_circle_outline,
+            color: Colors.white.withOpacity(0.9),
+            size: 20,
+          ),
+          const SizedBox(width: 8),
+          Text(
+            'Pievienot biļeti',
+            style: GoogleFonts.poppins(
+              color: Colors.white,
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTicketTable() {
+    return Container(
+      margin: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.black.withOpacity(0.3),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: Colors.white.withOpacity(0.1),
+          width: 1,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildTableHeader(),
+          const SizedBox(height: 12),
+          ...chosenSeats
+              .asMap()
+              .entries
+              .map((entry) => _buildTicketRow(entry.key)),
+          if (submittedPromocode != null) _buildPromocodeRow(),
+          if (chosenSeats.isNotEmpty) _buildTotalRow(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTableHeader() {
+    return Row(
+      children: [
+        Expanded(
+          flex: 2,
+          child: Text(
+            'Biļete',
+            style: GoogleFonts.poppins(
+              color: Colors.white.withOpacity(0.5),
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+        Expanded(
+          flex: 3,
+          child: Text(
+            'Vieta',
+            style: GoogleFonts.poppins(
+              color: Colors.white.withOpacity(0.5),
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+        Expanded(
+          flex: 2,
+          child: Text(
+            'Cena',
+            style: GoogleFonts.poppins(
+              color: Colors.white.withOpacity(0.5),
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+        const SizedBox(width: 40),
+      ],
+    );
+  }
+
+  Widget _buildTicketRow(int index) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(
+            color: Colors.white.withOpacity(0.1),
+            width: 1,
+          ),
+        ),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            flex: 2,
+            child: Text(
+              'Biļete ${index + 1}',
+              style: GoogleFonts.poppins(
+                color: Colors.white,
+                fontSize: 14,
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 3,
+            child: Text(
+              'Rinda ${getRowFromIndex(chosenSeats[index]) + 1}, Vieta ${getColFromIndex(chosenSeats[index]) + 1}',
+              style: GoogleFonts.poppins(
+                color: Colors.white,
+                fontSize: 14,
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Text(
+              '${getTicketPrice().toStringAsFixed(2)}€',
+              style: GoogleFonts.poppins(
+                color: Colors.white,
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+          SizedBox(
+            width: 40,
+            child: IconButton(
+              onPressed: () => removeTicket(index),
+              icon: Icon(
+                Icons.remove_circle_outline,
+                color: Colors.red.withOpacity(0.7),
+                size: 20,
+              ),
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(),
+              splashRadius: 20,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPromocodeRow() {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(
+            color: Colors.white.withOpacity(0.1),
+            width: 1,
+          ),
+        ),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            flex: 2,
+            child: Text(
+              'Atlaide',
+              style: GoogleFonts.poppins(
+                color: Colors.white,
+                fontSize: 14,
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 3,
+            child: Text(
+              submittedPromocode!.name,
+              style: GoogleFonts.poppins(
+                color: Colors.white,
+                fontSize: 14,
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Text(
+              getPromocodeSale(),
+              style: GoogleFonts.poppins(
+                color: Colors.green,
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+          SizedBox(
+            width: 40,
+            child: IconButton(
+              onPressed: removePromocode,
+              icon: Icon(
+                Icons.remove_circle_outline,
+                color: Colors.red.withOpacity(0.7),
+                size: 20,
+              ),
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(),
+              splashRadius: 20,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTotalRow() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 12),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Text(
+            'Kopā: ',
+            style: GoogleFonts.poppins(
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          Text(
+            getSum(),
+            style: GoogleFonts.poppins(
+              color: Colors.white,
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPromocodeInput() {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.black.withOpacity(0.3),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: Colors.white.withOpacity(0.1),
+          width: 1,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Promokods',
+            style: GoogleFonts.poppins(
+              color: Colors.white.withOpacity(0.7),
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              Expanded(
+                child: Container(
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF2A2A2A),
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(
+                      color: Colors.white.withOpacity(0.1),
+                      width: 1,
+                    ),
+                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: TextField(
+                    controller: promocodeController,
+                    style: GoogleFonts.poppins(
+                      color: Colors.white,
+                      fontSize: 14,
+                    ),
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: 'Ievadiet promokodu',
+                      hintStyle: GoogleFonts.poppins(
+                        color: Colors.white.withOpacity(0.3),
+                        fontSize: 14,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 12),
+              IconButton(
+                onPressed: () => submitPromocode(context),
+                icon: Icon(
+                  Icons.add_circle_outline,
+                  color: Colors.white.withOpacity(0.9),
+                  size: 24,
+                ),
+                style: IconButton.styleFrom(
+                  backgroundColor: const Color(0xFF2A2A2A),
+                  padding: const EdgeInsets.all(12),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSubmitButton() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      child: isProcessingPayment
+          ? const Center(child: CircularProgressIndicator())
+          : TextButton(
+              onPressed: () {
+                if (chosenSeats.isNotEmpty) {
+                  processPayment(context);
+                } else {
+                  StylizedDialog.alert(
+                    context,
+                    "Kļūda",
+                    "Lūdzu, izvēlieties vismaz vienu vietu",
+                  );
+                }
+              },
+              style: TextButton.styleFrom(
+                backgroundColor: chosenSeats.isEmpty
+                    ? Colors.white.withOpacity(0.1)
+                    : const Color(0xFF2A2A2A),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.payment,
+                    color: Colors.white.withOpacity(0.9),
+                    size: 20,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Apmaksāt',
+                    style: GoogleFonts.poppins(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+    );
+  }
+
+  double getTicketPrice() => 4.0;
+
+  double getTotalPrice() {
+    final ticketPrice = getTicketPrice();
+    final totalBeforeDiscount = chosenSeats.length * ticketPrice;
+    final discount = submittedPromocode != null
+        ? submittedPromocode!.amount != null
+            ? submittedPromocode!.amount!
+            : (totalBeforeDiscount * (submittedPromocode!.percents ?? 0) / 100)
+        : 0;
+    return totalBeforeDiscount - discount;
+  }
+
+  String getSum() => "${getTotalPrice().toStringAsFixed(2)}€";
+
+  String getPromocodeSale() {
+    final ticketPrice = getTicketPrice();
+    final totalBeforeDiscount = chosenSeats.length * ticketPrice;
+    return submittedPromocode!.amount != null
+        ? "-${submittedPromocode!.amount!.toStringAsFixed(2).replaceAll('.', ',')}€"
+        : "-${(totalBeforeDiscount * (submittedPromocode!.percents ?? 0) / 100).toStringAsFixed(2).replaceAll('.', ',')}€";
   }
 
   Future<void> submitPromocode(BuildContext context) async {
@@ -162,14 +721,11 @@ class _HallSeatsState extends State<HallSeats> {
     try {
       final response = await PromocodeController()
           .getPromocodeByName(promocodeController.text.toUpperCase());
-
-      debugPrint("response: $response");
-
       setState(() {
         submittedPromocode = response;
       });
-    } catch (E) {
-      debugPrint(E.toString());
+    } catch (e) {
+      debugPrint(e.toString());
       StylizedDialog.alert(
         context,
         "Kļūda",
@@ -178,149 +734,11 @@ class _HallSeatsState extends State<HallSeats> {
     }
   }
 
-  promocodeInput() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          " Promokods",
-          style: bodyLarge,
-        ),
-        Row(
-          spacing: 10,
-          children: [
-            Expanded(
-              flex: 4,
-              child: SizedBox(
-                width: 250,
-                height: 40,
-                child: TextFormField(
-                  controller: promocodeController,
-                  decoration: InputDecoration(
-                    contentPadding: EdgeInsets.symmetric(horizontal: 15),
-                  ),
-                ),
-              ),
-            ),
-            Expanded(
-              flex: 1,
-              child: IconButton.filled(
-                onPressed: () {
-                  submitPromocode(context);
-                },
-                icon: Icon(Icons.add),
-              ),
-            )
-          ],
-        ),
-      ],
-    );
-  }
-
-  double getTicketPrice() {
-    return 4.0;
-  }
-
-  double getTotalPrice() {
-    final ticketPrice = getTicketPrice();
-    final totalBeforeDiscount = chosenSeats.length * ticketPrice;
-
-    final discount = submittedPromocode != null
-        ? submittedPromocode!.amount != null
-            ? submittedPromocode!.amount!
-            : (totalBeforeDiscount * (submittedPromocode!.percents ?? 0) / 100)
-        : 0;
-
-    return totalBeforeDiscount - discount;
-  }
-
-  String getSum() {
-    return "${getTotalPrice().toStringAsFixed(2)}€";
-  }
-
-  Row selectSeatDropdowns() {
-    final colors = ColorContext.of(context);
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      spacing: 10,
-      children: [
-        Expanded(
-          child: Container(
-            decoration: colors.classicDecorationSharper,
-            height: 50,
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: DropdownButton(
-              iconEnabledColor: Colors.white,
-              underline: Container(),
-              style: bodySmall,
-              items: List.generate(
-                rowAmount,
-                (index) => DropdownMenuItem(
-                  value: index,
-                  child: Text("Rinda: ${index + 1}"),
-                ),
-              ),
-              onChanged: (value) {
-                setState(() {
-                  selectedRowIndex = value;
-                });
-              },
-              value: selectedRowIndex,
-              isExpanded: true,
-            ),
-          ),
-        ),
-        Expanded(
-          child: Container(
-            decoration: colors.classicDecorationSharper,
-            height: 50,
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: DropdownButton(
-              iconEnabledColor: Colors.white,
-              underline: Container(),
-              style: bodySmall,
-              items: List.generate(
-                seatAmountPerRow,
-                (index) => DropdownMenuItem(
-                  value: index,
-                  child: Text("Vieta: ${index + 1}"),
-                ),
-              ),
-              onChanged: (value) {
-                setState(() {
-                  selectedSeatIndex = value;
-                });
-              },
-              value: selectedSeatIndex,
-              isExpanded: true,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Padding submitButton() {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 75.0),
-      child: isProcessingPayment
-          ? CircularProgressIndicator()
-          : StylizedButton(
-              action: () {
-                if (chosenSeats.isNotEmpty) {
-                  processPayment(context);
-                } else {
-                  StylizedDialog.alert(
-                    context,
-                    "Kļūda",
-                    "Lūdzu, izvēlieties vismaz vienu vietu",
-                  );
-                }
-              },
-              title: "Apmaksāt",
-              icon: Icons.payment,
-            ),
-    );
+  void removePromocode() {
+    setState(() {
+      submittedPromocode = null;
+      promocodeController.clear();
+    });
   }
 
   Future<void> processPayment(BuildContext context) async {
@@ -375,7 +793,7 @@ class _HallSeatsState extends State<HallSeats> {
         "Maksājuma kļūda",
         "Neizdevās apstrādāt maksājumu. Lūdzu, mēģiniet vēlāk.",
       );
-    } finally {
+
       if (mounted) {
         setState(() {
           isProcessingPayment = false;
@@ -404,14 +822,13 @@ class _HallSeatsState extends State<HallSeats> {
   }
 
   Future<void> saveTickets() async {
-    List<Map<String, int>> payload;
-
-    payload = chosenSeats
+    List<Map<String, int>> payload = chosenSeats
         .map((seatIndex) => {
               "row": getRowFromIndex(seatIndex),
               "seat": getColFromIndex(seatIndex),
             })
         .toList();
+
     try {
       await TicketController().createTickets(currentScheduleId!, payload);
       for (var seat in chosenSeats) {
@@ -425,313 +842,17 @@ class _HallSeatsState extends State<HallSeats> {
         promocodeController.clear();
       });
       selectFirstAvailableSeat();
+
+      // Play confetti once
       confettiController.play();
+      // Stop after 2 seconds
+      Future.delayed(const Duration(seconds: 2), () {
+        if (mounted) {
+          confettiController.stop();
+        }
+      });
     } catch (e) {
       debugPrint('Error saving tickets: $e');
     }
-  }
-
-  Container ticketTable() {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 15),
-      decoration: darkDecorationSharper,
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Table(
-              columnWidths: const {
-                0: FlexColumnWidth(1.2),
-                1: FlexColumnWidth(3),
-                2: FlexColumnWidth(1),
-                3: FlexColumnWidth(0.8),
-              },
-              defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-              children: [
-                TableRow(
-                  decoration: BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(
-                        color: smokeyWhite.withAlpha(75),
-                        width: 1,
-                      ),
-                    ),
-                  ),
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 8.0, horizontal: 8.0),
-                      child: Text(
-                        "Veids",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: smokeyWhite.withAlpha(200),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: Text(
-                        "Apraksts",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: smokeyWhite.withAlpha(200),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: Text(
-                        "Cena",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: smokeyWhite.withAlpha(200),
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 10),
-                  ],
-                ),
-                ...List.generate(
-                  chosenSeats.length,
-                  (index) => ticketRow(index),
-                ),
-                if (submittedPromocode != null) promocodeRow(),
-              ],
-            ),
-            if (chosenSeats.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.only(top: 12.0, right: 8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Text(
-                      "Kopā: ",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: smokeyWhite,
-                      ),
-                    ),
-                    Text(
-                      getSum(),
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: smokeyWhite,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  TableRow promocodeRow() {
-    return TableRow(
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            color: smokeyWhite.withAlpha(40),
-            width: 1,
-          ),
-        ),
-      ),
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 8.0),
-          child: Text(
-            "Atlaide",
-            style: TextStyle(
-              color: smokeyWhite,
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12.0),
-          child: Text(
-            submittedPromocode!.name,
-            style: TextStyle(
-              color: smokeyWhite,
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12.0),
-          child: Text(
-            getPromocodeSale(),
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: smokeyWhite,
-            ),
-          ),
-        ),
-        IconButton(
-          onPressed: () {
-            removePromocode();
-          },
-          icon: Icon(
-            Icons.remove_circle_outline,
-            color: red003,
-            size: 22,
-          ),
-          padding: EdgeInsets.zero,
-          constraints: BoxConstraints(),
-          splashRadius: 20,
-        ),
-      ],
-    );
-  }
-
-  void removePromocode() {
-    setState(() {
-      submittedPromocode = null;
-    });
-  }
-
-  String getPromocodeSale() {
-    final ticketPrice = getTicketPrice();
-    final totalBeforeDiscount = chosenSeats.length * ticketPrice;
-
-    return submittedPromocode!.amount != null
-        ? "-${submittedPromocode!.amount!.toStringAsFixed(2).replaceAll('.', ',')}€"
-        : "-${(totalBeforeDiscount * (submittedPromocode!.percents ?? 0) / 100).toStringAsFixed(2).replaceAll('.', ',')}€";
-  }
-
-  TableRow ticketRow(int index) {
-    return TableRow(
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            color: smokeyWhite.withAlpha(40),
-            width: 1,
-          ),
-        ),
-      ),
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 8.0),
-          child: Text(
-            "Biļete",
-            style: TextStyle(
-              color: smokeyWhite,
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12.0),
-          child: Text(
-            "Rinda: ${getRowFromIndex(chosenSeats[index]) + 1}, Vieta: ${getColFromIndex(chosenSeats[index]) + 1}",
-            style: TextStyle(
-              color: smokeyWhite,
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12.0),
-          child: Text(
-            "${getTicketPrice().toStringAsFixed(2)}€",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: smokeyWhite,
-            ),
-          ),
-        ),
-        IconButton(
-          onPressed: () {
-            removeTicket(index);
-          },
-          icon: Icon(
-            Icons.remove_circle_outline,
-            color: red003,
-            size: 22,
-          ),
-          padding: EdgeInsets.zero,
-          constraints: BoxConstraints(),
-          splashRadius: 20,
-        ),
-      ],
-    );
-  }
-
-  Container seatGrid() {
-    final colors = ColorContext.of(context);
-    return Container(
-      decoration: colors.classicDecorationSharper,
-      padding: const EdgeInsets.all(15),
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(bottom: 10.0),
-            child: Text("${widget.hallId}. Zale", style: bodyLarge),
-          ),
-          SizedBox(
-            height: 220,
-            child: isLoading
-                ? Center(child: CircularProgressIndicator())
-                : GridView.count(
-                    physics: NeverScrollableScrollPhysics(),
-                    crossAxisCount: 10,
-                    mainAxisSpacing: 5,
-                    crossAxisSpacing: 5,
-                    childAspectRatio: 0.8,
-                    padding: const EdgeInsets.all(0),
-                    children: List.generate(
-                      50,
-                      (index) => seat(49 - index),
-                    ),
-                  ),
-          ),
-          StylizedButton(
-            action: () {
-              if (!chosenSeats.contains(selected())) {
-                addTicket();
-              }
-            },
-            title: "Pievienot biļeti",
-            icon: Icons.add,
-          ),
-        ],
-      ),
-    );
-  }
-
-  seat(int? index) {
-    final colors = ColorContext.of(context);
-    bool isSelected = index == selected();
-    return GestureDetector(
-      onTap: () {
-        if (!takenSeats.contains(index)) {
-          selectSeat(index);
-        }
-      },
-      child: AnimatedContainer(
-        duration: Duration(milliseconds: 200),
-        decoration: takenSeats.contains(index)
-            ? classicDecorationDarkSharper
-            : BoxDecoration(
-                color: isSelected && !chosenSeats.contains(index)
-                    ? colors.color003
-                    : chosenSeats.contains(index)
-                        ? Colors.white24
-                        : colors.color002,
-                border: Border.all(
-                  color: colors.color003,
-                  width: 1,
-                ),
-                borderRadius: BorderRadius.circular(5),
-              ),
-        child: takenSeats.contains(index)
-            ? Icon(
-                Icons.close,
-                size: 25,
-                color: Colors.white24,
-              )
-            : null,
-      ),
-    );
   }
 }

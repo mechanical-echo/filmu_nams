@@ -1,17 +1,17 @@
 import 'dart:io';
 import 'package:filmu_nams/controllers/user_controller.dart';
 import 'package:filmu_nams/providers/color_context.dart';
-import 'package:filmu_nams/views/admin/dashboard/widgets/stylized_button.dart';
 import 'package:filmu_nams/views/client/auth/registration/registration_steps/registration_state.dart';
 import 'package:filmu_nams/assets/dialog/dialog.dart';
 import 'package:filmu_nams/enums/auth_error_codes.dart';
-import 'package:filmu_nams/assets/input/text_input.dart';
+import 'package:filmu_nams/assets/components/form_input.dart';
+import 'package:filmu_nams/assets/components/auth_container.dart';
+import 'package:filmu_nams/assets/components/loading_indicator.dart';
 import 'package:filmu_nams/validators/validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 
 class ProfileSetupStep extends StatefulWidget {
@@ -47,25 +47,66 @@ class _ProfileSetupStepState extends State<ProfileSetupStep> {
 
   @override
   Widget build(BuildContext context) {
-    if (_isLoading) {
-      return const Center(child: _LoadingIndicator());
-    }
-
-    return Center(
-      child: Column(
-        children: [
-          _NavigationButton(onPressed: widget.previousRegistrationStep),
-          const _StepTitle(),
-          _ProfileImagePicker(
-            image: _image,
-            onPickImage: _pickImage,
+    return AuthContainer(
+      title: 'Reģistrācija',
+      child: _isLoading
+          ? const Center(child: LoadingIndicator())
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const SizedBox(height: 20),
+                Text(
+                  'Profila iestatīšana',
+                  style: GoogleFonts.poppins(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 30),
+                _ProfileImagePicker(
+                  image: _image,
+                  onPickImage: _pickImage,
+                ),
+                const SizedBox(height: 20),
+                FormInput(
+                  controller: widget.nameController,
+                  hintText: "Jūsu vārds",
+                  icon: Icons.person,
+                  error: nameError,
+                  obligatory: true,
+                ),
+                const SizedBox(height: 30),
+                ElevatedButton(
+                  onPressed: _submitProfile,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    foregroundColor: Colors.black,
+                    padding: const EdgeInsets.symmetric(vertical: 15),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: Text(
+                    'Pabeigt reģistrāciju',
+                    style: GoogleFonts.poppins(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+      bottomAction: TextButton(
+        onPressed: widget.previousRegistrationStep,
+        child: Text(
+          'Atpakaļ',
+          style: GoogleFonts.poppins(
+            color: Colors.white,
+            fontWeight: FontWeight.w600,
           ),
-          _NameInput(
-            controller: widget.nameController,
-            error: nameError,
-          ),
-          _SubmitButton(onSubmit: _submitProfile),
-        ],
+        ),
       ),
     );
   }
@@ -129,61 +170,6 @@ class _ProfileSetupStepState extends State<ProfileSetupStep> {
   }
 }
 
-class _LoadingIndicator extends StatelessWidget {
-  const _LoadingIndicator();
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 65, bottom: 40),
-      child: LoadingAnimationWidget.staggeredDotsWave(
-        size: 100,
-        color: Theme.of(context).focusColor,
-      ),
-    );
-  }
-}
-
-class _NavigationButton extends StatelessWidget {
-  final VoidCallback onPressed;
-
-  const _NavigationButton({required this.onPressed});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(top: 20, bottom: 10),
-      child: IntrinsicWidth(
-        child: StylizedButton(
-          icon: Icons.keyboard_return,
-          title: "Atpakaļ",
-          action: onPressed,
-        ),
-      ),
-    );
-  }
-}
-
-class _StepTitle extends StatelessWidget {
-  const _StepTitle();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(top: 10),
-      child: Text(
-        'Prieks iepazīties!',
-        style: GoogleFonts.poppins(
-          color: Colors.white,
-          fontSize: 36,
-          fontWeight: FontWeight.w300,
-          decoration: TextDecoration.none,
-        ),
-      ),
-    );
-  }
-}
-
 class _ProfileImagePicker extends StatelessWidget {
   final File? image;
   final VoidCallback onPickImage;
@@ -197,70 +183,42 @@ class _ProfileImagePicker extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 40.0, vertical: 5),
-          child: image == null
-              ? const Text(
-                  "Jūs varat izvēlēties bildi savām kontam (nav obligāti)",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.white),
-                )
-              : Container(
-                  width: 100,
-                  height: 100,
-                  clipBehavior: Clip.hardEdge,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(100),
-                  ),
-                  child: Image.file(
+        Container(
+          width: 120,
+          height: 120,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(
+              color: Colors.white.withOpacity(0.2),
+              width: 2,
+            ),
+          ),
+          child: ClipOval(
+            child: image == null
+                ? Icon(
+                    Icons.person,
+                    size: 60,
+                    color: Colors.white.withOpacity(0.5),
+                  )
+                : Image.file(
                     image!,
                     fit: BoxFit.cover,
                   ),
-                ),
+          ),
         ),
-        TextButton(
+        const SizedBox(height: 15),
+        TextButton.icon(
           onPressed: onPickImage,
-          child: const Text("Izvēlēties bildi"),
+          icon: const Icon(Icons.add_a_photo, color: Colors.white),
+          label: Text(
+            'Izvēlēties bildi',
+            style: GoogleFonts.poppins(
+              color: Colors.white,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
         ),
       ],
-    );
-  }
-}
-
-class _NameInput extends StatelessWidget {
-  final TextEditingController controller;
-  final String? error;
-
-  const _NameInput({
-    required this.controller,
-    this.error,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = ColorContext.of(context);
-    return TextInput(
-      obscureText: false,
-      hintText: "Jānis Bērziņš",
-      icon: Icon(Icons.person, color: colors.color001),
-      margin: const [25, 35, 25, 35],
-      controller: controller,
-      error: error,
-      obligatory: true,
-    );
-  }
-}
-
-class _SubmitButton extends StatelessWidget {
-  final VoidCallback onSubmit;
-
-  const _SubmitButton({required this.onSubmit});
-
-  @override
-  Widget build(BuildContext context) {
-    return FilledButton(
-      onPressed: onSubmit,
-      child: const Text("Pabeigt reģistrāciju"),
     );
   }
 }

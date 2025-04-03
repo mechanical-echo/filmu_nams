@@ -27,18 +27,25 @@ class _StylizedButtonState extends State<StylizedButton> {
   late BoxDecoration decoration;
   bool isHovered = false;
   bool isPressed = false;
+  bool isActive = false;
 
   @override
   Widget build(BuildContext context) {
     final colors = ColorContext.of(context);
 
     // Update decoration based on state
-    if (isPressed) {
-      decoration = colors.classicDecorationWhiteSharperActive;
+    if (isActive) {
+      decoration = colors.cardDecoration.copyWith(
+        color: colors.surfaceVariant.withOpacity(0.7),
+      );
     } else if (isHovered) {
-      decoration = colors.classicDecorationWhiteSharperHover;
+      decoration = colors.cardDecoration.copyWith(
+        color: colors.surfaceVariant.withOpacity(0.8),
+      );
     } else {
-      decoration = colors.classicDecorationWhiteSharper;
+      decoration = colors.cardDecoration.copyWith(
+        color: colors.surfaceVariant,
+      );
     }
 
     return MouseRegion(
@@ -66,16 +73,16 @@ class _StylizedButtonState extends State<StylizedButton> {
               if (widget.icon != null)
                 Positioned(
                   left: -40,
-                  child: Icon(
-                      widget.icon,
-                      color: colors.color001,
-                      size: widget.iconSize
-                  ),
+                  child: Icon(widget.icon,
+                      color: colors.primary, size: widget.iconSize),
                 ),
               Center(
                 child: Text(
                   widget.title,
-                  style: widget.textStyle ?? colors.bodyLargeThemeColor,
+                  style: widget.textStyle ??
+                      colors.titleLarge.copyWith(
+                        color: colors.primary,
+                      ),
                   maxLines: 1,
                 ),
               ),

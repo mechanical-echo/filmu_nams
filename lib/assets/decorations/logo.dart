@@ -1,6 +1,7 @@
 import 'package:filmu_nams/assets/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../providers/color_context.dart';
 
@@ -10,66 +11,63 @@ class Logo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    final colors = ColorContext.of(context);
 
     return Container(
-      margin: const EdgeInsets.only(
-        top: 75,
-        left: 10,
-        right: 10,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       width: width,
-      height: 60,
-      decoration: BoxDecoration(
-        color: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Stack(
-        alignment: Alignment.centerRight,
-        clipBehavior: Clip.none,
+      height: 80,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Positioned(
-            bottom: -10,
-            left: 10,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              decoration: colors.classicDecorationSharper,
-              child: Row(
-                spacing: 10,
-                children: [
-                  Icon(
-                    Icons.movie_filter,
-                    color: Colors.white,
-                    size: 28,
-                  ),
-                  Text(
-                    "Filmu Nams",
-                    style: header2,
-                  ),
-                ],
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Icon(
+                  Icons.movie_filter,
+                  color: Colors.white,
+                  size: 24,
+                ),
               ),
-            ),
+              const SizedBox(width: 12),
+              Text(
+                "Filmu Nams",
+                style: GoogleFonts.poppins(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
           ),
-          Positioned(
-            right: 10,
-            top: 15,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              decoration: colors.classicDecorationWhiteSharper,
-              child: Row(
-                spacing: 10,
-                children: [
-                  Icon(
-                    Icons.calendar_month,
-                    color: colors.color001,
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Row(
+              children: [
+                const Icon(
+                  Icons.calendar_month,
+                  color: Colors.white,
+                  size: 20,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  DateFormat('E\ndd.MM.', 'lv').format(DateTime.now()),
+                  style: GoogleFonts.poppins(
+                    color: Colors.white,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
                   ),
-                  Text(
-                    DateFormat('E\ndd.MM.', 'lv').format(DateTime.now()),
-                    style: colors.bodySmallThemeColor,
-                    textAlign: TextAlign.right,
-                  ),
-                ],
-              ),
+                  textAlign: TextAlign.right,
+                ),
+              ],
             ),
           ),
         ],

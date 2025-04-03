@@ -23,84 +23,153 @@ class ColorContext extends InheritedWidget {
     return result!;
   }
 
-  Color get color001 => themeProvider.colors.color001;
-  Color get color002 => themeProvider.colors.color002;
-  Color get color003 => themeProvider.colors.color003;
-  Color get smokeyWhite => themeProvider.colors.smokeyWhite;
-  bool get isLightTheme => themeProvider.colors.isLightTheme;
+  Color get primary => themeProvider.currentTheme.colorScheme.primary;
+  Color get onPrimary => themeProvider.currentTheme.colorScheme.onPrimary;
+  Color get primaryContainer =>
+      themeProvider.currentTheme.colorScheme.primaryContainer;
+  Color get onPrimaryContainer =>
+      themeProvider.currentTheme.colorScheme.onPrimaryContainer;
+  Color get secondary => themeProvider.currentTheme.colorScheme.secondary;
+  Color get onSecondary => themeProvider.currentTheme.colorScheme.onSecondary;
+  Color get secondaryContainer =>
+      themeProvider.currentTheme.colorScheme.secondaryContainer;
+  Color get onSecondaryContainer =>
+      themeProvider.currentTheme.colorScheme.onSecondaryContainer;
+  Color get tertiary => themeProvider.currentTheme.colorScheme.tertiary;
+  Color get onTertiary => themeProvider.currentTheme.colorScheme.onTertiary;
+  Color get tertiaryContainer =>
+      themeProvider.currentTheme.colorScheme.tertiaryContainer;
+  Color get onTertiaryContainer =>
+      themeProvider.currentTheme.colorScheme.onTertiaryContainer;
+  Color get error => themeProvider.currentTheme.colorScheme.error;
+  Color get onError => themeProvider.currentTheme.colorScheme.onError;
+  Color get errorContainer =>
+      themeProvider.currentTheme.colorScheme.errorContainer;
+  Color get onErrorContainer =>
+      themeProvider.currentTheme.colorScheme.onErrorContainer;
+  Color get background => themeProvider.currentTheme.colorScheme.background;
+  Color get onBackground => themeProvider.currentTheme.colorScheme.onBackground;
+  Color get surface => themeProvider.currentTheme.colorScheme.surface;
+  Color get onSurface => themeProvider.currentTheme.colorScheme.onSurface;
+  Color get surfaceVariant =>
+      themeProvider.currentTheme.colorScheme.surfaceVariant;
+  Color get onSurfaceVariant =>
+      themeProvider.currentTheme.colorScheme.onSurfaceVariant;
+  Color get outline => themeProvider.currentTheme.colorScheme.outline;
+  Color get shadow => themeProvider.currentTheme.colorScheme.shadow;
+  Color get inverseSurface =>
+      themeProvider.currentTheme.colorScheme.inverseSurface;
+  Color get onInverseSurface =>
+      themeProvider.currentTheme.colorScheme.onInverseSurface;
+  Color get inversePrimary =>
+      themeProvider.currentTheme.colorScheme.inversePrimary;
+  Color get surfaceTint => themeProvider.currentTheme.colorScheme.surfaceTint;
 
-  Color textColorFor(Color backgroundColor) {
-    final luminance = backgroundColor.computeLuminance();
+  TextStyle get displayLarge =>
+      themeProvider.currentTheme.textTheme.displayLarge!;
+  TextStyle get displayMedium =>
+      themeProvider.currentTheme.textTheme.displayMedium!;
+  TextStyle get displaySmall =>
+      themeProvider.currentTheme.textTheme.displaySmall!;
+  TextStyle get headlineLarge =>
+      themeProvider.currentTheme.textTheme.headlineLarge!;
+  TextStyle get headlineMedium =>
+      themeProvider.currentTheme.textTheme.headlineMedium!;
+  TextStyle get headlineSmall =>
+      themeProvider.currentTheme.textTheme.headlineSmall!;
+  TextStyle get titleLarge => themeProvider.currentTheme.textTheme.titleLarge!;
+  TextStyle get titleMedium =>
+      themeProvider.currentTheme.textTheme.titleMedium!;
+  TextStyle get titleSmall => themeProvider.currentTheme.textTheme.titleSmall!;
+  TextStyle get labelLarge => themeProvider.currentTheme.textTheme.labelLarge!;
+  TextStyle get labelMedium =>
+      themeProvider.currentTheme.textTheme.labelMedium!;
+  TextStyle get labelSmall => themeProvider.currentTheme.textTheme.labelSmall!;
+  TextStyle get bodyLarge => themeProvider.currentTheme.textTheme.bodyLarge!;
+  TextStyle get bodyMedium => themeProvider.currentTheme.textTheme.bodyMedium!;
+  TextStyle get bodySmall => themeProvider.currentTheme.textTheme.bodySmall!;
 
-    return luminance > 0.4 ? Colors.black87 : Colors.white;
-  }
-
-  TextStyle bodySmallFor(Color backgroundColor) => GoogleFonts.poppins(
-        color: textColorFor(backgroundColor),
-        fontSize: 13,
-        fontWeight: FontWeight.w600,
+  BoxDecoration get cardDecoration => BoxDecoration(
+        color: surface,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: shadow.withOpacity(0.1),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
       );
 
-  TextStyle bodyMediumFor(Color backgroundColor) => GoogleFonts.poppins(
-        color: textColorFor(backgroundColor),
-        fontSize: 15,
-        fontWeight: FontWeight.w600,
+  BoxDecoration get elevatedCardDecoration => BoxDecoration(
+        color: surface,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: shadow.withOpacity(0.2),
+            blurRadius: 12,
+            offset: const Offset(0, 6),
+          ),
+        ],
       );
 
-  TextStyle bodyLargeFor(Color backgroundColor) => GoogleFonts.poppins(
-        color: textColorFor(backgroundColor),
-        fontSize: 20,
-        fontWeight: FontWeight.w800,
+  BoxDecoration get gradientCardDecoration => BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            primary,
+            primary.withOpacity(0.7),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: shadow.withOpacity(0.1),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
       );
 
-  TextStyle header1For(Color backgroundColor) => GoogleFonts.poppins(
-        color: textColorFor(backgroundColor),
-        fontSize: 30,
-        fontWeight: FontWeight.w800,
+  BoxDecoration get ticketDecoration => BoxDecoration(
+        color: surface,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: shadow.withOpacity(0.1),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
       );
 
-  TextStyle header2For(Color backgroundColor) => GoogleFonts.poppins(
-        color: textColorFor(backgroundColor),
-        fontSize: 26,
-        fontWeight: FontWeight.w800,
+  ButtonStyle get primaryButtonStyle => ElevatedButton.styleFrom(
+        backgroundColor: primary,
+        foregroundColor: onPrimary,
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+        textStyle: labelLarge,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
       );
 
-  TextStyle get bodySmall => themeProvider.bodySmall;
-  TextStyle get bodySmallThemeColor => themeProvider.bodySmallThemeColor;
-  TextStyle get bodyMedium => themeProvider.bodyMedium;
-  TextStyle get bodyMediumThemeColor => themeProvider.bodyMediumThemeColor;
-  TextStyle get bodyLarge => themeProvider.bodyLarge;
-  TextStyle get bodyLargeThemeColor => themeProvider.bodyLargeThemeColor;
-  TextStyle get header1 => themeProvider.header1;
-  TextStyle get header1ThemeColor => themeProvider.header1ThemeColor;
-  TextStyle get header2 => themeProvider.header2;
-  TextStyle get header2ThemeColor => themeProvider.header2ThemeColor;
-  TextStyle get header3 => themeProvider.header3;
+  ButtonStyle get outlinedButtonStyle => OutlinedButton.styleFrom(
+        foregroundColor: primary,
+        side: BorderSide(color: primary),
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+        textStyle: labelLarge,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+      );
 
-  BoxDecoration get classicDecoration => themeProvider.classicDecoration;
-  BoxDecoration get classicDecorationWhite =>
-      themeProvider.classicDecorationWhite;
-  BoxDecoration get classicDecorationDark =>
-      themeProvider.classicDecorationDark;
-  BoxDecoration get classicDecorationSharp =>
-      themeProvider.classicDecorationSharp;
-  BoxDecoration get classicDecorationSharper =>
-      themeProvider.classicDecorationSharper;
-  BoxDecoration get classicDecorationWhiteSharper =>
-      themeProvider.classicDecorationWhiteSharper;
-  BoxDecoration get classicDecorationWhiteSharperHover =>
-      themeProvider.classicDecorationWhiteSharperHover;
-  BoxDecoration get classicDecorationWhiteSharperActive =>
-      themeProvider.classicDecorationWhiteSharperActive;
-  BoxDecoration get classicDecorationDarkSharper =>
-      themeProvider.classicDecorationDarkSharper;
-  BoxDecoration get darkDecorationSharper =>
-      themeProvider.darkDecorationSharper;
-  BoxDecoration get mediumDarkDecorationSharper =>
-      themeProvider.mediumDarkDecorationSharper;
-  BoxDecoration get darkDecoration => themeProvider.darkDecoration;
-
-  Border get bottomBorder => themeProvider.bottomBorder;
-  Border get bottomBorderDark => themeProvider.bottomBorderDark;
-  List<BoxShadow> get cardShadow => themeProvider.cardShadow;
+  ButtonStyle get textButtonStyle => TextButton.styleFrom(
+        foregroundColor: primary,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        textStyle: labelLarge.copyWith(
+          decoration: TextDecoration.underline,
+          decorationColor: primary,
+        ),
+      );
 }
