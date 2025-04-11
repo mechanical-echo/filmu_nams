@@ -1,60 +1,105 @@
 import 'package:filmu_nams/providers/color_context.dart';
 import 'package:flutter/material.dart';
 
-class Background extends StatelessWidget {
+class Background extends StatefulWidget {
   const Background({super.key, required this.child});
 
   final Widget child;
 
   @override
+  State<Background> createState() => _BackgroundState();
+}
+
+class _BackgroundState extends State<Background> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<Color?> _colorAnimation1;
+  late Animation<Color?> _colorAnimation2;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = AnimationController(
+      duration: const Duration(seconds: 5),
+      vsync: this,
+    )..repeat(reverse: true);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    final theme = ContextTheme.of(context);
+      _colorAnimation1 = ColorTween(
+        begin: Colors.white.withOpacity(0.15),
+        end: Colors.white.withOpacity(0.3),
+      ).animate(_controller);
+
+      _colorAnimation2 = ColorTween(
+        begin: Colors.transparent,
+        end: Colors.transparent,
+      ).animate(_controller);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
-    final colors = ColorContext.of(context);
+    final theme = ContextTheme.of(context);
 
     return Stack(
       children: [
-        // Main gradient background
         Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [
+              colors: theme.isDark
+                  ? [
                 Colors.black,
                 Colors.black.withOpacity(0.95),
-                Colors.black.withOpacity(0.9),
+                Colors.black.withOpacity(0.9)
+              ]
+                  : [
+                Colors.grey[200]!,
+                Colors.grey[200]!.withOpacity(0.95),
+                Colors.grey[200]!.withOpacity(0.9),
               ],
             ),
           ),
         ),
-
-        // Subtle pattern overlay
         CustomPaint(
           size: Size(width, height),
           painter: GridPainter(
-            color: Colors.white.withOpacity(0.03),
+            color: theme.isDark ? Colors.white.withOpacity(0.03) : Colors.black.withOpacity(0.075),
             strokeWidth: 1,
             spacing: 30,
           ),
         ),
-
-        // Radial gradient for depth
-        Container(
-          decoration: BoxDecoration(
-            gradient: RadialGradient(
-              center: Alignment.topCenter,
-              radius: 1.5,
-              colors: [
-                Colors.white.withOpacity(0.1),
-                Colors.transparent,
-              ],
-            ),
-          ),
+        AnimatedBuilder(
+          animation: _controller,
+          builder: (context, child) {
+            return Container(
+              decoration: BoxDecoration(
+                gradient: RadialGradient(
+                  center: Alignment.topCenter,
+                  radius: 1,
+                  colors: [
+                    _colorAnimation1.value!,
+                    _colorAnimation2.value!,
+                  ],
+                ),
+              ),
+            );
+          },
         ),
-
-        // Content
-        child,
+        widget.child,
       ],
     );
   }

@@ -1,5 +1,6 @@
 import 'package:filmu_nams/assets/widgets/stylized_tabs/stylized_tab.dart';
 import 'package:filmu_nams/assets/widgets/stylized_tabs/stylized_tabs.dart';
+import 'package:filmu_nams/providers/color_context.dart';
 import 'package:filmu_nams/views/client/main/schedule/movie_list/movie_list.dart';
 import 'package:filmu_nams/views/client/main/schedule/schedule_list/schedule_list.dart';
 import 'package:flutter/material.dart';
@@ -10,28 +11,23 @@ class ScheduleAndMovies extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = ContextTheme.of(context);
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
           padding: const EdgeInsets.fromLTRB(20, 20, 20, 16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 8,
             children: [
               Text(
-                'Saraksts',
-                style: GoogleFonts.poppins(
-                  color: Colors.white,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
+                'Saraksts 🗓️',
+                style: theme.displaySmall,
               ),
-              const SizedBox(height: 8),
               Text(
-                'Atrastie filmu seansi un piedāvājumi',
-                style: GoogleFonts.poppins(
-                  color: Colors.white.withOpacity(0.7),
-                  fontSize: 14,
-                ),
+                'Filmu seansi un piedāvājumi',
+                style: theme.titleSmall,
               ),
             ],
           ),

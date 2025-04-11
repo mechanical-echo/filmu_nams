@@ -16,7 +16,7 @@ class TicketDetailDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = ColorContext.of(context);
+    final colors = ContextTheme.of(context);
     final bool isExpired =
         ticket.schedule.time.toDate().isBefore(DateTime.now());
 

@@ -32,7 +32,7 @@ class FormInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = ColorContext.of(context);
+    final colors = ContextTheme.of(context);
 
     return Container(
       margin: EdgeInsets.fromLTRB(margin[3], margin[0], margin[1], margin[2]),
@@ -53,7 +53,6 @@ class FormInput extends StatelessWidget {
             clipBehavior: Clip.none,
             children: [
               Container(
-                decoration: colors.classicDecorationWhiteSharper,
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: TextField(
                   controller: controller,
@@ -81,7 +80,7 @@ class FormInput extends StatelessWidget {
                   left: -40,
                   child: Icon(
                     icon,
-                    color: colors.color001,
+                    color: colors.primary,
                     size: 25,
                   ),
                 ),

@@ -589,14 +589,14 @@ class _HallSeatsState extends State<HallSeats> {
               Expanded(
                 child: Container(
                   height: 40,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF2A2A2A),
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(
-                      color: Colors.white.withOpacity(0.1),
-                      width: 1,
-                    ),
-                  ),
+                  // decoration: BoxDecoration(
+                  //   color: const Color(0xFF2A2A2A),
+                  //   borderRadius: BorderRadius.circular(8),
+                  //   border: Border.all(
+                  //     color: Colors.white.withOpacity(0.1),
+                  //     width: 1,
+                  //   ),
+                  // ),
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   child: TextField(
                     controller: promocodeController,
@@ -645,7 +645,7 @@ class _HallSeatsState extends State<HallSeats> {
                 if (chosenSeats.isNotEmpty) {
                   processPayment(context);
                 } else {
-                  StylizedDialog.alert(
+                  StylizedDialog.dialog(Icons.error_outline,
                     context,
                     "Kļūda",
                     "Lūdzu, izvēlieties vismaz vienu vietu",
@@ -710,7 +710,7 @@ class _HallSeatsState extends State<HallSeats> {
 
   Future<void> submitPromocode(BuildContext context) async {
     if (submittedPromocode != null) {
-      StylizedDialog.alert(
+      StylizedDialog.dialog(Icons.error_outline,
         context,
         "Kļūda",
         "Drīkst ievadīt tikai 1 promokodu",
@@ -726,7 +726,7 @@ class _HallSeatsState extends State<HallSeats> {
       });
     } catch (e) {
       debugPrint(e.toString());
-      StylizedDialog.alert(
+      StylizedDialog.dialog(Icons.error_outline,
         context,
         "Kļūda",
         "Promokods nav atrasts",
@@ -743,7 +743,7 @@ class _HallSeatsState extends State<HallSeats> {
 
   Future<void> processPayment(BuildContext context) async {
     if (chosenSeats.isEmpty) {
-      StylizedDialog.alert(
+      StylizedDialog.dialog(Icons.error_outline,
         context,
         "Kļūda",
         "Lūdzu, izvēlieties vismaz vienu vietu",
@@ -753,7 +753,7 @@ class _HallSeatsState extends State<HallSeats> {
 
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) {
-      StylizedDialog.alert(
+      StylizedDialog.dialog(Icons.error_outline,
         context,
         "Kļūda",
         "Lūdzu, ielogojieties, lai veiktu pirkumu",
@@ -788,7 +788,7 @@ class _HallSeatsState extends State<HallSeats> {
       }
     } catch (e) {
       debugPrint('Payment error: $e');
-      StylizedDialog.alert(
+      StylizedDialog.dialog(Icons.error_outline,
         context,
         "Maksājuma kļūda",
         "Neizdevās apstrādāt maksājumu. Lūdzu, mēģiniet vēlāk.",

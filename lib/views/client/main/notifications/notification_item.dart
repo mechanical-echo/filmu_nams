@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import '../../../../controllers/notification_controller.dart';
 import '../../../../models/notification.dart';
+import '../../../../providers/color_context.dart';
 import 'notifications.dart';
 
 class NotificationItem extends StatefulWidget {
@@ -10,10 +11,12 @@ class NotificationItem extends StatefulWidget {
     super.key,
     required this.notification,
     required this.onDelete,
+    required this.onStatusChange,
   });
 
   final NotificationModel notification;
   final Function() onDelete;
+  final Function() onStatusChange;
 
   @override
   State<NotificationItem> createState() => _NotificationItemState();
@@ -49,37 +52,13 @@ class _NotificationItemState extends State<NotificationItem>
 
   @override
   Widget build(BuildContext context) {
-    if (isLoading) {
-      return Center(
-        child: LoadingAnimationWidget.stretchedDots(
-          color: Colors.white,
-          size: 40,
-        ),
-      );
-    }
+    final theme = ContextTheme.of(context);
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
-      decoration: BoxDecoration(
-        color: _notification.status == NotificationStatusEnum.unread
-            ? Colors.white.withOpacity(0.1)
-            : Colors.white.withOpacity(0.03),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: _notification.status == NotificationStatusEnum.unread
-              ? Colors.white.withOpacity(0.2)
-              : Colors.white.withOpacity(0.05),
-          width: 1,
-        ),
-        boxShadow: [
-          if (_notification.status == NotificationStatusEnum.unread)
-            BoxShadow(
-              color: Colors.white.withOpacity(0.1),
-              blurRadius: 8,
-              spreadRadius: 1,
-            ),
-        ],
-      ),
+      decoration: _notification.status == NotificationStatusEnum.unread
+          ? theme.activeCardDecoration
+          : theme.cardDecoration,
       child: Material(
         color: Colors.transparent,
         child: InkWell(
@@ -87,18 +66,25 @@ class _NotificationItemState extends State<NotificationItem>
           borderRadius: BorderRadius.circular(12),
           child: Padding(
             padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildHeader(),
-                const SizedBox(height: 12),
-                _buildMessage(),
-                if (isExpanded) ...[
-                  const SizedBox(height: 16),
-                  _buildActions(),
-                ],
-              ],
-            ),
+            child: isLoading
+                ? Center(
+                    child: LoadingAnimationWidget.stretchedDots(
+                      color: Colors.white,
+                      size: 40,
+                    ),
+                  )
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildHeader(),
+                      const SizedBox(height: 12),
+                      _buildMessage(),
+                      if (isExpanded) ...[
+                        const SizedBox(height: 16),
+                        _buildActions(),
+                      ],
+                    ],
+                  ),
           ),
         ),
       ),
@@ -257,6 +243,7 @@ class _NotificationItemState extends State<NotificationItem>
       setState(() {
         _notification = response;
       });
+      widget.onStatusChange();
     } catch (e) {
       debugPrint(e.toString());
     }

@@ -51,20 +51,20 @@ class _AddUserState extends State<AddUser> {
       if (!mounted) return;
 
       if (response?.errorMessage != null) {
-        StylizedDialog.alert(
+        StylizedDialog.dialog(Icons.error_outline,
           context,
           "Kļūda",
           "Neizdevās pievienot lietotāju: ${response?.errorMessage}",
         );
       } else {
-        StylizedDialog.alert(context, "Veiksmīgi", "Lietotājs ir pievienots");
+        StylizedDialog.dialog(Icons.error_outline,context, "Veiksmīgi", "Lietotājs ir pievienots");
         widget.action("mng_users");
       }
     } catch (exception) {
       debugPrint(exception.toString());
       if (!mounted) return;
 
-      StylizedDialog.alert(
+      StylizedDialog.dialog(Icons.error_outline,
         context,
         "Kļūda",
         "Neizdevās pievienot lietotāju",

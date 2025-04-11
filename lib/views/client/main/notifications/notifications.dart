@@ -1,4 +1,5 @@
 import 'package:filmu_nams/models/notification.dart';
+import 'package:filmu_nams/providers/color_context.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../../controllers/notification_controller.dart';
@@ -45,10 +46,17 @@ class _NotificationsState extends State<Notifications> {
       final response = await NotificationController().fetchNotifications();
       setState(() {
         notifications = response;
+        sortNotifications();
       });
     } catch (e) {
       debugPrint('Error fetching notifications: $e');
     }
+  }
+
+  void sortNotifications() {
+    setState(() {
+      notifications.sort((a, b) => b.status.compareTo(a.status));
+    });
   }
 
   @override
@@ -59,6 +67,7 @@ class _NotificationsState extends State<Notifications> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = ContextTheme.of(context);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
@@ -66,12 +75,8 @@ class _NotificationsState extends State<Notifications> {
         children: [
           const SizedBox(height: 16),
           Text(
-            'Paziņojumi',
-            style: GoogleFonts.poppins(
-              color: Colors.white,
-              fontSize: 24,
-              fontWeight: FontWeight.w600,
-            ),
+            'Paziņojumi 🔔',
+            style: theme.displaySmall,
           ),
           const SizedBox(height: 24),
           Expanded(
@@ -84,6 +89,7 @@ class _NotificationsState extends State<Notifications> {
                         child: NotificationItem(
                           notification: notifications[index],
                           onDelete: fetchNotifications,
+                          onStatusChange: sortNotifications,
                         ),
                       );
                     },
@@ -95,15 +101,12 @@ class _NotificationsState extends State<Notifications> {
                         Icon(
                           Icons.notifications_none,
                           size: 64,
-                          color: Colors.white.withOpacity(0.3),
+                          color: theme.contrast.withOpacity(0.3),
                         ),
                         const SizedBox(height: 16),
                         Text(
                           'Nav paziņojumu',
-                          style: GoogleFonts.poppins(
-                            color: Colors.white.withOpacity(0.5),
-                            fontSize: 16,
-                          ),
+                          style: theme.titleMedium,
                         ),
                       ],
                     ),

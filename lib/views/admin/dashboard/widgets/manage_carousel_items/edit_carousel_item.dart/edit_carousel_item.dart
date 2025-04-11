@@ -47,7 +47,7 @@ class _EditCarouselItemState extends State<EditCarouselItem> {
     } catch (exception) {
       debugPrint(exception.toString());
       if (mounted) {
-        StylizedDialog.alert(context, "Kļūda", 'Neizdēvas dabūt datus');
+        StylizedDialog.dialog(Icons.error_outline,context, "Kļūda", 'Neizdēvas dabūt datus');
       }
     }
 
@@ -73,7 +73,7 @@ class _EditCarouselItemState extends State<EditCarouselItem> {
     } catch (exception) {
       debugPrint(exception.toString());
       if (mounted) {
-        StylizedDialog.alert(context, "Kļūda", "Neizdēvas rediģēt elementu");
+        StylizedDialog.dialog(Icons.error_outline,context, "Kļūda", "Neizdēvas rediģēt elementu");
       }
     }
     setState(() {
@@ -94,7 +94,7 @@ class _EditCarouselItemState extends State<EditCarouselItem> {
       }
     } catch (e) {
       print('Error picking image: $e');
-      StylizedDialog.alert(context, "Kļūda", "Neizdēvas uztaisīt elementu: ${e.toString()}");
+      StylizedDialog.dialog(Icons.error_outline,context, "Kļūda", "Neizdēvas uztaisīt elementu: ${e.toString()}");
     }
   }
 

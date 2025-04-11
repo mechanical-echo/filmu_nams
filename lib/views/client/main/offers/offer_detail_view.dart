@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:filmu_nams/assets/dialog/dialog.dart';
 import 'package:filmu_nams/models/offer.dart';
 import 'package:filmu_nams/models/promocode.dart';
+import 'package:filmu_nams/providers/color_context.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -71,7 +72,7 @@ class _OfferViewState extends State<OfferView>
     if (promocode != null) {
       await Clipboard.setData(ClipboardData(text: promocode!.name));
       if (mounted) {
-        StylizedDialog.alert(
+        StylizedDialog.dialog(Icons.paste,
           context,
           "Kopēts!",
           "Promokods ir kopēts uz starpliktuvi",
@@ -82,22 +83,25 @@ class _OfferViewState extends State<OfferView>
 
   @override
   Widget build(BuildContext context) {
+    final theme = ContextTheme.of(context);
+
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: theme.themeBgColor,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
+        scrolledUnderElevation: 0,
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
           icon: Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.5),
+              color: theme.themeBgColor.withOpacity(0.5),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: const Icon(
+            child: Icon(
               Icons.arrow_back,
-              color: Colors.white,
+              color: theme.contrast,
             ),
           ),
           onPressed: () => Navigator.of(context).pop(),
@@ -117,15 +121,15 @@ class _OfferViewState extends State<OfferView>
                   child: Center(
                     child: LoadingAnimationWidget.staggeredDotsWave(
                       size: 50,
-                      color: Colors.white,
+                      color: theme.contrast,
                     ),
                   ),
                 ),
                 errorWidget: (context, url, error) => Container(
                   color: Colors.grey[900],
-                  child: const Icon(
+                  child: Icon(
                     Icons.error,
-                    color: Colors.white,
+                    color: theme.contrast,
                     size: 50,
                   ),
                 ),
@@ -141,9 +145,9 @@ class _OfferViewState extends State<OfferView>
                   end: Alignment.bottomCenter,
                   colors: [
                     Colors.transparent,
-                    Colors.black.withOpacity(0.5),
-                    Colors.black.withOpacity(0.8),
-                    Colors.black,
+                    theme.themeBgColor.withOpacity(0.5),
+                    theme.themeBgColor.withOpacity(0.8),
+                    theme.themeBgColor,
                   ],
                   stops: const [0.0, 0.3, 0.5, 0.8],
                 ),
@@ -166,11 +170,7 @@ class _OfferViewState extends State<OfferView>
                         position: _slideAnimation,
                         child: Text(
                           widget.data.title,
-                          style: GoogleFonts.poppins(
-                            color: Colors.white,
-                            fontSize: 32,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: theme.displayLarge,
                         ),
                       ),
                     ),
@@ -183,7 +183,7 @@ class _OfferViewState extends State<OfferView>
                         child: Text(
                           widget.data.description,
                           style: GoogleFonts.poppins(
-                            color: Colors.white.withOpacity(0.8),
+                            color: theme.contrast.withOpacity(0.8),
                             fontSize: 16,
                             height: 1.6,
                           ),
@@ -199,14 +199,7 @@ class _OfferViewState extends State<OfferView>
                           position: _slideAnimation,
                           child: Container(
                             padding: const EdgeInsets.all(24),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(16),
-                              border: Border.all(
-                                color: Colors.white.withOpacity(0.1),
-                                width: 1,
-                              ),
-                            ),
+                            decoration: theme.cardDecoration,
                             child: promocode != null
                                 ? Column(
                                     crossAxisAlignment:
@@ -217,14 +210,14 @@ class _OfferViewState extends State<OfferView>
                                           Icon(
                                             Icons.local_offer,
                                             color:
-                                                Colors.white.withOpacity(0.8),
+                                                theme.contrast.withOpacity(0.8),
                                             size: 24,
                                           ),
                                           const SizedBox(width: 12),
                                           Text(
                                             'Promokods',
                                             style: GoogleFonts.poppins(
-                                              color: Colors.white,
+                                              color: theme.contrast,
                                               fontSize: 20,
                                               fontWeight: FontWeight.w600,
                                             ),
@@ -235,28 +228,19 @@ class _OfferViewState extends State<OfferView>
                                       GestureDetector(
                                         onTap: () => copyToClipboard(context),
                                         child: Container(
+                                          width: double.infinity,
                                           padding: const EdgeInsets.symmetric(
                                             horizontal: 20,
                                             vertical: 12,
                                           ),
-                                          decoration: BoxDecoration(
-                                            color:
-                                                Colors.white.withOpacity(0.1),
-                                            borderRadius:
-                                                BorderRadius.circular(12),
-                                            border: Border.all(
-                                              color:
-                                                  Colors.white.withOpacity(0.1),
-                                              width: 1,
-                                            ),
-                                          ),
+                                          decoration: theme.activeCardDecoration,
                                           child: Row(
-                                            mainAxisSize: MainAxisSize.min,
+                                            mainAxisAlignment: MainAxisAlignment.center,
                                             children: [
                                               Text(
                                                 promocode!.name,
                                                 style: GoogleFonts.poppins(
-                                                  color: Colors.white,
+                                                  color: theme.contrast,
                                                   fontSize: 24,
                                                   fontWeight: FontWeight.w600,
                                                   letterSpacing: 1.2,
@@ -265,7 +249,7 @@ class _OfferViewState extends State<OfferView>
                                               const SizedBox(width: 12),
                                               Icon(
                                                 Icons.copy,
-                                                color: Colors.white
+                                                color: theme.contrast
                                                     .withOpacity(0.8),
                                                 size: 20,
                                               ),
@@ -281,7 +265,7 @@ class _OfferViewState extends State<OfferView>
                                                 ? 'Atlaide ${promocode!.amount!.toStringAsFixed(2)}€'
                                                 : 'Atlaide',
                                         style: GoogleFonts.poppins(
-                                          color: Colors.white.withOpacity(0.8),
+                                          color: theme.contrast.withOpacity(0.8),
                                           fontSize: 16,
                                         ),
                                       ),
@@ -289,7 +273,7 @@ class _OfferViewState extends State<OfferView>
                                       Text(
                                         'Nospiediet, lai kopētu',
                                         style: GoogleFonts.poppins(
-                                          color: Colors.white.withOpacity(0.5),
+                                          color: theme.contrast.withOpacity(0.5),
                                           fontSize: 14,
                                         ),
                                       ),
@@ -299,7 +283,7 @@ class _OfferViewState extends State<OfferView>
                                     child: Text(
                                       'Diemžēl promokods šobrīd nav pieejams',
                                       style: GoogleFonts.poppins(
-                                        color: Colors.white.withOpacity(0.8),
+                                        color: theme.contrast.withOpacity(0.8),
                                         fontSize: 16,
                                       ),
                                       textAlign: TextAlign.center,

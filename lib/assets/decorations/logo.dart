@@ -11,6 +11,7 @@ class Logo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
+    final theme = ContextTheme.of(context);
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -22,50 +23,50 @@ class Logo extends StatelessWidget {
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: const Icon(
-                  Icons.movie_filter,
-                  color: Colors.white,
-                  size: 24,
-                ),
-              ),
-              const SizedBox(width: 12),
-              Text(
-                "Filmu Nams",
-                style: GoogleFonts.poppins(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+                padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 25),
+                decoration: theme.cardDecoration,
+                child: Row(
+                  spacing: 15,
+                  children: [
+                    Icon(
+                      Icons.movie_filter,
+                      color: theme.contrast.withAlpha(150),
+                      size: 24,
+                    ),
+                    Text(
+                      "Filmu Nams",
+                      style: GoogleFonts.poppins(
+                        color: theme.contrast.withAlpha(110),
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                )
               ),
             ],
           ),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(12),
-            ),
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            decoration: theme.cardDecoration,
             child: Row(
+              spacing: 8,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Icon(
-                  Icons.calendar_month,
-                  color: Colors.white,
-                  size: 20,
-                ),
-                const SizedBox(width: 8),
                 Text(
-                  DateFormat('E\ndd.MM.', 'lv').format(DateTime.now()),
+                  DateFormat('E dd.MM.', 'lv').format(DateTime.now()),
                   style: GoogleFonts.poppins(
-                    color: Colors.white,
+                    color: theme.contrast.withAlpha(150),
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
                   ),
                   textAlign: TextAlign.right,
+                  maxLines: 1,
+                ),
+                Icon(
+                  Icons.calendar_month,
+                  color: theme.contrast.withAlpha(150),
+                  size: 16,
                 ),
               ],
             ),

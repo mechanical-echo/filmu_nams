@@ -206,6 +206,7 @@ class _MovieViewState extends State<MovieView>
                             const SizedBox(height: 24),
 
                             // Cast
+                            if (widget.data.actors.isNotEmpty)
                             Text(
                               'Aktieri',
                               style: GoogleFonts.poppins(
@@ -215,6 +216,7 @@ class _MovieViewState extends State<MovieView>
                               ),
                             ),
                             const SizedBox(height: 8),
+                            if (widget.data.actors.isNotEmpty)
                             Wrap(
                               spacing: 8,
                               runSpacing: 8,

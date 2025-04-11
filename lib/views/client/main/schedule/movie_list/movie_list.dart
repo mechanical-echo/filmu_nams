@@ -44,30 +44,6 @@ class _MovieListState extends State<MovieList> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(20, 20, 20, 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Visas filmas',
-                style: GoogleFonts.poppins(
-                  color: Colors.white,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Atrastie visi pieejamie filmu piedāvājumi',
-                style: GoogleFonts.poppins(
-                  color: Colors.white.withOpacity(0.7),
-                  fontSize: 14,
-                ),
-              ),
-            ],
-          ),
-        ),
         Expanded(
           child: isLoading
               ? Center(

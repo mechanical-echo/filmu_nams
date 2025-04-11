@@ -116,7 +116,7 @@ class PaymentController {
   }
 
   void _showPaymentError(BuildContext context, String message) {
-    StylizedDialog.alert(
+    StylizedDialog.dialog(Icons.error_outline,
       context,
       "Maksājuma kļūda",
       message,

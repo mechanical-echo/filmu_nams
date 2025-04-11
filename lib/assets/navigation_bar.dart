@@ -1,5 +1,6 @@
 import 'package:filmu_nams/providers/color_context.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class NavBar extends StatefulWidget {
   const NavBar({
@@ -24,7 +25,7 @@ class _NavBarState extends State<NavBar> with SingleTickerProviderStateMixin {
     super.initState();
     _previousIndex = widget.currentIndex;
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 450),
       vsync: this,
     );
 
@@ -66,114 +67,109 @@ class _NavBarState extends State<NavBar> with SingleTickerProviderStateMixin {
       'Profils',
     ];
 
+    final theme = ContextTheme.of(context);
+
     return Container(
       color: Colors.transparent,
       child: Stack(
         clipBehavior: Clip.none,
         children: [
           Container(
-            height: 85,
+            height: 80,
             margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.3),
-              borderRadius: BorderRadius.circular(25),
-              border: Border.all(
-                color: Colors.white.withOpacity(0.1),
-                width: 1,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.2),
-                  blurRadius: 20,
-                  offset: const Offset(0, 5),
-                ),
-              ],
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: List.generate(
-                  icons.length,
-                  (index) {
-                    final isSelected = widget.currentIndex == index;
-                    final wasSelected = _previousIndex == index;
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            decoration: theme.roundCardDecoration,
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final totalWidth = constraints.maxWidth;
 
-                    Animation<double> animation;
-                    if (isSelected) {
-                      animation = Tween<double>(begin: 0.0, end: 1.0).animate(
-                        CurvedAnimation(
-                          parent: _controller,
-                          curve: Curves.easeOutCubic,
-                        ),
-                      );
-                    } else if (wasSelected) {
-                      animation = Tween<double>(begin: 1.0, end: 0.0).animate(
-                        CurvedAnimation(
-                          parent: _controller,
-                          curve: Curves.easeOutCubic,
-                        ),
-                      );
-                    } else {
-                      animation = const AlwaysStoppedAnimation<double>(0.0);
-                    }
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: List.generate(
+                    icons.length,
+                        (index) {
+                      final isSelected = widget.currentIndex == index;
+                      final wasSelected = _previousIndex == index;
 
-                    return AnimatedBuilder(
-                      animation: animation,
-                      builder: (context, child) {
-                        final scale = 1.0 + (0.1 * animation.value);
-                        final opacity = 0.5 + (0.5 * animation.value);
-
-                        return GestureDetector(
-                          onTap: () => widget.onPageChanged(index),
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 6),
-                            decoration: BoxDecoration(
-                              color: isSelected
-                                  ? Colors.white.withOpacity(0.1)
-                                  : Colors.transparent,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Transform.scale(
-                                  scale: scale,
-                                  child: Icon(
-                                    icons[index],
-                                    color: Color.lerp(
-                                      Colors.white.withOpacity(0.5),
-                                      Colors.white,
-                                      opacity,
-                                    ),
-                                    size: 22,
-                                  ),
-                                ),
-                                const SizedBox(height: 2),
-                                Text(
-                                  labels[index],
-                                  style: TextStyle(
-                                    color: Color.lerp(
-                                      Colors.white.withOpacity(0.5),
-                                      Colors.white,
-                                      opacity,
-                                    ),
-                                    fontSize: 10,
-                                    fontWeight: isSelected
-                                        ? FontWeight.bold
-                                        : FontWeight.normal,
-                                  ),
-                                ),
-                              ],
-                            ),
+                      Animation<double> animation;
+                      if (isSelected) {
+                        animation = Tween<double>(begin: 0.0, end: 1.0).animate(
+                          CurvedAnimation(
+                            parent: _controller,
+                            curve: Cubic(1, 0, 0, 1),
                           ),
                         );
-                      },
-                    );
-                  },
-                ),
-              ),
+                      } else if (wasSelected) {
+                        animation = Tween<double>(begin: 1.0, end: 0.0).animate(
+                          CurvedAnimation(
+                            parent: _controller,
+                            curve: Cubic(1, 0, 0, 1),
+                          ),
+                        );
+                      } else {
+                        animation = const AlwaysStoppedAnimation<double>(0.0);
+                      }
+
+                      return AnimatedBuilder(
+                        animation: animation,
+                        builder: (context, child) {
+                          final flexFactor = 1 + animation.value;
+
+                          return Flexible(
+                            flex: (flexFactor * 10).round(),
+                            child: GestureDetector(
+                              onTap: () => widget.onPageChanged(index),
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 4 + (animation.value * 8),
+                                ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Transform.scale(
+                                      scale: 1.0 + (0.1 * animation.value),
+                                      child: Icon(
+                                        icons[index],
+                                        color: Color.lerp(
+                                          theme.contrast.withOpacity(0.5),
+                                          theme.primary,
+                                          0.5 + (0.5 * animation.value),
+                                        ),
+                                        size: 28,
+                                      ),
+                                    ),
+                                    ClipRect(
+                                      child: SizedBox(
+                                        height: animation.value * 20,
+                                        child: Opacity(
+                                          opacity: animation.value,
+                                          child: Transform.translate(
+                                            offset: Offset(0, 5 * (1 - animation.value)),
+                                            child: Text(
+                                              labels[index],
+                                              style: GoogleFonts.poppins(
+                                                color: theme.primary,
+                                                fontSize: 12,
+                                              ),
+                                              textAlign: TextAlign.center,
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ),
+                );
+              },
             ),
           ),
         ],

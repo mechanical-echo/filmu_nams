@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:filmu_nams/providers/color_context.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -19,25 +20,12 @@ class ProfileImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = ContextTheme.of(context);
     return Container(
       clipBehavior: Clip.antiAlias,
       width: width,
       height: width,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black26,
-            blurRadius: 0,
-            offset: const Offset(6, 8),
-          ),
-          BoxShadow(
-            color: Colors.white24,
-            blurRadius: 0,
-            offset: const Offset(-2, -2),
-          ),
-        ],
-      ),
+      decoration: theme.cardDecoration,
       child: user!.photoURL != null && customImage == null
           ? CachedNetworkImage(
               imageUrl: user!.photoURL!,

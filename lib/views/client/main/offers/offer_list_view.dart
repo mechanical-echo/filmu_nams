@@ -43,6 +43,7 @@ class _OffersListState extends State<OffersList> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = ContextTheme.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
@@ -55,20 +56,13 @@ class _OffersListState extends State<OffersList> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Piedāvājumi',
-                  style: GoogleFonts.poppins(
-                    color: Colors.white,
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  'Piedāvājumi 💯',
+                  style: theme.displayLarge,
                 ),
                 const SizedBox(height: 8),
                 Text(
                   'Īpašie piedāvājumi un akcijas',
-                  style: GoogleFonts.poppins(
-                    color: Colors.white.withOpacity(0.7),
-                    fontSize: 16,
-                  ),
+                  style: theme.titleMedium,
                 ),
               ],
             ),
@@ -105,10 +99,7 @@ class _OffersListState extends State<OffersList> {
                             const SizedBox(height: 16),
                             Text(
                               "Nav pieejamu piedāvājumu",
-                              style: GoogleFonts.poppins(
-                                color: Colors.white.withOpacity(0.7),
-                                fontSize: 16,
-                              ),
+                              style: theme.titleMedium,
                             ),
                           ],
                         ),
@@ -139,25 +130,18 @@ class OfferCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = ContextTheme.of(context);
     return GestureDetector(
       onTap: () => openOfferView(context),
       child: Container(
         margin: const EdgeInsets.only(bottom: 16),
-        decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.05),
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: Colors.white.withOpacity(0.1),
-            width: 1,
-          ),
-        ),
+        decoration: theme.cardDecoration,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Image
             ClipRRect(
               borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(16),
+                top: Radius.circular(5),
               ),
               child: AspectRatio(
                 aspectRatio: 16 / 9,
@@ -185,38 +169,27 @@ class OfferCard extends StatelessWidget {
               ),
             ),
 
-            // Content
             Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Title
                   Text(
                     data.title,
-                    style: GoogleFonts.poppins(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: theme.headlineMedium,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 8),
 
-                  // Description
                   Text(
                     data.description,
-                    style: GoogleFonts.poppins(
-                      color: Colors.white.withOpacity(0.7),
-                      fontSize: 14,
-                    ),
+                    style: theme.titleSmall,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 16),
 
-                  // Footer
                   Row(
                     children: [
                       if (data.promocode != null)
@@ -226,21 +199,21 @@ class OfferCard extends StatelessWidget {
                             vertical: 6,
                           ),
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.1),
+                            color: theme.contrast.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Row(
                             children: [
                               Icon(
                                 Icons.local_offer,
-                                color: Colors.white.withOpacity(0.8),
+                                color: theme.contrast.withOpacity(0.8),
                                 size: 16,
                               ),
                               const SizedBox(width: 4),
                               Text(
                                 "Promokods",
                                 style: GoogleFonts.poppins(
-                                  color: Colors.white.withOpacity(0.8),
+                                  color: theme.contrast.withOpacity(0.8),
                                   fontSize: 14,
                                 ),
                               ),
@@ -254,23 +227,19 @@ class OfferCard extends StatelessWidget {
                           vertical: 8,
                         ),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(20),
+                          color: theme.contrast.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(7),
                         ),
                         child: Row(
                           children: [
                             Text(
                               "Lasīt vairāk",
-                              style: GoogleFonts.poppins(
-                                color: Colors.white,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                              ),
+                              style: theme.titleSmall,
                             ),
                             const SizedBox(width: 4),
                             Icon(
                               Icons.arrow_forward,
-                              color: Colors.white.withOpacity(0.8),
+                              color: theme.contrast.withOpacity(0.8),
                               size: 16,
                             ),
                           ],

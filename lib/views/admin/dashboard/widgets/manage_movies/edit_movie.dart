@@ -57,7 +57,7 @@ class _EditMovieState extends State<EditMovie> {
     } catch (exception) {
       debugPrint(exception.toString());
       if (mounted) {
-        StylizedDialog.alert(context, "Kļūda", 'Neizdevās iegūt filmas datus');
+        StylizedDialog.dialog(Icons.error_outline,context, "Kļūda", 'Neizdevās iegūt filmas datus');
       }
     }
 
@@ -96,12 +96,12 @@ class _EditMovieState extends State<EditMovie> {
       );
 
       if (mounted) {
-        StylizedDialog.alert(context, "Veiksmīgi", "Filma ir atjaunināta");
+        StylizedDialog.dialog(Icons.error_outline,context, "Veiksmīgi", "Filma ir atjaunināta");
       }
     } catch (exception) {
       debugPrint(exception.toString());
       if (mounted) {
-        StylizedDialog.alert(context, "Kļūda", "Neizdevās atjaunināt filmu");
+        StylizedDialog.dialog(Icons.error_outline,context, "Kļūda", "Neizdevās atjaunināt filmu");
       }
     }
 
@@ -156,7 +156,7 @@ class _EditMovieState extends State<EditMovie> {
     } catch (exception) {
       debugPrint(exception.toString());
       if (mounted) {
-        StylizedDialog.alert(context, "Kļūda", "Neizdevās dzēst filmu");
+        StylizedDialog.dialog(Icons.error_outline,context, "Kļūda", "Neizdevās dzēst filmu");
       }
       setState(() {
         isLoading = false;

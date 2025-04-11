@@ -151,7 +151,7 @@ class _CredentialsStepState extends State<CredentialsStep> {
         validator.validatePassword(password, passwordConfirmation);
     if (validation.isNotValid) {
       if (validation.problematicFields.contains("passwordConfirmation")) {
-        StylizedDialog.alert(context, "Kļūda", "Paroles nesakrīt");
+        StylizedDialog.dialog(Icons.error_outline,context, "Kļūda", "Paroles nesakrīt");
         setState(() => passwordConfirmationError = validation.error);
       } else {
         setState(() => passwordError = validation.error);

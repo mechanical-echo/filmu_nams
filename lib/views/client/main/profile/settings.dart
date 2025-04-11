@@ -1,4 +1,5 @@
 import 'package:filmu_nams/assets/decorations/background.dart';
+import 'package:filmu_nams/providers/color_context.dart';
 import 'package:filmu_nams/providers/theme_provider.dart';
 import 'package:filmu_nams/views/client/main/profile/password_change.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -26,6 +27,7 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
+    final theme = ContextTheme.of(context);
 
     return Stack(
       children: [
@@ -40,21 +42,7 @@ class _SettingsPageState extends State<SettingsPage> {
             clipBehavior: Clip.none,
             title: Container(
               padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 5),
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.05),
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                  color: Colors.white.withOpacity(0.1),
-                  width: 1,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
-                    blurRadius: 20,
-                    offset: const Offset(0, 10),
-                  ),
-                ],
-              ),
+              decoration: theme.cardDecoration,
               child: Stack(
                 alignment: Alignment.centerLeft,
                 clipBehavior: Clip.none,
@@ -121,6 +109,7 @@ class _SettingsPageState extends State<SettingsPage> {
                           Icons.logout_outlined,
                           () {
                             FirebaseAuth.instance.signOut();
+                            Navigator.pop(context);
                           },
                         ),
                       ],
@@ -203,15 +192,9 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Widget _buildThemeSelector(ThemeProvider themeProvider) {
+    final theme = ContextTheme.of(context);
     return Container(
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceVariant,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: Theme.of(context).colorScheme.outline,
-          width: 1,
-        ),
-      ),
+      decoration: theme.cardDecoration,
       child: Column(
         children: [
           _buildThemeOption(
@@ -296,6 +279,7 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Widget _buildInfoItem(String title, String value, {VoidCallback? onTap}) {
+    final theme = ContextTheme.of(context);
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -304,14 +288,7 @@ class _SettingsPageState extends State<SettingsPage> {
         child: Container(
           margin: const EdgeInsets.only(bottom: 8),
           padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-          decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.03),
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: Colors.white.withOpacity(0.1),
-              width: 1,
-            ),
-          ),
+          decoration: theme.cardDecoration,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -342,6 +319,7 @@ class _SettingsPageState extends State<SettingsPage> {
     IconData icon,
     VoidCallback onPressed,
   ) {
+    final theme = ContextTheme.of(context);
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -350,14 +328,7 @@ class _SettingsPageState extends State<SettingsPage> {
         child: Container(
           margin: const EdgeInsets.only(bottom: 8),
           padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-          decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.03),
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: Colors.white.withOpacity(0.1),
-              width: 1,
-            ),
-          ),
+          decoration: theme.activeCardDecoration,
           child: Row(
             children: [
               Icon(

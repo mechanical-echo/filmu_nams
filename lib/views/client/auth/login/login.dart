@@ -4,6 +4,8 @@ import 'package:filmu_nams/views/client/auth/login/login_view.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../../providers/color_context.dart';
+
 class Login extends StatefulWidget {
   final void Function(int? view) onViewChange;
 
@@ -59,7 +61,8 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    // final theme = Theme.of(context);
+    final theme = ContextTheme.of(context);
 
     return LoginView(
       formKey: _formKey,
@@ -74,28 +77,24 @@ class _LoginState extends State<Login> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Pieslēgties',
-                  style: GoogleFonts.poppins(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w600,
-                    color: theme.colorScheme.onSurface,
+          SizedBox(
+            width: double.infinity,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 34, vertical: 24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Pieslēgties',
+                    style: theme.displaySmall,
                   ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Ievadiet savu e-pastu un paroli',
-                  style: GoogleFonts.poppins(
-                    fontSize: 14,
-                    color: theme.colorScheme.onSurface.withOpacity(0.7),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Ievadiet savu e-pastu un paroli',
+                    style: theme.bodySmall,
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
           Padding(
@@ -107,20 +106,7 @@ class _LoginState extends State<Login> {
                   validator: LoginValidator.validateEmail,
                   decoration: InputDecoration(
                     labelText: 'E-pasts',
-                    prefixIcon: Icon(Icons.email_outlined,
-                        color: theme.colorScheme.primary),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: theme.colorScheme.outline),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: theme.colorScheme.outline),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: theme.colorScheme.primary),
-                    ),
+                    prefixIcon: Icon(Icons.email_outlined),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -130,29 +116,16 @@ class _LoginState extends State<Login> {
                   obscureText: _obscurePassword,
                   decoration: InputDecoration(
                     labelText: 'Parole',
-                    prefixIcon: Icon(Icons.lock_outline,
-                        color: theme.colorScheme.primary),
+                    prefixIcon: Icon(Icons.lock_outline),
                     suffixIcon: IconButton(
                       icon: Icon(
                         _obscurePassword
                             ? Icons.visibility_outlined
                             : Icons.visibility_off_outlined,
-                        color: theme.colorScheme.primary,
+                        color: theme.primary,
                       ),
                       onPressed: () =>
                           setState(() => _obscurePassword = !_obscurePassword),
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: theme.colorScheme.outline),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: theme.colorScheme.outline),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: theme.colorScheme.primary),
                     ),
                   ),
                 ),
@@ -163,8 +136,9 @@ class _LoginState extends State<Login> {
                   child: ElevatedButton(
                     onPressed: _isLoading ? null : _handleLogin,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: theme.colorScheme.primary,
-                      foregroundColor: theme.colorScheme.onPrimary,
+                      backgroundColor: theme.primary,
+                      foregroundColor: theme.onPrimary,
+                      padding: const EdgeInsets.all(0),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -194,11 +168,12 @@ class _LoginState extends State<Login> {
                   child: Text(
                     'Vai vēlaties reģistrēties?',
                     style: GoogleFonts.poppins(
-                      color: theme.colorScheme.primary,
+                      color: theme.primary,
                       fontSize: 14,
                     ),
                   ),
                 ),
+                const SizedBox(height: 16),
               ],
             ),
           ),

@@ -15,16 +15,16 @@ class MovieController {
   Future<List<CarouselItemModel>> getHomescreenCarousel() async {
     final response = await _firestore.collection(carouselCollection).get();
 
-    return response.docs
-        .map((doc) => CarouselItemModel.fromMap(doc.data(), doc.id))
+    final futures = response.docs
+        .map((doc) => CarouselItemModel.fromMapAsync(doc.data(), doc.id))
         .toList();
+    return await Future.wait(futures);
   }
 
   Future<CarouselItemModel> getCarouselItemById(String id) async {
-    final response =
-        await _firestore.collection(carouselCollection).doc(id).get();
+    final response = await _firestore.collection(carouselCollection).doc(id).get();
 
-    return CarouselItemModel.fromMap(response.data()!, response.id);
+    return await CarouselItemModel.fromMapAsync(response.data()!, response.id);
   }
 
   Future<void> updateHomescreenCarousel(

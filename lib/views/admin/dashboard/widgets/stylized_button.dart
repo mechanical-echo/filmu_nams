@@ -31,7 +31,7 @@ class _StylizedButtonState extends State<StylizedButton> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = ColorContext.of(context);
+    final colors = ContextTheme.of(context);
 
     // Update decoration based on state
     if (isActive) {

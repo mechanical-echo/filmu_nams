@@ -58,34 +58,20 @@ class _TicketsViewState extends State<TicketsView>
 
   @override
   Widget build(BuildContext context) {
-    final colors = ColorContext.of(context);
+    final theme = ContextTheme.of(context);
 
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         centerTitle: true,
         iconTheme: IconThemeData(
-          color: colors.primary,
+          color: theme.primary,
         ),
         backgroundColor: Colors.transparent,
         clipBehavior: Clip.none,
         title: Container(
           padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 5),
-          decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.05),
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-              color: Colors.white.withOpacity(0.1),
-              width: 1,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.2),
-                blurRadius: 20,
-                offset: const Offset(0, 10),
-              ),
-            ],
-          ),
+          decoration: theme.cardDecoration,
           child: Stack(
             alignment: Alignment.centerLeft,
             clipBehavior: Clip.none,
@@ -100,11 +86,7 @@ class _TicketsViewState extends State<TicketsView>
               Text(
                 'Manas biļetes',
                 textAlign: TextAlign.center,
-                style: GoogleFonts.poppins(
-                  color: Colors.white.withOpacity(0.9),
-                  fontSize: 24,
-                  fontWeight: FontWeight.w500,
-                ),
+                style: theme.displaySmall,
               ),
             ],
           ),
@@ -118,36 +100,9 @@ class _TicketsViewState extends State<TicketsView>
               child: TabBar(
                 controller: _tabController,
                 tabs: [
-                  Tab(
-                    child: Text(
-                      'Tuvākie',
-                      style: GoogleFonts.poppins(
-                        color: Colors.white.withOpacity(0.9),
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                  Tab(
-                    child: Text(
-                      'Izmantotie',
-                      style: GoogleFonts.poppins(
-                        color: Colors.white.withOpacity(0.9),
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                  Tab(
-                    child: Text(
-                      'Novecojušie',
-                      style: GoogleFonts.poppins(
-                        color: Colors.white.withOpacity(0.9),
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
+                  Tab(child: Text('Atkuālie', style: theme.bodyMedium)),
+                  Tab(child: Text('Izmantotie', style: theme.bodyMedium)),
+                  Tab(child: Text('Novecojušie', style: theme.bodyMedium)),
                 ],
                 indicatorColor: Colors.white,
                 indicatorWeight: 2,

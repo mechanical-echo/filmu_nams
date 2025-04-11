@@ -176,7 +176,7 @@ class _ScheduleDateViewState extends State<ScheduleDateView> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = ColorContext.of(context);
+    final colors = ContextTheme.of(context);
 
     return isLoading
         ? LoadingAnimationWidget.staggeredDotsWave(

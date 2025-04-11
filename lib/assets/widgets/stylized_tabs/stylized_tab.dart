@@ -89,7 +89,7 @@ class _StylizedTabState extends State<StylizedTab>
 
   @override
   Widget build(BuildContext context) {
-    final colors = ColorContext.of(context);
+    final colors = ContextTheme.of(context);
     return GestureDetector(
       onTap: widget.onTap,
       child: AnimatedBuilder(

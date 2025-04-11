@@ -54,7 +54,7 @@ class _EditUserState extends State<EditUser> {
     } catch (exception) {
       debugPrint(exception.toString());
       if (mounted) {
-        StylizedDialog.alert(
+        StylizedDialog.dialog(Icons.error_outline,
             context, "Kļūda", 'Neizdevās dabūt lietotāja datus');
       }
     }
@@ -79,12 +79,12 @@ class _EditUserState extends State<EditUser> {
       );
 
       if (mounted) {
-        StylizedDialog.alert(context, "Veiksmīgi", "Lietotājs ir atjaunināts");
+        StylizedDialog.dialog(Icons.error_outline,context, "Veiksmīgi", "Lietotājs ir atjaunināts");
       }
     } catch (exception) {
       debugPrint(exception.toString());
       if (mounted) {
-        StylizedDialog.alert(
+        StylizedDialog.dialog(Icons.error_outline,
             context, "Kļūda", "Neizdēvās atjaunināt lietotāju");
       }
     }
@@ -137,7 +137,7 @@ class _EditUserState extends State<EditUser> {
     } catch (exception) {
       debugPrint(exception.toString());
       if (mounted) {
-        StylizedDialog.alert(context, "Kļūda", "Neizdēvās dzēst lietotāju");
+        StylizedDialog.dialog(Icons.error_outline,context, "Kļūda", "Neizdēvās dzēst lietotāju");
       }
       setState(() {
         isLoading = false;

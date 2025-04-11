@@ -48,7 +48,7 @@ class ThemedApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
-    return ColorContext(
+    return ContextTheme(
       themeProvider: themeProvider,
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

@@ -160,6 +160,7 @@ class _TicketBuyingFormState extends State<TicketBuyingForm> {
                             Expanded(
                               flex: 2,
                               child: DatePickerInput(
+                                padding: const EdgeInsets.symmetric(horizontal: 15),
                                 availableDates: availableDates,
                                 sharp: true,
                                 height: 50,

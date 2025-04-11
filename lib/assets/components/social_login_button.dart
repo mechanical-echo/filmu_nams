@@ -20,7 +20,7 @@ class SocialLoginButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = ColorContext.of(context);
+    final colors = ContextTheme.of(context);
     final effectiveBackgroundColor = backgroundColor ?? Colors.white;
     final effectiveTextColor = textColor ?? Colors.black;
 

@@ -9,6 +9,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
+import '../../../../providers/color_context.dart';
+
 class ProfileView extends StatefulWidget {
   const ProfileView({super.key, required this.onPressed});
 
@@ -44,12 +46,14 @@ class _ProfileViewState extends State<ProfileView> {
 
     try {
       await user!.updateDisplayName(nameCtrl.text);
-      await user?.verifyBeforeUpdateEmail(emailCtrl.text);
+      if (emailCtrl.text != user!.email) {
+        await user?.verifyBeforeUpdateEmail(emailCtrl.text);
+      }
       await userController.updateOwnProfile(
           nameCtrl.text, emailCtrl.text, image);
     } catch (e) {
       if (mounted) {
-        StylizedDialog.alert(context, "Kļūda", "Neizdevās atjaunināt");
+        StylizedDialog.dialog(Icons.error_outline,context, "Kļūda", "Neizdevās atjaunināt");
         debugPrint(e.toString());
       }
     }
@@ -69,6 +73,7 @@ class _ProfileViewState extends State<ProfileView> {
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
+    final theme = ContextTheme.of(context);
 
     return Container(
       width: 350,
@@ -76,21 +81,7 @@ class _ProfileViewState extends State<ProfileView> {
         maxHeight: height * 0.65,
       ),
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.05),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: Colors.white.withOpacity(0.1),
-          width: 1,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.2),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
-          ),
-        ],
-      ),
+      decoration: theme.cardDecoration,
       child: isLoading
           ? Center(
               child: LoadingAnimationWidget.staggeredDotsWave(
@@ -100,13 +91,25 @@ class _ProfileViewState extends State<ProfileView> {
             )
           : SingleChildScrollView(
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                spacing: 20,
                 children: [
-                  _buildBackButton(),
-                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      _buildBackButton(),
+                      Container(
+                        decoration: theme.cardDecoration,
+                        child: Icon(
+                          Icons.person,
+                          size: 45,
+                          color: Colors.white.withAlpha(200),
+                        ),
+                      ),
+                    ],
+                  ),
                   _buildProfileImage(),
-                  const SizedBox(height: 20),
                   _buildInputFields(),
-                  const SizedBox(height: 30),
                   _buildSaveButton(),
                 ],
               ),
@@ -115,6 +118,7 @@ class _ProfileViewState extends State<ProfileView> {
   }
 
   Widget _buildBackButton() {
+    final theme = ContextTheme.of(context);
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -122,23 +126,16 @@ class _ProfileViewState extends State<ProfileView> {
         borderRadius: BorderRadius.circular(12),
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-          decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.03),
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: Colors.white.withOpacity(0.05),
-              width: 1,
-            ),
-          ),
+          decoration: theme.cardDecoration,
           child: Row(
             mainAxisSize: MainAxisSize.min,
+            spacing: 8,
             children: [
               Icon(
                 Icons.arrow_back_ios_rounded,
                 color: Colors.white.withOpacity(0.7),
                 size: 20,
               ),
-              const SizedBox(width: 8),
               Text(
                 "Atpakaļ",
                 style: GoogleFonts.poppins(
@@ -155,59 +152,74 @@ class _ProfileViewState extends State<ProfileView> {
   }
 
   Widget _buildProfileImage() {
-    return Column(
+    final theme = ContextTheme.of(context);
+    return Row(
+      spacing: 10,
+      mainAxisSize: MainAxisSize.max,
       children: [
         ProfileImage(
           width: 120,
           customImage: image,
         ),
-        const SizedBox(height: 15),
-        Material(
-          color: Colors.transparent,
-          child: InkWell(
-            onTap: pickImage,
-            borderRadius: BorderRadius.circular(12),
-            child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.03),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color: Colors.white.withOpacity(0.05),
-                  width: 1,
-                ),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
+        Expanded(
+          child: Material(
+            color: Colors.transparent,
+            child: SizedBox(
+              height: 120,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Icon(
-                    Icons.image_outlined,
-                    color: Colors.white.withOpacity(0.7),
-                    size: 20,
+                  FittedBox(
+                    child: Text(
+                      user!.displayName!.replaceFirst(' ', '\n'),
+                      style: theme.displaySmall,
+                    ),
                   ),
-                  const SizedBox(width: 8),
-                  Text(
-                    "Mainīt profila attēlu",
-                    style: GoogleFonts.poppins(
-                      color: Colors.white.withOpacity(0.9),
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
+                  InkWell(
+                    onTap: pickImage,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 10,
+                        horizontal: 13,
+                      ),
+                      decoration: theme.cardDecoration,
+                      child: Stack(
+                        alignment: Alignment.centerLeft,
+                        children: [
+                          Icon(
+                            Icons.image_outlined,
+                            color: Colors.white.withOpacity(0.7),
+                            size: 20,
+                          ),
+                          Center(
+                            child: Text(
+                              "Mainīt bildi",
+                              style: GoogleFonts.poppins(
+                                color: Colors.white.withOpacity(0.9),
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],
               ),
             ),
           ),
-        ),
+        )
       ],
     );
   }
 
   Widget _buildInputFields() {
     return Column(
+      spacing: 10,
       children: [
         _buildInputField("Vārds", Icons.person_outline, nameCtrl),
-        const SizedBox(height: 15),
         _buildInputField("E-pasts", Icons.email_outlined, emailCtrl),
       ],
     );
@@ -218,6 +230,7 @@ class _ProfileViewState extends State<ProfileView> {
     IconData icon,
     TextEditingController ctrl,
   ) {
+    final theme = ContextTheme.of(context);
     return TextField(
       controller: ctrl,
       style: GoogleFonts.poppins(
@@ -226,67 +239,33 @@ class _ProfileViewState extends State<ProfileView> {
       ),
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: GoogleFonts.poppins(
-          color: Colors.white.withOpacity(0.5),
-          fontSize: 14,
-        ),
         prefixIcon: Icon(
           icon,
           color: Colors.white.withOpacity(0.7),
-        ),
-        filled: true,
-        fillColor: Colors.white.withOpacity(0.03),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(
-            color: Colors.white.withOpacity(0.1),
-            width: 1,
-          ),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(
-            color: Colors.white.withOpacity(0.1),
-            width: 1,
-          ),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(
-            color: Colors.white.withOpacity(0.2),
-            width: 1,
-          ),
         ),
       ),
     );
   }
 
   Widget _buildSaveButton() {
+    final theme = ContextTheme.of(context);
     return Material(
       color: Colors.transparent,
       child: InkWell(
         onTap: submit,
-        borderRadius: BorderRadius.circular(12),
         child: Container(
           width: double.infinity,
           padding: const EdgeInsets.symmetric(vertical: 15),
-          decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: Colors.white.withOpacity(0.2),
-              width: 1,
-            ),
-          ),
+          decoration: theme.activeCardDecoration,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
+            spacing: 8,
             children: [
               Icon(
                 Icons.save_outlined,
                 color: Colors.white.withOpacity(0.9),
                 size: 20,
               ),
-              const SizedBox(width: 8),
               Text(
                 "Saglabāt izmaiņas",
                 style: GoogleFonts.poppins(

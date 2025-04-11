@@ -29,7 +29,7 @@ class _EmailNotVerifiedState extends State<EmailNotVerified> {
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
-    final colors = ColorContext.of(context);
+    final colors = ContextTheme.of(context);
     return Scaffold(
       body: Background(
         child: Column(

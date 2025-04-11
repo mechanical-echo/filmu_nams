@@ -156,7 +156,7 @@ class _ProfileSetupStepState extends State<ProfileSetupStep> {
         );
       } else {
         setState(() => _isLoading = false);
-        StylizedDialog.alert(
+        StylizedDialog.dialog(Icons.error_outline,
           context,
           "Kļūda",
           getFirebaseAuthErrorCode(response?.errorMessage),
@@ -165,7 +165,7 @@ class _ProfileSetupStepState extends State<ProfileSetupStep> {
     } catch (e) {
       if (!mounted) return;
       setState(() => _isLoading = false);
-      StylizedDialog.alert(context, "Kļūda", "Nezināma kļūda");
+      StylizedDialog.dialog(Icons.error_outline,context, "Kļūda", "Nezināma kļūda");
     }
   }
 }

@@ -157,7 +157,7 @@ class _AdminLoginState extends State<AdminLogin> {
     } on FirebaseAuthException catch (e) {
       debugPrint("Error signing in as Admin: ${e.toString()}");
       if (mounted) {
-        StylizedDialog.alert(
+        StylizedDialog.dialog(Icons.error_outline,
           context,
           "Kļūda",
           getFirebaseAuthErrorCode(e.code)

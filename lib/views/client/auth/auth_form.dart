@@ -6,6 +6,8 @@ import 'package:filmu_nams/assets/animations/carousel_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../providers/color_context.dart';
+
 class AuthForm extends StatefulWidget {
   const AuthForm({super.key});
 
@@ -56,15 +58,16 @@ class _AuthFormState extends State<AuthForm>
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    // final theme = Theme.of(context);
     final size = MediaQuery.of(context).size;
+    final theme = ContextTheme.of(context);
 
     return Scaffold(
       body: Background(
         child: SafeArea(
           child: SingleChildScrollView(
             child: SizedBox(
-              height: size.height - MediaQuery.of(context).padding.top,
+              height: size.height - MediaQuery.of(context).padding.top - 50,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -76,47 +79,26 @@ class _AuthFormState extends State<AuthForm>
                         const SizedBox(height: 20),
                         Text(
                           'Laipni lūdzam',
-                          style: GoogleFonts.poppins(
-                            color: theme.colorScheme.onBackground,
-                            fontSize: 28,
-                            fontWeight: FontWeight.w600,
-                          ),
+                          style: theme.displayMedium,
                         ),
                         const SizedBox(height: 8),
                         Text(
                           'Filmu nams',
-                          style: GoogleFonts.poppins(
-                            color: theme.colorScheme.primary,
-                            fontSize: 32,
-                            fontWeight: FontWeight.w700,
-                          ),
+                          style: theme.displayLarge,
                         ),
                       ],
                     ),
                   ),
                   Flexible(
-                    flex: 3,
+                    flex: 4,
                     child: FadeTransition(
                       opacity: _fadeAnimation,
                       child: Container(
                         margin: const EdgeInsets.symmetric(horizontal: 24),
-                        decoration: BoxDecoration(
-                          color: theme.cardColor,
-                          borderRadius: BorderRadius.circular(24),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.1),
-                              blurRadius: 20,
-                              offset: const Offset(0, 10),
-                            ),
-                          ],
-                        ),
+                        decoration: theme.cardDecoration,
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(24),
-                          child: CarouselSwitch(
-                            direction: CarouselSwitchDirection.left,
-                            child: views[currentView],
-                          ),
+                          child: views[currentView]
                         ),
                       ),
                     ),

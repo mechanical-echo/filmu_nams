@@ -1,40 +1,26 @@
+import 'package:filmu_nams/providers/color_context.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class StylizedDialog {
-  static void alert(BuildContext context, String title, String content) {
+  static void dialog(IconData icon, BuildContext context, String title, String content) {
+    final theme = ContextTheme.of(context);
     showGeneralDialog(
       context: context,
       pageBuilder: (context, animation, secondaryAnimation) => Dialog(
         backgroundColor: Colors.transparent,
         child: Container(
           padding: const EdgeInsets.all(24),
-          decoration: BoxDecoration(
-            color: const Color(0xFF1A1A1A),
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-              color: Colors.white.withOpacity(0.1),
-              width: 1,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.2),
-                blurRadius: 20,
-                spreadRadius: 5,
-              ),
-            ],
-          ),
+          decoration: theme.opaqueCardDecoration,
           child: Column(
             mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
                 padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(12),
-                ),
+                decoration: theme.cardDecoration,
                 child: Icon(
-                  Icons.error_outline,
+                  icon,
                   color: Colors.white.withOpacity(0.9),
                   size: 32,
                 ),
@@ -59,31 +45,36 @@ class StylizedDialog {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 24),
-              Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  onTap: () => Navigator.of(context).pop(),
-                  borderRadius: BorderRadius.circular(12),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 24,
-                      vertical: 12,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      'Ok!',
-                      style: GoogleFonts.poppins(
-                        color: Colors.white.withOpacity(0.9),
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
+              Row(
+                children: [
+                  Expanded(
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: () => Navigator.of(context).pop(),
+                        borderRadius: BorderRadius.circular(12),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 24,
+                            vertical: 8,
+                          ),
+                          decoration: theme.cardDecoration,
+                          child: Center(
+                            child: Text(
+                              'Ok!',
+                              style: GoogleFonts.poppins(
+                                color: Colors.white.withOpacity(0.9),
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ),
+                ],
+              )
             ],
           ),
         ),

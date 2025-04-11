@@ -19,7 +19,7 @@ class TicketCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = ColorContext.of(context);
+    final theme = ContextTheme.of(context);
     final DateTime movieTime = ticket.schedule.time.toDate();
     final bool isExpired = movieTime.isBefore(DateTime.now());
 
@@ -30,37 +30,21 @@ class TicketCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         child: Container(
           margin: const EdgeInsets.only(bottom: 16),
-          decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.03),
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: Colors.white.withOpacity(0.1),
-              width: 1,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.2),
-                blurRadius: 10,
-                offset: const Offset(0, 5),
-              ),
-            ],
-          ),
-          child: Column(
+          decoration: theme.cardDecoration,
+          child: Stack(
+            alignment: Alignment.bottomCenter,
             children: [
-              // Movie poster and title section
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Movie poster
                   ClipRRect(
                     borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(16),
-                      bottomRight: Radius.circular(16),
+                      topLeft: Radius.circular(4),
                     ),
                     child: CachedNetworkImage(
                       imageUrl: ticket.schedule.movie.posterUrl,
-                      width: 100,
-                      height: 150,
+                      width: 130,
+                      height: 220,
                       fit: BoxFit.cover,
                       placeholder: (context, url) => Container(
                         width: 100,
@@ -85,7 +69,6 @@ class TicketCard extends StatelessWidget {
                       ),
                     ),
                   ),
-                  // Movie title and details
                   Expanded(
                     child: Padding(
                       padding: const EdgeInsets.all(16),
@@ -125,21 +108,20 @@ class TicketCard extends StatelessWidget {
                   ),
                 ],
               ),
-              // Status indicator
               if (isExpired)
                 Container(
                   width: double.infinity,
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   decoration: BoxDecoration(
-                    color: Colors.red.withOpacity(0.1),
+                    color: Colors.red.withOpacity(0.15),
                     borderRadius: const BorderRadius.only(
-                      bottomLeft: Radius.circular(16),
-                      bottomRight: Radius.circular(16),
+                      bottomLeft: Radius.circular(4),
+                      bottomRight: Radius.circular(4),
                     ),
                   ),
                   child: Center(
                     child: Text(
-                      'Novecojusi',
+                      'Novecojusi | Izlietota',
                       style: GoogleFonts.poppins(
                         color: Colors.red[300],
                         fontSize: 14,

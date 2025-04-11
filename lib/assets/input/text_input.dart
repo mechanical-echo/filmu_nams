@@ -48,7 +48,7 @@ class _TextInputState extends State<TextInput> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = ColorContext.of(context);
+    final colors = ContextTheme.of(context);
     return Container(
       margin: EdgeInsets.only(
         top: widget.margin[0],

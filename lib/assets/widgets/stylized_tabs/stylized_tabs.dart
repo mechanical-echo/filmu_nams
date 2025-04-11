@@ -1,5 +1,6 @@
 import 'package:filmu_nams/assets/animations/carousel_switch.dart';
 import 'package:filmu_nams/assets/widgets/stylized_tabs/stylized_tab.dart';
+import 'package:filmu_nams/providers/color_context.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -63,21 +64,28 @@ class _StylizedTabsState extends State<StylizedTabs>
     });
   }
 
+  radius() {
+    if (currentIndex == 0) {
+      return BorderRadius.only(
+          bottomLeft: Radius.circular(5), topLeft: Radius.circular(5));
+    } else if (currentIndex == widget.tabs.length - 1) {
+      return BorderRadius.only(
+          bottomRight: Radius.circular(5), topRight: Radius.circular(5));
+    } else {
+      return BorderRadius.circular(0);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final theme = ContextTheme.of(context);
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
           margin: const EdgeInsets.symmetric(horizontal: 16),
-          decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.05),
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: Colors.white.withOpacity(0.1),
-              width: 1,
-            ),
-          ),
+          decoration: theme.cardDecoration,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: List.generate(
@@ -93,22 +101,35 @@ class _StylizedTabsState extends State<StylizedTabs>
                       final progress = isActive
                           ? _controller.value
                           : (wasActive ? 1 - _controller.value : 0.0);
-
-                      return Container(
+                      return AnimatedContainer(
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeIn,
                         padding: const EdgeInsets.symmetric(vertical: 12),
-                        decoration: BoxDecoration(
-                          color: isActive
-                              ? Colors.white.withOpacity(0.1)
-                              : Colors.transparent,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
+                        decoration: isActive
+                            ? BoxDecoration(
+                                border: Border(
+                                  right: BorderSide(
+                                    color: theme.contrast.withAlpha(100),
+                                    width: .45,
+                                  ),
+                                  left: BorderSide(
+                                    color: theme.contrast.withAlpha(100),
+                                    width: .45,
+                                  ),
+                                ),
+                              )
+                            : BoxDecoration(
+                                color: theme.primary.withAlpha(20),
+                              ),
                         child: Center(
                           child: widget.tabs[index].title.isIcon
                               ? Icon(
                                   widget.tabs[index].title.value as IconData,
                                   color: Color.lerp(
-                                    Colors.white.withOpacity(0.5),
-                                    Colors.white,
+                                    isActive
+                                        ? theme.primary.withAlpha(170)
+                                        : theme.contrast.withOpacity(0.5),
+                                    isActive ? theme.primary.withAlpha(170) : theme.contrast,
                                     progress,
                                   ),
                                   size: widget.fontSize + 9,
@@ -117,8 +138,10 @@ class _StylizedTabsState extends State<StylizedTabs>
                                   widget.tabs[index].title.value as String,
                                   style: GoogleFonts.poppins(
                                     color: Color.lerp(
-                                      Colors.white.withOpacity(0.5),
-                                      Colors.white,
+                                      isActive
+                                          ? theme.primary.withAlpha(170)
+                                          : theme.contrast.withOpacity(0.5),
+                                      isActive ? theme.primary.withAlpha(170) : theme.contrast,
                                       progress,
                                     ),
                                     fontSize: widget.fontSize,

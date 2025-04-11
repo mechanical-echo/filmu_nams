@@ -85,28 +85,31 @@ class _RegistrationState extends State<Registration> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Reģistrēties',
-                  style: GoogleFonts.poppins(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w600,
-                    color: theme.colorScheme.onSurface,
+          SizedBox(
+            width: double.infinity,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 34, vertical: 24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Reģistrēties',
+                    style: GoogleFonts.poppins(
+                      fontSize: 24,
+                      fontWeight: FontWeight.w600,
+                      color: theme.colorScheme.onSurface,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Izveidojiet savu kontu',
-                  style: GoogleFonts.poppins(
-                    fontSize: 14,
-                    color: theme.colorScheme.onSurface.withOpacity(0.7),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Izveidojiet savu kontu',
+                    style: GoogleFonts.poppins(
+                      fontSize: 14,
+                      color: theme.colorScheme.onSurface.withOpacity(0.7),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
           Padding(
@@ -267,6 +270,7 @@ class _RegistrationState extends State<Registration> {
                     ),
                   ),
                 ),
+                const SizedBox(height: 16),
               ],
             ),
           ),

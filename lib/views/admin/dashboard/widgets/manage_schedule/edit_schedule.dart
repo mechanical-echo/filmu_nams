@@ -83,7 +83,7 @@ class _EditScheduleState extends State<EditSchedule> {
       });
 
       if (mounted) {
-        StylizedDialog.alert(
+        StylizedDialog.dialog(Icons.error_outline,
           context,
           "Kļūda",
           "Neizdevās ielādēt datus",
@@ -94,7 +94,7 @@ class _EditScheduleState extends State<EditSchedule> {
 
   Future<void> _saveSchedule() async {
     if (selectedMovieId == null) {
-      StylizedDialog.alert(
+      StylizedDialog.dialog(Icons.error_outline,
         context,
         "Kļūda",
         "Lūdzu, izvēlieties filmu",
@@ -134,7 +134,7 @@ class _EditScheduleState extends State<EditSchedule> {
       }
 
       if (mounted) {
-        StylizedDialog.alert(
+        StylizedDialog.dialog(Icons.error_outline,
           context,
           "Veiksmīgi",
           widget.id.isEmpty ? "Saraksts pievienots" : "Saraksts atjaunināts",
@@ -144,7 +144,7 @@ class _EditScheduleState extends State<EditSchedule> {
     } catch (e) {
       debugPrint('Error saving schedule: $e');
       if (mounted) {
-        StylizedDialog.alert(
+        StylizedDialog.dialog(Icons.error_outline,
           context,
           "Kļūda",
           "Neizdevās saglabāt sarakstu",
@@ -200,7 +200,7 @@ class _EditScheduleState extends State<EditSchedule> {
     } catch (e) {
       debugPrint('Error deleting schedule: $e');
       if (mounted) {
-        StylizedDialog.alert(
+        StylizedDialog.dialog(Icons.error_outline,
           context,
           "Kļūda",
           "Neizdevās dzēst sarakstu",

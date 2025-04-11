@@ -1,3 +1,4 @@
+import 'package:filmu_nams/providers/color_context.dart';
 import 'package:filmu_nams/views/client/main/home/home.dart';
 import 'package:filmu_nams/views/client/main/offers/offer_list_view.dart';
 import 'package:filmu_nams/views/client/main/notifications/notifications.dart';
@@ -53,31 +54,10 @@ class Base extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = ContextTheme.of(context);
     return Scaffold(
       backgroundColor: Colors.transparent,
       extendBody: true,
-      extendBodyBehindAppBar: true,
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(60),
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Colors.black,
-                Colors.black.withOpacity(0.8),
-                Colors.transparent,
-              ],
-              stops: const [0.0, 0.7, 1.0],
-            ),
-          ),
-          child: const SafeArea(
-            bottom: false,
-            child: Logo(),
-          ),
-        ),
-      ),
       body: Stack(
         fit: StackFit.expand,
         children: [
@@ -87,18 +67,16 @@ class Base extends StatelessWidget {
               child: SizedBox.expand(),
             ),
           ),
-          // Gradient overlay
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  Colors.transparent,
-                  Colors.black.withOpacity(0.5),
-                  Colors.black,
+                  theme.isDark ? Colors.transparent : Colors.white.withOpacity(0.0),
+                  theme.isDark ? Colors.black87 : Colors.white,
                 ],
-                stops: const [0.0, 0.7, 0.9],
+                stops: const [0.5, 1],
               ),
             ),
           ),

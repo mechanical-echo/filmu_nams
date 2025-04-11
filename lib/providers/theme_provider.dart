@@ -1,3 +1,4 @@
+import 'package:filmu_nams/assets/decorations/background.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -40,7 +41,7 @@ class ThemeProvider extends ChangeNotifier {
     switch (_currentTheme) {
       case AppTheme.redDark:
         return _buildTheme(
-          seedColor: const Color(0xFFE50914), // Netflix red
+          seedColor: const Color(0xFF8E1616), // Netflix red
           brightness: Brightness.dark,
         );
       case AppTheme.blueDark:
@@ -50,7 +51,7 @@ class ThemeProvider extends ChangeNotifier {
         );
       case AppTheme.redLight:
         return _buildTheme(
-          seedColor: const Color(0xFFE50914), // Netflix red
+          seedColor: const Color(0xFF8E1616), // Netflix red
           brightness: Brightness.light,
         );
       case AppTheme.blueLight:
@@ -77,121 +78,120 @@ class ThemeProvider extends ChangeNotifier {
         displayLarge: GoogleFonts.poppins(
           fontSize: 32,
           fontWeight: FontWeight.bold,
-          color: isDark ? Colors.white : Colors.black,
+          color: isDark ? Color(0xFFEEEEEE) : seedColor.darker(0.05),
         ),
         displayMedium: GoogleFonts.poppins(
           fontSize: 28,
           fontWeight: FontWeight.bold,
-          color: isDark ? Colors.white : Colors.black,
+          color: isDark ? Color(0xFFEEEEEE) : seedColor.darker(0.05),
         ),
         displaySmall: GoogleFonts.poppins(
           fontSize: 24,
           fontWeight: FontWeight.bold,
-          color: isDark ? Colors.white : Colors.black,
+          color: isDark ? Color(0xFFEEEEEE) : seedColor.darker(0.05),
         ),
         headlineLarge: GoogleFonts.poppins(
           fontSize: 22,
           fontWeight: FontWeight.w600,
-          color: isDark ? Colors.white : Colors.black,
+          color: isDark ? Color(0xFFEEEEEE) : seedColor.darker(0.05),
         ),
         headlineMedium: GoogleFonts.poppins(
           fontSize: 20,
           fontWeight: FontWeight.w600,
-          color: isDark ? Colors.white : Colors.black,
+          color: isDark ? Color(0xFFEEEEEE) : seedColor.darker(0.05),
         ),
         titleLarge: GoogleFonts.poppins(
           fontSize: 18,
           fontWeight: FontWeight.w600,
-          color: isDark ? Colors.white : Colors.black,
+          color: isDark ? Color(0xFFEEEEEE) : Color(0xFF1D1616),
         ),
         titleMedium: GoogleFonts.poppins(
           fontSize: 16,
           fontWeight: FontWeight.w600,
-          color: isDark ? Colors.white : Colors.black,
+          color: isDark ? Color(0xFFEEEEEE) : Color(0xFF1D1616).withAlpha(185),
         ),
         titleSmall: GoogleFonts.poppins(
           fontSize: 14,
           fontWeight: FontWeight.w600,
-          color: isDark ? Colors.white : Colors.black,
+          color: isDark ? Color(0xFFEEEEEE) : Color(0xFF1D1616).withAlpha(185),
         ),
         bodyLarge: GoogleFonts.poppins(
           fontSize: 16,
           fontWeight: FontWeight.w400,
-          color: isDark ? Colors.white : Colors.black,
+          color: isDark ? Color(0xFFEEEEEE) : Color(0xFF1D1616),
         ),
         bodyMedium: GoogleFonts.poppins(
           fontSize: 14,
           fontWeight: FontWeight.w400,
-          color: isDark ? Colors.white : Colors.black,
+          color: isDark ? Color(0xFFEEEEEE) : Color(0xFF1D1616),
         ),
         bodySmall: GoogleFonts.poppins(
           fontSize: 12,
           fontWeight: FontWeight.w400,
-          color: isDark ? Colors.white : Colors.black,
+          color: isDark ? Color(0xFFEEEEEE) : Color(0xFF1D1616),
         ),
       ),
       scaffoldBackgroundColor:
           isDark ? const Color(0xFF121212) : const Color(0xFFF5F5F7),
       cardTheme: CardTheme(
-        color: isDark ? const Color(0xFF212121) : Colors.white,
+        color: isDark ? const Color(0xFF212121) : Color(0xFFEEEEEE),
         elevation: 2,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
         ),
       ),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
-        backgroundColor: isDark ? const Color(0xFF121212) : Colors.white,
+        backgroundColor: isDark ? const Color(0xFF121212) : Color(0xFFEEEEEE),
         selectedItemColor: seedColor,
         unselectedItemColor: isDark ? Colors.grey : Colors.grey[600],
         type: BottomNavigationBarType.fixed,
         elevation: 0,
       ),
       appBarTheme: AppBarTheme(
-        backgroundColor: isDark ? const Color(0xFF121212) : Colors.white,
-        foregroundColor: isDark ? Colors.white : Colors.black,
+        backgroundColor: isDark ? const Color(0xFF121212) : Color(0xFFEEEEEE),
+        foregroundColor: isDark ? Color(0xFFEEEEEE) : seedColor.darker(0.05),
         elevation: 0,
         centerTitle: true,
         titleTextStyle: GoogleFonts.poppins(
           fontSize: 20,
           fontWeight: FontWeight.w600,
-          color: isDark ? Colors.white : Colors.black,
+          color: isDark ? Color(0xFFEEEEEE) : seedColor.darker(0.05),
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
+        iconColor: Color(0xFFEEEEEE).withOpacity(0.7),
+        hintStyle: GoogleFonts.poppins(
+          color: Color(0xFFEEEEEE).withOpacity(0.5),
+          fontSize: 14,
+        ),
         filled: true,
-        fillColor: isDark ? const Color(0xFF333333) : Colors.grey[100],
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        fillColor: Color(0xFFEEEEEE).withOpacity(0.03),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide.none,
+          borderRadius: BorderRadius.circular(5),
+          borderSide: BorderSide(
+            color: Color(0xFFEEEEEE).withOpacity(0.1),
+            width: 1,
+          ),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide.none,
+          borderRadius: BorderRadius.circular(5),
+          borderSide: BorderSide(
+            color: Color(0xFFEEEEEE).withOpacity(0.1),
+            width: 1,
+          ),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: seedColor, width: 1),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Colors.redAccent, width: 1),
-        ),
-        hintStyle: GoogleFonts.poppins(
-          color: isDark ? Colors.white54 : Colors.grey[600],
-        ),
-        labelStyle: GoogleFonts.poppins(
-          color: isDark ? Colors.white : Colors.black,
-        ),
-        floatingLabelStyle: GoogleFonts.poppins(
-          color: seedColor,
+          borderRadius: BorderRadius.circular(5),
+          borderSide: BorderSide(
+            color: Color(0xFFEEEEEE).withOpacity(0.2),
+            width: 1,
+          ),
         ),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: seedColor,
-          foregroundColor: Colors.white,
+          foregroundColor: Color(0xFFEEEEEE),
           textStyle: GoogleFonts.poppins(
             fontSize: 16,
             fontWeight: FontWeight.w600,
@@ -228,16 +228,16 @@ class ThemeProvider extends ChangeNotifier {
         ),
       ),
       dividerTheme: DividerThemeData(
-        color: isDark ? Colors.white24 : Colors.grey[300],
+        color: isDark ? Color(0xFFEEEEEE) : Colors.grey[300],
         thickness: 1,
         space: 24,
       ),
       iconTheme: IconThemeData(
-        color: isDark ? Colors.white : Colors.black,
+        color: isDark ? Color(0xFFEEEEEE) : seedColor.darker(0.05),
         size: 24,
       ),
       bottomSheetTheme: BottomSheetThemeData(
-        backgroundColor: isDark ? const Color(0xFF212121) : Colors.white,
+        backgroundColor: isDark ? const Color(0xFF212121) : Color(0xFFEEEEEE),
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(
             top: Radius.circular(20),
@@ -245,7 +245,7 @@ class ThemeProvider extends ChangeNotifier {
         ),
       ),
       dialogTheme: DialogTheme(
-        backgroundColor: isDark ? const Color(0xFF212121) : Colors.white,
+        backgroundColor: isDark ? const Color(0xFF212121) : Color(0xFFEEEEEE),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
@@ -253,7 +253,7 @@ class ThemeProvider extends ChangeNotifier {
       snackBarTheme: SnackBarThemeData(
         backgroundColor: isDark ? const Color(0xFF333333) : Colors.grey[800],
         contentTextStyle: GoogleFonts.poppins(
-          color: Colors.white,
+          color: Color(0xFFEEEEEE),
         ),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
@@ -283,4 +283,6 @@ class ThemeProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  bool get isDark => _currentTheme == AppTheme.redDark || _currentTheme == AppTheme.blueDark;
 }
