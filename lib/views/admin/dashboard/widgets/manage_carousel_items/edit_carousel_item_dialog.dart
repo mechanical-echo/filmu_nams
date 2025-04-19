@@ -14,10 +14,10 @@ import '../../../../../providers/color_context.dart';
 class EditCarouselItemDialog extends StatefulWidget {
   const EditCarouselItemDialog({
     super.key,
-    required this.data,
+    this.data,
   });
 
-  final CarouselItemModel data;
+  final CarouselItemModel? data;
 
   @override
   State<EditCarouselItemDialog> createState() => _EditCarouselItemDialogState();
@@ -43,6 +43,8 @@ class _EditCarouselItemDialogState extends State<EditCarouselItemDialog> {
   bool isLoading = true;
 
   Uint8List? image;
+
+  String? title() => titleController.text;
 
   void fetchMovies() {
     movieController.getAllMovies().then((response) {
@@ -84,16 +86,20 @@ class _EditCarouselItemDialogState extends State<EditCarouselItemDialog> {
   void initState() {
     super.initState();
     _selectedLink = [
-      widget.data.movie != null,
-      widget.data.offer != null,
-      widget.data.movie == null && widget.data.offer == null,
+      widget.data?.movie != null,
+      widget.data?.offer != null,
+      widget.data?.movie == null && widget.data?.offer == null,
     ];
 
-    selectedMovieId = widget.data.movie?.id;
-    selectedOfferId = widget.data.offer?.id;
+    selectedMovieId = widget.data?.movie?.id;
+    selectedOfferId = widget.data?.offer?.id;
 
-    titleController.text = widget.data.title;
-    descriptionController.text = widget.data.description;
+    titleController.text = widget.data?.title ?? "";
+    descriptionController.text = widget.data?.description ?? "";
+
+    titleController.addListener(() {
+      setState(() {});
+    });
 
     fetchMovies();
     fetchOffers();
@@ -123,33 +129,124 @@ class _EditCarouselItemDialogState extends State<EditCarouselItemDialog> {
       }
     } catch (e) {
       debugPrint('Error picking image: $e');
-      StylizedDialog.dialog(Icons.error_outline, context, "Kļūda",
-          "Neizdēvas pievienot bildi: ${e.toString()}");
+      if (mounted) {
+        StylizedDialog.dialog(
+          Icons.error_outline,
+          context,
+          "Kļūda",
+          "Neizdēvas pievienot bildi: ${e.toString()}",
+        );
+      }
     }
   }
 
   void submit() {
+    if (widget.data == null) {
+      add();
+    } else {
+      edit();
+    }
+  }
+
+  void delete() {
+    StylizedDialog.dialog(
+      Icons.warning_amber_outlined,
+      context,
+      "Brīdinājums",
+      "Vai tiešām vēlaties izdzēst šo elementu?",
+      onConfirm: () => deleteItem(),
+    );
+  }
+
+  void deleteItem() {
+    movieController.deleteCarouselItem(widget.data!.id).then((_) {
+      if (mounted) {
+        StylizedDialog.dialog(Icons.check_circle_outline, context, "Veiksmīgi",
+            "Elementi veiksmīgi izdzēsts");
+      }
+    }).catchError((error) {
+      if (mounted) {
+        StylizedDialog.dialog(Icons.error_outline, context, "Kļūda",
+            'Neizdevās izdzēst elementu');
+      }
+      debugPrint(error.message);
+    });
+    Navigator.of(context).pop();
+  }
+
+  void add() {
+    if (image == null) {
+      StylizedDialog.dialog(
+          Icons.error_outline, context, "Kļūda", "Lūdzu pievienojiet bildi");
+      return;
+    }
+
+    if (titleController.text.isEmpty) {
+      StylizedDialog.dialog(
+          Icons.error_outline, context, "Kļūda", "Lūdzu ievadiet nosaukumu");
+      return;
+    }
+
+    if (descriptionController.text.isEmpty) {
+      StylizedDialog.dialog(
+          Icons.error_outline, context, "Kļūda", "Lūdzu ievadiet aprakstu");
+      return;
+    }
+
     MovieModel? movie = movies.cast<MovieModel?>().firstWhere(
           (movie) => movie?.id == selectedMovieId,
-      orElse: () => null,
-    );
+          orElse: () => null,
+        );
 
     OfferModel? offer = offers.cast<OfferModel?>().firstWhere(
           (offer) => offer?.id == selectedOfferId,
-      orElse: () => null,
-    );
+          orElse: () => null,
+        );
 
-    movieController.updateHomescreenCarousel(
-      widget.data.id,
+    movieController
+        .addHomescreenCarousel(
       titleController.text,
       descriptionController.text,
       image,
-      image == null ? widget.data.imageUrl : null,
+      null,
       movie,
       offer,
-    ).catchError((error) {
+    )
+        .catchError((error) {
       if (mounted) {
-        StylizedDialog.dialog(Icons.error_outline, context, "Kļūda", 'Neizdevās saglabāt izmaiņas');
+        StylizedDialog.dialog(Icons.error_outline, context, "Kļūda",
+            'Neizdevās pievienot jauno elementu');
+      }
+      debugPrint(error.message);
+    });
+    Navigator.of(context).pop();
+  }
+
+  void edit() {
+    MovieModel? movie = movies.cast<MovieModel?>().firstWhere(
+          (movie) => movie?.id == selectedMovieId,
+          orElse: () => null,
+        );
+
+    OfferModel? offer = offers.cast<OfferModel?>().firstWhere(
+          (offer) => offer?.id == selectedOfferId,
+          orElse: () => null,
+        );
+
+    movieController
+        .updateHomescreenCarousel(
+      widget.data!.id,
+      titleController.text,
+      descriptionController.text,
+      image,
+      image == null ? widget.data!.imageUrl : null,
+      movie,
+      offer,
+    )
+        .catchError((error) {
+      if (mounted) {
+        StylizedDialog.dialog(Icons.error_outline, context, "Kļūda",
+            'Neizdevās saglabāt izmaiņas');
       }
       debugPrint(error.message);
     });
@@ -186,12 +283,14 @@ class _EditCarouselItemDialogState extends State<EditCarouselItemDialog> {
                           spacing: 10,
                           children: [
                             Text(
-                              "Rediģēt:",
+                              widget.data?.title == null
+                                  ? "Pievienot:"
+                                  : "Rediģēt:",
                               style: theme.headlineMedium
                                   .copyWith(color: Colors.white.withAlpha(180)),
                             ),
                             Text(
-                              widget.data.title,
+                              titleController.text,
                               style: theme.displayLarge,
                             ),
                           ],
@@ -296,6 +395,13 @@ class _EditCarouselItemDialogState extends State<EditCarouselItemDialog> {
                       child: Text("Atcelt"),
                     ),
                     FilledButton(
+                      onPressed: delete,
+                      style: FilledButton.styleFrom(
+                        backgroundColor: Colors.grey[600],
+                      ),
+                      child: Text("Dzēst"),
+                    ),
+                    FilledButton(
                       onPressed: submit,
                       child: Text("Saglabāt izmaiņas"),
                     ),
@@ -330,17 +436,29 @@ class _EditCarouselItemDialogState extends State<EditCarouselItemDialog> {
           width: 290,
           child: image != null
               ? Image.memory(image!)
-              : CachedNetworkImage(
-                  imageUrl: widget.data.imageUrl,
-                  placeholder: (context, url) => Center(
-                    child: LoadingAnimationWidget.staggeredDotsWave(
-                      color: Colors.white,
-                      size: 100,
+              : widget.data?.imageUrl != null
+                  ? CachedNetworkImage(
+                      imageUrl: widget.data!.imageUrl,
+                      placeholder: (context, url) => Center(
+                        child: LoadingAnimationWidget.staggeredDotsWave(
+                          color: Colors.white,
+                          size: 100,
+                        ),
+                      ),
+                      errorWidget: (context, url, error) => Icon(Icons.error),
+                      fit: BoxFit.cover,
+                    )
+                  : Container(
+                      width: 290,
+                      height: 390,
+                      color: Colors.grey[800],
+                      child: Center(
+                        child: Text(
+                          "Nav pievienota bilde",
+                          style: theme.bodyMedium,
+                        ),
+                      ),
                     ),
-                  ),
-                  errorWidget: (context, url, error) => Icon(Icons.error),
-                  fit: BoxFit.cover,
-                ),
         ),
         FilledButton(
           onPressed: pickImage,

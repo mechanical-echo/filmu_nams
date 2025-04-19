@@ -12,7 +12,7 @@ class MovieController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
 
-  final String carouselCollection = 'homescreen-carousel';
+  static String carouselCollection = 'homescreen-carousel';
 
   Future<List<CarouselItemModel>> getHomescreenCarousel() async {
     final response = await _firestore.collection(carouselCollection).get();
@@ -24,7 +24,8 @@ class MovieController {
   }
 
   Future<CarouselItemModel> getCarouselItemById(String id) async {
-    final response = await _firestore.collection(carouselCollection).doc(id).get();
+    final response =
+        await _firestore.collection(carouselCollection).doc(id).get();
 
     return await CarouselItemModel.fromMapAsync(response.data()!, response.id);
   }
@@ -222,6 +223,41 @@ class MovieController {
     } catch (e) {
       debugPrint('Movie image upload error: $e');
       return null;
+    }
+  }
+
+  Future<void> addHomescreenCarousel(
+    String title,
+    String description,
+    Uint8List? image,
+    String? url,
+    MovieModel? movie,
+    OfferModel? offer,
+  ) async {
+    String? uploadResult;
+
+    if (image != null) {
+      uploadResult = await uploadCoverImage(title, image);
+    }
+
+    final movieRef = _firestore.collection('movies').doc(movie?.id);
+    final offerRef = _firestore.collection('offers').doc(offer?.id);
+
+    await _firestore.collection(carouselCollection).add({
+      'title': title,
+      'description': description,
+      'image-url': url ?? uploadResult,
+      'movie': movieRef,
+      'offer': offerRef,
+    });
+  }
+
+  Future<void> deleteCarouselItem(String id) async {
+    try {
+      await _firestore.collection(carouselCollection).doc(id).delete();
+      await _storage.ref().child('carousel_covers/$id.jpg').delete();
+    } catch (e) {
+      debugPrint('Error deleting carousel item: $e');
     }
   }
 }

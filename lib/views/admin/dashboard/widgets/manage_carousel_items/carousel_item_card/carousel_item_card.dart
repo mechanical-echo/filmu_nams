@@ -1,12 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:filmu_nams/assets/theme.dart';
-import 'package:filmu_nams/assets/widgets/admin/item_card.dart';
 import 'package:filmu_nams/models/carousel_item.dart';
 import 'package:filmu_nams/providers/color_context.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_carousel_items/edit_carousel_item_dialog.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:marquee/marquee.dart';
 

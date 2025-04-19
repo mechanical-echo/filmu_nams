@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class StylizedDialog {
-  static void dialog(IconData icon, BuildContext context, String title, String content) {
+  static void dialog(
+      IconData icon, BuildContext context, String title, String content,
+      {Function()? onConfirm}) {
     final theme = ContextTheme.of(context);
     showGeneralDialog(
       context: context,
@@ -51,7 +53,10 @@ class StylizedDialog {
                     child: Material(
                       color: Colors.transparent,
                       child: InkWell(
-                        onTap: () => Navigator.of(context).pop(),
+                        onTap: () {
+                          onConfirm?.call();
+                          Navigator.of(context).pop();
+                        },
                         borderRadius: BorderRadius.circular(12),
                         child: Container(
                           padding: const EdgeInsets.symmetric(
