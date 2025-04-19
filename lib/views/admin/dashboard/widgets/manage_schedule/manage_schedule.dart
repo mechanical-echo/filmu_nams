@@ -10,10 +10,7 @@ import 'package:intl/intl.dart';
 class ManageSchedule extends StatefulWidget {
   const ManageSchedule({
     super.key,
-    required this.action,
   });
-
-  final Function(String, String) action;
 
   @override
   State<ManageSchedule> createState() => _ManageScheduleState();
@@ -80,7 +77,7 @@ class _ManageScheduleState extends State<ManageSchedule> {
         ),
         IntrinsicWidth(
           child: StylizedButton(
-            action: () => widget.action("add_schedule", ""),
+            action: () {},
             title: "Pievienot sarakstu",
             icon: Icons.add_circle_outline,
           ),
@@ -132,7 +129,6 @@ class _ManageScheduleState extends State<ManageSchedule> {
           child: ScheduleCard(
             data: items[index],
             onEdit: (scheduleId) {
-              widget.action("edit_schedule", scheduleId);
             },
           ),
         );

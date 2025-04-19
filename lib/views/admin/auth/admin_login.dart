@@ -1,13 +1,13 @@
 import 'package:filmu_nams/assets/decorations/background.dart';
 import 'package:filmu_nams/assets/dialog/dialog.dart';
-import 'package:filmu_nams/assets/theme.dart';
 import 'package:filmu_nams/controllers/user_controller.dart';
 import 'package:filmu_nams/enums/auth_error_codes.dart';
+import 'package:filmu_nams/providers/color_context.dart';
 import 'package:filmu_nams/validators/validator.dart';
-import 'package:filmu_nams/assets/input/text_input.dart';
-import 'package:filmu_nams/views/admin/dashboard/widgets/stylized_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class AdminLogin extends StatefulWidget {
   const AdminLogin({super.key});
@@ -21,124 +21,157 @@ class _AdminLoginState extends State<AdminLogin> {
   final TextEditingController passwordController = TextEditingController();
 
   get email => emailController.text;
+
   get password => passwordController.text;
+
+  get theme => ContextTheme.of(context);
 
   Validator validator = Validator();
 
   String? emailError;
   String? passwordError;
 
+  bool isLoading = false;
+  bool isPasswordVisible = false;
+
+  final formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Background(
-        child: Center(
-          child: AnimatedSize(
-            duration: Duration(milliseconds: 250),
-            curve: Curves.easeOut,
-            child: IntrinsicHeight(
-              child: Container(
-                decoration: classicDecorationDark,
-                padding:
-                    const EdgeInsets.symmetric(vertical: 30, horizontal: 40),
-                child: IntrinsicWidth(
-                  child: Row(
-                    spacing: 30,
-                    children: [
-                      buildWelcomeText(),
-                      buildLoginForm(),
-                    ],
-                  ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          spacing: 50,
+          children: [
+            buildWelcomeText(),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 35),
+              margin: const EdgeInsets.symmetric(horizontal: 35),
+              constraints: BoxConstraints(maxWidth: 500),
+              decoration: theme.cardDecoration,
+              child: Form(
+                key: formKey,
+                child: Column(
+                  spacing: 20,
+                  children: [
+                    TextFormField(
+                      controller: emailController,
+                      keyboardType: TextInputType.emailAddress,
+                      validator: (value) {
+                        ValidatorResult emailValidationResult = validator.validateEmail(email, true);
+                        if (value == null || value.isEmpty || emailValidationResult.isNotValid) {
+                          return emailValidationResult.error ?? 'Lūdzu, ievadiet e-pastu';
+                        }
+                        return null;
+                      },
+                      decoration: InputDecoration(
+                        hintText: "Ievadiet e-pastu",
+                        label: Text('E-pasts'),
+                        prefixIcon: Icon(
+                          Icons.email,
+                          color: theme.contrast.withAlpha(100),
+                        ),
+                      ),
+                    ),
+                    TextFormField(
+                      controller: passwordController,
+                      obscureText: !isPasswordVisible,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Lūdzu, ievadiet paroli';
+                        }
+                        return null;
+                      },
+                      decoration: InputDecoration(
+                        hintText: "Ievadiet paroli",
+                        label: Text('Parole'),
+                        prefixIcon: Icon(
+                          Icons.password,
+                          color: theme.contrast.withAlpha(100),
+                        ),
+                        suffixIcon: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              isPasswordVisible = !isPasswordVisible;
+                            });
+                          },
+                          child: Icon(
+                            isPasswordVisible
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                            color: theme.contrast.withAlpha(100),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 200,
+                      child: FilledButton(
+                        onPressed: login,
+                        child: isLoading
+                            ? LoadingAnimationWidget.staggeredDotsWave(
+                                color: Colors.white, size: 30)
+                            : Stack(
+                                alignment: Alignment.centerLeft,
+                                clipBehavior: Clip.none,
+                                children: [
+                                  Positioned(
+                                    left: -18,
+                                    child: Icon(Icons.login),
+                                  ),
+                                  Center(
+                                    child: Text("Ielogoties"),
+                                  )
+                                ],
+                              ),
+                      ),
+                    )
+                  ],
                 ),
               ),
-            ),
-          ),
+            )
+          ],
         ),
       ),
     );
   }
 
   Widget buildWelcomeText() {
-    return Expanded(
-      child: Container(
-        constraints: BoxConstraints(
-          maxWidth: 400,
+    return Center(
+        child: Column(
+      children: [
+        Text(
+          "Laipni lūdzam",
+          style: theme.displayLarge,
+          textAlign: TextAlign.center,
         ),
-        decoration: classicDecorationWhiteSharper,
-        padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
-        child: Center(
-          child: Text(
-            "Laipni lūdzam administrācijas panelī",
-            textAlign: TextAlign.center,
-            style: header1Red,
+        Text(
+          "Filmu Nams",
+          style: GoogleFonts.poppins(
+            color: theme.primary,
+            fontWeight: FontWeight.bold,
+            fontSize: 48,
           ),
+          textAlign: TextAlign.center,
         ),
-      ),
-    );
-  }
-
-  Widget buildLoginForm() {
-    return Expanded(
-      child: Stack(
-        alignment: Alignment.bottomCenter,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: 10,
-            children: [
-              Row(
-                spacing: 10,
-                children: [
-                  Icon(Icons.email, size: 25, color: smokeyWhite),
-                  Text("E-pasts", style: bodyMedium),
-                ],
-              ),
-              SizedBox(
-                width: 500,
-                child: TextInput(
-                  controller: emailController,
-                  error: emailError,
-                  obligatory: true,
-                ),
-              ),
-              Row(
-                spacing: 10,
-                children: [
-                  Icon(Icons.password, size: 25, color: smokeyWhite),
-                  Text("Parole", style: bodyMedium),
-                ],
-              ),
-              SizedBox(
-                width: 500,
-                child: TextInput(
-                  controller: passwordController,
-                  obscureText: true,
-                  error: passwordError,
-                  obligatory: true,
-                ),
-              ),
-              SizedBox(height: 75),
-            ],
-          ),
-          SizedBox(
-            width: 500,
-            child: IntrinsicHeight(
-              child: StylizedButton(
-                icon: Icons.login,
-                title: "Ielogoties",
-                action: login,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+        Text(
+          "adminsitrācijas panelī",
+          style: theme.displayLarge,
+          textAlign: TextAlign.center,
+        ),
+      ],
+    ));
   }
 
   void login() async {
-    if (!isValid()) {
+    if (!formKey.currentState!.validate()) {
       return;
     }
+
+    setState(() {
+      isLoading = true;
+    });
 
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
@@ -149,6 +182,10 @@ class _AdminLoginState extends State<AdminLogin> {
       if (user != null) {
         bool userIsAdmin = await UserController().userHasRole(user, "admin");
 
+        setState(() {
+          isLoading = false;
+        });
+
         if (!userIsAdmin) {
           await FirebaseAuth.instance.signOut();
           return;
@@ -156,12 +193,12 @@ class _AdminLoginState extends State<AdminLogin> {
       }
     } on FirebaseAuthException catch (e) {
       debugPrint("Error signing in as Admin: ${e.toString()}");
+      setState(() {
+        isLoading = false;
+      });
       if (mounted) {
-        StylizedDialog.dialog(Icons.error_outline,
-          context,
-          "Kļūda",
-          getFirebaseAuthErrorCode(e.code)
-        );
+        StylizedDialog.dialog(Icons.error_outline, context, "Kļūda",
+            getFirebaseAuthErrorCode(e.code));
       }
     }
   }

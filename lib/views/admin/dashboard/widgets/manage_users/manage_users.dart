@@ -9,10 +9,7 @@ import 'package:flutter/material.dart';
 class ManageUsers extends StatefulWidget {
   const ManageUsers({
     super.key,
-    required this.action,
   });
-
-  final Function(String, String) action;
 
   @override
   State<ManageUsers> createState() => _ManageUsersState();
@@ -57,7 +54,8 @@ class _ManageUsersState extends State<ManageUsers> {
         ),
         IntrinsicWidth(
           child: StylizedButton(
-            action: () => widget.action("add_user", ""),
+            action: () {
+            },
             title: "Pievienot lietotāju",
             icon: Icons.person_add,
           ),
@@ -73,7 +71,6 @@ class _ManageUsersState extends State<ManageUsers> {
       child: UserCard(
         data: users[index],
         onEdit: (userId) {
-          widget.action("edit_user", userId);
         },
       ),
     );

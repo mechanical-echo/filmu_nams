@@ -237,7 +237,7 @@ class _HomeState extends State<Home> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Sveicināti Filmu Namā',
+              'Sveicināti Filmu Namā 🎬',
               style: theme.displayMedium,
             ),
             const SizedBox(height: 8),

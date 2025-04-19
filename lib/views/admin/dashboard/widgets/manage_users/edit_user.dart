@@ -18,11 +18,9 @@ class EditUser extends StatefulWidget {
   const EditUser({
     super.key,
     required this.id,
-    required this.action,
   });
 
   final String id;
-  final Function(String) action;
 
   @override
   State<EditUser> createState() => _EditUserState();
@@ -131,7 +129,6 @@ class _EditUserState extends State<EditUser> {
         await _userController.deleteUser(widget.id);
 
         if (mounted) {
-          widget.action("mng_users");
         }
       }
     } catch (exception) {
@@ -383,7 +380,7 @@ class _EditUserState extends State<EditUser> {
           ],
         ),
         StylizedButton(
-          action: () => widget.action("mng_users"),
+          action: () {},
           title: "Atpakaļ",
           icon: Icons.chevron_left_rounded,
           textStyle: header2Red,

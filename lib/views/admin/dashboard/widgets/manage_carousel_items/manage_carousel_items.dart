@@ -8,10 +8,7 @@ import 'package:flutter/material.dart';
 class ManageCarouselItems extends StatefulWidget {
   const ManageCarouselItems({
     super.key,
-    required this.action,
   });
-
-  final Function(String, String) action;
 
   @override
   State<ManageCarouselItems> createState() => _ManageCarouselItemsState();
@@ -58,15 +55,9 @@ class _ManageCarouselItemsState extends State<ManageCarouselItems> {
   }
 
   generateCards() {
-    return (index) => Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-          decoration: classicDecorationSharp,
-          child: CarouselItemCard(
-            data: carouselItems[index],
-            onEdit: (itemId) {
-              widget.action("edit_carousel", itemId);
-            },
-          ),
-        );
+    return (index) => CarouselItemCard(
+      data: carouselItems[index],
+      onEdit: (itemId) {},
+    );
   }
 }

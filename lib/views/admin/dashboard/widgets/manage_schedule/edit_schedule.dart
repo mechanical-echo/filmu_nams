@@ -13,11 +13,9 @@ class EditSchedule extends StatefulWidget {
   const EditSchedule({
     super.key,
     required this.id,
-    required this.action,
   });
 
   final String id;
-  final Function(String) action;
 
   @override
   State<EditSchedule> createState() => _EditScheduleState();
@@ -139,7 +137,6 @@ class _EditScheduleState extends State<EditSchedule> {
           "Veiksmīgi",
           widget.id.isEmpty ? "Saraksts pievienots" : "Saraksts atjaunināts",
         );
-        widget.action("mng_schedule");
       }
     } catch (e) {
       debugPrint('Error saving schedule: $e');
@@ -194,7 +191,6 @@ class _EditScheduleState extends State<EditSchedule> {
         await _firestore.collection('schedule').doc(widget.id).delete();
 
         if (mounted) {
-          widget.action("mng_schedule");
         }
       }
     } catch (e) {
@@ -337,7 +333,8 @@ class _EditScheduleState extends State<EditSchedule> {
           ),
         ),
         StylizedButton(
-          action: () => widget.action("mng_schedule"),
+          action: () {
+          },
           title: "Atpakaļ",
           icon: Icons.chevron_left_rounded,
           textStyle: header2Red,

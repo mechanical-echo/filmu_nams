@@ -1,4 +1,5 @@
 import 'package:filmu_nams/assets/theme.dart';
+import 'package:filmu_nams/providers/color_context.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
@@ -21,12 +22,14 @@ class ManageScreen extends StatefulWidget {
 }
 
 class _ManageScreenState extends State<ManageScreen> {
+  ContextTheme get theme => ContextTheme.of(context);
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
-    double calculatedWidth() => width * 0.7;
+    double calculatedWidth() => width * 0.9;
     double calculatedHeight() => height * 0.7;
 
     double itemWidth = 400.0;
@@ -43,10 +46,10 @@ class _ManageScreenState extends State<ManageScreen> {
         header(calculatedWidth()),
         Container(
           constraints: BoxConstraints(
-            maxHeight: calculatedHeight(),
+            maxHeight: 1050,
             maxWidth: calculatedWidth(),
           ),
-          decoration: classicDecorationDark,
+          decoration: theme.cardDecoration,
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
           child: widget.isLoading
               ? Center(
@@ -62,11 +65,11 @@ class _ManageScreenState extends State<ManageScreen> {
 
                     return GridView.builder(
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: itemsPerRow,
+                        crossAxisCount: 1,
                         mainAxisSpacing: 15,
                         crossAxisSpacing: 20,
                         childAspectRatio: itemWidth / itemHeight,
-                        mainAxisExtent: itemHeight,
+                        mainAxisExtent: 80,
                       ),
                       itemCount: widget.count,
                       itemBuilder: (context, index) =>
@@ -88,25 +91,25 @@ class _ManageScreenState extends State<ManageScreen> {
         runSpacing: 10,
         children: [
           Container(
-            decoration: classicDecorationSharper,
+            decoration: theme.activeCardDecoration,
             padding: const EdgeInsets.symmetric(
               horizontal: 25,
               vertical: 10,
             ),
             child: FittedBox(
               fit: BoxFit.scaleDown,
-              child: Text(widget.title, style: header1),
+              child: Text(widget.title, style: theme.displayLarge),
             ),
           ),
           Container(
-            decoration: classicDecorationSharper,
+            decoration: theme.cardDecoration,
             padding: const EdgeInsets.symmetric(
               horizontal: 25,
               vertical: 10,
             ),
             child: FittedBox(
               fit: BoxFit.scaleDown,
-              child: Text("Kopā: ${widget.count}", style: header1),
+              child: Text("Kopā: ${widget.count}", style: theme.displayMedium),
             ),
           ),
         ],

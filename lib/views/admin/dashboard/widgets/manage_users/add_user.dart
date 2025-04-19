@@ -13,10 +13,7 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 class AddUser extends StatefulWidget {
   const AddUser({
     super.key,
-    required this.action,
   });
-
-  final Function(String) action;
 
   @override
   State<AddUser> createState() => _AddUserState();
@@ -58,7 +55,6 @@ class _AddUserState extends State<AddUser> {
         );
       } else {
         StylizedDialog.dialog(Icons.error_outline,context, "Veiksmīgi", "Lietotājs ir pievienots");
-        widget.action("mng_users");
       }
     } catch (exception) {
       debugPrint(exception.toString());
@@ -238,7 +234,7 @@ class _AddUserState extends State<AddUser> {
           ),
         ),
         StylizedButton(
-          action: () => widget.action("mng_users"),
+          action: () {},
           title: "Atpakaļ",
           icon: Icons.chevron_left_rounded,
           textStyle: header2Red,

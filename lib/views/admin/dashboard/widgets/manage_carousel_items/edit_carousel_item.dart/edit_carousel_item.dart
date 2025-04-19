@@ -16,11 +16,9 @@ class EditCarouselItem extends StatefulWidget {
   const EditCarouselItem({
     super.key,
     required this.id,
-    required this.action,
   });
 
   final String id;
-  final Function(String) action;
 
   @override
   State<EditCarouselItem> createState() => _EditCarouselItemState();
@@ -63,13 +61,13 @@ class _EditCarouselItemState extends State<EditCarouselItem> {
     try {
       String? url = image == null ? data!.imageUrl : null;
 
-      await MovieController().updateHomescreenCarousel(
-        widget.id,
-        titleController.text,
-        descriptionController.text,
-        image,
-        url,
-      );
+      // await MovieController().updateHomescreenCarousel(
+      //   widget.id,
+      //   titleController.text,
+      //   descriptionController.text,
+      //   image,
+      //   url,
+      // );
     } catch (exception) {
       debugPrint(exception.toString());
       if (mounted) {
@@ -180,7 +178,7 @@ class _EditCarouselItemState extends State<EditCarouselItem> {
           ),
         ),
         StylizedButton(
-          action: () => widget.action("mng_carousel"),
+          action: () {},
           title: "Atpakaļ",
           icon: Icons.chevron_left_rounded,
           textStyle: header2Red,

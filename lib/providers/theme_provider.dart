@@ -41,22 +41,22 @@ class ThemeProvider extends ChangeNotifier {
     switch (_currentTheme) {
       case AppTheme.redDark:
         return _buildTheme(
-          seedColor: const Color(0xFF8E1616), // Netflix red
+          seedColor: const Color(0xFF8E1616),
           brightness: Brightness.dark,
         );
       case AppTheme.blueDark:
         return _buildTheme(
-          seedColor: const Color(0xFF1E88E5), // Material blue
+          seedColor: const Color(0xFF1E88E5),
           brightness: Brightness.dark,
         );
       case AppTheme.redLight:
         return _buildTheme(
-          seedColor: const Color(0xFF8E1616), // Netflix red
+          seedColor: const Color(0xFF8E1616),
           brightness: Brightness.light,
         );
       case AppTheme.blueLight:
         return _buildTheme(
-          seedColor: const Color(0xFF1E88E5), // Material blue
+          seedColor: const Color(0xFF1E88E5),
           brightness: Brightness.light,
         );
     }
@@ -138,6 +138,32 @@ class ThemeProvider extends ChangeNotifier {
         elevation: 2,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
+        ),
+      ),
+      filledButtonTheme: FilledButtonThemeData(
+        style: FilledButton.styleFrom(
+          backgroundColor: seedColor,
+          foregroundColor: Color(0xFFEEEEEE),
+          textStyle: GoogleFonts.poppins(
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+          ),
+          iconSize: 20,
+          padding: const EdgeInsets.symmetric(horizontal: 34, vertical: 15),
+        ),
+      ),
+      navigationRailTheme: NavigationRailThemeData(
+        backgroundColor: isDark ? const Color(0xFF212121) : Color(0xFFEEEEEE),
+        indicatorColor: seedColor,
+        indicatorShape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(5),
+        ),
+        selectedIconTheme: IconThemeData(
+          color: Colors.white,
+          size: 24,
+        ),
+        unselectedIconTheme: IconThemeData(
+          color: isDark ? Color(0xFFEEEEEE) : Colors.grey[600],
         ),
       ),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(

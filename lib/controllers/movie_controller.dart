@@ -6,6 +6,8 @@ import 'package:filmu_nams/models/schedule.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
+import '../models/offer.dart';
+
 class MovieController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
@@ -33,16 +35,24 @@ class MovieController {
     String description,
     Uint8List? image,
     String? url,
+    MovieModel? movie,
+    OfferModel? offer,
   ) async {
     String? uploadResult;
+
     if (image != null) {
       uploadResult = await uploadCoverImage(id, image);
     }
+
+    final movieRef = _firestore.collection('movies').doc(movie?.id);
+    final offerRef = _firestore.collection('offers').doc(offer?.id);
 
     await _firestore.collection(carouselCollection).doc(id).update({
       'title': title,
       'description': description,
       'image-url': url ?? uploadResult,
+      'movie': movieRef,
+      'offer': offerRef,
     });
   }
 

@@ -9,10 +9,7 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 class ManageMovies extends StatefulWidget {
   const ManageMovies({
     super.key,
-    required this.action,
   });
-
-  final Function(String, String) action;
 
   @override
   State<ManageMovies> createState() => _ManageMoviesState();
@@ -65,7 +62,6 @@ class _ManageMoviesState extends State<ManageMovies> {
           child: AdminMovieCard(
             data: movies![index],
             onEdit: (itemId) {
-              widget.action("edit_movie", itemId);
             },
           ),
         );
