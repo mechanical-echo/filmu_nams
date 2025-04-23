@@ -1,9 +1,8 @@
 import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:filmu_nams/controllers/movie_controller.dart';
 import 'package:filmu_nams/models/carousel_item.dart';
-import 'package:filmu_nams/views/admin/dashboard/widgets/manage_carousel_items/carousel_item_card/carousel_item_card.dart';
+import 'package:filmu_nams/views/admin/dashboard/widgets/manage_carousel_items/carousel_item_card.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_carousel_items/edit_carousel_item_dialog.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_screen.dart';
 import 'package:flutter/material.dart';
@@ -44,7 +43,7 @@ class _ManageCarouselItemsState extends State<ManageCarouselItems> {
         isLoading = false;
       });
     }, onError: (e) {
-      print('Error listening to carousel changes: $e');
+      debugPrint('Error listening to carousel changes: $e');
       setState(() {
         isLoading = false;
       });
@@ -95,7 +94,6 @@ class _ManageCarouselItemsState extends State<ManageCarouselItems> {
   generateCards() {
     return (index) => CarouselItemCard(
           data: carouselItems[index],
-          onEdit: (itemId) {},
         );
   }
 }

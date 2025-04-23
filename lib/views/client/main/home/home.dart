@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:filmu_nams/assets/dialog/dialog.dart';
 import 'package:filmu_nams/assets/widgets/overlapping_carousel.dart';
 import 'package:filmu_nams/controllers/movie_controller.dart';
@@ -18,6 +21,9 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  StreamSubscription<QuerySnapshot>? _carouselSubscription;
+
   List<CarouselItemModel>? carouselItems;
   List<Widget>? carouselWidgets;
 
@@ -26,32 +32,30 @@ class _HomeState extends State<Home> {
 
   final movieController = MovieController();
 
-  void fetchCarouselItems() {
-    movieController.getHomescreenCarousel()
-    .then((response) {
+  void listenToCarouselChanges() {
+    _carouselSubscription = _firestore
+        .collection(MovieController.carouselCollection)
+        .snapshots()
+        .listen((snapshot) async {
+      final futures = snapshot.docs.map(
+        (doc) => CarouselItemModel.fromMapAsync(doc.data(), doc.id),
+      );
+
+      final items = await Future.wait(futures.toList());
+
       setState(() {
-        carouselItems = response;
+        carouselItems = items;
         carouselWidgets = List.generate(
-          response.length,
+          items.length,
           (index) => Builder(builder: (context) {
             final isActive = activeIndex == index;
             return MovieItem(index, isActive);
           }),
         );
+        isLoading = false;
       });
-    })
-    .catchError((error) {
-      debugPrint(error.toString());
-      if (mounted) {
-        StylizedDialog.dialog(
-            Icons.error_outline,
-            context,
-            "Kļūda",
-            "Neizdevās dabūt datus"
-        );
-      }
-    })
-    .whenComplete(() {
+    }, onError: (e) {
+      print('Error listening to carousel changes: $e');
       setState(() {
         isLoading = false;
       });
@@ -61,7 +65,13 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    fetchCarouselItems();
+    listenToCarouselChanges();
+  }
+
+  @override
+  void dispose() {
+    _carouselSubscription?.cancel();
+    super.dispose();
   }
 
   MovieItem(int index, bool isActive) {
@@ -205,7 +215,9 @@ class _HomeState extends State<Home> {
       );
     }
 
-    if (carouselItems == null || carouselWidgets == null || carouselItems!.isEmpty) {
+    if (carouselItems == null ||
+        carouselWidgets == null ||
+        carouselItems!.isEmpty) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -297,7 +309,8 @@ class _HomeState extends State<Home> {
       var offsetAnimation = animation.drive(tween);
 
       return SlideTransition(
-        position: offsetAnimation, child: child,
+        position: offsetAnimation,
+        child: child,
       );
     };
   }

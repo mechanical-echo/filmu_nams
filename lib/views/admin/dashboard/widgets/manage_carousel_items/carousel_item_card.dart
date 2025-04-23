@@ -12,11 +12,9 @@ class CarouselItemCard extends StatefulWidget {
   const CarouselItemCard({
     super.key,
     required this.data,
-    required this.onEdit,
   });
 
   final CarouselItemModel data;
-  final Function(String) onEdit;
 
   @override
   State<CarouselItemCard> createState() => _CarouselItemCardState();

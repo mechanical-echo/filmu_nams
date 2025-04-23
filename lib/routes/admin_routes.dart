@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../views/admin/dashboard/widgets/manage_carousel_items/edit_carousel_item.dart/edit_carousel_item.dart';
 import '../views/admin/dashboard/widgets/manage_carousel_items/manage_carousel_items.dart';
-import '../views/admin/dashboard/widgets/manage_movies/edit_movie.dart';
 import '../views/admin/dashboard/widgets/manage_movies/manage_movies.dart';
 import '../views/admin/dashboard/widgets/manage_schedule/add_schedule.dart';
 import '../views/admin/dashboard/widgets/manage_schedule/edit_schedule.dart';
@@ -50,31 +47,21 @@ Route<dynamic>? generateAdminRoute(RouteSettings settings, ThemeData theme) {
 
   // Handle different admin routes
   switch (settings.name) {
-  // Carousel routes
+    // Carousel routes
     case AdminRoutes.carousel:
       return MaterialPageRoute(
         settings: settings,
         builder: (context) => const ManageCarouselItems(),
       );
-    case AdminRoutes.editCarousel:
-      return MaterialPageRoute(
-        settings: settings,
-        builder: (context) => EditCarouselItem(id: args['id'] ?? ''),
-      );
 
-  // Movie routes
+    // Movie routes
     case AdminRoutes.movies:
       return MaterialPageRoute(
         settings: settings,
         builder: (context) => const ManageMovies(),
       );
-    case AdminRoutes.editMovie:
-      return MaterialPageRoute(
-        settings: settings,
-        builder: (context) => EditMovie(id: args['id'] ?? ''),
-      );
 
-  // Schedule routes
+    // Schedule routes
     case AdminRoutes.schedule:
       return MaterialPageRoute(
         settings: settings,
@@ -91,7 +78,7 @@ Route<dynamic>? generateAdminRoute(RouteSettings settings, ThemeData theme) {
         builder: (context) => EditSchedule(id: args['id'] ?? ''),
       );
 
-  // User routes
+    // User routes
     case AdminRoutes.users:
       return MaterialPageRoute(
         settings: settings,
@@ -108,7 +95,7 @@ Route<dynamic>? generateAdminRoute(RouteSettings settings, ThemeData theme) {
         builder: (context) => EditUser(id: args['id'] ?? ''),
       );
 
-  // Other management routes
+    // Other management routes
     case AdminRoutes.offers:
       return MaterialPageRoute(
         settings: settings,

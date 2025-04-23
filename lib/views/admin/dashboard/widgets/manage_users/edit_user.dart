@@ -4,7 +4,7 @@ import 'package:filmu_nams/assets/dialog/dialog.dart';
 import 'package:filmu_nams/assets/theme.dart';
 import 'package:filmu_nams/controllers/user_controller.dart';
 import 'package:filmu_nams/models/user.dart';
-import 'package:filmu_nams/views/admin/dashboard/widgets/manage_carousel_items/edit_carousel_item.dart/form_input.dart';
+import 'package:filmu_nams/views/admin/dashboard/widgets/form_input.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/stylized_button.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
@@ -52,8 +52,8 @@ class _EditUserState extends State<EditUser> {
     } catch (exception) {
       debugPrint(exception.toString());
       if (mounted) {
-        StylizedDialog.dialog(Icons.error_outline,
-            context, "Kļūda", 'Neizdevās dabūt lietotāja datus');
+        StylizedDialog.dialog(Icons.error_outline, context, "Kļūda",
+            'Neizdevās dabūt lietotāja datus');
       }
     }
 
@@ -77,13 +77,14 @@ class _EditUserState extends State<EditUser> {
       );
 
       if (mounted) {
-        StylizedDialog.dialog(Icons.error_outline,context, "Veiksmīgi", "Lietotājs ir atjaunināts");
+        StylizedDialog.dialog(Icons.error_outline, context, "Veiksmīgi",
+            "Lietotājs ir atjaunināts");
       }
     } catch (exception) {
       debugPrint(exception.toString());
       if (mounted) {
-        StylizedDialog.dialog(Icons.error_outline,
-            context, "Kļūda", "Neizdēvās atjaunināt lietotāju");
+        StylizedDialog.dialog(Icons.error_outline, context, "Kļūda",
+            "Neizdēvās atjaunināt lietotāju");
       }
     }
     setState(() {
@@ -128,13 +129,13 @@ class _EditUserState extends State<EditUser> {
 
         await _userController.deleteUser(widget.id);
 
-        if (mounted) {
-        }
+        if (mounted) {}
       }
     } catch (exception) {
       debugPrint(exception.toString());
       if (mounted) {
-        StylizedDialog.dialog(Icons.error_outline,context, "Kļūda", "Neizdēvās dzēst lietotāju");
+        StylizedDialog.dialog(
+            Icons.error_outline, context, "Kļūda", "Neizdēvās dzēst lietotāju");
       }
       setState(() {
         isLoading = false;

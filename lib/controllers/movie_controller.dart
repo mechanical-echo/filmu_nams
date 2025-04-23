@@ -137,44 +137,6 @@ class MovieController {
     }
   }
 
-  Future<void> updateMovie(
-    String id,
-    String title,
-    String description,
-    String director,
-    String genre,
-    String rating,
-    int duration,
-    List<String> actors,
-    Uint8List? posterImage,
-    Uint8List? heroImage,
-    String? posterUrl,
-    String? heroUrl,
-  ) async {
-    String? uploadedPosterUrl;
-    String? uploadedHeroUrl;
-
-    if (posterImage != null) {
-      uploadedPosterUrl = await uploadMovieImage(id, posterImage, 'poster');
-    }
-
-    if (heroImage != null) {
-      uploadedHeroUrl = await uploadMovieImage(id, heroImage, 'hero');
-    }
-
-    await _firestore.collection('movies').doc(id).update({
-      'title': title,
-      'description': description,
-      'director': director,
-      'genre': genre,
-      'rating': rating,
-      'duration': duration,
-      'actors': actors,
-      'poster-url': posterUrl ?? uploadedPosterUrl ?? '',
-      'hero-url': heroUrl ?? uploadedHeroUrl ?? '',
-    });
-  }
-
   Future<void> deleteMovie(String id) async {
     try {
       DocumentReference movieRef = _firestore.collection('movies').doc(id);
@@ -259,5 +221,93 @@ class MovieController {
     } catch (e) {
       debugPrint('Error deleting carousel item: $e');
     }
+  }
+
+  Future<void> updateMovie({
+    required MovieModel movie,
+    required String? title,
+    required String? description,
+    required String? genre,
+    required String? director,
+    required Timestamp? premiere,
+    required int? duration,
+    required String? rating,
+    required List<dynamic> actors,
+    required Uint8List? posterImage,
+    required Uint8List? heroImage,
+  }) async {
+    String? posterUrl;
+    String? heroUrl;
+
+    if (posterImage != null) {
+      posterUrl = await uploadMovieImage(movie.id, posterImage, 'poster');
+    }
+
+    if (heroImage != null) {
+      heroUrl = await uploadMovieImage(movie.id, heroImage, 'hero');
+    }
+
+    return _firestore.collection('movies').doc(movie.id).update({
+      'title': title,
+      'description': description,
+      'director': director,
+      'genre': genre,
+      'rating': rating,
+      'duration': duration,
+      'premiere': premiere,
+      'actors': actors,
+      'poster-url': posterUrl ?? movie.posterUrl,
+      'hero-url': heroUrl ?? movie.heroUrl,
+    });
+  }
+
+  Future<MovieModel?> addMovie({
+    required String? title,
+    required String? description,
+    required String? genre,
+    required String? director,
+    required Timestamp? premiere,
+    required int? duration,
+    required String? rating,
+    required List<dynamic> actors,
+    required Uint8List? posterImage,
+    required Uint8List? heroImage,
+  }) async {
+    String? posterUrl;
+    String? heroUrl;
+
+    if (posterImage != null) {
+      posterUrl = await uploadMovieImage(title!, posterImage, 'poster');
+    }
+
+    if (heroImage != null) {
+      heroUrl = await uploadMovieImage(title!, heroImage, 'hero');
+    }
+
+    _firestore
+        .collection('movies')
+        .add({
+          'title': title,
+          'description': description,
+          'director': director,
+          'genre': genre,
+          'rating': rating,
+          'duration': duration,
+          'premiere': premiere,
+          'actors': actors,
+          'poster-url': posterUrl,
+          'hero-url': heroUrl,
+        })
+        .then((response) => {
+              debugPrint('Movie added with ID: ${response.id}'),
+              response.get().then((doc) {
+                return MovieModel.fromMap(doc.data()!, doc.id);
+              }),
+            })
+        .catchError((error) {
+          debugPrint('Error adding movie: $error');
+          throw error;
+        });
+    return null;
   }
 }

@@ -2,7 +2,7 @@ import 'dart:typed_data';
 import 'package:filmu_nams/assets/dialog/dialog.dart';
 import 'package:filmu_nams/assets/theme.dart';
 import 'package:filmu_nams/controllers/user_controller.dart';
-import 'package:filmu_nams/views/admin/dashboard/widgets/manage_carousel_items/edit_carousel_item.dart/form_input.dart';
+import 'package:filmu_nams/views/admin/dashboard/widgets/form_input.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/stylized_button.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -48,19 +48,22 @@ class _AddUserState extends State<AddUser> {
       if (!mounted) return;
 
       if (response?.errorMessage != null) {
-        StylizedDialog.dialog(Icons.error_outline,
+        StylizedDialog.dialog(
+          Icons.error_outline,
           context,
           "Kļūda",
           "Neizdevās pievienot lietotāju: ${response?.errorMessage}",
         );
       } else {
-        StylizedDialog.dialog(Icons.error_outline,context, "Veiksmīgi", "Lietotājs ir pievienots");
+        StylizedDialog.dialog(Icons.error_outline, context, "Veiksmīgi",
+            "Lietotājs ir pievienots");
       }
     } catch (exception) {
       debugPrint(exception.toString());
       if (!mounted) return;
 
-      StylizedDialog.dialog(Icons.error_outline,
+      StylizedDialog.dialog(
+        Icons.error_outline,
         context,
         "Kļūda",
         "Neizdevās pievienot lietotāju",

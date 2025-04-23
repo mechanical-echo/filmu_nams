@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class MovieModel {
   final String id;
   final String title;
@@ -8,6 +10,7 @@ class MovieModel {
   final String genre;
   final String director;
   final String heroUrl;
+  final Timestamp premiere;
   final List<dynamic> actors;
 
   MovieModel({
@@ -21,6 +24,7 @@ class MovieModel {
     required this.director,
     required this.heroUrl,
     required this.actors,
+    required this.premiere,
   });
 
   factory MovieModel.fromMap(Map<String, dynamic> map, String id) {
@@ -35,6 +39,7 @@ class MovieModel {
       director: map['director'] ?? '',
       heroUrl: map['hero-url'] ?? '',
       actors: map['actors'] ?? '',
+      premiere: map['premiere'] ?? Timestamp(0, 0),
     );
   }
 
@@ -50,6 +55,7 @@ class MovieModel {
       'director': director,
       'hero-url': heroUrl,
       'actors': actors,
+      'premiere': premiere,
     };
   }
 }

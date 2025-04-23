@@ -286,6 +286,22 @@ class ThemeProvider extends ChangeNotifier {
         ),
         behavior: SnackBarBehavior.floating,
       ),
+      chipTheme: ChipThemeData(
+        backgroundColor: isDark ? const Color(0xFF212121) : Color(0xFFEEEEEE),
+        selectedColor: seedColor,
+        secondarySelectedColor: seedColor.withOpacity(0.5),
+        disabledColor: Colors.grey[400],
+        labelStyle: GoogleFonts.poppins(
+          color: isDark ? Color(0xFFEEEEEE) : Color(0xFF1D1616),
+          fontSize: 14,
+          fontWeight: FontWeight.w500,
+        ),
+        secondaryLabelStyle: GoogleFonts.poppins(
+          color: isDark ? Color(0xFFEEEEEE) : Color(0xFF1D1616).withAlpha(185),
+          fontSize: 14,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
     );
   }
 
@@ -310,5 +326,6 @@ class ThemeProvider extends ChangeNotifier {
     }
   }
 
-  bool get isDark => _currentTheme == AppTheme.redDark || _currentTheme == AppTheme.blueDark;
+  bool get isDark =>
+      _currentTheme == AppTheme.redDark || _currentTheme == AppTheme.blueDark;
 }
