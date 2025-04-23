@@ -79,6 +79,7 @@ class _ManageScreenState extends State<ManageScreen> {
       width: calculatedWidth,
       child: Wrap(
         alignment: WrapAlignment.spaceBetween,
+        crossAxisAlignment: WrapCrossAlignment.center,
         spacing: 20,
         runSpacing: 10,
         children: [

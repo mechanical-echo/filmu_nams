@@ -27,12 +27,14 @@ class CarouselItemModel {
       title: map['title'] ?? '',
       imageUrl: map['image-url'] ?? '',
       description: map['description'] ?? '',
+      movie: map['movie'],
+      offer: map['offer'],
     );
   }
 
   static Future<CarouselItemModel> fromMapAsync(
-      Map<String, dynamic> map,
-      String id,
+    Map<String, dynamic> map,
+    String id,
   ) async {
     MovieModel? movie;
     OfferModel? offer;
@@ -79,14 +81,14 @@ class CarouselItemModel {
     );
   }
 
-    Map<String, dynamic> toMap() {
-      return {
-        'id': id,
-        'title': title,
-        'image-url': imageUrl,
-        'description': description,
-        'movie': movie,
-        'offer': offer,
-      };
-    }
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'title': title,
+      'image-url': imageUrl,
+      'description': description,
+      'movie': movie,
+      'offer': offer,
+    };
   }
+}

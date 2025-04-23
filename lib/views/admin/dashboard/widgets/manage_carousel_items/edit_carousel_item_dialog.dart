@@ -85,6 +85,7 @@ class _EditCarouselItemDialogState extends State<EditCarouselItemDialog> {
   @override
   void initState() {
     super.initState();
+    debugPrint("movie? ${widget.data?.movie != null}");
     _selectedLink = [
       widget.data?.movie != null,
       widget.data?.offer != null,
@@ -141,7 +142,7 @@ class _EditCarouselItemDialogState extends State<EditCarouselItemDialog> {
   }
 
   void submit() {
-    if (widget.data == null) {
+    if (widget.data == null || widget.data!.id == 'new') {
       add();
     } else {
       edit();
@@ -175,7 +176,7 @@ class _EditCarouselItemDialogState extends State<EditCarouselItemDialog> {
   }
 
   void add() {
-    if (image == null) {
+    if (image == null && widget.data?.imageUrl == null) {
       StylizedDialog.dialog(
           Icons.error_outline, context, "Kļūda", "Lūdzu pievienojiet bildi");
       return;
@@ -208,7 +209,7 @@ class _EditCarouselItemDialogState extends State<EditCarouselItemDialog> {
       titleController.text,
       descriptionController.text,
       image,
-      null,
+      widget.data?.imageUrl,
       movie,
       offer,
     )
@@ -283,7 +284,7 @@ class _EditCarouselItemDialogState extends State<EditCarouselItemDialog> {
                           spacing: 10,
                           children: [
                             Text(
-                              widget.data?.title == null
+                              widget.data == null || widget.data!.id == 'new'
                                   ? "Pievienot:"
                                   : "Rediģēt:",
                               style: theme.headlineMedium
@@ -383,29 +384,34 @@ class _EditCarouselItemDialogState extends State<EditCarouselItemDialog> {
               Container(
                 margin:
                     const EdgeInsets.symmetric(horizontal: 50, vertical: 25),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  spacing: 25,
-                  children: [
-                    FilledButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      style: FilledButton.styleFrom(
-                        backgroundColor: Colors.grey[600],
+                child: Center(
+                  child: Wrap(
+                    runAlignment: WrapAlignment.center,
+                    alignment: WrapAlignment.center,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    spacing: 25,
+                    children: [
+                      FilledButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        style: FilledButton.styleFrom(
+                          backgroundColor: Colors.grey[600],
+                        ),
+                        child: Text("Atcelt"),
                       ),
-                      child: Text("Atcelt"),
-                    ),
-                    FilledButton(
-                      onPressed: delete,
-                      style: FilledButton.styleFrom(
-                        backgroundColor: Colors.grey[600],
+                      if (widget.data != null && widget.data!.id != 'new')
+                        FilledButton(
+                          onPressed: delete,
+                          style: FilledButton.styleFrom(
+                            backgroundColor: Colors.grey[600],
+                          ),
+                          child: Text("Dzēst"),
+                        ),
+                      FilledButton(
+                        onPressed: submit,
+                        child: Text("Saglabāt"),
                       ),
-                      child: Text("Dzēst"),
-                    ),
-                    FilledButton(
-                      onPressed: submit,
-                      child: Text("Saglabāt izmaiņas"),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               )
             ],

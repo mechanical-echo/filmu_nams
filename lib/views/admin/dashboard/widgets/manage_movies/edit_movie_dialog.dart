@@ -3,7 +3,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:filmu_nams/assets/dialog/dialog.dart';
 import 'package:filmu_nams/controllers/offer_controller.dart';
+import 'package:filmu_nams/models/carousel_item.dart';
 import 'package:filmu_nams/models/movie.dart';
+import 'package:filmu_nams/views/admin/dashboard/widgets/manage_carousel_items/edit_carousel_item_dialog.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_movies/search_movie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -283,6 +285,44 @@ class _EditMovieDialogState extends State<EditMovieDialog> {
         isLoading = false;
       });
     });
+  }
+
+  void createCarouselItem() {
+    final carouselItem = CarouselItemModel.fromMap({
+      'title': '',
+      'image-url': widget.data!.posterUrl,
+      'description': '',
+      'movie': widget.data!,
+      'offer': null,
+    }, 'new');
+
+    debugPrint(
+      'Creating carousel item with movie: ${widget.data != null}',
+    );
+
+    Navigator.of(context).pop();
+
+    showGeneralDialog(
+      context: context,
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return EditCarouselItemDialog(data: carouselItem);
+      },
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        return FadeTransition(
+          opacity: animation,
+          child: ScaleTransition(
+            scale: Tween<double>(begin: 0.8, end: 1.0).animate(
+              CurvedAnimation(
+                parent: animation,
+                curve: Curves.easeOutBack,
+              ),
+            ),
+            child: child,
+          ),
+        );
+      },
+      transitionDuration: const Duration(milliseconds: 400),
+    );
   }
 
   void edit() {
@@ -584,38 +624,45 @@ class _EditMovieDialogState extends State<EditMovieDialog> {
                         right: 50,
                         bottom: 25,
                       ),
-                      child: Wrap(
-                        spacing: 25,
-                        runSpacing: 15,
-                        runAlignment: WrapAlignment.center,
-                        alignment: WrapAlignment.center,
-                        crossAxisAlignment: WrapCrossAlignment.center,
-                        children: [
-                          FilledButton(
-                            onPressed: () => Navigator.of(context).pop(),
-                            style: FilledButton.styleFrom(
-                              backgroundColor: Colors.grey[600],
-                            ),
-                            child: Text("Atcelt"),
-                          ),
-                          if (widget.data != null && widget.data!.id != 'new')
+                      child: Center(
+                        child: Wrap(
+                          spacing: 25,
+                          runSpacing: 15,
+                          runAlignment: WrapAlignment.center,
+                          alignment: WrapAlignment.center,
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          children: [
                             FilledButton(
-                              onPressed: delete,
+                              onPressed: () => Navigator.of(context).pop(),
                               style: FilledButton.styleFrom(
                                 backgroundColor: Colors.grey[600],
                               ),
-                              child: Text("Dzēst"),
+                              child: Text("Atcelt"),
                             ),
-                          FilledButton(
-                            onPressed: submit,
-                            child: Text("Saglabāt izmaiņas"),
-                          ),
-                          if (widget.data == null || widget.data!.id == 'new')
+                            if (widget.data != null && widget.data!.id != 'new')
+                              FilledButton(
+                                onPressed: delete,
+                                style: FilledButton.styleFrom(
+                                  backgroundColor: Colors.grey[600],
+                                ),
+                                child: Text("Dzēst"),
+                              ),
                             FilledButton(
-                              onPressed: search,
-                              child: Text("Meklēt, lai pievienot"),
+                              onPressed: submit,
+                              child: Text("Saglabāt"),
                             ),
-                        ],
+                            if (widget.data == null || widget.data!.id == 'new')
+                              FilledButton(
+                                onPressed: search,
+                                child: Text("Meklēt, lai pievienot"),
+                              ),
+                            if (widget.data != null && widget.data!.id != 'new')
+                              FilledButton(
+                                onPressed: createCarouselItem,
+                                child: Text("Uztaisīt sākuma elementu"),
+                              ),
+                          ],
+                        ),
                       ),
                     ),
                   ],
