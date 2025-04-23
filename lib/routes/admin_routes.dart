@@ -72,11 +72,6 @@ Route<dynamic>? generateAdminRoute(RouteSettings settings, ThemeData theme) {
         settings: settings,
         builder: (context) => const AddSchedule(),
       );
-    case AdminRoutes.editSchedule:
-      return MaterialPageRoute(
-        settings: settings,
-        builder: (context) => EditSchedule(id: args['id'] ?? ''),
-      );
 
     // User routes
     case AdminRoutes.users:

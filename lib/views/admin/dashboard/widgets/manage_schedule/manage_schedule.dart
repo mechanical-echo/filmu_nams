@@ -1,22 +1,24 @@
-import 'package:filmu_nams/assets/theme.dart';
-import 'package:filmu_nams/controllers/movie_controller.dart';
+import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:filmu_nams/models/schedule.dart';
+import 'package:filmu_nams/providers/color_context.dart';
+import 'package:filmu_nams/views/admin/dashboard/widgets/manage_schedule/edit_schedule.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_schedule/schedule_card.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_screen.dart';
-import 'package:filmu_nams/views/admin/dashboard/widgets/stylized_button.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class ManageSchedule extends StatefulWidget {
-  const ManageSchedule({
-    super.key,
-  });
+  const ManageSchedule({super.key});
 
   @override
   State<ManageSchedule> createState() => _ManageScheduleState();
 }
 
 class _ManageScheduleState extends State<ManageSchedule> {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  StreamSubscription<QuerySnapshot>? _scheduleSubscription;
+
   List<ScheduleModel> scheduleItems = [];
   bool isLoading = true;
   DateTime selectedDate = DateTime.now();
@@ -24,113 +26,172 @@ class _ManageScheduleState extends State<ManageSchedule> {
   @override
   void initState() {
     super.initState();
-    fetchScheduleFromFirebase();
+    listenToScheduleChanges();
   }
 
-  Future<void> fetchScheduleFromFirebase() async {
-    try {
-      final response = await MovieController().getAllSchedule();
+  void listenToScheduleChanges() {
+    final startOfDay = DateTime(
+        selectedDate.year, selectedDate.month, selectedDate.day, 0, 0, 0);
+    final endOfDay = DateTime(
+        selectedDate.year, selectedDate.month, selectedDate.day, 23, 59, 59);
+
+    final startTimestamp = Timestamp.fromDate(startOfDay);
+    final endTimestamp = Timestamp.fromDate(endOfDay);
+
+    _scheduleSubscription = _firestore
+        .collection('schedule')
+        .where('time', isGreaterThanOrEqualTo: startTimestamp)
+        .where('time', isLessThanOrEqualTo: endTimestamp)
+        .snapshots()
+        .listen((snapshot) async {
+      final futures = snapshot.docs.map(
+        (doc) => ScheduleModel.fromMapAsync(doc.data(), doc.id),
+      );
+
+      final items = await Future.wait(futures.toList());
+
       setState(() {
-        scheduleItems = response;
+        scheduleItems = items;
         isLoading = false;
       });
-    } catch (e) {
-      debugPrint('Error fetching schedule items: $e');
+    }, onError: (e) {
+      debugPrint('Error listening to schedule changes: $e');
       setState(() {
         isLoading = false;
       });
-    }
+    });
   }
 
-  List<ScheduleModel> getFilteredSchedule() {
-    if (scheduleItems.isEmpty) return [];
+  @override
+  void dispose() {
+    _scheduleSubscription?.cancel();
+    super.dispose();
+  }
 
-    return scheduleItems.where((item) {
-      final itemDate = item.time.toDate();
-      return itemDate.year == selectedDate.year &&
-          itemDate.month == selectedDate.month &&
-          itemDate.day == selectedDate.day;
-    }).toList();
+  void showAddDialog() {
+    showGeneralDialog(
+      context: context,
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return EditScheduleDialog();
+      },
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        return FadeTransition(
+          opacity: animation,
+          child: ScaleTransition(
+            scale: Tween<double>(begin: 0.8, end: 1.0).animate(
+              CurvedAnimation(
+                parent: animation,
+                curve: Curves.easeOutBack,
+              ),
+            ),
+            child: child,
+          ),
+        );
+      },
+      transitionDuration: const Duration(milliseconds: 400),
+    );
   }
 
   void onDateSelected(DateTime date) {
     setState(() {
       selectedDate = date;
+      isLoading = true;
     });
+
+    _scheduleSubscription?.cancel();
+    listenToScheduleChanges();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final filteredItems = getFilteredSchedule();
+  Widget _buildDateSelector() {
+    final theme = ContextTheme.of(context);
 
-    return Column(
-      spacing: 10,
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        dateSelector(),
-        ManageScreen(
-          count: filteredItems.length,
-          isLoading: isLoading,
-          itemGenerator: (index) => generateCard(filteredItems)(index),
-          title:
-              "Saraksts - ${DateFormat('d MMMM y', 'lv').format(selectedDate)}",
-        ),
-        IntrinsicWidth(
-          child: StylizedButton(
-            action: () {},
-            title: "Pievienot sarakstu",
-            icon: Icons.add_circle_outline,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget dateSelector() {
-    return IntrinsicWidth(
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 15),
-        decoration: classicDecorationSharp,
-        padding: const EdgeInsets.all(15),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          spacing: 15,
-          children: [
-            IconButton(
-              icon: Icon(Icons.arrow_back_ios, color: smokeyWhite),
-              onPressed: () => onDateSelected(
-                selectedDate.subtract(const Duration(days: 1)),
-              ),
+    return Container(
+      margin: const EdgeInsets.only(bottom: 15),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          IconButton(
+            icon: Icon(Icons.arrow_back_ios),
+            onPressed: () => onDateSelected(
+              selectedDate.subtract(const Duration(days: 1)),
             ),
-            Container(
+          ),
+          InkWell(
+            onTap: () async {
+              final DateTime? pickedDate = await showDatePicker(
+                context: context,
+                initialDate: selectedDate,
+                firstDate: DateTime.now().subtract(const Duration(days: 365)),
+                lastDate: DateTime.now().add(const Duration(days: 365)),
+              );
+              if (pickedDate != null) {
+                onDateSelected(pickedDate);
+              }
+            },
+            child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              decoration: classicDecorationWhiteSharper,
+              decoration: BoxDecoration(
+                color: theme.surfaceVariant,
+                borderRadius: BorderRadius.circular(8),
+              ),
               child: Text(
                 DateFormat('EEEE, d MMMM y', 'lv').format(selectedDate),
-                style: bodyMediumRed,
+                style: theme.titleMedium,
               ),
             ),
-            IconButton(
-              icon: Icon(Icons.arrow_forward_ios, color: smokeyWhite),
-              onPressed: () => onDateSelected(
-                selectedDate.add(const Duration(days: 1)),
-              ),
+          ),
+          IconButton(
+            icon: Icon(Icons.arrow_forward_ios),
+            onPressed: () => onDateSelected(
+              selectedDate.add(const Duration(days: 1)),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
-  Function(int) generateCard(List<ScheduleModel> items) {
-    return (index) => Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-          decoration: classicDecorationSharp,
-          child: ScheduleCard(
-            data: items[index],
-            onEdit: (scheduleId) {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        _buildDateSelector(),
+        ManageScreen(
+          height: 100,
+          count: scheduleItems.length,
+          isLoading: isLoading,
+          itemGenerator: (index) => ScheduleCard(
+            data: scheduleItems[index],
+            onEdit: (id) {
+              showGeneralDialog(
+                context: context,
+                pageBuilder: (context, animation, secondaryAnimation) {
+                  return EditScheduleDialog(id: id);
+                },
+                transitionBuilder:
+                    (context, animation, secondaryAnimation, child) {
+                  return FadeTransition(
+                    opacity: animation,
+                    child: ScaleTransition(
+                      scale: Tween<double>(begin: 0.8, end: 1.0).animate(
+                        CurvedAnimation(
+                          parent: animation,
+                          curve: Curves.easeOutBack,
+                        ),
+                      ),
+                      child: child,
+                    ),
+                  );
+                },
+                transitionDuration: const Duration(milliseconds: 400),
+              );
             },
           ),
-        );
+          title:
+              "Saraksts - ${DateFormat('d MMMM y', 'lv').format(selectedDate)}",
+          onCreate: showAddDialog,
+        ),
+      ],
+    );
   }
 }

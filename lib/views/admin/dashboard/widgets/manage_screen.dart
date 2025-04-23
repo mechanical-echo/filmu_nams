@@ -11,6 +11,7 @@ class ManageScreen extends StatefulWidget {
     required this.itemGenerator,
     required this.title,
     this.onCreate,
+    this.height = 40,
   });
 
   final int count;
@@ -18,6 +19,7 @@ class ManageScreen extends StatefulWidget {
   final Widget Function(int) itemGenerator;
   final Function()? onCreate;
   final String title;
+  final double height;
 
   @override
   State<ManageScreen> createState() => _ManageScreenState();
@@ -61,7 +63,7 @@ class _ManageScreenState extends State<ManageScreen> {
                         mainAxisSpacing: 10,
                         crossAxisSpacing: 20,
                         childAspectRatio: itemWidth / itemHeight,
-                        mainAxisExtent: 40,
+                        mainAxisExtent: widget.height,
                       ),
                       itemCount: widget.count,
                       itemBuilder: (context, index) =>

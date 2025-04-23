@@ -1,32 +1,34 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:filmu_nams/assets/dialog/dialog.dart';
-import 'package:filmu_nams/assets/theme.dart';
 import 'package:filmu_nams/controllers/movie_controller.dart';
 import 'package:filmu_nams/models/movie.dart';
 import 'package:filmu_nams/models/schedule.dart';
-import 'package:filmu_nams/views/admin/dashboard/widgets/stylized_button.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:filmu_nams/providers/color_context.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
-class EditSchedule extends StatefulWidget {
-  const EditSchedule({
+class EditScheduleDialog extends StatefulWidget {
+  const EditScheduleDialog({
     super.key,
-    required this.id,
+    this.id,
   });
 
-  final String id;
+  final String? id;
 
   @override
-  State<EditSchedule> createState() => _EditScheduleState();
+  State<EditScheduleDialog> createState() => _EditScheduleDialogState();
 }
 
-class _EditScheduleState extends State<EditSchedule> {
+class _EditScheduleDialogState extends State<EditScheduleDialog> {
+  final _formKey = GlobalKey<FormState>();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final MovieController _movieController = MovieController();
 
+  ContextTheme get theme => ContextTheme.of(context);
+
+  List<MovieModel> movies = [];
   ScheduleModel? scheduleData;
-  List<MovieModel> allMovies = [];
   bool isLoading = true;
   bool isUpdating = false;
 
@@ -43,10 +45,11 @@ class _EditScheduleState extends State<EditSchedule> {
 
   Future<void> _loadData() async {
     try {
-      final List<MovieModel> movies = await _movieController.getAllMovies();
+      final List<MovieModel> loadedMovies =
+          await _movieController.getAllMovies();
       ScheduleModel? schedule;
 
-      if (widget.id.isNotEmpty) {
+      if (widget.id != null) {
         final documentSnapshot =
             await _firestore.collection('schedule').doc(widget.id).get();
         if (documentSnapshot.exists) {
@@ -70,7 +73,7 @@ class _EditScheduleState extends State<EditSchedule> {
       }
 
       setState(() {
-        allMovies = movies;
+        movies = loadedMovies;
         scheduleData = schedule;
         isLoading = false;
       });
@@ -81,7 +84,8 @@ class _EditScheduleState extends State<EditSchedule> {
       });
 
       if (mounted) {
-        StylizedDialog.dialog(Icons.error_outline,
+        StylizedDialog.dialog(
+          Icons.error_outline,
           context,
           "Kļūda",
           "Neizdevās ielādēt datus",
@@ -91,8 +95,13 @@ class _EditScheduleState extends State<EditSchedule> {
   }
 
   Future<void> _saveSchedule() async {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
     if (selectedMovieId == null) {
-      StylizedDialog.dialog(Icons.error_outline,
+      StylizedDialog.dialog(
+        Icons.error_outline,
         context,
         "Kļūda",
         "Lūdzu, izvēlieties filmu",
@@ -122,26 +131,37 @@ class _EditScheduleState extends State<EditSchedule> {
         'time': Timestamp.fromDate(scheduledDateTime),
       };
 
-      if (widget.id.isEmpty) {
+      if (widget.id == null) {
         await _firestore.collection('schedule').add(scheduleData);
+        if (mounted) {
+          StylizedDialog.dialog(
+            Icons.check_circle_outline,
+            context,
+            "Veiksmīgi",
+            "Saraksts pievienots",
+          );
+        }
       } else {
         await _firestore
             .collection('schedule')
             .doc(widget.id)
             .update(scheduleData);
+        if (mounted) {
+          StylizedDialog.dialog(
+            Icons.check_circle_outline,
+            context,
+            "Veiksmīgi",
+            "Saraksts atjaunināts",
+          );
+        }
       }
 
-      if (mounted) {
-        StylizedDialog.dialog(Icons.error_outline,
-          context,
-          "Veiksmīgi",
-          widget.id.isEmpty ? "Saraksts pievienots" : "Saraksts atjaunināts",
-        );
-      }
+      Navigator.of(context).pop();
     } catch (e) {
       debugPrint('Error saving schedule: $e');
       if (mounted) {
-        StylizedDialog.dialog(Icons.error_outline,
+        StylizedDialog.dialog(
+          Icons.error_outline,
           context,
           "Kļūda",
           "Neizdevās saglabāt sarakstu",
@@ -160,10 +180,10 @@ class _EditScheduleState extends State<EditSchedule> {
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
-                title: Text("Dzēst sarakstu?", style: header2),
+                title: Text("Dzēst sarakstu?", style: theme.headlineMedium),
                 content: Text(
                   "Vai tiešām vēlaties dzēst šo sarakstu? Šo darbību nevar atsaukt.",
-                  style: bodyMedium,
+                  style: theme.bodyMedium,
                 ),
                 actions: [
                   TextButton(
@@ -191,12 +211,20 @@ class _EditScheduleState extends State<EditSchedule> {
         await _firestore.collection('schedule').doc(widget.id).delete();
 
         if (mounted) {
+          Navigator.of(context).pop();
+          StylizedDialog.dialog(
+            Icons.check_circle_outline,
+            context,
+            "Veiksmīgi",
+            "Saraksts dzēsts",
+          );
         }
       }
     } catch (e) {
       debugPrint('Error deleting schedule: $e');
       if (mounted) {
-        StylizedDialog.dialog(Icons.error_outline,
+        StylizedDialog.dialog(
+          Icons.error_outline,
           context,
           "Kļūda",
           "Neizdevās dzēst sarakstu",
@@ -218,12 +246,12 @@ class _EditScheduleState extends State<EditSchedule> {
         return Theme(
           data: Theme.of(context).copyWith(
             colorScheme: ColorScheme.dark(
-              primary: red002,
-              onPrimary: Colors.white,
-              surface: red001,
-              onSurface: Colors.white,
+              primary: theme.primary,
+              onPrimary: theme.onPrimary,
+              surface: theme.surface,
+              onSurface: theme.onSurface,
             ),
-            dialogBackgroundColor: Color.fromARGB(255, 44, 39, 39),
+            dialogBackgroundColor: theme.surface,
           ),
           child: child!,
         );
@@ -245,12 +273,12 @@ class _EditScheduleState extends State<EditSchedule> {
         return Theme(
           data: Theme.of(context).copyWith(
             colorScheme: ColorScheme.dark(
-              primary: red002,
-              onPrimary: Colors.white,
-              surface: red001,
-              onSurface: Colors.white,
+              primary: theme.primary,
+              onPrimary: theme.onPrimary,
+              surface: theme.surface,
+              onSurface: theme.onSurface,
             ),
-            dialogBackgroundColor: Color.fromARGB(255, 44, 39, 39),
+            dialogBackgroundColor: theme.surface,
           ),
           child: child!,
         );
@@ -266,52 +294,39 @@ class _EditScheduleState extends State<EditSchedule> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      constraints: const BoxConstraints(
-        maxWidth: 800,
-        maxHeight: 800,
-      ),
-      decoration: classicDecorationDark,
-      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-      child: isLoading || isUpdating ? _buildLoading() : _buildFormContent(),
-    );
-  }
-
-  Widget _buildLoading() {
     return Center(
-      child: LoadingAnimationWidget.staggeredDotsWave(
-        color: smokeyWhite,
-        size: 100,
-      ),
-    );
-  }
-
-  Widget _buildFormContent() {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 35),
-      decoration: classicDecorationSharp,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildHeader(),
-          const Divider(height: 30),
-          Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildDateTimePickers(),
-                  const SizedBox(height: 20),
-                  _buildHallSelector(),
-                  const SizedBox(height: 20),
-                  _buildMovieSelector(),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(height: 20),
-          _buildButtonRow(),
-        ],
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxWidth: 900,
+          maxHeight: MediaQuery.of(context).size.height * 0.9,
+        ),
+        child: Dialog(
+          insetPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+          child: isLoading || isUpdating
+              ? Center(
+                  child: LoadingAnimationWidget.staggeredDotsWave(
+                    color: theme.contrast,
+                    size: 80,
+                  ),
+                )
+              : Form(
+                  key: _formKey,
+                  child: Padding(
+                    padding: const EdgeInsets.all(40),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildHeader(),
+                        const SizedBox(height: 32),
+                        _buildFormContent(),
+                        const SizedBox(height: 40),
+                        _buildButtonRow(),
+                      ],
+                    ),
+                  ),
+                ),
+        ),
       ),
     );
   }
@@ -321,79 +336,70 @@ class _EditScheduleState extends State<EditSchedule> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Container(
-          decoration: classicDecorationWhiteSharper,
-          padding: const EdgeInsets.symmetric(
-            horizontal: 25,
-            vertical: 5,
-          ),
-          child: Text(
-            widget.id.isEmpty ? "Jauns saraksts" : "Rediģēt sarakstu",
-            style: header2Red,
-          ),
+        Text(
+          widget.id == null ? "Jauns saraksts" : "Rediģēt sarakstu",
+          style: theme.displayMedium,
         ),
-        StylizedButton(
-          action: () {
-          },
-          title: "Atpakaļ",
-          icon: Icons.chevron_left_rounded,
-          textStyle: header2Red,
-          iconSize: 35,
+        IconButton(
+          onPressed: () => Navigator.of(context).pop(),
+          icon: Icon(Icons.close, size: 24),
         ),
       ],
     );
   }
 
-  Widget _buildDateTimePickers() {
+  Widget _buildFormContent() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Text('Datums un laiks', style: theme.titleLarge),
+        const SizedBox(height: 16),
         Row(
-          spacing: 10,
-          children: [
-            Icon(Icons.calendar_today, size: 25, color: smokeyWhite),
-            Text('Datums un laiks', style: bodyLarge),
-          ],
-        ),
-        const SizedBox(height: 15),
-        Row(
-          spacing: 15,
           children: [
             Expanded(
               child: InkWell(
                 onTap: _selectDate,
                 child: Container(
-                  height: 50,
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  decoration: classicDecorationSharper,
+                  height: 60,
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  decoration: BoxDecoration(
+                    color: theme.surfaceVariant.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: theme.outline),
+                  ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
                         DateFormat('dd.MM.yyyy').format(selectedDate),
-                        style: bodyMedium,
+                        style: theme.bodyLarge,
                       ),
-                      Icon(Icons.edit_calendar, color: smokeyWhite),
+                      Icon(Icons.calendar_today, color: theme.primary),
                     ],
                   ),
                 ),
               ),
             ),
+            const SizedBox(width: 16),
             Expanded(
               child: InkWell(
                 onTap: _selectTime,
                 child: Container(
-                  height: 50,
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  decoration: classicDecorationSharper,
+                  height: 60,
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  decoration: BoxDecoration(
+                    color: theme.surfaceVariant.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: theme.outline),
+                  ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
                         selectedTime.format(context),
-                        style: bodyMedium,
+                        style: theme.bodyLarge,
                       ),
-                      Icon(Icons.access_time, color: smokeyWhite),
+                      Icon(Icons.access_time, color: theme.primary),
                     ],
                   ),
                 ),
@@ -401,33 +407,23 @@ class _EditScheduleState extends State<EditSchedule> {
             ),
           ],
         ),
-      ],
-    );
-  }
-
-  Widget _buildHallSelector() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          spacing: 10,
-          children: [
-            Icon(Icons.meeting_room, size: 25, color: smokeyWhite),
-            Text('Zāle', style: bodyLarge),
-          ],
-        ),
-        const SizedBox(height: 15),
+        const SizedBox(height: 24),
+        Text('Zāle', style: theme.titleLarge),
+        const SizedBox(height: 16),
         Container(
-          height: 50,
-          decoration: classicDecorationSharper,
-          padding: const EdgeInsets.symmetric(horizontal: 15),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          decoration: BoxDecoration(
+            color: theme.surfaceVariant.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: theme.outline),
+          ),
           child: DropdownButtonHideUnderline(
             child: DropdownButton<int>(
               value: selectedHall,
               isExpanded: true,
-              dropdownColor: red001,
-              style: bodyMedium,
-              icon: Icon(Icons.arrow_drop_down, color: smokeyWhite),
+              dropdownColor: theme.surface,
+              style: theme.bodyLarge,
+              icon: Icon(Icons.arrow_drop_down, color: theme.primary),
               onChanged: (int? newValue) {
                 if (newValue != null) {
                   setState(() {
@@ -444,34 +440,26 @@ class _EditScheduleState extends State<EditSchedule> {
             ),
           ),
         ),
-      ],
-    );
-  }
-
-  Widget _buildMovieSelector() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          spacing: 10,
-          children: [
-            Icon(Icons.movie, size: 25, color: smokeyWhite),
-            Text('Filma', style: bodyLarge),
-          ],
-        ),
-        const SizedBox(height: 15),
+        const SizedBox(height: 24),
+        Text('Filma', style: theme.titleLarge),
+        const SizedBox(height: 16),
         Container(
-          height: 50,
-          decoration: classicDecorationSharper,
-          padding: const EdgeInsets.symmetric(horizontal: 15),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          decoration: BoxDecoration(
+            color: theme.surfaceVariant.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: theme.outline),
+          ),
           child: DropdownButtonHideUnderline(
             child: DropdownButton<String>(
               value: selectedMovieId,
               isExpanded: true,
-              dropdownColor: red001,
-              style: bodyMedium,
-              icon: Icon(Icons.arrow_drop_down, color: smokeyWhite),
-              hint: Text('Izvēlieties filmu', style: bodyMedium),
+              dropdownColor: theme.surface,
+              style: theme.bodyLarge,
+              icon: Icon(Icons.arrow_drop_down, color: theme.primary),
+              hint: Text('Izvēlieties filmu',
+                  style: theme.bodyLarge
+                      .copyWith(color: theme.contrast.withOpacity(0.5))),
               onChanged: (String? newValue) {
                 if (newValue != null) {
                   setState(() {
@@ -479,8 +467,7 @@ class _EditScheduleState extends State<EditSchedule> {
                   });
                 }
               },
-              items:
-                  allMovies.map<DropdownMenuItem<String>>((MovieModel movie) {
+              items: movies.map<DropdownMenuItem<String>>((MovieModel movie) {
                 return DropdownMenuItem<String>(
                   value: movie.id,
                   child: Text(movie.title),
@@ -495,19 +482,26 @@ class _EditScheduleState extends State<EditSchedule> {
 
   Widget _buildButtonRow() {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        StylizedButton(
-          action: _saveSchedule,
-          title: widget.id.isEmpty ? "Pievienot sarakstu" : "Saglabāt izmaiņas",
-          icon: widget.id.isEmpty ? Icons.add : Icons.save,
-        ),
-        if (widget.id.isNotEmpty)
-          StylizedButton(
-            action: _deleteSchedule,
-            title: "Dzēst sarakstu",
-            icon: Icons.delete_forever,
+        if (widget.id != null)
+          TextButton(
+            onPressed: _deleteSchedule,
+            style: TextButton.styleFrom(
+              foregroundColor: Colors.red[400],
+            ),
+            child: Text("Dzēst"),
           ),
+        const SizedBox(width: 16),
+        OutlinedButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: Text("Atcelt"),
+        ),
+        const SizedBox(width: 16),
+        FilledButton(
+          onPressed: _saveSchedule,
+          child: Text(widget.id == null ? "Pievienot" : "Saglabāt"),
+        ),
       ],
     );
   }

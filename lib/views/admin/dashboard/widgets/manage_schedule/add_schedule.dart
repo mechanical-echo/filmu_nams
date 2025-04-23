@@ -8,8 +8,6 @@ class AddSchedule extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return EditSchedule(
-      id: "",
-    );
+    return Placeholder();
   }
 }

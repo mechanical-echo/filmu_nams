@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:filmu_nams/assets/widgets/stylized_tabs/stylized_tab.dart';
 import 'package:filmu_nams/assets/widgets/stylized_tabs/stylized_tabs.dart';
 import 'package:filmu_nams/controllers/movie_controller.dart';
@@ -38,9 +41,34 @@ class _ScheduleWidgetState extends State<ScheduleWidget> {
     });
   }
 
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  StreamSubscription<QuerySnapshot>? _scheduleFetchSubscription;
+
+  @override
+  void dispose() {
+    _scheduleFetchSubscription?.cancel();
+    super.dispose();
+  }
+
   Future<void> fetchAllSchedule() async {
-    final response = await MovieController().getAllSchedule();
-    setAvailableDates(response);
+    _scheduleFetchSubscription =
+        _firestore.collection('schedule').snapshots().listen((snapshot) async {
+      final futures = snapshot.docs.map(
+        (doc) => ScheduleModel.fromMapAsync(doc.data(), doc.id),
+      );
+
+      final items = await Future.wait(futures.toList());
+
+      setState(() {
+        setAvailableDates(items);
+        // isLoading = false;
+      });
+    }, onError: (e) {
+      debugPrint('Error listening to carousel changes: $e');
+      setState(() {
+        // isLoading = false;
+      });
+    });
   }
 
   void setAvailableDates(List<ScheduleModel> scheduleData) {
