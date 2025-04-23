@@ -3,6 +3,7 @@ import 'package:filmu_nams/providers/color_context.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_carousel_items/manage_carousel_items.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_movies/manage_movies.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_offers/manage_offers.dart';
+import 'package:filmu_nams/views/admin/dashboard/widgets/manage_promocodes/manage_promocodes.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_schedule/manage_schedule.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_users/manage_users.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -42,8 +43,10 @@ class _AdminWrapperState extends State<AdminWrapper> {
       case 5:
         return Center(child: ManageOffers());
       case 6:
-        return Center(child: Text("Payments section"));
+        return Center(child: ManagePromocodes());
       case 7:
+        return Center(child: Text("Payments section"));
+      case 8:
         FirebaseAuth.instance.signOut();
         return Center(
           child: LoadingAnimationWidget.staggeredDotsWave(
@@ -102,6 +105,10 @@ class _AdminWrapperState extends State<AdminWrapper> {
               NavigationRailDestination(
                 icon: Icon(Icons.percent),
                 label: Text("Piedāvājumi"),
+              ),
+              NavigationRailDestination(
+                icon: Icon(Icons.local_offer_outlined),
+                label: Text("Promokodi"),
               ),
               NavigationRailDestination(
                 icon: Icon(Icons.payments),
