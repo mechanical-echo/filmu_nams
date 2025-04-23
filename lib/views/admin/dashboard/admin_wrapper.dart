@@ -2,6 +2,7 @@ import 'package:filmu_nams/assets/decorations/background.dart';
 import 'package:filmu_nams/providers/color_context.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_carousel_items/manage_carousel_items.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_movies/manage_movies.dart';
+import 'package:filmu_nams/views/admin/dashboard/widgets/manage_offers/manage_offers.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_schedule/manage_schedule.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_users/manage_users.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -39,7 +40,7 @@ class _AdminWrapperState extends State<AdminWrapper> {
       case 4:
         return Center(child: ManageUsers());
       case 5:
-        return Center(child: Text("Offers section"));
+        return Center(child: ManageOffers());
       case 6:
         return Center(child: Text("Payments section"));
       case 7:

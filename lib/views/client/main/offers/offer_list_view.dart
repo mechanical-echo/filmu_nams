@@ -1,6 +1,7 @@
+import 'dart:async';
+
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:filmu_nams/assets/theme.dart';
-import 'package:filmu_nams/controllers/offer_controller.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:filmu_nams/models/offer.dart';
 import 'package:filmu_nams/views/client/main/offers/offer_detail_view.dart';
 import 'package:flutter/material.dart';
@@ -20,19 +21,34 @@ class _OffersListState extends State<OffersList> {
   List<OfferModel>? offerData;
   bool isLoading = true;
 
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  StreamSubscription<QuerySnapshot>? _offerFetchSubscription;
+
+  @override
+  void dispose() {
+    _offerFetchSubscription?.cancel();
+    super.dispose();
+  }
+
   Future<void> fetchOffers() async {
-    try {
-      final response = await OfferController().getAllOffers();
+    _offerFetchSubscription =
+        _firestore.collection('offers').snapshots().listen((snapshot) async {
+      final futures = snapshot.docs.map(
+        (doc) => OfferModel.fromMapAsync(doc.data(), doc.id),
+      );
+
+      final items = await Future.wait(futures.toList());
+
       setState(() {
-        offerData = response;
+        offerData = items;
         isLoading = false;
       });
-    } catch (e) {
+    }, onError: (e) {
+      debugPrint('Error listening to carousel changes: $e');
       setState(() {
         isLoading = false;
       });
-      debugPrint('Error fetching offers: $e');
-    }
+    });
   }
 
   @override
@@ -168,7 +184,6 @@ class OfferCard extends StatelessWidget {
                 ),
               ),
             ),
-
             Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
@@ -181,7 +196,6 @@ class OfferCard extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 8),
-
                   Text(
                     data.description,
                     style: theme.titleSmall,
@@ -189,7 +203,6 @@ class OfferCard extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 16),
-
                   Row(
                     children: [
                       if (data.promocode != null)
