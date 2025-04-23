@@ -4,6 +4,7 @@ import 'package:filmu_nams/providers/color_context.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_movies/edit_movie_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:marquee/marquee.dart';
 
@@ -36,9 +37,9 @@ class _AdminMovieCardState extends State<AdminMovieCard> {
           elevation: 10,
           child: CachedNetworkImage(
             imageUrl: widget.data.posterUrl,
-            width: 250,
+            width: 230,
             height: 350,
-            fit: BoxFit.contain,
+            fit: BoxFit.cover,
           ),
         ),
       ),
@@ -108,15 +109,17 @@ class _AdminMovieCardState extends State<AdminMovieCard> {
           duration: const Duration(milliseconds: 100),
           decoration:
               hovered ? theme.activeCardDecoration : theme.cardDecoration,
-          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+          padding: const EdgeInsets.only(right: 30),
           child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 35,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               image(),
-              const VerticalDivider(),
               title(),
-              const VerticalDivider(),
               description(),
+              Text(
+                DateFormat('dd.MM.yyyy.').format(widget.data.premiere.toDate()),
+              ),
             ],
           ),
         ),
@@ -129,7 +132,7 @@ class _AdminMovieCardState extends State<AdminMovieCard> {
       child: Text(
         widget.data.description,
         style: theme.bodyMedium,
-        maxLines: 2,
+        maxLines: 1,
         overflow: TextOverflow.ellipsis,
       ),
     );
@@ -139,10 +142,10 @@ class _AdminMovieCardState extends State<AdminMovieCard> {
     return SizedBox(
       width: 250,
       height: 30,
-      child: widget.data.title.length > 18
+      child: widget.data.title.length > 21
           ? Marquee(
               text: widget.data.title,
-              style: theme.displaySmall,
+              style: theme.headlineMedium,
               scrollAxis: Axis.horizontal,
               crossAxisAlignment: CrossAxisAlignment.start,
               blankSpace: 20.0,
@@ -154,7 +157,7 @@ class _AdminMovieCardState extends State<AdminMovieCard> {
               decelerationDuration: Duration(milliseconds: 500),
               decelerationCurve: Curves.easeOut,
             )
-          : Text(widget.data.title, style: theme.displaySmall),
+          : Text(widget.data.title, style: theme.headlineMedium),
     );
   }
 
@@ -163,7 +166,7 @@ class _AdminMovieCardState extends State<AdminMovieCard> {
       onEnter: _showHoverPreview,
       onExit: _hideHoverPreview,
       child: SizedBox(
-        width: 100,
+        width: 150,
         height: 150,
         child: CachedNetworkImage(
           imageUrl: widget.data.posterUrl,

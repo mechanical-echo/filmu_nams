@@ -5,7 +5,6 @@ import 'package:filmu_nams/views/client/main/notifications/notifications.dart';
 import 'package:filmu_nams/views/client/main/profile/profile.dart';
 import 'package:filmu_nams/assets/decorations/background.dart';
 import 'package:filmu_nams/assets/animations/carousel_switch.dart';
-import 'package:filmu_nams/assets/decorations/logo.dart';
 import 'package:filmu_nams/assets/navigation_bar.dart';
 import 'package:filmu_nams/views/client/main/schedule/schedule.dart';
 import 'package:flutter/material.dart';
@@ -73,14 +72,15 @@ class Base extends StatelessWidget {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  theme.isDark ? Colors.transparent : Colors.white.withOpacity(0.0),
+                  theme.isDark
+                      ? Colors.transparent
+                      : Colors.white.withOpacity(0.0),
                   theme.isDark ? Colors.black87 : Colors.white,
                 ],
                 stops: const [0.5, 1],
               ),
             ),
           ),
-          // Content layer
           Column(
             children: [
               Expanded(
@@ -88,9 +88,9 @@ class Base extends StatelessWidget {
                   child: body,
                 ),
               ),
-              SafeArea(
-                top: false,
-                child: bottomNavigationBar,
+              bottomNavigationBar,
+              SizedBox(
+                height: 30,
               ),
             ],
           ),

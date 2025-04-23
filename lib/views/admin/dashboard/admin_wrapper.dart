@@ -2,6 +2,7 @@ import 'package:filmu_nams/assets/decorations/background.dart';
 import 'package:filmu_nams/providers/color_context.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_carousel_items/manage_carousel_items.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_movies/manage_movies.dart';
+import 'package:filmu_nams/views/admin/dashboard/widgets/manage_schedule/manage_schedule.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_users/manage_users.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -16,25 +17,12 @@ class AdminWrapper extends StatefulWidget {
 
 class _AdminWrapperState extends State<AdminWrapper> {
   int selectedIndex = 0;
-  bool expanded = false;
 
   ContextTheme get theme => ContextTheme.of(context);
 
   void switchPage(int index) {
     setState(() {
       selectedIndex = index;
-    });
-  }
-
-  void expand() {
-    setState(() {
-      expanded = true;
-    });
-  }
-
-  void shrink() {
-    setState(() {
-      expanded = false;
     });
   }
 
@@ -47,12 +35,14 @@ class _AdminWrapperState extends State<AdminWrapper> {
       case 2:
         return Center(child: ManageMovies());
       case 3:
-        return Center(child: ManageUsers());
+        return Center(child: ManageSchedule());
       case 4:
-        return Center(child: Text("Offers section"));
+        return Center(child: ManageUsers());
       case 5:
-        return Center(child: Text("Payments section"));
+        return Center(child: Text("Offers section"));
       case 6:
+        return Center(child: Text("Payments section"));
+      case 7:
         FirebaseAuth.instance.signOut();
         return Center(
           child: LoadingAnimationWidget.staggeredDotsWave(
@@ -67,57 +57,62 @@ class _AdminWrapperState extends State<AdminWrapper> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final bool isExpanded = screenWidth > 900;
+    final leftPadding = isExpanded ? 280.0 : 100.0;
+
     return Stack(
       children: [
         Background(
           child: SingleChildScrollView(
-              padding: const EdgeInsets.only(
-                left: 100,
-                top: 50,
-                right: 20,
-                bottom: 50,
-              ),
-              child: body(selectedIndex)),
+            padding: EdgeInsets.only(
+              left: leftPadding,
+              top: 50,
+              right: 20,
+              bottom: 50,
+            ),
+            child: body(selectedIndex),
+          ),
         ),
         IntrinsicWidth(
-          child: MouseRegion(
-            onEnter: (event) => expand(),
-            onExit: (event) => shrink(),
-            child: NavigationRail(
-              extended: expanded,
-              destinations: const [
-                NavigationRailDestination(
-                  icon: Icon(Icons.home),
-                  label: Text("Sākums"),
-                ),
-                NavigationRailDestination(
-                  icon: Icon(Icons.screen_lock_landscape),
-                  label: Text("Carousel"),
-                ),
-                NavigationRailDestination(
-                  icon: Icon(Icons.movie),
-                  label: Text("Filmas"),
-                ),
-                NavigationRailDestination(
-                  icon: Icon(Icons.person),
-                  label: Text("Lietotāji"),
-                ),
-                NavigationRailDestination(
-                  icon: Icon(Icons.percent),
-                  label: Text("Piedāvājumi"),
-                ),
-                NavigationRailDestination(
-                  icon: Icon(Icons.payments),
-                  label: Text("Maksājumi"),
-                ),
-                NavigationRailDestination(
-                  icon: Icon(Icons.logout),
-                  label: Text("Izlogoties"),
-                ),
-              ],
-              selectedIndex: selectedIndex,
-              onDestinationSelected: switchPage,
-            ),
+          child: NavigationRail(
+            extended: isExpanded,
+            destinations: const [
+              NavigationRailDestination(
+                icon: Icon(Icons.home),
+                label: Text("Sākums"),
+              ),
+              NavigationRailDestination(
+                icon: Icon(Icons.screen_lock_landscape),
+                label: Text("Sākuma lapas elementi"),
+              ),
+              NavigationRailDestination(
+                icon: Icon(Icons.movie),
+                label: Text("Filmas"),
+              ),
+              NavigationRailDestination(
+                icon: Icon(Icons.calendar_month),
+                label: Text("Saraksts"),
+              ),
+              NavigationRailDestination(
+                icon: Icon(Icons.person),
+                label: Text("Lietotāji"),
+              ),
+              NavigationRailDestination(
+                icon: Icon(Icons.percent),
+                label: Text("Piedāvājumi"),
+              ),
+              NavigationRailDestination(
+                icon: Icon(Icons.payments),
+                label: Text("Maksājumi"),
+              ),
+              NavigationRailDestination(
+                icon: Icon(Icons.logout),
+                label: Text("Izlogoties"),
+              ),
+            ],
+            selectedIndex: selectedIndex,
+            onDestinationSelected: switchPage,
           ),
         ),
       ],

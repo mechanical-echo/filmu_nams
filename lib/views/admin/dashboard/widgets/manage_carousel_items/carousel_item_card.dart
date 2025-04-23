@@ -109,17 +109,17 @@ class _CarouselItemCardState extends State<CarouselItemCard> {
           duration: const Duration(milliseconds: 100),
           decoration:
               hovered ? theme.activeCardDecoration : theme.cardDecoration,
-          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+          padding: const EdgeInsets.only(
+            right: 5,
+          ),
           child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 25,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               image(),
-              const VerticalDivider(),
               title(),
-              const VerticalDivider(),
               description(),
-              if (widget.data.movie != null || widget.data.offer != null)
-                const VerticalDivider(),
               if (widget.data.movie != null || widget.data.offer != null)
                 Container(
                   decoration: theme.activeCardDecoration,
@@ -129,6 +129,7 @@ class _CarouselItemCardState extends State<CarouselItemCard> {
                   ),
                   child: Icon(
                     widget.data.movie != null ? Icons.movie : Icons.percent,
+                    size: 15,
                   ),
                 )
             ],

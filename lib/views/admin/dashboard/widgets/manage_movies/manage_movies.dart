@@ -20,19 +20,19 @@ class ManageMovies extends StatefulWidget {
 }
 
 class _ManageMoviesState extends State<ManageMovies> {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   List<MovieModel>? movies;
   bool isLoading = true;
 
   ContextTheme get theme => ContextTheme.of(context);
-
-  StreamSubscription<QuerySnapshot>? _movieFetchSubscription;
 
   @override
   void initState() {
     super.initState();
     fetchMovies();
   }
+
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  StreamSubscription<QuerySnapshot>? _movieFetchSubscription;
 
   @override
   void dispose() {
@@ -41,8 +41,11 @@ class _ManageMoviesState extends State<ManageMovies> {
   }
 
   Future<void> fetchMovies() async {
-    _movieFetchSubscription =
-        _firestore.collection('movies').snapshots().listen((snapshot) async {
+    _movieFetchSubscription = _firestore
+        .collection('movies')
+        .orderBy('premiere', descending: true)
+        .snapshots()
+        .listen((snapshot) async {
       final moviesDocs = snapshot.docs.map(
         (doc) => MovieModel.fromMap(doc.data(), doc.id),
       );
@@ -88,7 +91,9 @@ class _ManageMoviesState extends State<ManageMovies> {
     return isLoading
         ? Center(
             child: LoadingAnimationWidget.staggeredDotsWave(
-                color: smokeyWhite, size: 100),
+              color: smokeyWhite,
+              size: 100,
+            ),
           )
         : ManageScreen(
             count: movies!.length,

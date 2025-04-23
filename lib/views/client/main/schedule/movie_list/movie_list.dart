@@ -1,4 +1,6 @@
-import 'package:filmu_nams/controllers/movie_controller.dart';
+import 'dart:async';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:filmu_nams/models/movie.dart';
 import 'package:filmu_nams/views/client/main/schedule/movie_list/movie_card.dart';
 import 'package:flutter/material.dart';
@@ -18,19 +20,35 @@ class _MovieListState extends State<MovieList> {
   List<MovieModel>? movieData;
   bool isLoading = true;
 
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  StreamSubscription<QuerySnapshot>? _movieFetchSubscription;
+
+  @override
+  void dispose() {
+    _movieFetchSubscription?.cancel();
+    super.dispose();
+  }
+
   Future<void> fetchMovies() async {
-    try {
-      final response = await MovieController().getAllMovies();
+    _movieFetchSubscription = _firestore
+        .collection('movies')
+        .orderBy('premiere', descending: true)
+        .snapshots()
+        .listen((snapshot) async {
+      final moviesDocs = snapshot.docs.map(
+        (doc) => MovieModel.fromMap(doc.data(), doc.id),
+      );
+
       setState(() {
-        movieData = response;
+        movieData = moviesDocs.toList();
         isLoading = false;
       });
-    } catch (e) {
+    }, onError: (e) {
+      debugPrint('Error listening to carousel changes: $e');
       setState(() {
         isLoading = false;
       });
-      debugPrint('Error fetching movies: $e');
-    }
+    });
   }
 
   @override

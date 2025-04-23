@@ -272,9 +272,11 @@ class MovieController {
     required List<dynamic> actors,
     required Uint8List? posterImage,
     required Uint8List? heroImage,
+    String? poster,
+    String? hero,
   }) async {
-    String? posterUrl;
-    String? heroUrl;
+    String? posterUrl = poster;
+    String? heroUrl = hero;
 
     if (posterImage != null) {
       posterUrl = await uploadMovieImage(title!, posterImage, 'poster');

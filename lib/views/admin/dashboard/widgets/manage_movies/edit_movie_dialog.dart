@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:filmu_nams/assets/dialog/dialog.dart';
 import 'package:filmu_nams/controllers/offer_controller.dart';
 import 'package:filmu_nams/models/movie.dart';
+import 'package:filmu_nams/views/admin/dashboard/widgets/manage_movies/search_movie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
@@ -173,7 +174,7 @@ class _EditMovieDialogState extends State<EditMovieDialog> {
         return;
       }
 
-      if (widget.data == null) {
+      if (widget.data == null || widget.data!.id == 'new') {
         add();
       } else {
         edit();
@@ -191,12 +192,23 @@ class _EditMovieDialogState extends State<EditMovieDialog> {
     );
   }
 
+  void search() {
+    Navigator.of(context).pop();
+    showGeneralDialog(
+      context: context,
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return SearchMovie();
+      },
+    );
+  }
+
   void deleteItem() {
     setState(() {
       isLoading = true;
     });
     movieController.deleteMovie(widget.data!.id).then((_) {
       if (mounted) {
+        Navigator.of(context).pop();
         StylizedDialog.dialog(
           Icons.check_circle_outline,
           context,
@@ -206,6 +218,7 @@ class _EditMovieDialogState extends State<EditMovieDialog> {
       }
     }).catchError((error) {
       if (mounted) {
+        Navigator.of(context).pop();
         StylizedDialog.dialog(
           Icons.error_outline,
           context,
@@ -217,7 +230,6 @@ class _EditMovieDialogState extends State<EditMovieDialog> {
       setState(() {
         isLoading = false;
       });
-      Navigator.of(context).pop();
     });
   }
 
@@ -225,6 +237,15 @@ class _EditMovieDialogState extends State<EditMovieDialog> {
     setState(() {
       isLoading = true;
     });
+
+    String? heroUrl;
+    String? posterUrl;
+
+    if (widget.data!.id == 'new') {
+      posterUrl = widget.data?.posterUrl;
+      heroUrl = widget.data?.heroUrl;
+    }
+
     movieController
         .addMovie(
       title: title(),
@@ -237,6 +258,8 @@ class _EditMovieDialogState extends State<EditMovieDialog> {
       actors: actors,
       posterImage: posterImage,
       heroImage: heroImage,
+      poster: posterUrl,
+      hero: heroUrl,
     )
         .then((response) {
       setState(() {
@@ -355,7 +378,8 @@ class _EditMovieDialogState extends State<EditMovieDialog> {
                                         spacing: 10,
                                         children: [
                                           Text(
-                                            widget.data?.title == null
+                                            widget.data == null ||
+                                                    widget.data!.id == 'new'
                                                 ? "Pievienot:"
                                                 : "Rediģēt:",
                                             style: theme.headlineMedium
@@ -555,11 +579,17 @@ class _EditMovieDialogState extends State<EditMovieDialog> {
                       ),
                     ),
                     Container(
-                      margin: const EdgeInsets.symmetric(
-                          horizontal: 50, vertical: 25),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                      margin: const EdgeInsets.only(
+                        left: 50,
+                        right: 50,
+                        bottom: 25,
+                      ),
+                      child: Wrap(
                         spacing: 25,
+                        runSpacing: 15,
+                        runAlignment: WrapAlignment.center,
+                        alignment: WrapAlignment.center,
+                        crossAxisAlignment: WrapCrossAlignment.center,
                         children: [
                           FilledButton(
                             onPressed: () => Navigator.of(context).pop(),
@@ -568,7 +598,7 @@ class _EditMovieDialogState extends State<EditMovieDialog> {
                             ),
                             child: Text("Atcelt"),
                           ),
-                          if (widget.data != null)
+                          if (widget.data != null && widget.data!.id != 'new')
                             FilledButton(
                               onPressed: delete,
                               style: FilledButton.styleFrom(
@@ -580,6 +610,11 @@ class _EditMovieDialogState extends State<EditMovieDialog> {
                             onPressed: submit,
                             child: Text("Saglabāt izmaiņas"),
                           ),
+                          if (widget.data == null || widget.data!.id == 'new')
+                            FilledButton(
+                              onPressed: search,
+                              child: Text("Meklēt, lai pievienot"),
+                            ),
                         ],
                       ),
                     ),

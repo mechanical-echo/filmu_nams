@@ -58,10 +58,10 @@ class _ManageScreenState extends State<ManageScreen> {
                     return GridView.builder(
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 1,
-                        mainAxisSpacing: 15,
+                        mainAxisSpacing: 10,
                         crossAxisSpacing: 20,
                         childAspectRatio: itemWidth / itemHeight,
-                        mainAxisExtent: 80,
+                        mainAxisExtent: 40,
                       ),
                       itemCount: widget.count,
                       itemBuilder: (context, index) =>

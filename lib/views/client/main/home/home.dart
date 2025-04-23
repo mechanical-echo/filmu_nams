@@ -1,8 +1,6 @@
 import 'dart:async';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:filmu_nams/assets/dialog/dialog.dart';
 import 'package:filmu_nams/assets/widgets/overlapping_carousel.dart';
 import 'package:filmu_nams/controllers/movie_controller.dart';
 import 'package:filmu_nams/models/carousel_item.dart';
@@ -241,6 +239,7 @@ class _HomeState extends State<Home> {
     }
 
     final theme = ContextTheme.of(context);
+    final height = MediaQuery.of(context).size.height;
 
     return Column(
       children: [
@@ -263,7 +262,7 @@ class _HomeState extends State<Home> {
         OverlappingCarousel(
           items: carouselWidgets!,
           itemWidth: 350,
-          itemHeight: 480,
+          itemHeight: height * 0.49,
           scaleFactor: 0.70,
           horizontalSpace: 10,
           spacingFactor: 0.75,
