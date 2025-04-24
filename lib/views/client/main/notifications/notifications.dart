@@ -1,5 +1,5 @@
-import 'package:filmu_nams/models/notification.dart';
-import 'package:filmu_nams/providers/color_context.dart';
+import 'package:filmu_nams/models/notification_model.dart';
+import 'package:filmu_nams/providers/theme.dart';
 import 'package:flutter/material.dart';
 import '../../../../controllers/notification_controller.dart';
 import 'notification_item.dart';
@@ -66,7 +66,7 @@ class _NotificationsState extends State<Notifications> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = ContextTheme.of(context);
+    final theme = Style.of(context);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(

@@ -1,7 +1,7 @@
 import 'package:filmu_nams/assets/dialog/dialog.dart';
 import 'package:filmu_nams/controllers/promocode_controller.dart';
-import 'package:filmu_nams/models/promocode.dart';
-import 'package:filmu_nams/providers/color_context.dart';
+import 'package:filmu_nams/models/promocode_model.dart';
+import 'package:filmu_nams/providers/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -22,7 +22,7 @@ class _EditPromocodeDialogState extends State<EditPromocodeDialog> {
   final _formKey = GlobalKey<FormState>();
   final PromocodeController _promocodeController = PromocodeController();
 
-  ContextTheme get theme => ContextTheme.of(context);
+  Style get theme => Style.of(context);
 
   TextEditingController nameController = TextEditingController();
   TextEditingController valueController = TextEditingController();

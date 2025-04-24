@@ -1,4 +1,4 @@
-import 'package:filmu_nams/models/user.dart';
+import 'package:filmu_nams/models/user_model.dart';
 
 class NotificationModel {
   final String id;

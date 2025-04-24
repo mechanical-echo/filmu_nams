@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../models/ticket.dart';
+import '../models/ticket_model.dart';
 
 class TicketController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -36,29 +36,27 @@ class TicketController {
       if (user == null) {
         return [];
       }
-      
+
       final userRef = _firestore.collection('users').doc(user.uid);
-      
+
       final QuerySnapshot querySnapshot = await _firestore
           .collection('tickets')
           .where('user', isEqualTo: userRef)
           .orderBy('purchaseDate', descending: true)
           .get();
-      
+
       List<TicketModel> tickets = [];
-      
+
       for (var doc in querySnapshot.docs) {
         try {
           final ticket = await TicketModel.fromMapAsync(
-            doc.data() as Map<String, dynamic>, 
-            doc.id
-          );
+              doc.data() as Map<String, dynamic>, doc.id);
           tickets.add(ticket);
         } catch (e) {
           debugPrint('Error parsing ticket: $e');
         }
       }
-      
+
       return tickets;
     } catch (e) {
       debugPrint('Error getting user tickets: $e');
@@ -78,8 +76,10 @@ class TicketController {
       List<int> seats = [];
 
       for (var doc in querySnapshot.docs) {
-        final ticket = await TicketModel.fromMapAsync(doc.data() as Map<String, dynamic>, doc.id);
-        seats.add(getIndexFromRowCol(ticket.seat['row']!, ticket.seat['seat']!));
+        final ticket = await TicketModel.fromMapAsync(
+            doc.data() as Map<String, dynamic>, doc.id);
+        seats
+            .add(getIndexFromRowCol(ticket.seat['row']!, ticket.seat['seat']!));
       }
 
       return seats;

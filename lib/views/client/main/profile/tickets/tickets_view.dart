@@ -1,7 +1,7 @@
 import 'package:filmu_nams/assets/decorations/background.dart';
 import 'package:filmu_nams/controllers/ticket_controller.dart';
-import 'package:filmu_nams/models/ticket.dart';
-import 'package:filmu_nams/providers/color_context.dart';
+import 'package:filmu_nams/models/ticket_model.dart';
+import 'package:filmu_nams/providers/theme.dart';
 import 'package:filmu_nams/views/client/main/profile/tickets/ticket_card.dart';
 import 'package:filmu_nams/views/client/main/profile/tickets/ticket_detail_dialog.dart';
 import 'package:flutter/material.dart';
@@ -58,7 +58,7 @@ class _TicketsViewState extends State<TicketsView>
 
   @override
   Widget build(BuildContext context) {
-    final theme = ContextTheme.of(context);
+    final theme = Style.of(context);
 
     return Scaffold(
       extendBodyBehindAppBar: true,

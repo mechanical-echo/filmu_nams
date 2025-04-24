@@ -1,23 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:filmu_nams/providers/theme_provider.dart';
 
-class ContextTheme extends InheritedWidget {
+class Style extends InheritedWidget {
   final ThemeProvider themeProvider;
 
-  const ContextTheme({
+  const Style({
     super.key,
     required this.themeProvider,
     required super.child,
   });
 
   @override
-  bool updateShouldNotify(ContextTheme oldWidget) {
+  bool updateShouldNotify(Style oldWidget) {
     return themeProvider != oldWidget.themeProvider;
   }
 
-  static ContextTheme of(BuildContext context) {
-    final ContextTheme? result =
-        context.dependOnInheritedWidgetOfExactType<ContextTheme>();
+  static Style of(BuildContext context) {
+    final Style? result = context.dependOnInheritedWidgetOfExactType<Style>();
     assert(result != null, 'No ColorContext found in context');
     return result!;
   }

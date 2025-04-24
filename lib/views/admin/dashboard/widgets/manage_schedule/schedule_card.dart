@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:filmu_nams/models/schedule.dart';
-import 'package:filmu_nams/providers/color_context.dart';
+import 'package:filmu_nams/models/schedule_model.dart';
+import 'package:filmu_nams/providers/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -24,7 +24,7 @@ class _ScheduleCardState extends State<ScheduleCard> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = ContextTheme.of(context);
+    final theme = Style.of(context);
 
     return MouseRegion(
       onEnter: (_) => setState(() => isHovered = true),
@@ -79,7 +79,7 @@ class _ScheduleCardState extends State<ScheduleCard> {
   }
 
   Widget _buildInfoSection() {
-    final theme = ContextTheme.of(context);
+    final theme = Style.of(context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -126,7 +126,7 @@ class _ScheduleCardState extends State<ScheduleCard> {
   }
 
   Widget _buildTimeInfo() {
-    final theme = ContextTheme.of(context);
+    final theme = Style.of(context);
     final date = widget.data.time.toDate();
 
     return Container(

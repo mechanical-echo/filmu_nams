@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:filmu_nams/assets/theme.dart';
-import 'package:filmu_nams/models/carousel_item.dart';
-import 'package:filmu_nams/providers/color_context.dart';
+import 'package:filmu_nams/models/carousel_item_model.dart';
+import 'package:filmu_nams/providers/theme.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_carousel_items/edit_carousel_item_dialog.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +20,7 @@ class CarouselItemCard extends StatefulWidget {
 }
 
 class _CarouselItemCardState extends State<CarouselItemCard> {
-  ContextTheme get theme => ContextTheme.of(context);
+  Style get theme => Style.of(context);
 
   OverlayEntry? _overlayEntry;
 
@@ -184,7 +183,7 @@ class _CarouselItemCardState extends State<CarouselItemCard> {
           imageUrl: widget.data.imageUrl,
           placeholder: (context, url) => Center(
             child: LoadingAnimationWidget.staggeredDotsWave(
-              color: smokeyWhite,
+              color: Colors.white,
               size: 100,
             ),
           ),

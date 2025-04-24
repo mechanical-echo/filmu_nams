@@ -1,4 +1,4 @@
-import 'package:filmu_nams/providers/color_context.dart';
+import 'package:filmu_nams/providers/theme.dart';
 import 'package:filmu_nams/views/client/main/home/home.dart';
 import 'package:filmu_nams/views/client/main/offers/offer_list_view.dart';
 import 'package:filmu_nams/views/client/main/notifications/notifications.dart';
@@ -53,7 +53,7 @@ class Base extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = ContextTheme.of(context);
+    final theme = Style.of(context);
     return Scaffold(
       backgroundColor: Colors.transparent,
       extendBody: true,

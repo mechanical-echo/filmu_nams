@@ -1,4 +1,4 @@
-import 'package:filmu_nams/views/client/auth/registration/registration_controller.dart';
+import 'package:filmu_nams/controllers/registration_controller.dart';
 import 'package:filmu_nams/views/client/auth/registration/registration_validator.dart';
 import 'package:filmu_nams/views/client/auth/registration/registration_view.dart';
 import 'package:flutter/material.dart';

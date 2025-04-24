@@ -1,5 +1,5 @@
 import 'package:filmu_nams/assets/decorations/background.dart';
-import 'package:filmu_nams/providers/color_context.dart';
+import 'package:filmu_nams/providers/theme.dart';
 import 'package:filmu_nams/providers/theme_provider.dart';
 import 'package:filmu_nams/views/client/main/profile/password_change.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -26,7 +26,7 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
-    final theme = ContextTheme.of(context);
+    final theme = Style.of(context);
 
     return Stack(
       children: [
@@ -191,7 +191,7 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Widget _buildThemeSelector(ThemeProvider themeProvider) {
-    final theme = ContextTheme.of(context);
+    final theme = Style.of(context);
     return Container(
       decoration: theme.cardDecoration,
       child: Column(
@@ -278,7 +278,7 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Widget _buildInfoItem(String title, String value, {VoidCallback? onTap}) {
-    final theme = ContextTheme.of(context);
+    final theme = Style.of(context);
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -318,7 +318,7 @@ class _SettingsPageState extends State<SettingsPage> {
     IconData icon,
     VoidCallback onPressed,
   ) {
-    final theme = ContextTheme.of(context);
+    final theme = Style.of(context);
     return Material(
       color: Colors.transparent,
       child: InkWell(

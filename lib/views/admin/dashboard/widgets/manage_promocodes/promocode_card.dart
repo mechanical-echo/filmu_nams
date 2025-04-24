@@ -1,5 +1,5 @@
-import 'package:filmu_nams/models/promocode.dart';
-import 'package:filmu_nams/providers/color_context.dart';
+import 'package:filmu_nams/models/promocode_model.dart';
+import 'package:filmu_nams/providers/theme.dart';
 import 'package:flutter/material.dart';
 
 class PromocodeCard extends StatefulWidget {
@@ -21,7 +21,7 @@ class _PromocodeCardState extends State<PromocodeCard> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = ContextTheme.of(context);
+    final theme = Style.of(context);
 
     return MouseRegion(
       onEnter: (_) => setState(() => isHovered = true),
@@ -56,7 +56,7 @@ class _PromocodeCardState extends State<PromocodeCard> {
   }
 
   Widget _buildCodeContainer() {
-    final theme = ContextTheme.of(context);
+    final theme = Style.of(context);
 
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
@@ -85,7 +85,7 @@ class _PromocodeCardState extends State<PromocodeCard> {
   }
 
   Widget _buildInfoSection() {
-    final theme = ContextTheme.of(context);
+    final theme = Style.of(context);
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 16),
@@ -111,7 +111,7 @@ class _PromocodeCardState extends State<PromocodeCard> {
   }
 
   Widget _buildDiscountValue() {
-    final theme = ContextTheme.of(context);
+    final theme = Style.of(context);
 
     String value = '';
 

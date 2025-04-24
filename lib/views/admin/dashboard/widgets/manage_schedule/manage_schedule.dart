@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:filmu_nams/models/schedule.dart';
-import 'package:filmu_nams/providers/color_context.dart';
+import 'package:filmu_nams/models/schedule_model.dart';
+import 'package:filmu_nams/providers/theme.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_schedule/edit_schedule.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_schedule/schedule_card.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_screen.dart';
@@ -72,7 +72,7 @@ class _ManageScheduleState extends State<ManageSchedule> {
     showGeneralDialog(
       context: context,
       pageBuilder: (context, animation, secondaryAnimation) {
-        return EditScheduleDialog();
+        return EditScheduleDialog(dateTime: selectedDate);
       },
       transitionBuilder: (context, animation, secondaryAnimation, child) {
         return FadeTransition(
@@ -103,7 +103,7 @@ class _ManageScheduleState extends State<ManageSchedule> {
   }
 
   Widget _buildDateSelector() {
-    final theme = ContextTheme.of(context);
+    final theme = Style.of(context);
 
     return Container(
       margin: const EdgeInsets.only(bottom: 15),

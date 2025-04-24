@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:filmu_nams/models/promocode.dart';
+import 'package:filmu_nams/models/promocode_model.dart';
 import 'package:flutter/material.dart';
 
 class PromocodeController {

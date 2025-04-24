@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:filmu_nams/models/movie.dart';
+import 'package:filmu_nams/models/movie_model.dart';
 import 'package:filmu_nams/views/client/main/schedule/movie_list/movie_card.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';

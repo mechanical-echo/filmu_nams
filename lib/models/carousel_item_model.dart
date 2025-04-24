@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-import 'movie.dart';
-import 'offer.dart';
+import 'movie_model.dart';
+import 'offer_model.dart';
 
 class CarouselItemModel {
   final String id;

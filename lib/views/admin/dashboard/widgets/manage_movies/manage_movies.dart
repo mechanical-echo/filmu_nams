@@ -1,9 +1,8 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:filmu_nams/assets/theme.dart';
-import 'package:filmu_nams/models/movie.dart';
-import 'package:filmu_nams/providers/color_context.dart';
+import 'package:filmu_nams/models/movie_model.dart';
+import 'package:filmu_nams/providers/theme.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_movies/admin_movie_card.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_movies/edit_movie_dialog.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_screen.dart';
@@ -23,7 +22,7 @@ class _ManageMoviesState extends State<ManageMovies> {
   List<MovieModel>? movies;
   bool isLoading = true;
 
-  ContextTheme get theme => ContextTheme.of(context);
+  Style get theme => Style.of(context);
 
   @override
   void initState() {
@@ -91,7 +90,7 @@ class _ManageMoviesState extends State<ManageMovies> {
     return isLoading
         ? Center(
             child: LoadingAnimationWidget.staggeredDotsWave(
-              color: smokeyWhite,
+              color: Colors.white,
               size: 100,
             ),
           )

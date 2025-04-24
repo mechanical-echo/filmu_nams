@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:filmu_nams/models/offer.dart';
-import 'package:filmu_nams/providers/color_context.dart';
+import 'package:filmu_nams/models/offer_model.dart';
+import 'package:filmu_nams/providers/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
@@ -23,7 +23,7 @@ class _OfferCardState extends State<OfferCard> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = ContextTheme.of(context);
+    final theme = Style.of(context);
 
     return MouseRegion(
       onEnter: (_) => setState(() => isHovered = true),
@@ -78,7 +78,7 @@ class _OfferCardState extends State<OfferCard> {
           ),
         ),
         errorWidget: (context, url, error) => Container(
-          color: ContextTheme.of(context).surfaceVariant,
+          color: Style.of(context).surfaceVariant,
           child: Icon(Icons.image_not_supported),
         ),
       ),
@@ -86,7 +86,7 @@ class _OfferCardState extends State<OfferCard> {
   }
 
   Widget _buildInfoSection() {
-    final theme = ContextTheme.of(context);
+    final theme = Style.of(context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -111,7 +111,7 @@ class _OfferCardState extends State<OfferCard> {
   }
 
   Widget _buildPromocodeInfo() {
-    final theme = ContextTheme.of(context);
+    final theme = Style.of(context);
 
     if (widget.data.promocode == null) {
       return Container(

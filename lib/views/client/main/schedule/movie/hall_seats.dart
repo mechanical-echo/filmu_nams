@@ -6,7 +6,7 @@ import 'package:filmu_nams/assets/dialog/dialog.dart';
 import 'package:filmu_nams/controllers/payment_controller.dart';
 import 'package:filmu_nams/controllers/promocode_controller.dart';
 import 'package:filmu_nams/controllers/ticket_controller.dart';
-import 'package:filmu_nams/models/promocode.dart';
+import 'package:filmu_nams/models/promocode_model.dart';
 
 class HallSeats extends StatefulWidget {
   const HallSeats({
@@ -645,7 +645,8 @@ class _HallSeatsState extends State<HallSeats> {
                 if (chosenSeats.isNotEmpty) {
                   processPayment(context);
                 } else {
-                  StylizedDialog.dialog(Icons.error_outline,
+                  StylizedDialog.dialog(
+                    Icons.error_outline,
                     context,
                     "Kļūda",
                     "Lūdzu, izvēlieties vismaz vienu vietu",
@@ -710,7 +711,8 @@ class _HallSeatsState extends State<HallSeats> {
 
   Future<void> submitPromocode(BuildContext context) async {
     if (submittedPromocode != null) {
-      StylizedDialog.dialog(Icons.error_outline,
+      StylizedDialog.dialog(
+        Icons.error_outline,
         context,
         "Kļūda",
         "Drīkst ievadīt tikai 1 promokodu",
@@ -726,7 +728,8 @@ class _HallSeatsState extends State<HallSeats> {
       });
     } catch (e) {
       debugPrint(e.toString());
-      StylizedDialog.dialog(Icons.error_outline,
+      StylizedDialog.dialog(
+        Icons.error_outline,
         context,
         "Kļūda",
         "Promokods nav atrasts",
@@ -743,7 +746,8 @@ class _HallSeatsState extends State<HallSeats> {
 
   Future<void> processPayment(BuildContext context) async {
     if (chosenSeats.isEmpty) {
-      StylizedDialog.dialog(Icons.error_outline,
+      StylizedDialog.dialog(
+        Icons.error_outline,
         context,
         "Kļūda",
         "Lūdzu, izvēlieties vismaz vienu vietu",
@@ -753,7 +757,8 @@ class _HallSeatsState extends State<HallSeats> {
 
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) {
-      StylizedDialog.dialog(Icons.error_outline,
+      StylizedDialog.dialog(
+        Icons.error_outline,
         context,
         "Kļūda",
         "Lūdzu, ielogojieties, lai veiktu pirkumu",
@@ -788,7 +793,8 @@ class _HallSeatsState extends State<HallSeats> {
       }
     } catch (e) {
       debugPrint('Payment error: $e');
-      StylizedDialog.dialog(Icons.error_outline,
+      StylizedDialog.dialog(
+        Icons.error_outline,
         context,
         "Maksājuma kļūda",
         "Neizdevās apstrādāt maksājumu. Lūdzu, mēģiniet vēlāk.",

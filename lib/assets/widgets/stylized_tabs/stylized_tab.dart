@@ -1,7 +1,6 @@
+import 'package:filmu_nams/providers/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-import '../../../providers/color_context.dart';
 
 class StylizedTabTitle {
   final bool isIcon;
@@ -89,7 +88,7 @@ class _StylizedTabState extends State<StylizedTab>
 
   @override
   Widget build(BuildContext context) {
-    final colors = ContextTheme.of(context);
+    final theme = Style.of(context);
     return GestureDetector(
       onTap: widget.onTap,
       child: AnimatedBuilder(
@@ -111,9 +110,8 @@ class _StylizedTabState extends State<StylizedTab>
             child: widget.title.isIcon
                 ? Icon(
                     widget.title.value as IconData,
-                    color: widget.isActive
-                        ? Colors.white
-                        : colors.onSurfaceVariant,
+                    color:
+                        widget.isActive ? Colors.white : theme.onSurfaceVariant,
                     size: widget.fontSize + 9,
                   )
                 : Text(

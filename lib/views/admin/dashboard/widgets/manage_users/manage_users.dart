@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:filmu_nams/controllers/user_controller.dart';
-import 'package:filmu_nams/models/user.dart';
+import 'package:filmu_nams/models/user_model.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_users/user_card.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_users/edit_user_dialog.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_screen.dart';

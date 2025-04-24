@@ -7,17 +7,14 @@ class RegistrationController {
 
   Future<void> register(String name, String email, String password) async {
     try {
-      // Create user with email and password
       final UserCredential userCredential =
           await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
 
-      // Update user display name
       await userCredential.user?.updateDisplayName(name);
 
-      // Create user document in Firestore
       await _firestore.collection('users').doc(userCredential.user?.uid).set({
         'name': name,
         'email': email,
@@ -25,7 +22,6 @@ class RegistrationController {
         'role': 'user',
       });
 
-      // Send email verification
       await userCredential.user?.sendEmailVerification();
     } on FirebaseAuthException catch (e) {
       throw _getErrorMessage(e.code);

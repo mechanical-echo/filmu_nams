@@ -3,8 +3,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:filmu_nams/assets/widgets/overlapping_carousel.dart';
 import 'package:filmu_nams/controllers/movie_controller.dart';
-import 'package:filmu_nams/models/carousel_item.dart';
-import 'package:filmu_nams/providers/color_context.dart';
+import 'package:filmu_nams/models/carousel_item_model.dart';
+import 'package:filmu_nams/providers/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -179,7 +179,7 @@ class _HomeState extends State<Home> {
   }
 
   dots() {
-    final theme = ContextTheme.of(context);
+    final theme = Style.of(context);
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
@@ -238,7 +238,7 @@ class _HomeState extends State<Home> {
       );
     }
 
-    final theme = ContextTheme.of(context);
+    final theme = Style.of(context);
     final height = MediaQuery.of(context).size.height;
 
     return Column(

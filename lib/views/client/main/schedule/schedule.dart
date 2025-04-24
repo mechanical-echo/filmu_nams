@@ -1,6 +1,6 @@
 import 'package:filmu_nams/assets/widgets/stylized_tabs/stylized_tab.dart';
 import 'package:filmu_nams/assets/widgets/stylized_tabs/stylized_tabs.dart';
-import 'package:filmu_nams/providers/color_context.dart';
+import 'package:filmu_nams/providers/theme.dart';
 import 'package:filmu_nams/views/client/main/schedule/movie_list/movie_list.dart';
 import 'package:filmu_nams/views/client/main/schedule/schedule_list/schedule_list.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +10,7 @@ class ScheduleAndMovies extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = ContextTheme.of(context);
+    final theme = Style.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

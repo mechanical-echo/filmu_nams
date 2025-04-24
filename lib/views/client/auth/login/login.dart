@@ -1,10 +1,11 @@
-import 'package:filmu_nams/views/client/auth/login/login_controller.dart';
+import 'package:filmu_nams/views/client/auth/login/social_login_button.dart';
+import 'package:filmu_nams/controllers/login_controller.dart';
 import 'package:filmu_nams/views/client/auth/login/login_validator.dart';
 import 'package:filmu_nams/views/client/auth/login/login_view.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../../../providers/color_context.dart';
+import '../../../../providers/theme.dart';
 
 class Login extends StatefulWidget {
   final void Function(int? view) onViewChange;
@@ -61,8 +62,7 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    // final theme = Theme.of(context);
-    final theme = ContextTheme.of(context);
+    final theme = Style.of(context);
 
     return LoginView(
       formKey: _formKey,
@@ -128,6 +128,23 @@ class _LoginState extends State<Login> {
                           setState(() => _obscurePassword = !_obscurePassword),
                     ),
                   ),
+                ),
+                const SizedBox(height: 16),
+                Wrap(
+                  spacing: 10,
+                  runSpacing: 10,
+                  children: [
+                    SocialLoginButton(
+                      iconPath: 'assets/google.png',
+                      label: 'Google',
+                      onPressed: _loginController.signInWithGoogle,
+                    ),
+                    SocialLoginButton(
+                      iconPath: 'assets/facebook.png',
+                      label: 'Facebook',
+                      onPressed: _loginController.signInWithFacebook,
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 24),
                 SizedBox(

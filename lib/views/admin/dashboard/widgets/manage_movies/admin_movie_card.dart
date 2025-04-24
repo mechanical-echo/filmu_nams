@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:filmu_nams/models/movie.dart';
-import 'package:filmu_nams/providers/color_context.dart';
+import 'package:filmu_nams/models/movie_model.dart';
+import 'package:filmu_nams/providers/theme.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_movies/edit_movie_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -21,7 +21,7 @@ class AdminMovieCard extends StatefulWidget {
 }
 
 class _AdminMovieCardState extends State<AdminMovieCard> {
-  ContextTheme get theme => ContextTheme.of(context);
+  Style get theme => Style.of(context);
 
   OverlayEntry? _overlayEntry;
 

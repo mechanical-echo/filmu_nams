@@ -1,5 +1,5 @@
 import 'package:filmu_nams/assets/decorations/background.dart';
-import 'package:filmu_nams/enums/auth_error_codes.dart';
+import 'package:filmu_nams/controllers/login_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -84,7 +84,7 @@ class _PasswordChangePageState extends State<PasswordChangePage> {
       }
     } on FirebaseAuthException catch (e) {
       setState(() {
-        _errorMessage = AuthErrorCodes.getMessage(e.code);
+        _errorMessage = LoginController().getMessage(e.code);
         _isLoading = false;
       });
     } catch (e) {

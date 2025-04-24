@@ -2,13 +2,13 @@ import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:filmu_nams/models/offer.dart';
+import 'package:filmu_nams/models/offer_model.dart';
 import 'package:filmu_nams/views/client/main/offers/offer_detail_view.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
-import '../../../../providers/color_context.dart';
+import '../../../../providers/theme.dart';
 
 class OffersList extends StatefulWidget {
   const OffersList({super.key});
@@ -59,7 +59,7 @@ class _OffersListState extends State<OffersList> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = ContextTheme.of(context);
+    final theme = Style.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
@@ -146,7 +146,7 @@ class OfferCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = ContextTheme.of(context);
+    final theme = Style.of(context);
     return GestureDetector(
       onTap: () => openOfferView(context),
       child: Container(

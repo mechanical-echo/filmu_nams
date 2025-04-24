@@ -33,17 +33,14 @@ class RegistrationValidator {
       return 'Parolei jābūt vismaz 6 rakstzīmes garai';
     }
 
-    // Check for at least one uppercase letter
     if (!value.contains(RegExp(r'[A-Z]'))) {
       return 'Parolei jāsatur vismaz vienu lielo burtu';
     }
 
-    // Check for at least one lowercase letter
     if (!value.contains(RegExp(r'[a-z]'))) {
       return 'Parolei jāsatur vismaz vienu mazo burtu';
     }
 
-    // Check for at least one number
     if (!value.contains(RegExp(r'[0-9]'))) {
       return 'Parolei jāsatur vismaz vienu ciparu';
     }

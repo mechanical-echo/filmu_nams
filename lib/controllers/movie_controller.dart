@@ -1,12 +1,12 @@
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:filmu_nams/models/carousel_item.dart';
-import 'package:filmu_nams/models/movie.dart';
-import 'package:filmu_nams/models/schedule.dart';
+import 'package:filmu_nams/models/carousel_item_model.dart';
+import 'package:filmu_nams/models/movie_model.dart';
+import 'package:filmu_nams/models/schedule_model.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
-import '../models/offer.dart';
+import '../models/offer_model.dart';
 
 class MovieController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;

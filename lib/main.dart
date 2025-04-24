@@ -1,4 +1,5 @@
 import 'package:filmu_nams/controllers/notification_controller.dart';
+import 'package:filmu_nams/providers/theme.dart';
 import 'package:filmu_nams/views/admin/auth/admin_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,9 +10,7 @@ import 'dart:io' show Platform;
 import 'controllers/payment_controller.dart';
 import 'firebase_options.dart';
 import 'package:filmu_nams/views/client/client.dart';
-import 'package:filmu_nams/views/client/auth/registration/registration_steps/registration_state.dart';
 import 'package:filmu_nams/providers/theme_provider.dart';
-import 'package:filmu_nams/providers/color_context.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,7 +31,6 @@ void main() async {
     runApp(
       MultiProvider(
         providers: [
-          ChangeNotifierProvider(create: (context) => RegistrationState()),
           ChangeNotifierProvider(create: (context) => ThemeProvider()),
         ],
         child: const ThemedApp(),
@@ -47,7 +45,7 @@ class ThemedApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
-    return ContextTheme(
+    return Style(
       themeProvider: themeProvider,
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

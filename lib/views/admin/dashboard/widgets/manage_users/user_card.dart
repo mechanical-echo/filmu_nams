@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:filmu_nams/models/user.dart';
-import 'package:filmu_nams/providers/color_context.dart';
+import 'package:filmu_nams/models/user_model.dart';
+import 'package:filmu_nams/providers/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -26,7 +26,7 @@ class _UserCardState extends State<UserCard> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = ContextTheme.of(context);
+    final theme = Style.of(context);
 
     return MouseRegion(
       onEnter: (_) => setState(() => isHovered = true),
@@ -137,7 +137,7 @@ class _UserCardState extends State<UserCard> {
   }
 
   Widget _buildAvatarFallback() {
-    final theme = ContextTheme.of(context);
+    final theme = Style.of(context);
 
     return Container(
       color: theme.surfaceVariant,
@@ -150,7 +150,7 @@ class _UserCardState extends State<UserCard> {
   }
 
   Widget _buildUserInfo() {
-    final theme = ContextTheme.of(context);
+    final theme = Style.of(context);
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12),
@@ -200,7 +200,7 @@ class _UserCardState extends State<UserCard> {
   }
 
   Widget _buildRoleBadge() {
-    final theme = ContextTheme.of(context);
+    final theme = Style.of(context);
     final isAdmin = widget.data.role == 'admin';
 
     return Container(

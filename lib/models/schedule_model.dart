@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:filmu_nams/models/movie.dart';
+import 'package:filmu_nams/models/movie_model.dart';
 
 class ScheduleModel {
   final String id;

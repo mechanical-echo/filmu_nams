@@ -1,6 +1,6 @@
 import 'package:filmu_nams/assets/animations/carousel_switch.dart';
 import 'package:filmu_nams/assets/widgets/stylized_tabs/stylized_tab.dart';
-import 'package:filmu_nams/providers/color_context.dart';
+import 'package:filmu_nams/providers/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -78,7 +78,7 @@ class _StylizedTabsState extends State<StylizedTabs>
 
   @override
   Widget build(BuildContext context) {
-    final theme = ContextTheme.of(context);
+    final theme = Style.of(context);
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -129,7 +129,9 @@ class _StylizedTabsState extends State<StylizedTabs>
                                     isActive
                                         ? theme.primary.withAlpha(170)
                                         : theme.contrast.withOpacity(0.5),
-                                    isActive ? theme.primary.withAlpha(170) : theme.contrast,
+                                    isActive
+                                        ? theme.primary.withAlpha(170)
+                                        : theme.contrast,
                                     progress,
                                   ),
                                   size: widget.fontSize + 9,
@@ -141,7 +143,9 @@ class _StylizedTabsState extends State<StylizedTabs>
                                       isActive
                                           ? theme.primary.withAlpha(170)
                                           : theme.contrast.withOpacity(0.5),
-                                      isActive ? theme.primary.withAlpha(170) : theme.contrast,
+                                      isActive
+                                          ? theme.primary.withAlpha(170)
+                                          : theme.contrast,
                                       progress,
                                     ),
                                     fontSize: widget.fontSize,

@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:filmu_nams/models/promocode.dart';
+import 'package:filmu_nams/models/promocode_model.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_promocodes/promocode_card.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_promocodes/edit_promocode_dialog.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_screen.dart';

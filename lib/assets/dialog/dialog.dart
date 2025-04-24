@@ -1,4 +1,4 @@
-import 'package:filmu_nams/providers/color_context.dart';
+import 'package:filmu_nams/providers/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -6,7 +6,7 @@ class StylizedDialog {
   static void dialog(
       IconData icon, BuildContext context, String title, String content,
       {Function()? onConfirm}) {
-    final theme = ContextTheme.of(context);
+    final theme = Style.of(context);
     showGeneralDialog(
       context: context,
       pageBuilder: (context, animation, secondaryAnimation) => Dialog(

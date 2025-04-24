@@ -1,9 +1,8 @@
 import 'package:filmu_nams/assets/decorations/background.dart';
 import 'package:filmu_nams/assets/dialog/dialog.dart';
+import 'package:filmu_nams/controllers/login_controller.dart';
 import 'package:filmu_nams/controllers/user_controller.dart';
-import 'package:filmu_nams/enums/auth_error_codes.dart';
-import 'package:filmu_nams/providers/color_context.dart';
-import 'package:filmu_nams/validators/validator.dart';
+import 'package:filmu_nams/views/client/auth/login/login_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -24,9 +23,7 @@ class _AdminLoginState extends State<AdminLogin> {
 
   get password => passwordController.text;
 
-  get theme => ContextTheme.of(context);
-
-  Validator validator = Validator();
+  get theme => Theme.of(context);
 
   String? emailError;
   String? passwordError;
@@ -58,17 +55,7 @@ class _AdminLoginState extends State<AdminLogin> {
                     TextFormField(
                       controller: emailController,
                       keyboardType: TextInputType.emailAddress,
-                      validator: (value) {
-                        ValidatorResult emailValidationResult =
-                            validator.validateEmail(email, true);
-                        if (value == null ||
-                            value.isEmpty ||
-                            emailValidationResult.isNotValid) {
-                          return emailValidationResult.error ??
-                              'Lūdzu, ievadiet e-pastu';
-                        }
-                        return null;
-                      },
+                      validator: LoginValidator.validateEmail,
                       decoration: InputDecoration(
                         hintText: "Ievadiet e-pastu",
                         label: Text('E-pasts'),
@@ -81,12 +68,7 @@ class _AdminLoginState extends State<AdminLogin> {
                     TextFormField(
                       controller: passwordController,
                       obscureText: !isPasswordVisible,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Lūdzu, ievadiet paroli';
-                        }
-                        return null;
-                      },
+                      validator: LoginValidator.validatePassword,
                       decoration: InputDecoration(
                         hintText: "Ievadiet paroli",
                         label: Text('Parole'),
@@ -202,29 +184,13 @@ class _AdminLoginState extends State<AdminLogin> {
         isLoading = false;
       });
       if (mounted) {
-        StylizedDialog.dialog(Icons.error_outline, context, "Kļūda",
-            getFirebaseAuthErrorCode(e.code));
+        StylizedDialog.dialog(
+          Icons.error_outline,
+          context,
+          "Kļūda",
+          LoginController().getMessage(e.code),
+        );
       }
-    }
-  }
-
-  bool isValid() {
-    setState(() {
-      emailError = null;
-      passwordError = null;
-    });
-
-    ValidatorResult emailValidationResult =
-        validator.validateEmail(email, true);
-
-    if (emailValidationResult.isValid) {
-      return true;
-    } else {
-      setState(() {
-        emailError = emailValidationResult.error;
-        passwordError = password.isEmpty ? "Lūdzu, ievadiet paroli" : null;
-      });
-      return false;
     }
   }
 }

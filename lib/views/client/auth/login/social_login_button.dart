@@ -1,0 +1,55 @@
+import 'package:filmu_nams/providers/theme.dart';
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+class SocialLoginButton extends StatelessWidget {
+  final String iconPath;
+  final String label;
+  final VoidCallback onPressed;
+  final Color? backgroundColor;
+  final Color? textColor;
+
+  const SocialLoginButton({
+    super.key,
+    required this.iconPath,
+    required this.label,
+    required this.onPressed,
+    this.backgroundColor,
+    this.textColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final style = Style.of(context);
+
+    return InkWell(
+      onTap: onPressed,
+      child: Container(
+        decoration: style.cardDecoration,
+        padding: const EdgeInsets.symmetric(
+          vertical: 12,
+          horizontal: 20,
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Image.asset(
+              iconPath,
+              width: 24,
+              height: 24,
+              color: Colors.white,
+            ),
+            const SizedBox(width: 12),
+            Text(
+              label,
+              style: GoogleFonts.poppins(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:filmu_nams/models/offer.dart';
+import 'package:filmu_nams/models/offer_model.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_offers/offer_card.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_offers/edit_offer_dialog.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_screen.dart';

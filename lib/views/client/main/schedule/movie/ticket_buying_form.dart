@@ -4,8 +4,8 @@ import 'package:intl/intl.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:filmu_nams/assets/widgets/date_picker/date_picker_input.dart';
 import 'package:filmu_nams/controllers/movie_controller.dart';
-import 'package:filmu_nams/models/movie.dart';
-import 'package:filmu_nams/models/schedule.dart';
+import 'package:filmu_nams/models/movie_model.dart';
+import 'package:filmu_nams/models/schedule_model.dart';
 import 'package:filmu_nams/views/client/main/schedule/movie/hall_seats.dart';
 
 class TicketBuyingForm extends StatefulWidget {

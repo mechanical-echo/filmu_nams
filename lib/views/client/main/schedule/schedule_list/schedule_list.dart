@@ -4,9 +4,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:filmu_nams/assets/widgets/stylized_tabs/stylized_tab.dart';
 import 'package:filmu_nams/assets/widgets/stylized_tabs/stylized_tabs.dart';
 import 'package:filmu_nams/controllers/movie_controller.dart';
-import 'package:filmu_nams/models/schedule.dart';
+import 'package:filmu_nams/models/schedule_model.dart';
 import 'package:filmu_nams/assets/widgets/date_picker/date_picker.dart';
-import 'package:filmu_nams/providers/color_context.dart';
+import 'package:filmu_nams/providers/theme.dart';
 import 'package:filmu_nams/views/client/main/schedule/movie_list/movie_card.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -204,7 +204,7 @@ class _ScheduleDateViewState extends State<ScheduleDateView> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = ContextTheme.of(context);
+    final theme = Style.of(context);
 
     return isLoading
         ? LoadingAnimationWidget.staggeredDotsWave(
@@ -227,7 +227,7 @@ class _ScheduleDateViewState extends State<ScheduleDateView> {
             : Center(
                 child: Text(
                   "Saraksts izvēlētājā dienā ir tūkšs",
-                  style: colors.bodySmall,
+                  style: theme.bodySmall,
                 ),
               );
   }

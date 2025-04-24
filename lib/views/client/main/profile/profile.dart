@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:filmu_nams/assets/animations/carousel_switch.dart';
-import 'package:filmu_nams/providers/color_context.dart';
+import 'package:filmu_nams/providers/theme.dart';
 import 'package:filmu_nams/views/client/main/profile/profile_view.dart';
 import 'package:filmu_nams/views/client/main/profile/settings.dart';
 import 'package:filmu_nams/views/client/main/profile/tickets/tickets_view.dart';
@@ -50,7 +50,7 @@ class _ProfileState extends State<Profile> {
   }
 
   Widget profileMenu(BuildContext context) {
-    final theme = ContextTheme.of(context);
+    final theme = Style.of(context);
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
       child: Column(
@@ -134,7 +134,7 @@ class _ProfileState extends State<Profile> {
   }
 
   Container image() {
-    final theme = ContextTheme.of(context);
+    final theme = Style.of(context);
     return Container(
       height: 140,
       width: double.infinity,
@@ -169,7 +169,7 @@ class _ProfileState extends State<Profile> {
     IconData icon,
     VoidCallback onPressed,
   ) {
-    final theme = ContextTheme.of(context);
+    final theme = Style.of(context);
     return Material(
       color: Colors.transparent,
       child: InkWell(

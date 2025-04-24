@@ -9,7 +9,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
-import '../../../../providers/color_context.dart';
+import '../../../../providers/theme.dart';
 
 class ProfileView extends StatefulWidget {
   const ProfileView({super.key, required this.onPressed});
@@ -74,7 +74,7 @@ class _ProfileViewState extends State<ProfileView> {
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
-    final theme = ContextTheme.of(context);
+    final theme = Style.of(context);
 
     return Container(
       width: 350,
@@ -119,7 +119,7 @@ class _ProfileViewState extends State<ProfileView> {
   }
 
   Widget _buildBackButton() {
-    final theme = ContextTheme.of(context);
+    final theme = Style.of(context);
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -153,7 +153,7 @@ class _ProfileViewState extends State<ProfileView> {
   }
 
   Widget _buildProfileImage() {
-    final theme = ContextTheme.of(context);
+    final theme = Style.of(context);
     return Row(
       spacing: 10,
       mainAxisSize: MainAxisSize.max,
@@ -248,7 +248,7 @@ class _ProfileViewState extends State<ProfileView> {
   }
 
   Widget _buildSaveButton() {
-    final theme = ContextTheme.of(context);
+    final theme = Style.of(context);
     return Material(
       color: Colors.transparent,
       child: InkWell(

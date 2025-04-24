@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import '../../../../controllers/notification_controller.dart';
-import '../../../../models/notification.dart';
-import '../../../../providers/color_context.dart';
+import '../../../../models/notification_model.dart';
+import '../../../../providers/theme.dart';
 import 'notifications.dart';
 
 class NotificationItem extends StatefulWidget {
@@ -47,7 +47,7 @@ class _NotificationItemState extends State<NotificationItem>
 
   @override
   Widget build(BuildContext context) {
-    final theme = ContextTheme.of(context);
+    final theme = Style.of(context);
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),

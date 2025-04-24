@@ -1,10 +1,10 @@
-import 'dart:typed_data';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:filmu_nams/assets/dialog/dialog.dart';
 import 'package:filmu_nams/controllers/offer_controller.dart';
-import 'package:filmu_nams/models/carousel_item.dart';
-import 'package:filmu_nams/models/movie.dart';
+import 'package:filmu_nams/models/carousel_item_model.dart';
+import 'package:filmu_nams/models/movie_model.dart';
+import 'package:filmu_nams/providers/theme.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_carousel_items/edit_carousel_item_dialog.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_movies/search_movie.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +13,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import '../../../../../controllers/movie_controller.dart';
-import '../../../../../providers/color_context.dart';
 
 class EditMovieDialog extends StatefulWidget {
   const EditMovieDialog({
@@ -30,7 +29,7 @@ class EditMovieDialog extends StatefulWidget {
 class _EditMovieDialogState extends State<EditMovieDialog> {
   final _formKey = GlobalKey<FormState>();
 
-  ContextTheme get theme => ContextTheme.of(context);
+  Style get theme => Style.of(context);
 
   MovieController movieController = MovieController();
   OfferController offerController = OfferController();

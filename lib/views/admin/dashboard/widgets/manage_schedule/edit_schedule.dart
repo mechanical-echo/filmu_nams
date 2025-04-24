@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:filmu_nams/assets/dialog/dialog.dart';
 import 'package:filmu_nams/controllers/movie_controller.dart';
-import 'package:filmu_nams/models/movie.dart';
-import 'package:filmu_nams/models/schedule.dart';
-import 'package:filmu_nams/providers/color_context.dart';
+import 'package:filmu_nams/models/movie_model.dart';
+import 'package:filmu_nams/models/schedule_model.dart';
+import 'package:filmu_nams/providers/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -12,9 +12,11 @@ class EditScheduleDialog extends StatefulWidget {
   const EditScheduleDialog({
     super.key,
     this.id,
+    this.dateTime,
   });
 
   final String? id;
+  final DateTime? dateTime;
 
   @override
   State<EditScheduleDialog> createState() => _EditScheduleDialogState();
@@ -25,7 +27,7 @@ class _EditScheduleDialogState extends State<EditScheduleDialog> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final MovieController _movieController = MovieController();
 
-  ContextTheme get theme => ContextTheme.of(context);
+  Style get theme => Style.of(context);
 
   List<MovieModel> movies = [];
   ScheduleModel? scheduleData;
@@ -73,6 +75,13 @@ class _EditScheduleDialogState extends State<EditScheduleDialog> {
       }
 
       setState(() {
+        if (widget.dateTime != null) {
+          selectedDate = widget.dateTime!;
+          selectedTime = TimeOfDay(
+            hour: widget.dateTime!.hour,
+            minute: widget.dateTime!.minute,
+          );
+        }
         movies = loadedMovies;
         scheduleData = schedule;
         isLoading = false;

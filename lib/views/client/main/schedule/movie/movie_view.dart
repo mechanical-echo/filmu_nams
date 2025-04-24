@@ -1,5 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:filmu_nams/models/movie.dart';
+import 'package:filmu_nams/models/movie_model.dart';
 import 'package:filmu_nams/views/client/main/schedule/movie/foldable_description.dart';
 import 'package:filmu_nams/views/client/main/schedule/movie/ticket_buying_form.dart';
 import 'package:flutter/material.dart';

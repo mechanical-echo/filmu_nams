@@ -3,7 +3,7 @@ import 'package:filmu_nams/views/client/auth/registration/registration.dart';
 import 'package:filmu_nams/assets/decorations/background.dart';
 import 'package:flutter/material.dart';
 
-import '../../../providers/color_context.dart';
+import '../../../providers/theme.dart';
 
 class AuthForm extends StatefulWidget {
   const AuthForm({super.key});
@@ -55,9 +55,8 @@ class _AuthFormState extends State<AuthForm>
 
   @override
   Widget build(BuildContext context) {
-    // final theme = Theme.of(context);
     final size = MediaQuery.of(context).size;
-    final theme = ContextTheme.of(context);
+    final theme = Style.of(context);
 
     return Scaffold(
       body: Background(

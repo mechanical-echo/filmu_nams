@@ -1,4 +1,4 @@
-import 'package:filmu_nams/providers/color_context.dart';
+import 'package:filmu_nams/providers/theme.dart';
 import 'package:flutter/material.dart';
 
 class Background extends StatefulWidget {
@@ -50,7 +50,7 @@ class _BackgroundState extends State<Background>
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
-    final theme = ContextTheme.of(context);
+    final theme = Style.of(context);
 
     return Stack(
       children: [

@@ -1,5 +1,5 @@
 import 'package:filmu_nams/assets/decorations/background.dart';
-import 'package:filmu_nams/providers/color_context.dart';
+import 'package:filmu_nams/providers/theme.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_carousel_items/manage_carousel_items.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_movies/manage_movies.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_offers/manage_offers.dart';
@@ -20,7 +20,7 @@ class AdminWrapper extends StatefulWidget {
 class _AdminWrapperState extends State<AdminWrapper> {
   int selectedIndex = 0;
 
-  ContextTheme get theme => ContextTheme.of(context);
+  Style get theme => Style.of(context);
 
   void switchPage(int index) {
     setState(() {

@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:filmu_nams/models/ticket.dart';
-import 'package:filmu_nams/providers/color_context.dart';
+import 'package:filmu_nams/models/ticket_model.dart';
+import 'package:filmu_nams/providers/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -18,7 +18,7 @@ class TicketCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = ContextTheme.of(context);
+    final theme = Style.of(context);
     final DateTime movieTime = ticket.schedule.time.toDate();
     final bool isExpired = movieTime.isBefore(DateTime.now());
 

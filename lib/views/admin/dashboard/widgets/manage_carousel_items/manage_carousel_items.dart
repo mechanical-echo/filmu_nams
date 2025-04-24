@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:filmu_nams/controllers/movie_controller.dart';
-import 'package:filmu_nams/models/carousel_item.dart';
+import 'package:filmu_nams/models/carousel_item_model.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_carousel_items/carousel_item_card.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_carousel_items/edit_carousel_item_dialog.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_screen.dart';

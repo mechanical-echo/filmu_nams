@@ -3,8 +3,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:filmu_nams/assets/dialog/dialog.dart';
 import 'package:filmu_nams/controllers/user_controller.dart';
-import 'package:filmu_nams/models/user.dart';
-import 'package:filmu_nams/providers/color_context.dart';
+import 'package:filmu_nams/models/user_model.dart';
+import 'package:filmu_nams/providers/theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -27,7 +27,7 @@ class _EditUserDialogState extends State<EditUserDialog> {
   final _formKey = GlobalKey<FormState>();
   final UserController _userController = UserController();
 
-  ContextTheme get theme => ContextTheme.of(context);
+  Style get theme => Style.of(context);
 
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();

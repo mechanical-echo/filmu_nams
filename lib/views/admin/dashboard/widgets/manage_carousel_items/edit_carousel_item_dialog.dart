@@ -2,14 +2,14 @@ import 'dart:typed_data';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:filmu_nams/assets/dialog/dialog.dart';
 import 'package:filmu_nams/controllers/offer_controller.dart';
-import 'package:filmu_nams/models/movie.dart';
-import 'package:filmu_nams/models/offer.dart';
+import 'package:filmu_nams/models/movie_model.dart';
+import 'package:filmu_nams/models/offer_model.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import '../../../../../controllers/movie_controller.dart';
-import '../../../../../models/carousel_item.dart';
-import '../../../../../providers/color_context.dart';
+import '../../../../../models/carousel_item_model.dart';
+import '../../../../../providers/theme.dart';
 
 class EditCarouselItemDialog extends StatefulWidget {
   const EditCarouselItemDialog({
@@ -24,7 +24,7 @@ class EditCarouselItemDialog extends StatefulWidget {
 }
 
 class _EditCarouselItemDialogState extends State<EditCarouselItemDialog> {
-  ContextTheme get theme => ContextTheme.of(context);
+  Style get theme => Style.of(context);
 
   MovieController movieController = MovieController();
   OfferController offerController = OfferController();

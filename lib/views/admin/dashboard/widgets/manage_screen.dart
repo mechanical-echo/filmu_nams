@@ -1,5 +1,4 @@
-import 'package:filmu_nams/assets/theme.dart';
-import 'package:filmu_nams/providers/color_context.dart';
+import 'package:filmu_nams/providers/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
@@ -26,7 +25,7 @@ class ManageScreen extends StatefulWidget {
 }
 
 class _ManageScreenState extends State<ManageScreen> {
-  ContextTheme get theme => ContextTheme.of(context);
+  Style get theme => Style.of(context);
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +50,7 @@ class _ManageScreenState extends State<ManageScreen> {
           child: widget.isLoading
               ? Center(
                   child: LoadingAnimationWidget.staggeredDotsWave(
-                    color: smokeyWhite,
+                    color: Colors.white,
                     size: 100,
                   ),
                 )

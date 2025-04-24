@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:filmu_nams/controllers/tmdb_controller.dart';
-import 'package:filmu_nams/models/movie.dart';
+import 'package:filmu_nams/models/movie_model.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_movies/edit_movie_dialog.dart';
 import 'package:flutter/material.dart';
 

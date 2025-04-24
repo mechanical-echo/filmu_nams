@@ -1,8 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:filmu_nams/assets/dialog/dialog.dart';
-import 'package:filmu_nams/models/offer.dart';
-import 'package:filmu_nams/models/promocode.dart';
-import 'package:filmu_nams/providers/color_context.dart';
+import 'package:filmu_nams/models/offer_model.dart';
+import 'package:filmu_nams/models/promocode_model.dart';
+import 'package:filmu_nams/providers/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -72,7 +72,8 @@ class _OfferViewState extends State<OfferView>
     if (promocode != null) {
       await Clipboard.setData(ClipboardData(text: promocode!.name));
       if (mounted) {
-        StylizedDialog.dialog(Icons.paste,
+        StylizedDialog.dialog(
+          Icons.paste,
           context,
           "Kopēts!",
           "Promokods ir kopēts uz starpliktuvi",
@@ -83,7 +84,7 @@ class _OfferViewState extends State<OfferView>
 
   @override
   Widget build(BuildContext context) {
-    final theme = ContextTheme.of(context);
+    final theme = Style.of(context);
 
     return Scaffold(
       backgroundColor: theme.themeBgColor,
@@ -233,9 +234,11 @@ class _OfferViewState extends State<OfferView>
                                             horizontal: 20,
                                             vertical: 12,
                                           ),
-                                          decoration: theme.activeCardDecoration,
+                                          decoration:
+                                              theme.activeCardDecoration,
                                           child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
                                             children: [
                                               Text(
                                                 promocode!.name,
@@ -265,7 +268,8 @@ class _OfferViewState extends State<OfferView>
                                                 ? 'Atlaide ${promocode!.amount!.toStringAsFixed(2)}€'
                                                 : 'Atlaide',
                                         style: GoogleFonts.poppins(
-                                          color: theme.contrast.withOpacity(0.8),
+                                          color:
+                                              theme.contrast.withOpacity(0.8),
                                           fontSize: 16,
                                         ),
                                       ),
@@ -273,7 +277,8 @@ class _OfferViewState extends State<OfferView>
                                       Text(
                                         'Nospiediet, lai kopētu',
                                         style: GoogleFonts.poppins(
-                                          color: theme.contrast.withOpacity(0.5),
+                                          color:
+                                              theme.contrast.withOpacity(0.5),
                                           fontSize: 14,
                                         ),
                                       ),
