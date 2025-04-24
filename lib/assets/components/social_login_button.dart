@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:filmu_nams/providers/color_context.dart';
 
 class SocialLoginButton extends StatelessWidget {
   final String iconPath;
@@ -20,7 +19,6 @@ class SocialLoginButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = ContextTheme.of(context);
     final effectiveBackgroundColor = backgroundColor ?? Colors.white;
     final effectiveTextColor = textColor ?? Colors.black;
 

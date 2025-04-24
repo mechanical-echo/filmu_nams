@@ -1,9 +1,6 @@
-import 'package:filmu_nams/assets/theme.dart';
 import 'package:filmu_nams/models/movie.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-import '../../../../../providers/color_context.dart';
 
 class FoldableDescription extends StatefulWidget {
   const FoldableDescription({

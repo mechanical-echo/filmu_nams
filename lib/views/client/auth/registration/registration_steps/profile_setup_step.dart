@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:filmu_nams/controllers/user_controller.dart';
-import 'package:filmu_nams/providers/color_context.dart';
 import 'package:filmu_nams/views/client/auth/registration/registration_steps/registration_state.dart';
 import 'package:filmu_nams/assets/dialog/dialog.dart';
 import 'package:filmu_nams/enums/auth_error_codes.dart';
@@ -49,6 +48,16 @@ class _ProfileSetupStepState extends State<ProfileSetupStep> {
   Widget build(BuildContext context) {
     return AuthContainer(
       title: 'Reģistrācija',
+      bottomAction: TextButton(
+        onPressed: widget.previousRegistrationStep,
+        child: Text(
+          'Atpakaļ',
+          style: GoogleFonts.poppins(
+            color: Colors.white,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
       child: _isLoading
           ? const Center(child: LoadingIndicator())
           : Column(
@@ -98,16 +107,6 @@ class _ProfileSetupStepState extends State<ProfileSetupStep> {
                 ),
               ],
             ),
-      bottomAction: TextButton(
-        onPressed: widget.previousRegistrationStep,
-        child: Text(
-          'Atpakaļ',
-          style: GoogleFonts.poppins(
-            color: Colors.white,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ),
     );
   }
 
@@ -156,7 +155,8 @@ class _ProfileSetupStepState extends State<ProfileSetupStep> {
         );
       } else {
         setState(() => _isLoading = false);
-        StylizedDialog.dialog(Icons.error_outline,
+        StylizedDialog.dialog(
+          Icons.error_outline,
           context,
           "Kļūda",
           getFirebaseAuthErrorCode(response?.errorMessage),
@@ -165,7 +165,8 @@ class _ProfileSetupStepState extends State<ProfileSetupStep> {
     } catch (e) {
       if (!mounted) return;
       setState(() => _isLoading = false);
-      StylizedDialog.dialog(Icons.error_outline,context, "Kļūda", "Nezināma kļūda");
+      StylizedDialog.dialog(
+          Icons.error_outline, context, "Kļūda", "Nezināma kļūda");
     }
   }
 }

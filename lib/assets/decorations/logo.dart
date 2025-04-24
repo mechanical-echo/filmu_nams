@@ -1,4 +1,3 @@
-import 'package:filmu_nams/assets/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -23,27 +22,27 @@ class Logo extends StatelessWidget {
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 25),
-                decoration: theme.cardDecoration,
-                child: Row(
-                  spacing: 15,
-                  children: [
-                    Icon(
-                      Icons.movie_filter,
-                      color: theme.contrast.withAlpha(150),
-                      size: 24,
-                    ),
-                    Text(
-                      "Filmu Nams",
-                      style: GoogleFonts.poppins(
-                        color: theme.contrast.withAlpha(110),
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 4, horizontal: 25),
+                  decoration: theme.cardDecoration,
+                  child: Row(
+                    spacing: 15,
+                    children: [
+                      Icon(
+                        Icons.movie_filter,
+                        color: theme.contrast.withAlpha(150),
+                        size: 24,
                       ),
-                    ),
-                  ],
-                )
-              ),
+                      Text(
+                        "Filmu Nams",
+                        style: GoogleFonts.poppins(
+                          color: theme.contrast.withAlpha(110),
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  )),
             ],
           ),
           Container(

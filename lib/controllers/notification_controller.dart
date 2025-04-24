@@ -3,8 +3,6 @@ import 'package:filmu_nams/models/notification.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-import '../models/user.dart';
-
 class NotificationController {
   final notifications = FlutterLocalNotificationsPlugin();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -87,11 +85,12 @@ class NotificationController {
     return notifications;
   }
 
-  Future<NotificationModel> updateNotificationStatus(String id, String status) async {
-      await _firestore.collection('notifications').doc(id).update({
-        'status': status,
-      });
-      return await getNotificationById(id);
+  Future<NotificationModel> updateNotificationStatus(
+      String id, String status) async {
+    await _firestore.collection('notifications').doc(id).update({
+      'status': status,
+    });
+    return await getNotificationById(id);
   }
 
   Future<NotificationModel> getNotificationById(String id) async {

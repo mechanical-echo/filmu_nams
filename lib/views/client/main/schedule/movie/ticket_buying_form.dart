@@ -160,7 +160,8 @@ class _TicketBuyingFormState extends State<TicketBuyingForm> {
                             Expanded(
                               flex: 2,
                               child: DatePickerInput(
-                                padding: const EdgeInsets.symmetric(horizontal: 15),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 15),
                                 availableDates: availableDates,
                                 sharp: true,
                                 height: 50,
@@ -202,7 +203,7 @@ class _TicketBuyingFormState extends State<TicketBuyingForm> {
                                     items: timeList,
                                     onChanged: (value) {
                                       setState(() {
-                                        selectedId = value as String?;
+                                        selectedId = value;
                                       });
                                     },
                                     value: selectedId,

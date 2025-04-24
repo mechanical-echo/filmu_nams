@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:filmu_nams/models/movie.dart';
 import 'package:filmu_nams/models/promocode.dart';
 import 'package:flutter/material.dart';
 

@@ -81,13 +81,11 @@ class _NavBarState extends State<NavBar> with SingleTickerProviderStateMixin {
             decoration: theme.roundCardDecoration,
             child: LayoutBuilder(
               builder: (context, constraints) {
-                final totalWidth = constraints.maxWidth;
-
                 return Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: List.generate(
                     icons.length,
-                        (index) {
+                    (index) {
                       final isSelected = widget.currentIndex == index;
                       final wasSelected = _previousIndex == index;
 
@@ -144,7 +142,8 @@ class _NavBarState extends State<NavBar> with SingleTickerProviderStateMixin {
                                         child: Opacity(
                                           opacity: animation.value,
                                           child: Transform.translate(
-                                            offset: Offset(0, 5 * (1 - animation.value)),
+                                            offset: Offset(
+                                                0, 5 * (1 - animation.value)),
                                             child: Text(
                                               labels[index],
                                               style: GoogleFonts.poppins(

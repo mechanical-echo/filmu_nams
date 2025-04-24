@@ -15,7 +15,6 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  String _language = 'Latviešu';
   bool _showMaxwell = false;
 
   void _showMaxwellPopup() {

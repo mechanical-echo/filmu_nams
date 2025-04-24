@@ -1,52 +1,22 @@
-import 'dart:convert';
 import 'dart:io';
-import 'dart:math';
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cloud_functions/cloud_functions.dart';
-import 'package:crypto/crypto.dart';
 import 'package:filmu_nams/models/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 
 class UserController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<DocumentSnapshot<Map<String, dynamic>>?> getUserDocument(
-    String uid,
-  ) async {
-    try {
-      if (_auth.currentUser == null) return null;
-      var userDocument =
-          await FirebaseFirestore.instance.collection('users').doc(uid).get();
-      return userDocument;
-    } catch (e) {
-      debugPrint('Error getting user document: $e');
-      return null;
-    }
+  static const String usersPath = 'users';
+
+  User? getCurrentUser() {
+    return _auth.currentUser;
   }
 
-  /// Parbaudit vai lietotajam ir dota loma
-  Future<bool> userHasRole(
-    User user,
-    String role,
-  ) async {
-    try {
-      var userDocument = await getUserDocument(user.uid);
-      if (userDocument == null) return false;
-      return userDocument.data()?['role'] == role;
-    } catch (e) {
-      debugPrint('Error checking user role: $e');
-      return false;
-    }
-  }
-
-  /// Pieregistret jauno lietotaju
   Future<RegistrationResponse?> registerUser({
     required String email,
     required String password,
@@ -80,6 +50,236 @@ class UserController {
     }
   }
 
+  Future<List<UserModel>> getAllUsers() async {
+    try {
+      QuerySnapshot querySnapshot =
+          await _firestore.collection(usersPath).get();
+
+      List<UserModel> users = querySnapshot.docs.map((doc) {
+        return UserModel.fromMap(doc.data() as Map<String, dynamic>, doc.id);
+      }).toList();
+
+      return users;
+    } catch (e) {
+      debugPrint('Error getting all users: $e');
+      return [];
+    }
+  }
+
+  Future<UserModel?> getUserById(String uid) async {
+    try {
+      DocumentSnapshot doc =
+          await _firestore.collection(usersPath).doc(uid).get();
+
+      if (!doc.exists) {
+        debugPrint('User not found: $uid');
+        return null;
+      }
+
+      return UserModel.fromMap(doc.data() as Map<String, dynamic>, doc.id);
+    } catch (e) {
+      debugPrint('Error getting user by ID: $e');
+      return null;
+    }
+  }
+
+  Future<String?> uploadProfileImage(String userId, Uint8List imageData) async {
+    try {
+      Reference reference = _storage.ref().child('profile_images/$userId.jpg');
+
+      UploadTask uploadTask = reference.putData(
+        imageData,
+        SettableMetadata(contentType: 'image/jpeg'),
+      );
+
+      TaskSnapshot taskSnapshot = await uploadTask;
+      return await taskSnapshot.ref.getDownloadURL();
+    } catch (e) {
+      debugPrint('Profile image upload error: $e');
+      return null;
+    }
+  }
+
+  Future<void> deleteProfileImage(String userId) async {
+    try {
+      Reference reference = _storage.ref().child('profile_images/$userId.jpg');
+      await reference.delete();
+    } catch (e) {
+      debugPrint('Error deleting profile image: $e');
+    }
+  }
+
+  Future<String?> createUser({
+    required String email,
+    required String password,
+    required String name,
+    required String role,
+    Uint8List? profileImage,
+  }) async {
+    try {
+      UserCredential userCredential =
+          await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      User? user = userCredential.user;
+      if (user == null) return null;
+
+      String? imageUrl;
+      if (profileImage != null) {
+        imageUrl = await uploadProfileImage(user.uid, profileImage);
+      }
+
+      await _firestore.collection(usersPath).doc(user.uid).set({
+        'name': name,
+        'email': email,
+        'profileImageUrl': imageUrl ?? '',
+        'role': role,
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+
+      await user.updateDisplayName(name);
+      if (imageUrl != null) {
+        await user.updatePhotoURL(imageUrl);
+      }
+
+      return user.uid;
+    } catch (e) {
+      debugPrint('Error creating user: $e');
+      return null;
+    }
+  }
+
+  Future<bool> updateUser({
+    required String uid,
+    required String name,
+    required String email,
+    required String role,
+    Uint8List? profileImage,
+    bool deleteImage = false,
+  }) async {
+    try {
+      Map<String, dynamic> updateData = {
+        'name': name,
+        'email': email,
+        'role': role,
+      };
+
+      if (profileImage != null) {
+        String? imageUrl = await uploadProfileImage(uid, profileImage);
+        if (imageUrl != null) {
+          updateData['profileImageUrl'] = imageUrl;
+        }
+      } else if (deleteImage) {
+        updateData['profileImageUrl'] = '';
+        await deleteProfileImage(uid);
+      }
+
+      await _firestore.collection(usersPath).doc(uid).update(updateData);
+
+      User? currentUser = _auth.currentUser;
+      if (currentUser?.uid == uid) {
+        await currentUser?.updateDisplayName(name);
+        if (profileImage != null) {
+          String? imageUrl = updateData['profileImageUrl'] as String?;
+          if (imageUrl != null) {
+            await currentUser?.updatePhotoURL(imageUrl);
+          }
+        } else if (deleteImage) {
+          await currentUser?.updatePhotoURL('');
+        }
+      }
+
+      return true;
+    } catch (e) {
+      debugPrint('Error updating user: $e');
+      return false;
+    }
+  }
+
+  Future<void> updateOwnProfile({
+    required String name,
+    required String email,
+    File? profileImage,
+    Uint8List? profileImageWeb,
+  }) async {
+    try {
+      User? currentUser = _auth.currentUser;
+      if (currentUser == null) return;
+
+      String uid = currentUser.uid;
+      String role = 'user';
+
+      DocumentSnapshot userDoc =
+          await _firestore.collection(usersPath).doc(uid).get();
+      if (userDoc.exists) {
+        final userData = userDoc.data() as Map<String, dynamic>;
+        role = userData['role'] ?? 'user';
+      }
+
+      Uint8List? imageData;
+      if (profileImage != null) {
+        imageData = await profileImage.readAsBytes();
+      } else if (profileImageWeb != null) {
+        imageData = profileImageWeb;
+      }
+
+      await updateUser(
+        uid: uid,
+        name: name,
+        email: email,
+        role: role,
+        profileImage: imageData,
+      );
+    } catch (e) {
+      debugPrint('Error updating own profile: $e');
+    }
+  }
+
+  Future<bool> deleteUser(String uid) async {
+    try {
+      await _firestore.collection(usersPath).doc(uid).delete();
+
+      await deleteProfileImage(uid);
+
+      return true;
+    } catch (e) {
+      debugPrint('Error deleting user: $e');
+      return false;
+    }
+  }
+
+  Future<bool> changePassword(String newPassword) async {
+    try {
+      User? user = _auth.currentUser;
+      if (user == null) return false;
+
+      await user.updatePassword(newPassword);
+      return true;
+    } catch (e) {
+      debugPrint('Error changing password: $e');
+      return false;
+    }
+  }
+
+  Future<bool> userHasRole(String uid, String role) async {
+    try {
+      UserModel? user = await getUserById(uid);
+      return user?.role == role;
+    } catch (e) {
+      debugPrint('Error checking user role: $e');
+      return false;
+    }
+  }
+
+  Future<UserModel?> getCurrentUserModel() async {
+    User? user = _auth.currentUser;
+    if (user == null) return null;
+
+    return await getUserById(user.uid);
+  }
+
   Future<void> createUserDocument(
     User user,
     UserDocumentPayload payload,
@@ -96,7 +296,7 @@ class UserController {
         payload.profileImage is String ? payload.profileImage : null;
 
     if (payload.profileImage != null && payload.profileImage is File) {
-      imageUrl = await uploadProfileImage(uid, payload.profileImage, null);
+      imageUrl = await uploadProfileImage(uid, payload.profileImage);
     }
 
     await _firestore.collection('users').doc(uid).set({
@@ -111,324 +311,6 @@ class UserController {
     if (imageUrl != null) {
       await user.updatePhotoURL(imageUrl);
     }
-  }
-
-  Future<String?> uploadProfileImage(
-    String userId,
-    File? imageFile,
-    Uint8List? imageFileWeb,
-  ) async {
-    try {
-      Reference reference = _storage.ref().child('profile_images/$userId.jpg');
-
-      UploadTask? uploadTask;
-      if (imageFileWeb != null) {
-        uploadTask = reference.putData(imageFileWeb);
-      } else if (imageFile != null) {
-        uploadTask = reference.putFile(imageFile);
-      }
-
-      if (uploadTask == null) {
-        throw Exception('No valid image file provided for upload.');
-      }
-
-      TaskSnapshot taskSnapshot = await uploadTask;
-
-      return await taskSnapshot.ref.getDownloadURL();
-    } catch (e) {
-      debugPrint('Image upload error: $e');
-      return null;
-    }
-  }
-
-  Future<RegistrationResponse> signInWithGoogle() async {
-    try {
-      final GoogleSignInAccount? user = await GoogleSignIn().signIn();
-      if (user == null) {
-        throw Exception(["Google login failure"]);
-      }
-      final GoogleSignInAuthentication auth = await user.authentication;
-
-      final credential = GoogleAuthProvider.credential(
-        accessToken: auth.accessToken,
-        idToken: auth.idToken,
-      );
-
-      UserDocumentPayload payload = UserDocumentPayload(
-        name: user.displayName ?? '',
-        email: user.email,
-        profileImage: user.photoUrl,
-      );
-
-      await _auth.signInWithCredential(credential);
-      await createUserDocument(_auth.currentUser!, payload);
-      return RegistrationResponse(user: _auth.currentUser);
-    } catch (exception) {
-      debugPrint("Error google login: ${exception.toString()}");
-      return RegistrationResponse(errorMessage: "Google login failure");
-    }
-  }
-
-  Future<List<UserModel>> getAllUsers() async {
-    try {
-      QuerySnapshot querySnapshot = await _firestore.collection('users').get();
-
-      List<UserModel> users = querySnapshot.docs.map((doc) {
-        return UserModel.fromMap(doc.data() as Map<String, dynamic>, doc.id);
-      }).toList();
-
-      return users;
-    } catch (e) {
-      debugPrint('Error getting all users: $e');
-      return [];
-    }
-  }
-
-  Future<UserModel> getUserById(String uid) async {
-    try {
-      DocumentSnapshot doc =
-          await _firestore.collection('users').doc(uid).get();
-
-      if (!doc.exists) {
-        throw Exception('User not found');
-      }
-
-      return UserModel.fromMap(doc.data() as Map<String, dynamic>, doc.id);
-    } catch (e) {
-      debugPrint('Error getting user by ID: $e');
-      throw e;
-    }
-  }
-
-  Future<void> updateUser(
-    String uid,
-    String name,
-    String email,
-    String role,
-    File? profileImage,
-    Uint8List? profileImageWeb,
-  ) async {
-    try {
-      Map<String, dynamic> updateData = {
-        'name': name,
-        'email': email,
-        'role': role,
-      };
-
-      if (profileImage != null || profileImageWeb != null) {
-        String? imageUrl = await uploadProfileImage(uid, profileImage, profileImageWeb);
-        if (profileImage != null) {
-          await _auth.currentUser?.updatePhotoURL(imageUrl);
-        }
-        if (imageUrl != null) {
-          updateData['profileImageUrl'] = imageUrl;
-        }
-      }
-
-      await _firestore.collection('users').doc(uid).update(updateData);
-    } catch (e) {
-      debugPrint('Error updating user: $e');
-    }
-  }
-
-  Future<bool> verifyAdminStatus() async {
-    await FirebaseAuth.instance.currentUser?.reload();
-    IdTokenResult tokenResult =
-        await FirebaseAuth.instance.currentUser!.getIdTokenResult();
-    bool isAdmin = tokenResult.claims?['admin'] == true;
-    debugPrint('User admin status: $isAdmin');
-    return isAdmin;
-  }
-
-  Future<Map<String, dynamic>> deleteUserFromAuth(String uid) async {
-    try {
-      final functions = FirebaseFunctions.instanceFor(region: 'us-central1');
-      functions.useFunctionsEmulator('localhost', 5001);
-
-      await verifyAdminStatus();
-
-      final result = await functions.httpsCallable('deleteUserAccount').call({
-        'uid': uid,
-      });
-
-      debugPrint('Delete user result: ${result.data}');
-
-      if (result.data['success']) {
-        return {
-          'success': true,
-          'message': result.data['message'] ?? 'User deleted successfully'
-        };
-      } else {
-        return {
-          'success': false,
-          'message': result.data['message'] ?? 'Failed to delete user'
-        };
-      }
-    } on FirebaseFunctionsException catch (e) {
-      debugPrint(
-          'Firebase function error: ${e.code} - ${e.message} - ${e.details}');
-      return {
-        'success': false,
-        'message': e.message ?? 'Unknown error',
-        'code': e.code,
-        'details': e.details
-      };
-    } catch (e) {
-      debugPrint('Error deleting user: $e');
-      return {'success': false, 'message': e.toString()};
-    }
-  }
-
-  Future<Map<String, dynamic>> deleteUser(String uid) async {
-    try {
-      Map<String, dynamic> result = await deleteUserFromAuth(uid);
-      final user = await _firestore.collection('users').doc(uid).get();
-
-      if (user.data()!['profileImageUrl'] != null) {
-        await deleteProfileImageFromStorage(uid);
-      }
-
-      if (result['success']) {
-        try {
-          await _firestore.collection('users').doc(uid).delete();
-          return result;
-        } catch (e) {
-          debugPrint('Error deleting user from Firestore: $e');
-          return {
-            'success': true,
-            'message':
-                '${result['message']} (Note: User document may still exist in database)',
-            'firestore_error': e.toString()
-          };
-        }
-      }
-      return result;
-    } catch (e) {
-      debugPrint('Error in deleteUser: $e');
-      return {'success': false, 'message': 'Unexpected error: $e'};
-    }
-  }
-
-  deleteProfileImageFromStorage(String uid) async {
-    try {
-      Reference reference = _storage.ref().child('profile_images/$uid.jpg');
-      return await reference.delete();
-    } catch (e) {
-      debugPrint('Image delete error: $e');
-      return null;
-    }
-  }
-
-  String sha256ofString(String input) {
-    final bytes = utf8.encode(input);
-    final digest = sha256.convert(bytes);
-    return digest.toString();
-  }
-
-  String generateNonce([int length = 32]) {
-    final charset = '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-.';
-    final random = Random.secure();
-    return List.generate(length, (_) => charset[random.nextInt(charset.length)]).join();
-  }
-
-  Future<void> signInWithFacebook() async {
-    if (Platform.isIOS) {
-      return signInWithFacebookIOS();
-    } else {
-      return signInWithFacebookAndroid();
-    }
-  }
-
-  Future<void> signInWithFacebookIOS() async {
-    final rawNonce = generateNonce();
-    final nonce = sha256ofString(rawNonce);
-
-    final result = await FacebookAuth.instance.login(
-      loginBehavior: LoginBehavior.nativeWithFallback,
-      nonce: nonce,
-    );
-
-    if (result.status == LoginStatus.success) {
-      debugPrint('${await FacebookAuth.instance.getUserData()}');
-      final token = result.accessToken as LimitedToken;
-      OAuthCredential credential = OAuthCredential(
-        providerId: 'facebook.com',
-        signInMethod: 'oauth',
-        idToken: token.tokenString,
-        rawNonce: rawNonce,
-      );
-      final response = await FirebaseAuth.instance.signInWithCredential(credential);
-      final user = response.user;
-
-      UserDocumentPayload payload = UserDocumentPayload(
-        name: user!.displayName!,
-        email: user.email!,
-        profileImage: user.photoURL,
-      );
-
-      await createUserDocument(user, payload);
-    }
-  }
-
-  Future<void> signInWithFacebookAndroid() async {
-    try {
-      final rawNonce = generateNonce();
-      final nonce = sha256ofString(rawNonce);
-
-      final LoginResult result = await FacebookAuth.instance.login(
-        loginBehavior: LoginBehavior.nativeWithFallback,
-        permissions: ['email', 'public_profile'],
-      );
-
-      if (result.status == LoginStatus.success) {
-        final userData = await FacebookAuth.instance.getUserData();
-        debugPrint('Facebook user data: $userData');
-
-        final accessToken = result.accessToken?.tokenString;
-
-        if (accessToken == null) {
-          throw FirebaseAuthException(
-            code: 'facebook-auth-token-null',
-            message: 'Facebook access token is null',
-          );
-        }
-
-        final facebookAuthCredential = FacebookAuthProvider.credential(accessToken);
-
-        final userCredential = await FirebaseAuth.instance.signInWithCredential(
-            facebookAuthCredential
-        );
-
-        final user = userCredential.user;
-        if (user != null && user.email != null && user.displayName != null) {
-          UserDocumentPayload payload = UserDocumentPayload(
-            name: user.displayName!,
-            email: user.email!,
-            profileImage: user.photoURL,
-          );
-
-          await createUserDocument(user, payload);
-        } else {
-          debugPrint('User data incomplete: ${user?.displayName}, ${user?.email}');
-        }
-      } else {
-        debugPrint('Facebook login failed: ${result.status.toString()}');
-        if (result.message != null) {
-          debugPrint('Facebook login error message: ${result.message}');
-        }
-      }
-    } catch (e) {
-      debugPrint('Error during Facebook sign in: $e');
-    }
-  }
-
-  Future<void> updateOwnProfile(
-      String name,
-      String email,
-      File? profileImage,
-  ) async {
-    String uid = _auth.currentUser!.uid;
-    await updateUser(uid, name, email, UserRolesEnum.user, profileImage, null);
   }
 }
 

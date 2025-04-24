@@ -4,7 +4,6 @@ import 'package:filmu_nams/providers/color_context.dart';
 import 'package:filmu_nams/views/client/main/schedule/movie_list/movie_list.dart';
 import 'package:filmu_nams/views/client/main/schedule/schedule_list/schedule_list.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class ScheduleAndMovies extends StatelessWidget {
   const ScheduleAndMovies({super.key});

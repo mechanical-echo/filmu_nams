@@ -50,10 +50,11 @@ class _ProfileViewState extends State<ProfileView> {
         await user?.verifyBeforeUpdateEmail(emailCtrl.text);
       }
       await userController.updateOwnProfile(
-          nameCtrl.text, emailCtrl.text, image);
+          name: nameCtrl.text, email: emailCtrl.text, profileImage: image);
     } catch (e) {
       if (mounted) {
-        StylizedDialog.dialog(Icons.error_outline,context, "Kļūda", "Neizdevās atjaunināt");
+        StylizedDialog.dialog(
+            Icons.error_outline, context, "Kļūda", "Neizdevās atjaunināt");
         debugPrint(e.toString());
       }
     }
@@ -230,7 +231,6 @@ class _ProfileViewState extends State<ProfileView> {
     IconData icon,
     TextEditingController ctrl,
   ) {
-    final theme = ContextTheme.of(context);
     return TextField(
       controller: ctrl,
       style: GoogleFonts.poppins(

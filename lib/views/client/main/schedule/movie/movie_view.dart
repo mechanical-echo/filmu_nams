@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:filmu_nams/assets/theme.dart';
 import 'package:filmu_nams/models/movie.dart';
 import 'package:filmu_nams/views/client/main/schedule/movie/foldable_description.dart';
 import 'package:filmu_nams/views/client/main/schedule/movie/ticket_buying_form.dart';
@@ -207,39 +206,39 @@ class _MovieViewState extends State<MovieView>
 
                             // Cast
                             if (widget.data.actors.isNotEmpty)
-                            Text(
-                              'Aktieri',
-                              style: GoogleFonts.poppins(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
+                              Text(
+                                'Aktieri',
+                                style: GoogleFonts.poppins(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                            ),
                             const SizedBox(height: 8),
                             if (widget.data.actors.isNotEmpty)
-                            Wrap(
-                              spacing: 8,
-                              runSpacing: 8,
-                              children: widget.data.actors.map((actor) {
-                                return Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 12,
-                                    vertical: 6,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(0.1),
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: Text(
-                                    actor,
-                                    style: GoogleFonts.poppins(
-                                      color: Colors.white.withOpacity(0.8),
-                                      fontSize: 14,
+                              Wrap(
+                                spacing: 8,
+                                runSpacing: 8,
+                                children: widget.data.actors.map((actor) {
+                                  return Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 12,
+                                      vertical: 6,
                                     ),
-                                  ),
-                                );
-                              }).toList(),
-                            ),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white.withOpacity(0.1),
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: Text(
+                                      actor,
+                                      style: GoogleFonts.poppins(
+                                        color: Colors.white.withOpacity(0.8),
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
                             const SizedBox(height: 24),
 
                             // Ticket buying form

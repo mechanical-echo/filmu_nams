@@ -37,11 +37,6 @@ class LoadingIndicator extends StatelessWidget {
           size: size,
           color: effectiveColor,
         );
-      default:
-        return LoadingAnimationWidget.staggeredDotsWave(
-          size: size,
-          color: effectiveColor,
-        );
     }
   }
 }

@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:filmu_nams/assets/theme.dart';
 import 'package:filmu_nams/models/ticket.dart';
 import 'package:filmu_nams/providers/color_context.dart';
 import 'package:flutter/material.dart';

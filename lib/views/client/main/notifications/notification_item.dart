@@ -28,7 +28,6 @@ class _NotificationItemState extends State<NotificationItem>
   bool isLoading = false;
   late NotificationModel _notification;
   late AnimationController _controller;
-  late Animation<double> _animation;
 
   @override
   void initState() {
@@ -37,10 +36,6 @@ class _NotificationItemState extends State<NotificationItem>
     _controller = AnimationController(
       duration: const Duration(milliseconds: 300),
       vsync: this,
-    );
-    _animation = CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeInOut,
     );
   }
 

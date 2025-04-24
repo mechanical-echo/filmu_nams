@@ -1,7 +1,6 @@
 import 'package:filmu_nams/models/notification.dart';
 import 'package:filmu_nams/providers/color_context.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../../../../controllers/notification_controller.dart';
 import 'notification_item.dart';
 

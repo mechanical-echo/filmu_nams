@@ -4,7 +4,6 @@ import 'package:filmu_nams/assets/components/auth_container.dart';
 import 'package:filmu_nams/validators/validator.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../../../providers/color_context.dart';
 
 class CredentialsStep extends StatefulWidget {
   final TextEditingController emailController;
@@ -151,7 +150,8 @@ class _CredentialsStepState extends State<CredentialsStep> {
         validator.validatePassword(password, passwordConfirmation);
     if (validation.isNotValid) {
       if (validation.problematicFields.contains("passwordConfirmation")) {
-        StylizedDialog.dialog(Icons.error_outline,context, "Kļūda", "Paroles nesakrīt");
+        StylizedDialog.dialog(
+            Icons.error_outline, context, "Kļūda", "Paroles nesakrīt");
         setState(() => passwordConfirmationError = validation.error);
       } else {
         setState(() => passwordError = validation.error);

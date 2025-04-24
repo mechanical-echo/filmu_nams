@@ -10,7 +10,8 @@ class Background extends StatefulWidget {
   State<Background> createState() => _BackgroundState();
 }
 
-class _BackgroundState extends State<Background> with SingleTickerProviderStateMixin {
+class _BackgroundState extends State<Background>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<Color?> _colorAnimation1;
   late Animation<Color?> _colorAnimation2;
@@ -28,17 +29,15 @@ class _BackgroundState extends State<Background> with SingleTickerProviderStateM
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    _colorAnimation1 = ColorTween(
+      begin: Colors.white.withOpacity(0.15),
+      end: Colors.white.withOpacity(0.3),
+    ).animate(_controller);
 
-    final theme = ContextTheme.of(context);
-      _colorAnimation1 = ColorTween(
-        begin: Colors.white.withOpacity(0.15),
-        end: Colors.white.withOpacity(0.3),
-      ).animate(_controller);
-
-      _colorAnimation2 = ColorTween(
-        begin: Colors.transparent,
-        end: Colors.transparent,
-      ).animate(_controller);
+    _colorAnimation2 = ColorTween(
+      begin: Colors.transparent,
+      end: Colors.transparent,
+    ).animate(_controller);
   }
 
   @override
@@ -62,22 +61,24 @@ class _BackgroundState extends State<Background> with SingleTickerProviderStateM
               end: Alignment.bottomRight,
               colors: theme.isDark
                   ? [
-                Colors.black,
-                Colors.black.withOpacity(0.95),
-                Colors.black.withOpacity(0.9)
-              ]
+                      Colors.black,
+                      Colors.black.withOpacity(0.95),
+                      Colors.black.withOpacity(0.9)
+                    ]
                   : [
-                Colors.grey[200]!,
-                Colors.grey[200]!.withOpacity(0.95),
-                Colors.grey[200]!.withOpacity(0.9),
-              ],
+                      Colors.grey[200]!,
+                      Colors.grey[200]!.withOpacity(0.95),
+                      Colors.grey[200]!.withOpacity(0.9),
+                    ],
             ),
           ),
         ),
         CustomPaint(
           size: Size(width, height),
           painter: GridPainter(
-            color: theme.isDark ? Colors.white.withOpacity(0.03) : Colors.black.withOpacity(0.075),
+            color: theme.isDark
+                ? Colors.white.withOpacity(0.03)
+                : Colors.black.withOpacity(0.075),
             strokeWidth: 1,
             spacing: 30,
           ),

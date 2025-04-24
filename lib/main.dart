@@ -1,6 +1,5 @@
 import 'package:filmu_nams/controllers/notification_controller.dart';
 import 'package:filmu_nams/views/admin/auth/admin_auth.dart';
-import 'package:filmu_nams/views/admin/dashboard/admin_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -13,9 +12,6 @@ import 'package:filmu_nams/views/client/client.dart';
 import 'package:filmu_nams/views/client/auth/registration/registration_steps/registration_state.dart';
 import 'package:filmu_nams/providers/theme_provider.dart';
 import 'package:filmu_nams/providers/color_context.dart';
-
-// Import route definitions
-import 'package:filmu_nams/routes/admin_routes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -56,15 +52,8 @@ class ThemedApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: themeProvider.currentTheme,
-        initialRoute:
-            Platform.isWindows || Platform.isMacOS ? '/admin/auth' : '/client',
-        routes: {
-          '/client': (context) => const ClientApp(),
-          '/admin/auth': (context) => const AdminAuth(),
-          '/admin/dashboard': (context) => const AdminWrapper(),
-        },
-        onGenerateRoute: (settings) =>
-            generateAdminRoute(settings, themeProvider.currentTheme),
+        home:
+            Platform.isWindows || Platform.isMacOS ? AdminAuth() : ClientApp(),
       ),
     );
   }

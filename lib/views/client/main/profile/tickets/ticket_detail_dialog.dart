@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:filmu_nams/models/ticket.dart';
-import 'package:filmu_nams/providers/color_context.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -16,7 +15,6 @@ class TicketDetailDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = ContextTheme.of(context);
     final bool isExpired =
         ticket.schedule.time.toDate().isBefore(DateTime.now());
 

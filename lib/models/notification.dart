@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:filmu_nams/models/user.dart';
 
 class NotificationModel {

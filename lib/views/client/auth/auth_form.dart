@@ -1,10 +1,7 @@
 import 'package:filmu_nams/views/client/auth/login/login.dart';
 import 'package:filmu_nams/views/client/auth/registration/registration.dart';
 import 'package:filmu_nams/assets/decorations/background.dart';
-import 'package:filmu_nams/assets/decorations/big_logo.dart';
-import 'package:filmu_nams/assets/animations/carousel_switch.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../../../providers/color_context.dart';
 
@@ -97,9 +94,8 @@ class _AuthFormState extends State<AuthForm>
                         margin: const EdgeInsets.symmetric(horizontal: 24),
                         decoration: theme.cardDecoration,
                         child: ClipRRect(
-                          borderRadius: BorderRadius.circular(24),
-                          child: views[currentView]
-                        ),
+                            borderRadius: BorderRadius.circular(24),
+                            child: views[currentView]),
                       ),
                     ),
                   ),

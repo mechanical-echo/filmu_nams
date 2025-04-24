@@ -59,9 +59,13 @@ class _AdminLoginState extends State<AdminLogin> {
                       controller: emailController,
                       keyboardType: TextInputType.emailAddress,
                       validator: (value) {
-                        ValidatorResult emailValidationResult = validator.validateEmail(email, true);
-                        if (value == null || value.isEmpty || emailValidationResult.isNotValid) {
-                          return emailValidationResult.error ?? 'Lūdzu, ievadiet e-pastu';
+                        ValidatorResult emailValidationResult =
+                            validator.validateEmail(email, true);
+                        if (value == null ||
+                            value.isEmpty ||
+                            emailValidationResult.isNotValid) {
+                          return emailValidationResult.error ??
+                              'Lūdzu, ievadiet e-pastu';
                         }
                         return null;
                       },
@@ -180,7 +184,8 @@ class _AdminLoginState extends State<AdminLogin> {
       );
       User? user = FirebaseAuth.instance.currentUser;
       if (user != null) {
-        bool userIsAdmin = await UserController().userHasRole(user, "admin");
+        bool userIsAdmin =
+            await UserController().userHasRole(user.uid, "admin");
 
         setState(() {
           isLoading = false;
