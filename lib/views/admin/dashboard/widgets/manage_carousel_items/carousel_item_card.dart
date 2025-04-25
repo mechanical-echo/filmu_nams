@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:filmu_nams/models/carousel_item_model.dart';
-import 'package:filmu_nams/providers/theme.dart';
+import 'package:filmu_nams/providers/style.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_carousel_items/edit_carousel_item_dialog.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';

@@ -1,7 +1,7 @@
 import 'package:filmu_nams/assets/decorations/background.dart';
 import 'package:filmu_nams/controllers/ticket_controller.dart';
 import 'package:filmu_nams/models/ticket_model.dart';
-import 'package:filmu_nams/providers/theme.dart';
+import 'package:filmu_nams/providers/style.dart';
 import 'package:filmu_nams/views/client/main/profile/tickets/ticket_card.dart';
 import 'package:filmu_nams/views/client/main/profile/tickets/ticket_detail_dialog.dart';
 import 'package:flutter/material.dart';

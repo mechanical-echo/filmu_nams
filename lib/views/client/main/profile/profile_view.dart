@@ -9,7 +9,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
-import '../../../../providers/theme.dart';
+import '../../../../providers/style.dart';
 
 class ProfileView extends StatefulWidget {
   const ProfileView({super.key, required this.onPressed});

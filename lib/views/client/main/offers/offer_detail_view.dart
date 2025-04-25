@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:filmu_nams/assets/dialog/dialog.dart';
 import 'package:filmu_nams/models/offer_model.dart';
 import 'package:filmu_nams/models/promocode_model.dart';
-import 'package:filmu_nams/providers/theme.dart';
+import 'package:filmu_nams/providers/style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';

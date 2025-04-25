@@ -62,7 +62,7 @@ class MovieCard extends StatelessWidget {
               // Background image
               Positioned.fill(
                 child: CachedNetworkImage(
-                  imageUrl: data.posterUrl,
+                  imageUrl: data.heroUrl,
                   fit: BoxFit.cover,
                   placeholder: (context, url) => Center(
                     child: LoadingAnimationWidget.staggeredDotsWave(

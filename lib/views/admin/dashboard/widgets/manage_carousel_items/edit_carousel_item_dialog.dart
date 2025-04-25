@@ -9,7 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import '../../../../../controllers/movie_controller.dart';
 import '../../../../../models/carousel_item_model.dart';
-import '../../../../../providers/theme.dart';
+import '../../../../../providers/style.dart';
 
 class EditCarouselItemDialog extends StatefulWidget {
   const EditCarouselItemDialog({

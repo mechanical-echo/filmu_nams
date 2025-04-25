@@ -3,7 +3,7 @@ import 'package:filmu_nams/assets/dialog/dialog.dart';
 import 'package:filmu_nams/controllers/movie_controller.dart';
 import 'package:filmu_nams/models/movie_model.dart';
 import 'package:filmu_nams/models/schedule_model.dart';
-import 'package:filmu_nams/providers/theme.dart';
+import 'package:filmu_nams/providers/style.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';

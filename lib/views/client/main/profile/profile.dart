@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:filmu_nams/assets/animations/carousel_switch.dart';
-import 'package:filmu_nams/providers/theme.dart';
+import 'package:filmu_nams/providers/style.dart';
 import 'package:filmu_nams/views/client/main/profile/profile_view.dart';
 import 'package:filmu_nams/views/client/main/profile/settings.dart';
 import 'package:filmu_nams/views/client/main/profile/tickets/tickets_view.dart';

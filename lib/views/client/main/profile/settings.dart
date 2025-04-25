@@ -1,5 +1,5 @@
 import 'package:filmu_nams/assets/decorations/background.dart';
-import 'package:filmu_nams/providers/theme.dart';
+import 'package:filmu_nams/providers/style.dart';
 import 'package:filmu_nams/providers/theme_provider.dart';
 import 'package:filmu_nams/views/client/main/profile/password_change.dart';
 import 'package:firebase_auth/firebase_auth.dart';

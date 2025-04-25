@@ -2,6 +2,7 @@ import 'package:filmu_nams/assets/decorations/background.dart';
 import 'package:filmu_nams/assets/dialog/dialog.dart';
 import 'package:filmu_nams/controllers/login_controller.dart';
 import 'package:filmu_nams/controllers/user_controller.dart';
+import 'package:filmu_nams/providers/style.dart';
 import 'package:filmu_nams/views/client/auth/login/login_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +24,7 @@ class _AdminLoginState extends State<AdminLogin> {
 
   get password => passwordController.text;
 
-  get theme => Theme.of(context);
+  get theme => Style.of(context);
 
   String? emailError;
   String? passwordError;

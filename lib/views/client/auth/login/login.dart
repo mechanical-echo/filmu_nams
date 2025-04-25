@@ -5,7 +5,7 @@ import 'package:filmu_nams/views/client/auth/login/login_view.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../../../providers/theme.dart';
+import '../../../../providers/style.dart';
 
 class Login extends StatefulWidget {
   final void Function(int? view) onViewChange;

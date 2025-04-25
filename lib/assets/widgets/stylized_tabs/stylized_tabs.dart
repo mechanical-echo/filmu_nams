@@ -1,6 +1,6 @@
 import 'package:filmu_nams/assets/animations/carousel_switch.dart';
 import 'package:filmu_nams/assets/widgets/stylized_tabs/stylized_tab.dart';
-import 'package:filmu_nams/providers/theme.dart';
+import 'package:filmu_nams/providers/style.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 

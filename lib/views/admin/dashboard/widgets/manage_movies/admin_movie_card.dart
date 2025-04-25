@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:filmu_nams/models/movie_model.dart';
-import 'package:filmu_nams/providers/theme.dart';
+import 'package:filmu_nams/providers/style.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_movies/edit_movie_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -169,7 +169,8 @@ class _AdminMovieCardState extends State<AdminMovieCard> {
         width: 150,
         height: 150,
         child: CachedNetworkImage(
-          imageUrl: widget.data.posterUrl,
+          imageUrl: widget.data.heroUrl,
+          alignment: Alignment(0, -0.4),
           placeholder: (context, url) => Center(
             child: LoadingAnimationWidget.staggeredDotsWave(
               color: Colors.white30,

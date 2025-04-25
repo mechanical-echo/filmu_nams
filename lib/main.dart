@@ -1,5 +1,5 @@
 import 'package:filmu_nams/controllers/notification_controller.dart';
-import 'package:filmu_nams/providers/theme.dart';
+import 'package:filmu_nams/providers/style.dart';
 import 'package:filmu_nams/views/admin/auth/admin_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

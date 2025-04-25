@@ -3,7 +3,7 @@ import 'package:filmu_nams/views/client/auth/registration/registration.dart';
 import 'package:filmu_nams/assets/decorations/background.dart';
 import 'package:flutter/material.dart';
 
-import '../../../providers/theme.dart';
+import '../../../providers/style.dart';
 
 class AuthForm extends StatefulWidget {
   const AuthForm({super.key});

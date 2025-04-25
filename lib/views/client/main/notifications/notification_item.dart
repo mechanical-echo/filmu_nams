@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import '../../../../controllers/notification_controller.dart';
 import '../../../../models/notification_model.dart';
-import '../../../../providers/theme.dart';
+import '../../../../providers/style.dart';
 import 'notifications.dart';
 
 class NotificationItem extends StatefulWidget {

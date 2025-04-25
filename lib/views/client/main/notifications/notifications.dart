@@ -1,5 +1,5 @@
 import 'package:filmu_nams/models/notification_model.dart';
-import 'package:filmu_nams/providers/theme.dart';
+import 'package:filmu_nams/providers/style.dart';
 import 'package:flutter/material.dart';
 import '../../../../controllers/notification_controller.dart';
 import 'notification_item.dart';

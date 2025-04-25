@@ -23,7 +23,7 @@ class Style extends InheritedWidget {
 
   bool get isDark => themeProvider.isDark;
 
-  Color get primary => themeProvider.currentTheme.colorScheme.primary;
+  Color get primary => themeProvider.primary;
   Color get onPrimary => themeProvider.currentTheme.colorScheme.onPrimary;
   Color get primaryContainer =>
       themeProvider.currentTheme.colorScheme.primaryContainer;
@@ -93,7 +93,7 @@ class Style extends InheritedWidget {
   Color get themeBgColor => isDark ? Colors.black : Colors.white;
 
   BoxDecoration get cardDecoration => BoxDecoration(
-        color: Colors.white.withOpacity(isDark ? 0.05 : 1),
+        color: Colors.white.withOpacity(isDark ? 0.15 : 1),
         borderRadius: BorderRadius.circular(5),
         border: Border.all(
           color: contrast.withOpacity(0.2),
@@ -111,7 +111,7 @@ class Style extends InheritedWidget {
       );
 
   BoxDecoration get roundCardDecoration => BoxDecoration(
-        color: Colors.white.withOpacity(isDark ? 0.05 : 1),
+        color: Colors.white.withOpacity(isDark ? 0.07 : 1),
         borderRadius: BorderRadius.circular(15),
         boxShadow: isDark
             ? [BoxShadow()]
@@ -125,7 +125,7 @@ class Style extends InheritedWidget {
       );
 
   BoxDecoration get accentCardDecoration => BoxDecoration(
-        color: primary.withOpacity(0.2),
+        color: primary,
         borderRadius: BorderRadius.circular(5),
         border: Border.all(
           color: secondary.withOpacity(0.1),

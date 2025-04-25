@@ -1,3 +1,4 @@
+import 'package:filmu_nams/providers/style.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -28,6 +29,8 @@ class _TicketBuyingFormState extends State<TicketBuyingForm> {
   bool isLoading = true;
   DateTime? selectedDate;
   String? selectedId;
+
+  Style get style => Style.of(context);
 
   @override
   void initState() {
@@ -106,18 +109,20 @@ class _TicketBuyingFormState extends State<TicketBuyingForm> {
       ),
       child: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(24),
-            child: Text(
-              scheduleData == null ||
-                      (scheduleData!.isNotEmpty && availableDates.isNotEmpty)
-                  ? "Nopirkt biļeti"
-                  : "Nav pieejama saraksta",
-              style: GoogleFonts.poppins(
-                color: Colors.white,
-                fontSize: 24,
-                fontWeight: FontWeight.w600,
-                letterSpacing: 0.5,
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.all(24),
+              child: Text(
+                scheduleData == null ||
+                        (scheduleData!.isNotEmpty && availableDates.isNotEmpty)
+                    ? "Nopirkt biļeti"
+                    : "Nav pieejama saraksta",
+                style: GoogleFonts.poppins(
+                  color: Colors.white,
+                  fontSize: 24,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 0.5,
+                ),
               ),
             ),
           ),
@@ -135,14 +140,7 @@ class _TicketBuyingFormState extends State<TicketBuyingForm> {
                 children: [
                   Container(
                     padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.05),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: Colors.white.withOpacity(0.1),
-                        width: 1,
-                      ),
-                    ),
+                    decoration: style.cardDecoration,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [

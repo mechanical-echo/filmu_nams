@@ -1,5 +1,5 @@
 import 'package:filmu_nams/models/promocode_model.dart';
-import 'package:filmu_nams/providers/theme.dart';
+import 'package:filmu_nams/providers/style.dart';
 import 'package:flutter/material.dart';
 
 class PromocodeCard extends StatefulWidget {

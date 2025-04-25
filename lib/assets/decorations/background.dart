@@ -1,4 +1,4 @@
-import 'package:filmu_nams/providers/theme.dart';
+import 'package:filmu_nams/providers/style.dart';
 import 'package:flutter/material.dart';
 
 class Background extends StatefulWidget {

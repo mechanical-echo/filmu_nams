@@ -1,5 +1,6 @@
 import 'package:filmu_nams/assets/decorations/background.dart';
-import 'package:filmu_nams/providers/theme.dart';
+import 'package:filmu_nams/providers/style.dart';
+import 'package:filmu_nams/views/admin/dashboard/dashboard.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_carousel_items/manage_carousel_items.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_movies/manage_movies.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_offers/manage_offers.dart';
@@ -31,7 +32,7 @@ class _AdminWrapperState extends State<AdminWrapper> {
   Widget body(int index) {
     switch (index) {
       case 0:
-        return Center(child: Text("Welcome to the Dashboard"));
+        return Center(child: Dashboard());
       case 1:
         return Center(child: ManageCarouselItems());
       case 2:

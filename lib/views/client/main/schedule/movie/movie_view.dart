@@ -70,10 +70,9 @@ class _MovieViewState extends State<MovieView>
       backgroundColor: Colors.black,
       body: Stack(
         children: [
-          // Background image
           Positioned.fill(
             child: CachedNetworkImage(
-              imageUrl: widget.data.heroUrl,
+              imageUrl: widget.data.posterUrl,
               fit: BoxFit.cover,
               placeholder: (context, url) => Center(
                 child: LoadingAnimationWidget.staggeredDotsWave(
@@ -91,8 +90,6 @@ class _MovieViewState extends State<MovieView>
               ),
             ),
           ),
-
-          // Gradient overlay
           Positioned.fill(
             child: DecoratedBox(
               decoration: BoxDecoration(
@@ -100,7 +97,7 @@ class _MovieViewState extends State<MovieView>
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    Colors.black.withOpacity(0.3),
+                    Colors.black.withOpacity(0),
                     Colors.black.withOpacity(0.7),
                     Colors.black,
                   ],
@@ -109,8 +106,6 @@ class _MovieViewState extends State<MovieView>
               ),
             ),
           ),
-
-          // Content
           SafeArea(
             child: FadeTransition(
               opacity: _fadeAnimation,
@@ -118,7 +113,6 @@ class _MovieViewState extends State<MovieView>
                 position: _slideAnimation,
                 child: CustomScrollView(
                   slivers: [
-                    // App bar
                     SliverAppBar(
                       backgroundColor: Colors.transparent,
                       elevation: 0,
@@ -159,15 +153,12 @@ class _MovieViewState extends State<MovieView>
                         ),
                       ],
                     ),
-
-                    // Movie content
                     SliverToBoxAdapter(
                       child: Padding(
                         padding: const EdgeInsets.all(16),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // Title
                             Text(
                               widget.data.title,
                               style: GoogleFonts.poppins(
@@ -177,8 +168,6 @@ class _MovieViewState extends State<MovieView>
                               ),
                             ),
                             const SizedBox(height: 16),
-
-                            // Movie details
                             Row(
                               children: [
                                 _buildDetailChip(
@@ -199,12 +188,8 @@ class _MovieViewState extends State<MovieView>
                               ],
                             ),
                             const SizedBox(height: 24),
-
-                            // Description
                             FoldableDescription(data: widget.data),
                             const SizedBox(height: 24),
-
-                            // Cast
                             if (widget.data.actors.isNotEmpty)
                               Text(
                                 'Aktieri',
@@ -240,8 +225,6 @@ class _MovieViewState extends State<MovieView>
                                 }).toList(),
                               ),
                             const SizedBox(height: 24),
-
-                            // Ticket buying form
                             TicketBuyingForm(movieData: widget.data),
                             const SizedBox(height: 32),
                           ],

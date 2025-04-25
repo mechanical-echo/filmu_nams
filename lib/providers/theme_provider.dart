@@ -302,6 +302,17 @@ class ThemeProvider extends ChangeNotifier {
           fontWeight: FontWeight.w500,
         ),
       ),
+      tooltipTheme: TooltipThemeData(
+        decoration: BoxDecoration(
+          color: isDark ? const Color(0xFF212121) : Color(0xFFEEEEEE),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        textStyle: GoogleFonts.poppins(
+          color: isDark ? Color(0xFFEEEEEE) : Color(0xFF1D1616),
+          fontSize: 14,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
     );
   }
 
@@ -328,4 +339,8 @@ class ThemeProvider extends ChangeNotifier {
 
   bool get isDark =>
       _currentTheme == AppTheme.redDark || _currentTheme == AppTheme.blueDark;
+
+  Color get primary => _currentTheme == AppTheme.redDark
+      ? Color.fromARGB(255, 168, 38, 43)
+      : const Color.fromARGB(255, 102, 177, 243);
 }

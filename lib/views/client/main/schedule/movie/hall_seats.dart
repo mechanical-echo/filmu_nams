@@ -1,4 +1,5 @@
 import 'package:confetti/confetti.dart';
+import 'package:filmu_nams/providers/style.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -39,6 +40,8 @@ class _HallSeatsState extends State<HallSeats> {
   PromocodeModel? submittedPromocode;
   final TextEditingController promocodeController = TextEditingController();
   final confettiController = ConfettiController();
+
+  Style get style => Style.of(context);
 
   @override
   void initState() {
@@ -107,14 +110,7 @@ class _HallSeatsState extends State<HallSeats> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.05),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: Colors.white.withOpacity(0.1),
-          width: 1,
-        ),
-      ),
+      decoration: style.cardDecoration,
       child: Stack(
         children: [
           Column(
@@ -155,14 +151,8 @@ class _HallSeatsState extends State<HallSeats> {
   Widget _buildHeader() {
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            color: Colors.white.withOpacity(0.1),
-            width: 1,
-          ),
-        ),
-      ),
+      margin: const EdgeInsets.all(8),
+      decoration: style.cardDecoration,
       child: Row(
         children: [
           Icon(
@@ -640,7 +630,7 @@ class _HallSeatsState extends State<HallSeats> {
       padding: const EdgeInsets.all(16),
       child: isProcessingPayment
           ? const Center(child: CircularProgressIndicator())
-          : TextButton(
+          : FilledButton(
               onPressed: () {
                 if (chosenSeats.isNotEmpty) {
                   processPayment(context);
@@ -653,16 +643,6 @@ class _HallSeatsState extends State<HallSeats> {
                   );
                 }
               },
-              style: TextButton.styleFrom(
-                backgroundColor: chosenSeats.isEmpty
-                    ? Colors.white.withOpacity(0.1)
-                    : const Color(0xFF2A2A2A),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [

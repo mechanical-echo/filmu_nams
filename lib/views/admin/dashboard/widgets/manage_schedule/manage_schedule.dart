@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:filmu_nams/models/schedule_model.dart';
-import 'package:filmu_nams/providers/theme.dart';
+import 'package:filmu_nams/providers/style.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_schedule/edit_schedule.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_schedule/schedule_card.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_screen.dart';
@@ -157,7 +157,7 @@ class _ManageScheduleState extends State<ManageSchedule> {
       children: [
         _buildDateSelector(),
         ManageScreen(
-          height: 100,
+          height: 80,
           count: scheduleItems.length,
           isLoading: isLoading,
           itemGenerator: (index) => ScheduleCard(

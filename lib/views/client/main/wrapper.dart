@@ -1,4 +1,4 @@
-import 'package:filmu_nams/providers/theme.dart';
+import 'package:filmu_nams/providers/style.dart';
 import 'package:filmu_nams/views/client/main/home/home.dart';
 import 'package:filmu_nams/views/client/main/offers/offer_list_view.dart';
 import 'package:filmu_nams/views/client/main/notifications/notifications.dart';
