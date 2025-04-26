@@ -313,6 +313,7 @@ class ThemeProvider extends ChangeNotifier {
           fontWeight: FontWeight.w500,
         ),
       ),
+      listTileTheme: ListTileThemeData(),
     );
   }
 

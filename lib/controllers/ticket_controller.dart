@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:filmu_nams/controllers/payment_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -7,14 +8,17 @@ import '../models/ticket_model.dart';
 class TicketController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<void> createTickets(String id, List<Map<String, int>> seats) async {
+  Future<void> createTicketsAndPaymentHistory(String id,
+      List<Map<String, int>> seats, double amount, String description) async {
     try {
       final user = FirebaseAuth.instance.currentUser;
       final userRef = _firestore.collection('users').doc(user!.uid);
       final scheduleRef = _firestore.collection('schedule').doc(id);
 
+      List<DocumentReference> tickets = [];
+
       for (var seat in seats) {
-        await _firestore.collection('tickets').add({
+        final ticket = await _firestore.collection('tickets').add({
           'schedule': scheduleRef,
           'user': userRef,
           'seat': {
@@ -24,7 +28,15 @@ class TicketController {
           'purchaseDate': Timestamp.now(),
           'status': TicketStatusEnum.unused,
         });
+        tickets.add(ticket);
       }
+
+      PaymentController().generateHistory(
+        schedule: scheduleRef,
+        tickets: tickets,
+        amount: amount,
+        product: description,
+      );
     } catch (e) {
       debugPrint('Error creating tickets: $e');
     }

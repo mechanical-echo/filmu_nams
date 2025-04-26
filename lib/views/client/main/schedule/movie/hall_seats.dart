@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:confetti/confetti.dart';
+import 'package:filmu_nams/models/schedule_model.dart';
 import 'package:filmu_nams/providers/style.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -8,6 +10,7 @@ import 'package:filmu_nams/controllers/payment_controller.dart';
 import 'package:filmu_nams/controllers/promocode_controller.dart';
 import 'package:filmu_nams/controllers/ticket_controller.dart';
 import 'package:filmu_nams/models/promocode_model.dart';
+import 'package:intl/intl.dart';
 
 class HallSeats extends StatefulWidget {
   const HallSeats({
@@ -757,8 +760,16 @@ class _HallSeatsState extends State<HallSeats> {
               "R${getRowFromIndex(seatIndex) + 1}-V${getColFromIndex(seatIndex) + 1}")
           .join(", ");
 
+      final scheduleSnapshot = await FirebaseFirestore.instance
+          .collection('schedule')
+          .doc(widget.scheduleId)
+          .get();
+      final scheduleData = scheduleSnapshot.data() ?? {};
+      final schedule =
+          await ScheduleModel.fromMapAsync(scheduleData, widget.scheduleId);
+
       final description =
-          "Filmu Nams biļetes, ${widget.hallId}. zāle, vietas: $seats";
+          "${schedule.movie.title}, vietas: $seats, ${formatDate(schedule.time)}, ${schedule.id}";
 
       final success = await PaymentController().processPayment(
         context: context,
@@ -766,10 +777,14 @@ class _HallSeatsState extends State<HallSeats> {
         currency: 'eur',
         description: description,
         customerEmail: user.email,
+        scheduleId: currentScheduleId!,
       );
 
       if (success) {
-        saveTickets();
+        saveTickets(description);
+        setState(() {
+          isProcessingPayment = false;
+        });
       }
     } catch (e) {
       debugPrint('Payment error: $e');
@@ -807,7 +822,7 @@ class _HallSeatsState extends State<HallSeats> {
     }
   }
 
-  Future<void> saveTickets() async {
+  Future<void> saveTickets(String desc) async {
     List<Map<String, int>> payload = chosenSeats
         .map((seatIndex) => {
               "row": getRowFromIndex(seatIndex),
@@ -816,7 +831,12 @@ class _HallSeatsState extends State<HallSeats> {
         .toList();
 
     try {
-      await TicketController().createTickets(currentScheduleId!, payload);
+      await TicketController().createTicketsAndPaymentHistory(
+        currentScheduleId!,
+        payload,
+        getTotalPrice(),
+        desc,
+      );
       for (var seat in chosenSeats) {
         setState(() {
           takenSeats.add(seat);
@@ -829,9 +849,7 @@ class _HallSeatsState extends State<HallSeats> {
       });
       selectFirstAvailableSeat();
 
-      // Play confetti once
       confettiController.play();
-      // Stop after 2 seconds
       Future.delayed(const Duration(seconds: 2), () {
         if (mounted) {
           confettiController.stop();
@@ -840,5 +858,9 @@ class _HallSeatsState extends State<HallSeats> {
     } catch (e) {
       debugPrint('Error saving tickets: $e');
     }
+  }
+
+  String formatDate(Timestamp date) {
+    return DateFormat('y.MM.dd. HH:mm').format(date.toDate());
   }
 }

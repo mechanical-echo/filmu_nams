@@ -1,12 +1,17 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:filmu_nams/controllers/notification_controller.dart';
+import 'package:filmu_nams/models/payment_history_model.dart';
 import 'package:filmu_nams/stripe_options.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:filmu_nams/assets/dialog/dialog.dart';
 
 class PaymentController {
   final String _paymentApiUrl = "https://api.stripe.com/v1/payment_intents";
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   Future<void> initStripe() async {
     try {
@@ -24,7 +29,9 @@ class PaymentController {
     required String currency,
     required String description,
     String? customerEmail,
+    required String scheduleId,
   }) async {
+    final schedule = _firestore.collection('schedule').doc(scheduleId);
     try {
       debugPrint("Processing payment of $amount $currency for: $description");
 
@@ -37,6 +44,12 @@ class PaymentController {
 
       if (paymentIntentResult == null) {
         _showPaymentError(context, "Neizdevās izveidot maksājumu");
+        generateUnsuccessfulHistory(
+          amount: amount,
+          schedule: schedule,
+          reason: 'Failed to create payment intent',
+          product: description,
+        );
         return false;
       }
 
@@ -57,8 +70,20 @@ class PaymentController {
     } catch (e) {
       debugPrint("Payment error: $e");
       if (e is StripeException) {
+        generateUnsuccessfulHistory(
+          amount: amount,
+          schedule: schedule,
+          reason: 'Stripe: ${e.error.localizedMessage}',
+          product: description,
+        );
         _showPaymentError(context, "Stripe kļūda: ${e.error.localizedMessage}");
       } else {
+        generateUnsuccessfulHistory(
+          amount: amount,
+          schedule: schedule,
+          reason: "Payment error: $e",
+          product: description,
+        );
         _showPaymentError(context, "Maksājuma kļūda: $e");
       }
       return false;
@@ -116,10 +141,98 @@ class PaymentController {
   }
 
   void _showPaymentError(BuildContext context, String message) {
-    StylizedDialog.dialog(Icons.error_outline,
+    StylizedDialog.dialog(
+      Icons.error_outline,
       context,
       "Maksājuma kļūda",
       message,
     );
+  }
+
+  void generateHistory(
+      {required double amount,
+      required DocumentReference schedule,
+      required List<DocumentReference> tickets,
+      required String product}) async {
+    final userRef = _firestore.collection('users').doc(_auth.currentUser?.uid);
+
+    _firestore.collection('payments').add({
+      'user': userRef,
+      'amount': amount,
+      'schedule': schedule,
+      'tickets': tickets,
+      'purchaseDate': Timestamp.now(),
+      'status': 'completed',
+      'product': product,
+    }).catchError((error) {
+      debugPrint("Failed to add payment history: $error");
+      throw Exception("Failed to add payment history: $error");
+    });
+  }
+
+  void generateUnsuccessfulHistory({
+    required double amount,
+    required DocumentReference schedule,
+    required String reason,
+    required String product,
+  }) async {
+    final userRef = _firestore.collection('users').doc(_auth.currentUser?.uid);
+
+    _firestore.collection('payments').add({
+      'user': userRef,
+      'amount': amount,
+      'schedule': schedule,
+      'purchaseDate': Timestamp.now(),
+      'status': 'failed',
+      'reason': reason,
+      'product': product,
+    }).catchError((error) {
+      debugPrint("Failed to add unsuccessful payment history: $error");
+      throw Exception("Failed to add unsuccessful payment history: $error");
+    });
+  }
+
+  Future<List<PaymentHistoryModel>> getPaymentHistory() async {
+    final userRef = _firestore.collection('users').doc(_auth.currentUser?.uid);
+
+    try {
+      final QuerySnapshot querySnapshot = await _firestore
+          .collection('payments')
+          .where('user', isEqualTo: userRef)
+          .orderBy('purchaseDate', descending: true)
+          .get();
+      final List<PaymentHistoryModel> paymentHistory = [];
+      for (var doc in querySnapshot.docs) {
+        final paymentHistoryModel = await PaymentHistoryModel.fromMapAsync(
+          doc.data() as Map<String, dynamic>,
+          doc.id,
+        );
+        paymentHistory.add(paymentHistoryModel);
+      }
+      return paymentHistory;
+    } catch (e) {
+      debugPrint("Failed to retrieve payment history: $e");
+      return [];
+    }
+  }
+}
+
+class PaymentHistoryStatusEnum {
+  static const String completed = 'Apstrādāts';
+  static const String failed = 'Neveiksmīgs';
+
+  static String getStatus(String status) {
+    switch (status) {
+      case 'completed':
+        return completed;
+      case 'failed':
+        return failed;
+      default:
+        return 'Nezināms';
+    }
+  }
+
+  static bool isCompleted(String status) {
+    return status == 'completed';
   }
 }
