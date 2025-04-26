@@ -582,14 +582,6 @@ class _HallSeatsState extends State<HallSeats> {
               Expanded(
                 child: Container(
                   height: 40,
-                  // decoration: BoxDecoration(
-                  //   color: const Color(0xFF2A2A2A),
-                  //   borderRadius: BorderRadius.circular(8),
-                  //   border: Border.all(
-                  //     color: Colors.white.withOpacity(0.1),
-                  //     width: 1,
-                  //   ),
-                  // ),
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   child: TextField(
                     controller: promocodeController,

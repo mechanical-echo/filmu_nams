@@ -35,7 +35,6 @@ class _OfferCardState extends State<OfferCard> {
           duration: const Duration(milliseconds: 200),
           decoration:
               isHovered ? theme.activeCardDecoration : theme.cardDecoration,
-          margin: const EdgeInsets.symmetric(vertical: 8),
           child: Row(
             children: [
               _buildImage(),
@@ -43,12 +42,8 @@ class _OfferCardState extends State<OfferCard> {
               Expanded(
                 child: _buildInfoSection(),
               ),
-              _buildPromocodeInfo(),
               const SizedBox(width: 16),
-              IconButton(
-                icon: Icon(Icons.edit, color: theme.primary),
-                onPressed: () => widget.onEdit(widget.data.id),
-              ),
+              _buildPromocodeInfo(),
               const SizedBox(width: 8),
             ],
           ),

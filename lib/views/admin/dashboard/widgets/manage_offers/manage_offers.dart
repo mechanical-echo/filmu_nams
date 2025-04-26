@@ -87,7 +87,7 @@ class _ManageOffersState extends State<ManageOffers> {
   @override
   Widget build(BuildContext context) {
     return ManageScreen(
-      height: 100,
+      height: 80,
       count: offers.length,
       isLoading: isLoading,
       itemGenerator: (index) => OfferCard(

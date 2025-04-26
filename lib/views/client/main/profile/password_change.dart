@@ -52,7 +52,6 @@ class _PasswordChangePageState extends State<PasswordChangePage> {
         return;
       }
 
-      // Reauthenticate user with current password
       AuthCredential credential = EmailAuthProvider.credential(
         email: user.email!,
         password: _currentPasswordController.text,
@@ -60,7 +59,6 @@ class _PasswordChangePageState extends State<PasswordChangePage> {
 
       await user.reauthenticateWithCredential(credential);
 
-      // Change password
       await user.updatePassword(_newPasswordController.text);
 
       if (mounted) {

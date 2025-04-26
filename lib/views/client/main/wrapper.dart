@@ -60,7 +60,6 @@ class Base extends StatelessWidget {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          // Background layer
           const Positioned.fill(
             child: Background(
               child: SizedBox.expand(),

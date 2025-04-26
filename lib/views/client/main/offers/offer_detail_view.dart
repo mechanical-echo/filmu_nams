@@ -110,7 +110,6 @@ class _OfferViewState extends State<OfferView>
       ),
       body: Stack(
         children: [
-          // Background Image
           Positioned.fill(
             child: Hero(
               tag: 'offer_image_${widget.data.id}',
@@ -137,7 +136,6 @@ class _OfferViewState extends State<OfferView>
               ),
             ),
           ),
-          // Gradient Overlay
           Positioned.fill(
             child: DecoratedBox(
               decoration: BoxDecoration(
@@ -155,7 +153,6 @@ class _OfferViewState extends State<OfferView>
               ),
             ),
           ),
-          // Content
           SafeArea(
             child: SingleChildScrollView(
               child: Padding(
@@ -164,7 +161,6 @@ class _OfferViewState extends State<OfferView>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 200),
-                    // Title
                     FadeTransition(
                       opacity: _fadeAnimation,
                       child: SlideTransition(
@@ -176,7 +172,6 @@ class _OfferViewState extends State<OfferView>
                       ),
                     ),
                     const SizedBox(height: 24),
-                    // Description
                     FadeTransition(
                       opacity: _fadeAnimation,
                       child: SlideTransition(
@@ -193,7 +188,6 @@ class _OfferViewState extends State<OfferView>
                     ),
                     if (widget.data.promocode != null) ...[
                       const SizedBox(height: 32),
-                      // Promocode Section
                       FadeTransition(
                         opacity: _fadeAnimation,
                         child: SlideTransition(

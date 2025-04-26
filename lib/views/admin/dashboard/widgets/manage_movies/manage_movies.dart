@@ -95,6 +95,7 @@ class _ManageMoviesState extends State<ManageMovies> {
             ),
           )
         : ManageScreen(
+            height: 162,
             count: movies!.length,
             isLoading: isLoading,
             itemGenerator: generateCards(),

@@ -166,7 +166,7 @@ class _SearchMovieState extends State<SearchMovie> {
                       child: TextField(
                         controller: searchController,
                         decoration: InputDecoration(
-                          hintText: 'Search for a movie',
+                          hintText: 'Meklēt pēc nosaukuma',
                           border: OutlineInputBorder(),
                         ),
                         onSubmitted: (_) => search(),

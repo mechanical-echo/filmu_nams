@@ -332,10 +332,11 @@ class _ManagePaymentsState extends State<ManagePayments> {
         color: style.secondary,
       ),
       _buildStatCard(
-        label: 'Neveiksmīgi',
-        value: '${getFailedCount()}',
-        icon: Icons.error_outline,
-        color: Colors.red,
+        label: 'Veiksmju %',
+        value:
+            '${filteredPayments.isEmpty ? 0 : (getCompletedCount() / filteredPayments.length * 100).toStringAsFixed(1)}%',
+        icon: Icons.percent,
+        color: Colors.amber,
       ),
     ];
   }

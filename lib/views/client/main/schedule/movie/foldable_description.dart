@@ -62,7 +62,6 @@ class _FoldableDescriptionState extends State<FoldableDescription>
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Header
         GestureDetector(
           onTap: _toggleDescription,
           child: Container(
@@ -89,8 +88,6 @@ class _FoldableDescriptionState extends State<FoldableDescription>
             ),
           ),
         ),
-
-        // Description content
         SizeTransition(
           sizeFactor: _heightAnimation,
           child: Container(

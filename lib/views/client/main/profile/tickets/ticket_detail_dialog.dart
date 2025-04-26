@@ -40,7 +40,6 @@ class TicketDetailDialog extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Header
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -74,8 +73,6 @@ class TicketDetailDialog extends StatelessWidget {
                 ],
               ),
             ),
-
-            // Content
             Flexible(
               child: SingleChildScrollView(
                 child: Padding(
@@ -83,7 +80,6 @@ class TicketDetailDialog extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      // Movie poster
                       ClipRRect(
                         borderRadius: BorderRadius.circular(12),
                         child: CachedNetworkImage(
@@ -115,8 +111,6 @@ class TicketDetailDialog extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 16),
-
-                      // Movie details
                       Container(
                         width: double.infinity,
                         padding: const EdgeInsets.all(16),
@@ -160,8 +154,6 @@ class TicketDetailDialog extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 16),
-
-                      // QR Code
                       Container(
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
@@ -212,8 +204,6 @@ class TicketDetailDialog extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 8),
-
-                      // Ticket ID
                       Text(
                         'Biļetes ID: ${ticket.id}',
                         style: GoogleFonts.poppins(
@@ -226,8 +216,6 @@ class TicketDetailDialog extends StatelessWidget {
                 ),
               ),
             ),
-
-            // Status indicator
             if (isExpired)
               Container(
                 width: double.infinity,

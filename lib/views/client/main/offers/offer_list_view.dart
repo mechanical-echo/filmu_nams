@@ -65,7 +65,6 @@ class _OffersListState extends State<OffersList> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header
           Padding(
             padding: const EdgeInsets.only(top: 16, bottom: 24),
             child: Column(
@@ -83,8 +82,6 @@ class _OffersListState extends State<OffersList> {
               ],
             ),
           ),
-
-          // Offers list
           Expanded(
             child: isLoading
                 ? Center(

@@ -25,7 +25,6 @@ class _AdminWrapperState extends State<AdminWrapper> {
   Style get theme => Style.of(context);
 
   void switchPage(int index) {
-    // If logout option is selected, show dialog instead of switching page
     if (index == 8) {
       _showLogoutDialog();
       return;
@@ -36,9 +35,7 @@ class _AdminWrapperState extends State<AdminWrapper> {
     });
   }
 
-  // Move the dialog to a separate method
   void _showLogoutDialog() {
-    // Use Future.microtask to schedule the dialog after the current build is complete
     Future.microtask(() {
       showDialog(
         context: context,
@@ -86,8 +83,6 @@ class _AdminWrapperState extends State<AdminWrapper> {
       case 7:
         return Center(child: ManagePayments());
       case 8:
-        // We only return the loading widget for case 8
-        // Dialog is handled in switchPage method
         return Center(
           child: LoadingAnimationWidget.staggeredDotsWave(
             color: Colors.white12,
@@ -111,7 +106,7 @@ class _AdminWrapperState extends State<AdminWrapper> {
           child: Container(
             padding: EdgeInsets.only(
               left: leftPadding,
-              top: 50,
+              top: 20,
               right: 20,
               bottom: 20,
             ),

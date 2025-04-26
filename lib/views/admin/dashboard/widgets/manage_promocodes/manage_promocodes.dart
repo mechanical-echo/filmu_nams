@@ -80,7 +80,7 @@ class _ManagePromocodesState extends State<ManagePromocodes> {
   @override
   Widget build(BuildContext context) {
     return ManageScreen(
-      height: 105,
+      height: 50,
       count: promocodes.length,
       isLoading: isLoading,
       itemGenerator: (index) => PromocodeCard(

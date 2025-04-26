@@ -99,7 +99,7 @@ class _ManageUsersState extends State<ManageUsers> {
   Widget build(BuildContext context) {
     return ManageScreen(
       subHeader: _buildFilterBar(),
-      height: 120,
+      height: 98,
       count: filteredUsers.length,
       isLoading: isLoading,
       itemGenerator: (index) => UserCard(

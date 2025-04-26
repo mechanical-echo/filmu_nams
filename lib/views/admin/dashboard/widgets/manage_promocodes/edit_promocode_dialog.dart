@@ -31,8 +31,7 @@ class _EditPromocodeDialogState extends State<EditPromocodeDialog> {
   bool isLoading = true;
   bool isUpdating = false;
 
-  // For the discount type toggle
-  List<bool> isSelected = [true, false]; // [Fixed amount, Percentage]
+  List<bool> isSelected = [true, false];
 
   @override
   void initState() {
@@ -42,7 +41,6 @@ class _EditPromocodeDialogState extends State<EditPromocodeDialog> {
 
   Future<void> _loadData() async {
     try {
-      // Load promocode data if editing
       PromocodeModel? promocode;
       if (widget.id != null) {
         promocode = await _promocodeController.getPromocodeById(widget.id!);
@@ -50,12 +48,11 @@ class _EditPromocodeDialogState extends State<EditPromocodeDialog> {
           setState(() {
             nameController.text = promocode!.name;
 
-            // Set the correct discount type and value
             if (promocode.amount != null) {
-              isSelected = [true, false]; // Fixed amount
+              isSelected = [true, false];
               valueController.text = promocode.amount.toString();
             } else if (promocode.percents != null) {
-              isSelected = [false, true]; // Percentage
+              isSelected = [false, true];
               valueController.text = promocode.percents.toString();
             }
           });
@@ -97,19 +94,15 @@ class _EditPromocodeDialogState extends State<EditPromocodeDialog> {
       double? amount;
       int? percents;
 
-      // Determine discount type based on selection
       if (isSelected[0]) {
-        // Fixed amount
         amount = double.tryParse(valueController.text);
       } else {
-        // Percentage
         percents = int.tryParse(valueController.text);
       }
 
       bool success;
 
       if (widget.id == null) {
-        // Adding a new promocode
         final String? newId = await _promocodeController.addPromocode(
           name: name,
           amount: amount,
@@ -133,7 +126,6 @@ class _EditPromocodeDialogState extends State<EditPromocodeDialog> {
           );
         }
       } else {
-        // Updating an existing promocode
         success = await _promocodeController.updatePromocode(
           id: widget.id!,
           name: name,
@@ -313,7 +305,6 @@ class _EditPromocodeDialogState extends State<EditPromocodeDialog> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Promocode name field
         TextFormField(
           controller: nameController,
           decoration: InputDecoration(
@@ -337,10 +328,7 @@ class _EditPromocodeDialogState extends State<EditPromocodeDialog> {
             UpperCaseTextFormatter(),
           ],
         ),
-
         const SizedBox(height: 24),
-
-        // Discount type toggle
         Text(
           'Atlaide:',
           style: theme.titleLarge,
@@ -355,7 +343,6 @@ class _EditPromocodeDialogState extends State<EditPromocodeDialog> {
                 isSelected[buttonIndex] = buttonIndex == index;
               }
 
-              // Clear the value field when changing discount type
               valueController.clear();
             });
           },
@@ -378,10 +365,7 @@ class _EditPromocodeDialogState extends State<EditPromocodeDialog> {
             ),
           ],
         ),
-
         const SizedBox(height: 24),
-
-        // Discount value field
         TextFormField(
           controller: valueController,
           decoration: InputDecoration(
@@ -404,7 +388,6 @@ class _EditPromocodeDialogState extends State<EditPromocodeDialog> {
             }
 
             if (isSelected[0]) {
-              // Fixed amount validation
               double? amount = double.tryParse(value);
               if (amount == null) {
                 return 'Lūdzu ievadiet derīgu summu';
@@ -416,7 +399,6 @@ class _EditPromocodeDialogState extends State<EditPromocodeDialog> {
                 return 'Summa nevar pārsniegt 1000€';
               }
             } else {
-              // Percentage validation
               int? percent = int.tryParse(value);
               if (percent == null) {
                 return 'Lūdzu ievadiet derīgu procentu';
@@ -462,7 +444,6 @@ class _EditPromocodeDialogState extends State<EditPromocodeDialog> {
   }
 }
 
-// Custom formatter to convert text to uppercase
 class UpperCaseTextFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(

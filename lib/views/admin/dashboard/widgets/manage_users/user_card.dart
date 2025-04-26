@@ -41,7 +41,6 @@ class _UserCardState extends State<UserCard> {
               duration: const Duration(milliseconds: 200),
               decoration:
                   isHovered ? theme.activeCardDecoration : theme.cardDecoration,
-              margin: const EdgeInsets.symmetric(vertical: 8),
               child: Row(
                 children: [
                   _buildAvatar(),
@@ -85,11 +84,6 @@ class _UserCardState extends State<UserCard> {
                     ),
                   const SizedBox(width: 16),
                   _buildRoleBadge(),
-                  const SizedBox(width: 16),
-                  IconButton(
-                    icon: Icon(Icons.edit, color: theme.primary),
-                    onPressed: () => widget.onEdit(widget.data.id),
-                  ),
                   const SizedBox(width: 8),
                 ],
               ),
@@ -101,24 +95,10 @@ class _UserCardState extends State<UserCard> {
   }
 
   Widget _buildAvatar() {
-    final size = 70.0;
-
-    return Container(
-      width: size,
-      height: size,
-      margin: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
+    return SizedBox(
+      width: 100,
+      height: double.infinity,
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(size / 2),
         child: widget.data.profileImageUrl.isNotEmpty
             ? CachedNetworkImage(
                 imageUrl: widget.data.profileImageUrl,

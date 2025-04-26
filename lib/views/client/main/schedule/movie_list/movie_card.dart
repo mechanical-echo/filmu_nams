@@ -59,7 +59,6 @@ class MovieCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
           child: Stack(
             children: [
-              // Background image
               Positioned.fill(
                 child: CachedNetworkImage(
                   imageUrl: data.heroUrl,
@@ -80,8 +79,6 @@ class MovieCard extends StatelessWidget {
                   ),
                 ),
               ),
-
-              // Gradient overlay
               Positioned.fill(
                 child: DecoratedBox(
                   decoration: BoxDecoration(
@@ -96,15 +93,12 @@ class MovieCard extends StatelessWidget {
                   ),
                 ),
               ),
-
-              // Content
               Padding(
                 padding: const EdgeInsets.all(16),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Rating badge
                     Container(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 8, vertical: 4),
@@ -133,8 +127,6 @@ class MovieCard extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 8),
-
-                    // Title
                     Text(
                       data.title,
                       style: GoogleFonts.poppins(
@@ -146,8 +138,6 @@ class MovieCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 8),
-
-                    // Movie details
                     Row(
                       children: [
                         _buildDetailChip(

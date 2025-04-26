@@ -83,6 +83,7 @@ class _ManageCarouselItemsState extends State<ManageCarouselItems> {
   @override
   Widget build(BuildContext context) {
     return ManageScreen(
+      height: 120,
       count: carouselItems.length,
       isLoading: isLoading,
       itemGenerator: generateCards(),

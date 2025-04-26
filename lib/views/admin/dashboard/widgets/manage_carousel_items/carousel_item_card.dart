@@ -2,10 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:filmu_nams/models/carousel_item_model.dart';
 import 'package:filmu_nams/providers/style.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_carousel_items/edit_carousel_item_dialog.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:marquee/marquee.dart';
 
 class CarouselItemCard extends StatefulWidget {
   const CarouselItemCard({
@@ -20,57 +18,9 @@ class CarouselItemCard extends StatefulWidget {
 }
 
 class _CarouselItemCardState extends State<CarouselItemCard> {
+  bool isHovered = false;
+
   Style get theme => Style.of(context);
-
-  OverlayEntry? _overlayEntry;
-
-  void _showHoverPreview(PointerEnterEvent event) {
-    final renderBox = context.findRenderObject() as RenderBox;
-    final offset = renderBox.localToGlobal(Offset.zero);
-
-    _overlayEntry = OverlayEntry(
-      builder: (context) => Positioned(
-        left: offset.dx,
-        top: offset.dy + renderBox.size.height + 5,
-        child: Material(
-          elevation: 10,
-          child: CachedNetworkImage(
-            imageUrl: widget.data.imageUrl,
-            width: 250,
-            height: 350,
-            fit: BoxFit.contain,
-          ),
-        ),
-      ),
-    );
-
-    Overlay.of(context).insert(_overlayEntry!);
-  }
-
-  void _hideHoverPreview(PointerExitEvent event) {
-    _overlayEntry?.remove();
-    _overlayEntry = null;
-  }
-
-  @override
-  void dispose() {
-    _overlayEntry?.remove();
-    super.dispose();
-  }
-
-  void onHover() {
-    setState(() {
-      hovered = true;
-    });
-  }
-
-  void onHoverExit() {
-    setState(() {
-      hovered = false;
-    });
-  }
-
-  bool hovered = false;
 
   void showEditForm() {
     showGeneralDialog(
@@ -98,99 +48,205 @@ class _CarouselItemCardState extends State<CarouselItemCard> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: showEditForm,
-      child: MouseRegion(
-        onEnter: (event) => onHover(),
-        onExit: (event) => onHoverExit(),
-        cursor: SystemMouseCursors.click,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 100),
-          decoration:
-              hovered ? theme.activeCardDecoration : theme.cardDecoration,
-          padding: const EdgeInsets.only(
-            right: 5,
-          ),
-          child: Row(
-            spacing: 25,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              image(),
-              title(),
-              description(),
-              if (widget.data.movie != null || widget.data.offer != null)
-                Container(
-                  decoration: theme.activeCardDecoration,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 5,
-                  ),
-                  child: Icon(
-                    widget.data.movie != null ? Icons.movie : Icons.percent,
-                    size: 15,
-                  ),
-                )
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Expanded description() {
-    return Expanded(
-      child: Text(
-        widget.data.description,
-        style: theme.bodyMedium,
-        maxLines: 2,
-        overflow: TextOverflow.ellipsis,
-      ),
-    );
-  }
-
-  SizedBox title() {
-    return SizedBox(
-      width: 250,
-      height: 30,
-      child: widget.data.title.length > 18
-          ? Marquee(
-              text: widget.data.title,
-              style: theme.displaySmall,
-              scrollAxis: Axis.horizontal,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              blankSpace: 20.0,
-              velocity: 40.0,
-              pauseAfterRound: Duration(seconds: 1),
-              startPadding: 10.0,
-              accelerationDuration: Duration(seconds: 1),
-              accelerationCurve: Curves.linear,
-              decelerationDuration: Duration(milliseconds: 500),
-              decelerationCurve: Curves.easeOut,
-            )
-          : Text(widget.data.title, style: theme.displaySmall),
-    );
-  }
-
-  MouseRegion image() {
     return MouseRegion(
-      onEnter: _showHoverPreview,
-      onExit: _hideHoverPreview,
-      child: SizedBox(
-        width: 100,
-        height: 150,
-        child: CachedNetworkImage(
-          imageUrl: widget.data.imageUrl,
-          placeholder: (context, url) => Center(
-            child: LoadingAnimationWidget.staggeredDotsWave(
-              color: Colors.white,
-              size: 100,
+      onEnter: (_) => setState(() => isHovered = true),
+      onExit: (_) => setState(() => isHovered = false),
+      cursor: SystemMouseCursors.click,
+      child: Card(
+        margin: const EdgeInsets.only(bottom: 0),
+        elevation: 0,
+        color: Colors.transparent,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+        child: InkWell(
+          onTap: showEditForm,
+          child: Container(
+            decoration:
+                isHovered ? theme.activeCardDecoration : theme.cardDecoration,
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                children: [
+                  _buildCarouselImage(),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    flex: 2,
+                    child: _buildContentInfo(),
+                  ),
+                  const SizedBox(width: 16),
+                  _buildLinkSection(),
+                  const SizedBox(width: 8),
+                  IconButton(
+                    icon: Icon(
+                      Icons.edit,
+                      color: theme.primary,
+                    ),
+                    onPressed: showEditForm,
+                  ),
+                ],
+              ),
             ),
           ),
-          errorWidget: (context, url, error) => Icon(Icons.error),
-          fit: BoxFit.cover,
         ),
       ),
     );
+  }
+
+  Widget _buildCarouselImage() {
+    return Hero(
+      tag: 'carousel-image-${widget.data.id}',
+      child: Container(
+        width: 120,
+        height: 85,
+        clipBehavior: Clip.antiAlias,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              blurRadius: 4,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: CachedNetworkImage(
+          imageUrl: widget.data.imageUrl,
+          fit: BoxFit.cover,
+          placeholder: (context, url) => Center(
+            child: LoadingAnimationWidget.staggeredDotsWave(
+              color: theme.primary,
+              size: 30,
+            ),
+          ),
+          errorWidget: (context, url, error) => Container(
+            color: theme.surfaceVariant,
+            child:
+                Icon(Icons.image_not_supported, color: theme.primary, size: 30),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildContentInfo() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          widget.data.title,
+          style: theme.headlineMedium,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+        const SizedBox(height: 8),
+        Text(
+          widget.data.description,
+          style:
+              theme.bodyMedium.copyWith(color: theme.contrast.withOpacity(0.7)),
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildLinkSection() {
+    if (widget.data.movie == null && widget.data.offer == null) {
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        decoration: BoxDecoration(
+          color: Colors.grey.withOpacity(0.2),
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.link_off,
+                size: 16, color: theme.contrast.withOpacity(0.5)),
+            const SizedBox(width: 4),
+            Text(
+              'Nav saites',
+              style: theme.bodySmall
+                  .copyWith(color: theme.contrast.withOpacity(0.7)),
+            ),
+          ],
+        ),
+      );
+    }
+
+    if (widget.data.movie != null) {
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        decoration: BoxDecoration(
+          color: theme.primary.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: theme.primary.withOpacity(0.3)),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.movie, size: 16, color: theme.primary),
+                const SizedBox(width: 4),
+                Text(
+                  'Filma',
+                  style: theme.labelMedium.copyWith(color: theme.primary),
+                ),
+              ],
+            ),
+            const SizedBox(height: 4),
+            Text(
+              widget.data.movie!.title,
+              style: theme.bodySmall.copyWith(
+                color: theme.contrast.withOpacity(0.7),
+                fontWeight: FontWeight.bold,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
+        ),
+      );
+    }
+
+    if (widget.data.offer != null) {
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        decoration: BoxDecoration(
+          color: theme.secondary.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: theme.secondary.withOpacity(0.3)),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.percent, size: 16, color: theme.secondary),
+                const SizedBox(width: 4),
+                Text(
+                  'Piedāvājums',
+                  style: theme.labelMedium.copyWith(color: theme.secondary),
+                ),
+              ],
+            ),
+            const SizedBox(height: 4),
+            Text(
+              widget.data.offer!.title,
+              style: theme.bodySmall.copyWith(
+                color: theme.contrast.withOpacity(0.7),
+                fontWeight: FontWeight.bold,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
+        ),
+      );
+    }
+
+    return const SizedBox.shrink();
   }
 }
