@@ -20,6 +20,8 @@ class _PaymentHistoryViewState extends State<PaymentHistoryView> {
   Style get style => Style.of(context);
 
   List<PaymentHistoryModel> paymentHistory = [];
+  Map<String, bool> expandedItems = {};
+  Map<String, bool> hoveredItems = {};
 
   bool isLoading = true;
 
@@ -27,6 +29,10 @@ class _PaymentHistoryViewState extends State<PaymentHistoryView> {
     paymentController.getPaymentHistory().then((response) {
       setState(() {
         paymentHistory = response;
+        for (var payment in response) {
+          expandedItems[payment.id] = false;
+          hoveredItems[payment.id] = false;
+        }
       });
     }).catchError((error) {
       debugPrint('Error fetching payment history: $error');
@@ -92,50 +98,245 @@ class _PaymentHistoryViewState extends State<PaymentHistoryView> {
   }
 
   Widget listItem(PaymentHistoryModel payment) {
-    return Tooltip(
-      message: 'Maksājuma id ir veiksmīgi kopēts',
-      showDuration: const Duration(seconds: 2),
-      onTriggered: () {
-        Clipboard.setData(
-          ClipboardData(text: payment.id),
-        );
-      },
-      preferBelow: true,
-      child: Container(
-        decoration: style.cardDecoration,
-        margin: const EdgeInsets.only(bottom: 10),
-        child: ListTile(
-          title: Text(
-            truncateProductName(payment),
-            style: style.bodyLarge,
-          ),
-          subtitle: Column(
+    final isCompleted = PaymentHistoryStatusEnum.isCompleted(payment.status);
+    final isExpanded = expandedItems[payment.id] ?? false;
+    final isHovered = hoveredItems[payment.id] ?? false;
+
+    return Card(
+      margin: const EdgeInsets.only(bottom: 8),
+      elevation: 0,
+      color: Colors.transparent,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+      child: InkWell(
+        onTap: () => setState(() => expandedItems[payment.id] = !isExpanded),
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration:
+              isHovered ? style.activeCardDecoration : style.cardDecoration,
+          child: Column(
+            spacing: 8,
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Divider(),
-              Text(
-                'Maksājuma id: ${payment.id}\nSeansa id: ${payment.schedule.id}\nDatums: ${formatDate(payment.purchaseDate)}\nStatuss: ${PaymentHistoryStatusEnum.getStatus(payment.status)}',
-                style: style.bodyMedium,
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 5),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      '${payment.amount.toStringAsFixed(2)}€',
+                      style: style.headlineMedium.copyWith(
+                        color: isCompleted
+                            ? style.contrast
+                            : Colors.red.withOpacity(0.7),
+                      ),
+                    ),
+                    Text(
+                      PaymentHistoryStatusEnum.getStatus(payment.status),
+                      style: style.bodyLarge.copyWith(
+                        color: isCompleted ? Colors.green : Colors.red,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ],
-          ),
-          trailing: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                '${payment.amount} €',
-                style: style.bodyLarge,
+              Row(
+                children: [
+                  Container(
+                    width: 8,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: isCompleted ? Colors.green : Colors.red,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Tooltip(
+                        message: 'Klikšķiniet, lai kopētu',
+                        child: InkWell(
+                          onTap: () {
+                            Clipboard.setData(ClipboardData(text: payment.id));
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Maksājuma ID nokopēts'),
+                                duration: Duration(seconds: 1),
+                              ),
+                            );
+                          },
+                          child: Row(
+                            children: [
+                              Icon(Icons.receipt,
+                                  size: 16, color: style.primary),
+                              const SizedBox(width: 8),
+                              Text(
+                                'ID: ${payment.id.substring(1, payment.id.length - 15)}...',
+                                style: style.titleMedium,
+                              ),
+                              const SizedBox(width: 4),
+                              Icon(Icons.copy,
+                                  size: 14,
+                                  color: style.contrast.withOpacity(0.5)),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        formatDate(payment.purchaseDate),
+                        style: style.bodyMedium
+                            .copyWith(color: style.contrast.withOpacity(0.7)),
+                      ),
+                    ],
+                  ),
+                  SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          truncateProductName(payment),
+                          style: style.titleMedium,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 4),
+                        Row(
+                          spacing: 4,
+                          children: [
+                            Icon(
+                              Icons.meeting_room,
+                              size: 14,
+                              color: style.contrast.withOpacity(0.5),
+                            ),
+                            Text(
+                              '${payment.schedule.id.substring(1, payment.schedule.id.length - 5)}...',
+                              style: style.bodySmall.copyWith(
+                                color: style.contrast.withOpacity(0.7),
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  IconButton(
+                    icon: Icon(
+                      isExpanded
+                          ? Icons.keyboard_arrow_up
+                          : Icons.keyboard_arrow_down,
+                      color: style.primary,
+                    ),
+                    onPressed: () =>
+                        setState(() => expandedItems[payment.id] = !isExpanded),
+                  ),
+                ],
               ),
-              Icon(
-                PaymentHistoryStatusEnum.isCompleted(payment.status)
-                    ? Icons.check_circle
-                    : Icons.error,
-                color: PaymentHistoryStatusEnum.isCompleted(payment.status)
-                    ? Colors.green
-                    : Colors.red,
-              ),
+              if (isExpanded)
+                Container(
+                  width: double.infinity,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                  decoration: BoxDecoration(
+                    color: style.surfaceVariant.withOpacity(0.1),
+                    border: Border(
+                      top: BorderSide(
+                        color: Colors.grey.withOpacity(0.3),
+                      ),
+                    ),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Maksājuma detaļas',
+                        style: style.titleMedium,
+                      ),
+                      const SizedBox(height: 12),
+                      buildDetailRow(
+                        'Produkts',
+                        payment.product,
+                        copy: true,
+                        copyText: payment.schedule.id,
+                        copyLabel: 'Saraksta ID nokopēts',
+                      ),
+                      buildDetailRow(
+                        'Datums',
+                        formatDate(payment.purchaseDate),
+                      ),
+                      buildDetailRow(
+                        'Statuss',
+                        PaymentHistoryStatusEnum.getStatus(payment.status),
+                      ),
+                    ],
+                  ),
+                ),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget buildDetailRow(
+    String label,
+    String value, {
+    bool copy = false,
+    String copyText = '',
+    String copyLabel = 'Teksts nokopēts',
+  }) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 120,
+            child: Text(
+              '$label:',
+              style: style.bodyMedium.copyWith(fontWeight: FontWeight.bold),
+            ),
+          ),
+          Expanded(
+            child: copy
+                ? InkWell(
+                    onTap: () {
+                      Clipboard.setData(ClipboardData(text: copyText));
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(copyLabel),
+                          duration: Duration(seconds: 1),
+                        ),
+                      );
+                    },
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            value,
+                            style: style.bodyMedium,
+                          ),
+                        ),
+                        Tooltip(
+                          message: 'Klikšķiniet, lai kopētu',
+                          child: Icon(
+                            Icons.copy,
+                            size: 16,
+                            color: style.contrast.withOpacity(0.5),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                : Text(
+                    value,
+                    style: style.bodyMedium,
+                  ),
+          ),
+        ],
       ),
     );
   }
@@ -158,7 +359,7 @@ class _PaymentHistoryViewState extends State<PaymentHistoryView> {
   }
 
   String formatDate(Timestamp date) {
-    return DateFormat('y.MM.dd. HH:mm').format(date.toDate());
+    return DateFormat('dd.MM.yyyy HH:mm').format(date.toDate());
   }
 
   String truncateProductName(PaymentHistoryModel payment) {

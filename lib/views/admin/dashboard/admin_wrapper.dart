@@ -4,6 +4,7 @@ import 'package:filmu_nams/views/admin/dashboard/dashboard.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_carousel_items/manage_carousel_items.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_movies/manage_movies.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_offers/manage_offers.dart';
+import 'package:filmu_nams/views/admin/dashboard/widgets/manage_payments/manage_payments.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_promocodes/manage_promocodes.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_schedule/manage_schedule.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_users/manage_users.dart';
@@ -24,8 +25,45 @@ class _AdminWrapperState extends State<AdminWrapper> {
   Style get theme => Style.of(context);
 
   void switchPage(int index) {
+    // If logout option is selected, show dialog instead of switching page
+    if (index == 8) {
+      _showLogoutDialog();
+      return;
+    }
+
     setState(() {
       selectedIndex = index;
+    });
+  }
+
+  // Move the dialog to a separate method
+  void _showLogoutDialog() {
+    // Use Future.microtask to schedule the dialog after the current build is complete
+    Future.microtask(() {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text("Izlogoties"),
+            content: Text("Vai tiešām vēlaties izlogoties?"),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text("Nē"),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  FirebaseAuth.instance.signOut();
+                },
+                child: Text("Jā"),
+              ),
+            ],
+          );
+        },
+      );
     });
   }
 
@@ -46,9 +84,10 @@ class _AdminWrapperState extends State<AdminWrapper> {
       case 6:
         return Center(child: ManagePromocodes());
       case 7:
-        return Center(child: Text("Payments section"));
+        return Center(child: ManagePayments());
       case 8:
-        FirebaseAuth.instance.signOut();
+        // We only return the loading widget for case 8
+        // Dialog is handled in switchPage method
         return Center(
           child: LoadingAnimationWidget.staggeredDotsWave(
             color: Colors.white12,
@@ -69,12 +108,12 @@ class _AdminWrapperState extends State<AdminWrapper> {
     return Stack(
       children: [
         Background(
-          child: SingleChildScrollView(
+          child: Container(
             padding: EdgeInsets.only(
               left: leftPadding,
               top: 50,
               right: 20,
-              bottom: 50,
+              bottom: 20,
             ),
             child: body(selectedIndex),
           ),

@@ -130,19 +130,22 @@ class _LoginState extends State<Login> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                Wrap(
+                Row(
                   spacing: 10,
-                  runSpacing: 10,
                   children: [
-                    SocialLoginButton(
-                      iconPath: 'assets/google.png',
-                      label: 'Google',
-                      onPressed: _loginController.signInWithGoogle,
+                    Expanded(
+                      child: SocialLoginButton(
+                        iconPath: 'assets/google.png',
+                        label: 'Google',
+                        onPressed: _loginController.signInWithGoogle,
+                      ),
                     ),
-                    SocialLoginButton(
-                      iconPath: 'assets/facebook.png',
-                      label: 'Facebook',
-                      onPressed: _loginController.signInWithFacebook,
+                    Expanded(
+                      child: SocialLoginButton(
+                        iconPath: 'assets/facebook.png',
+                        label: 'Facebook',
+                        onPressed: _loginController.signInWithFacebook,
+                      ),
                     ),
                   ],
                 ),

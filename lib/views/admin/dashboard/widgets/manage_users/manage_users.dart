@@ -97,45 +97,40 @@ class _ManageUsersState extends State<ManageUsers> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        _buildFilterBar(),
-        ManageScreen(
-          height: 120,
-          count: filteredUsers.length,
-          isLoading: isLoading,
-          itemGenerator: (index) => UserCard(
-            data: filteredUsers[index],
-            isCurrentUser: filteredUsers[index].id == currentUserId,
-            onEdit: (id) {
-              showGeneralDialog(
-                context: context,
-                pageBuilder: (context, animation, secondaryAnimation) {
-                  return EditUserDialog(id: id);
-                },
-                transitionBuilder:
-                    (context, animation, secondaryAnimation, child) {
-                  return FadeTransition(
-                    opacity: animation,
-                    child: ScaleTransition(
-                      scale: Tween<double>(begin: 0.8, end: 1.0).animate(
-                        CurvedAnimation(
-                          parent: animation,
-                          curve: Curves.easeOutBack,
-                        ),
-                      ),
-                      child: child,
+    return ManageScreen(
+      subHeader: _buildFilterBar(),
+      height: 120,
+      count: filteredUsers.length,
+      isLoading: isLoading,
+      itemGenerator: (index) => UserCard(
+        data: filteredUsers[index],
+        isCurrentUser: filteredUsers[index].id == currentUserId,
+        onEdit: (id) {
+          showGeneralDialog(
+            context: context,
+            pageBuilder: (context, animation, secondaryAnimation) {
+              return EditUserDialog(id: id);
+            },
+            transitionBuilder: (context, animation, secondaryAnimation, child) {
+              return FadeTransition(
+                opacity: animation,
+                child: ScaleTransition(
+                  scale: Tween<double>(begin: 0.8, end: 1.0).animate(
+                    CurvedAnimation(
+                      parent: animation,
+                      curve: Curves.easeOutBack,
                     ),
-                  );
-                },
-                transitionDuration: const Duration(milliseconds: 400),
+                  ),
+                  child: child,
+                ),
               );
             },
-          ),
-          title: "Lietotāji" + _getFilterSuffix(),
-          onCreate: showAddDialog,
-        ),
-      ],
+            transitionDuration: const Duration(milliseconds: 400),
+          );
+        },
+      ),
+      title: "Lietotāji${_getFilterSuffix()}",
+      onCreate: showAddDialog,
     );
   }
 

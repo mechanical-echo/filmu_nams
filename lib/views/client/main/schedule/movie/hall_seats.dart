@@ -782,10 +782,10 @@ class _HallSeatsState extends State<HallSeats> {
 
       if (success) {
         saveTickets(description);
-        setState(() {
-          isProcessingPayment = false;
-        });
       }
+      setState(() {
+        isProcessingPayment = false;
+      });
     } catch (e) {
       debugPrint('Payment error: $e');
       StylizedDialog.dialog(
@@ -795,11 +795,9 @@ class _HallSeatsState extends State<HallSeats> {
         "Neizdevās apstrādāt maksājumu. Lūdzu, mēģiniet vēlāk.",
       );
 
-      if (mounted) {
-        setState(() {
-          isProcessingPayment = false;
-        });
-      }
+      setState(() {
+        isProcessingPayment = false;
+      });
     }
   }
 

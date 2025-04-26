@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:filmu_nams/models/schedule_model.dart';
 import 'package:filmu_nams/models/ticket_model.dart';
+import 'package:filmu_nams/models/user_model.dart';
 
 class PaymentHistoryModel {
   final String id;
@@ -11,6 +12,7 @@ class PaymentHistoryModel {
   final String status;
   final String? reason;
   final String product;
+  final UserModel user;
 
   PaymentHistoryModel({
     required this.id,
@@ -21,6 +23,7 @@ class PaymentHistoryModel {
     required this.status,
     this.reason,
     required this.product,
+    required this.user,
   });
 
   static Future<PaymentHistoryModel> fromMapAsync(
@@ -33,6 +36,12 @@ class PaymentHistoryModel {
       schedule.id,
     );
 
+    final user = await map['user'].get();
+    final userModel = await UserModel.fromMap(
+      user.data() as Map<String, dynamic>,
+      user.id,
+    );
+
     if (map['tickets'] == null) {
       return PaymentHistoryModel(
         id: id,
@@ -43,6 +52,7 @@ class PaymentHistoryModel {
         status: map['status'],
         reason: map['reason'],
         product: map['product'],
+        user: userModel,
       );
     }
 
@@ -65,6 +75,7 @@ class PaymentHistoryModel {
       status: map['status'],
       reason: map['reason'],
       product: map['product'],
+      user: userModel,
     );
   }
 }

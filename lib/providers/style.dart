@@ -134,7 +134,7 @@ class Style extends InheritedWidget {
       );
 
   BoxDecoration get activeCardDecoration => BoxDecoration(
-        color: Colors.white.withOpacity(0.15),
+        color: Colors.white.withOpacity(0.1),
         borderRadius: BorderRadius.circular(5),
         border: Border.all(
           color: Colors.white.withOpacity(0.1),

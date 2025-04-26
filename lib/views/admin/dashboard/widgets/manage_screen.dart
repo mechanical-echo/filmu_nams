@@ -11,6 +11,7 @@ class ManageScreen extends StatefulWidget {
     required this.title,
     this.onCreate,
     this.height = 40,
+    this.subHeader,
   });
 
   final int count;
@@ -19,6 +20,7 @@ class ManageScreen extends StatefulWidget {
   final Function()? onCreate;
   final String title;
   final double height;
+  final Widget? subHeader;
 
   @override
   State<ManageScreen> createState() => _ManageScreenState();
@@ -37,45 +39,41 @@ class _ManageScreenState extends State<ManageScreen> {
     double itemHeight = 320.0;
 
     return Column(
-      spacing: 10,
+      spacing: 8,
       children: [
         header(calculatedWidth()),
-        Container(
-          constraints: BoxConstraints(
-            maxHeight: 1050,
-            maxWidth: calculatedWidth(),
-          ),
-          decoration: theme.cardDecoration,
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-          child: widget.isLoading
-              ? Center(
-                  child: LoadingAnimationWidget.staggeredDotsWave(
-                    color: Colors.white,
-                    size: 100,
+        widget.subHeader ?? const SizedBox(),
+        Expanded(
+          child: Container(
+            width: calculatedWidth(),
+            decoration: theme.cardDecoration,
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+            child: widget.isLoading
+                ? Center(
+                    child: LoadingAnimationWidget.staggeredDotsWave(
+                      color: Colors.white,
+                      size: 100,
+                    ),
+                  )
+                : GridView.builder(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 1,
+                      mainAxisSpacing: 10,
+                      crossAxisSpacing: 20,
+                      childAspectRatio: itemWidth / itemHeight,
+                      mainAxisExtent: widget.height,
+                    ),
+                    itemCount: widget.count,
+                    itemBuilder: (context, index) =>
+                        widget.itemGenerator(index),
                   ),
-                )
-              : LayoutBuilder(
-                  builder: (context, constraints) {
-                    return GridView.builder(
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 1,
-                        mainAxisSpacing: 10,
-                        crossAxisSpacing: 20,
-                        childAspectRatio: itemWidth / itemHeight,
-                        mainAxisExtent: widget.height,
-                      ),
-                      itemCount: widget.count,
-                      itemBuilder: (context, index) =>
-                          widget.itemGenerator(index),
-                    );
-                  },
-                ),
+          ),
         ),
       ],
     );
   }
 
-  header(double calculatedWidth) {
+  Widget header(double calculatedWidth) {
     return SizedBox(
       width: calculatedWidth,
       child: Wrap(
@@ -86,32 +84,10 @@ class _ManageScreenState extends State<ManageScreen> {
         children: [
           IntrinsicWidth(
             child: Row(
-              spacing: 15,
               children: [
-                Container(
-                  decoration: theme.cardDecoration,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 25,
-                    vertical: 10,
-                  ),
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Text(widget.title, style: theme.displayLarge),
-                  ),
-                ),
-                Container(
-                  decoration: theme.cardDecoration,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 25,
-                    vertical: 10,
-                  ),
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Text(
-                      "Kopā: ${widget.count}",
-                      style: theme.displayLarge,
-                    ),
-                  ),
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(widget.title, style: theme.displayLarge),
                 ),
               ],
             ),
