@@ -168,19 +168,19 @@ class _MovieViewState extends State<MovieView>
                               ),
                             ),
                             const SizedBox(height: 16),
-                            Row(
+                            Wrap(
+                              spacing: 8,
+                              runSpacing: 8,
                               children: [
                                 _buildDetailChip(
                                   Icons.access_time,
                                   getDuration(),
                                 ),
-                                const SizedBox(width: 8),
                                 _buildDetailChip(
                                   Icons.movie,
                                   GenreName[widget.data.genre] ??
                                       widget.data.genre,
                                 ),
-                                const SizedBox(width: 8),
                                 _buildDetailChip(
                                   Icons.person,
                                   widget.data.director,

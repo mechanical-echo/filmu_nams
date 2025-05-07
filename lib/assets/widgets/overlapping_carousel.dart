@@ -8,7 +8,6 @@ class OverlappingCarousel extends StatefulWidget {
   final double horizontalSpace;
   final double spacingFactor;
   final Function(int)? onPageChanged;
-  // Add new callback for vertical scroll with index
   final Function(int)? onVerticalScrollUp;
 
   const OverlappingCarousel({
@@ -20,7 +19,7 @@ class OverlappingCarousel extends StatefulWidget {
     this.horizontalSpace = 60,
     this.spacingFactor = 0.15,
     this.onPageChanged,
-    this.onVerticalScrollUp, // New parameter
+    this.onVerticalScrollUp,
   });
 
   @override
@@ -32,10 +31,9 @@ class _OverlappingCarouselState extends State<OverlappingCarousel> {
   double _currentPage = 0;
   static const int _infiniteOffset = 10000;
 
-  // Variables to track vertical drag
   double _dragStartY = 0;
   double _dragEndY = 0;
-  static const double _verticalDragThreshold = 50.0; // Minimum distance to consider a vertical swipe
+  static const double _verticalDragThreshold = 50.0;
 
   double get _viewportFraction {
     if (widget.items.length <= 1) return 1.0;
@@ -91,22 +89,17 @@ class _OverlappingCarouselState extends State<OverlappingCarousel> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      // Handle vertical drag start
       onVerticalDragStart: (details) {
         _dragStartY = details.globalPosition.dy;
       },
-      // Handle vertical drag end
       onVerticalDragEnd: (details) {
-        // Check if swipe was from down to up (upward swipe)
         if (_dragStartY - _dragEndY > _verticalDragThreshold) {
-          // Call the callback with the current active index if it exists
           if (widget.onVerticalScrollUp != null) {
             int currentIndex = _getWrappedIndex(_currentPage.round());
             widget.onVerticalScrollUp!(currentIndex);
           }
         }
       },
-      // Update end position during drag
       onVerticalDragUpdate: (details) {
         _dragEndY = details.globalPosition.dy;
       },
@@ -118,11 +111,11 @@ class _OverlappingCarouselState extends State<OverlappingCarousel> {
           builder: (context, constraints) {
             final currentIndex = _currentPage.floor();
             final visibleRange =
-            widget.items.length <= 3 ? widget.items.length - 1 : 3;
+                widget.items.length <= 3 ? widget.items.length - 1 : 3;
 
             final indices = List.generate(
               visibleRange * 2 + 1,
-                  (index) => currentIndex - visibleRange + index,
+              (index) => currentIndex - visibleRange + index,
             );
 
             indices.sort((a, b) {
@@ -140,17 +133,18 @@ class _OverlappingCarouselState extends State<OverlappingCarousel> {
               alignment: Alignment.center,
               children: [
                 ...indices.map(
-                      (index) => Builder(
+                  (index) => Builder(
                     builder: (context) {
                       final wrappedIndex = _getWrappedIndex(index);
                       double difference = index - _currentPage;
-                      double scale = 1 - (difference.abs() * (1 - _dynamicScale));
+                      double scale =
+                          1 - (difference.abs() * (1 - _dynamicScale));
 
                       double translateX =
                           difference * widget.itemWidth * _dynamicSpacingFactor;
 
                       int darkness =
-                      (difference.abs() * 170).clamp(0, 255).toInt();
+                          (difference.abs() * 170).clamp(0, 255).toInt();
 
                       return Positioned(
                         left: constraints.maxWidth / 2 -
@@ -175,8 +169,8 @@ class _OverlappingCarouselState extends State<OverlappingCarousel> {
                                   Container(
                                     width: widget.itemWidth,
                                     height: widget.itemHeight,
-                                    margin:
-                                    const EdgeInsets.symmetric(horizontal: 5),
+                                    margin: const EdgeInsets.symmetric(
+                                        horizontal: 5),
                                     decoration: BoxDecoration(
                                       color: Colors.black.withAlpha(darkness),
                                       borderRadius: BorderRadius.circular(16),

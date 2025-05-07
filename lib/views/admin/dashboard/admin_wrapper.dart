@@ -94,71 +94,66 @@ class _AdminWrapperState extends State<AdminWrapper> {
     }
   }
 
+  Style get style => Style.of(context);
+
+  bool get isExpanded => MediaQuery.of(context).size.width > 945;
+
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final bool isExpanded = screenWidth > 900;
-    final leftPadding = isExpanded ? 280.0 : 100.0;
-
-    return Stack(
-      children: [
-        Background(
-          child: Container(
-            padding: EdgeInsets.only(
-              left: leftPadding,
-              top: 20,
-              right: 20,
-              bottom: 20,
+    return Background(
+      child: Row(
+        spacing: 8,
+        children: [
+          IntrinsicWidth(
+            child: Container(
+              margin: EdgeInsets.only(left: 20, top: 20, bottom: 20),
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              decoration: style.cardDecoration,
+              child: Column(
+                spacing: 8,
+                children: [
+                  navigationItem("Sākums", Icons.dashboard, 0),
+                  navigationItem("Sākuma elementi", Icons.image, 1),
+                  navigationItem("Filmas", Icons.movie, 2),
+                  navigationItem("Saraksts", Icons.schedule, 3),
+                  navigationItem("Lietotāji", Icons.person, 4),
+                  navigationItem("Piedāvājumi", Icons.local_offer, 5),
+                  navigationItem("Promokodi", Icons.card_giftcard, 6),
+                  navigationItem("Maksājumi", Icons.payment, 7),
+                  navigationItem("Izlogoties", Icons.logout, 8),
+                ],
+              ),
             ),
-            child: body(selectedIndex),
           ),
-        ),
-        IntrinsicWidth(
-          child: NavigationRail(
-            extended: isExpanded,
-            destinations: const [
-              NavigationRailDestination(
-                icon: Icon(Icons.home),
-                label: Text("Sākums"),
-              ),
-              NavigationRailDestination(
-                icon: Icon(Icons.screen_lock_landscape),
-                label: Text("Sākuma lapas elementi"),
-              ),
-              NavigationRailDestination(
-                icon: Icon(Icons.movie),
-                label: Text("Filmas"),
-              ),
-              NavigationRailDestination(
-                icon: Icon(Icons.calendar_month),
-                label: Text("Saraksts"),
-              ),
-              NavigationRailDestination(
-                icon: Icon(Icons.person),
-                label: Text("Lietotāji"),
-              ),
-              NavigationRailDestination(
-                icon: Icon(Icons.percent),
-                label: Text("Piedāvājumi"),
-              ),
-              NavigationRailDestination(
-                icon: Icon(Icons.local_offer_outlined),
-                label: Text("Promokodi"),
-              ),
-              NavigationRailDestination(
-                icon: Icon(Icons.payments),
-                label: Text("Maksājumi"),
-              ),
-              NavigationRailDestination(
-                icon: Icon(Icons.logout),
-                label: Text("Izlogoties"),
-              ),
-            ],
-            selectedIndex: selectedIndex,
-            onDestinationSelected: switchPage,
+          Expanded(
+            child: Container(
+              padding: EdgeInsets.only(top: 20, right: 20, bottom: 20),
+              child: body(selectedIndex),
+            ),
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget navigationItem(String title, IconData icon, int index) {
+    return InkWell(
+      onTap: () => switchPage(index),
+      child: AnimatedContainer(
+        duration: Durations.short4,
+        decoration: selectedIndex == index
+            ? style.activeCardDecoration
+            : style.cardDecoration,
+        margin: EdgeInsets.symmetric(horizontal: 8),
+        padding: EdgeInsets.all(8),
+        child: Row(
+          spacing: 16,
+          children: [
+            Icon(icon),
+            if (isExpanded) Text(title),
+          ],
         ),
-      ],
+      ),
     );
   }
 }

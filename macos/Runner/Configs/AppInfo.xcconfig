@@ -14,3 +14,6 @@ PRODUCT_BUNDLE_IDENTIFIER = com.example.filmuNams
 PRODUCT_COPYRIGHT = Copyright © 2025 com.example. All rights reserved.
 
 MACOSX_DEPLOYMENT_TARGET = 10.15
+#include "Pods/Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"
+#include "Pods/Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"
+#include "Pods/Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"

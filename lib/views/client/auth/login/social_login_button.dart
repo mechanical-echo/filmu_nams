@@ -1,6 +1,5 @@
 import 'package:filmu_nams/providers/style.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class SocialLoginButton extends StatelessWidget {
   final String iconPath;
@@ -32,6 +31,7 @@ class SocialLoginButton extends StatelessWidget {
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
+          spacing: 12,
           children: [
             Image.asset(
               iconPath,
@@ -39,12 +39,10 @@ class SocialLoginButton extends StatelessWidget {
               height: 24,
               color: Colors.white,
             ),
-            const SizedBox(width: 12),
-            Text(
-              label,
-              style: GoogleFonts.poppins(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
+            FittedBox(
+              child: Text(
+                label,
+                style: style.bodyMedium,
               ),
             ),
           ],

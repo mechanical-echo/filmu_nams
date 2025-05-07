@@ -371,12 +371,12 @@ class _DashboardState extends State<Dashboard> {
                 child: Row(
                   spacing: 8,
                   children: [
-                    Icon(Icons.access_time, color: style.onPrimary),
+                    Icon(
+                      Icons.access_time,
+                    ),
                     Text(
                       DateFormat('HH:mm:ss').format(now),
-                      style: style.headlineLarge.copyWith(
-                        color: style.onPrimary,
-                      ),
+                      style: style.headlineLarge,
                     ),
                   ],
                 ),
@@ -389,50 +389,74 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Widget _buildStatisticsSection() {
-    return Wrap(
-      spacing: 8,
-      runSpacing: 8,
-      children: [
-        _buildStatCard(
-          title: "Filmas",
-          value: "$movieCount",
-          icon: Icons.movie,
-          color: Colors.blue,
-        ),
-        _buildStatCard(
-          title: "Lietotāji",
-          value: "$userCount",
-          icon: Icons.people,
-          color: Colors.green,
-        ),
-        _buildStatCard(
-          title: "Piedāvājumi",
-          value: "$offerCount",
-          icon: Icons.local_offer,
-          color: Colors.orange,
-        ),
-        _buildStatCard(
-          title: "Promokodi",
-          value: "$promoCodeCount",
-          icon: Icons.confirmation_number,
-          color: Colors.purple,
-        ),
-        _buildStatCard(
-          title: "Šodienas ieņēmumi",
-          value: isLoadingRevenue ? "-" : "${todayRevenue.toStringAsFixed(2)}€",
-          icon: Icons.euro,
-          color: style.primary,
-          isLoading: isLoadingRevenue,
-        ),
-        _buildStatCard(
-          title: "Šodienas biļetes",
-          value: isLoadingRevenue ? "-" : "$todayTicketCount",
-          icon: Icons.confirmation_number,
-          color: style.primary,
-          isLoading: isLoadingRevenue,
-        ),
-      ],
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxWidth >= 1075) {
+          return Row(
+            spacing: 8,
+            children: List.generate(
+              _buildStatCards().length,
+              (index) => index < _buildStatCards().length - 2
+                  ? IntrinsicWidth(
+                      child: _buildStatCards()[index],
+                    )
+                  : Expanded(
+                      child: _buildStatCards()[index],
+                    ),
+            ),
+          );
+        } else {
+          return Wrap(
+            runSpacing: 8,
+            spacing: 8,
+            children: _buildStatCards(),
+          );
+        }
+      },
     );
+  }
+
+  _buildStatCards() {
+    return [
+      _buildStatCard(
+        title: "Filmas",
+        value: "$movieCount",
+        icon: Icons.movie,
+        color: Colors.blue,
+      ),
+      _buildStatCard(
+        title: "Lietotāji",
+        value: "$userCount",
+        icon: Icons.people,
+        color: Colors.green,
+      ),
+      _buildStatCard(
+        title: "Piedāvājumi",
+        value: "$offerCount",
+        icon: Icons.local_offer,
+        color: Colors.orange,
+      ),
+      _buildStatCard(
+        title: "Promokodi",
+        value: "$promoCodeCount",
+        icon: Icons.confirmation_number,
+        color: Colors.purple,
+      ),
+      _buildStatCard(
+        title: "Šodienas ieņēmumi",
+        value: isLoadingRevenue ? "-" : "${todayRevenue.toStringAsFixed(2)}€",
+        icon: Icons.euro,
+        color: style.primary,
+        isLoading: isLoadingRevenue,
+      ),
+      _buildStatCard(
+        title: "Šodienas biļetes",
+        value: isLoadingRevenue ? "-" : "$todayTicketCount",
+        icon: Icons.confirmation_number,
+        color: style.primary,
+        isLoading: isLoadingRevenue,
+      )
+    ];
   }
 
   Widget _buildStatCard({

@@ -212,46 +212,47 @@ class _HallSeatsState extends State<HallSeats> {
   }
 
   Widget _buildLegend() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+    return Wrap(
+      spacing: 16,
+      runSpacing: 16,
       children: [
         _buildLegendItem('Pieejams', Colors.white.withOpacity(0.05)),
-        const SizedBox(width: 16),
         _buildLegendItem('Aizņemts', Colors.white.withOpacity(0.2),
             icon: Icons.close),
-        const SizedBox(width: 16),
         _buildLegendItem('Izvēlēts', const Color(0xFF2A2A2A)),
       ],
     );
   }
 
   Widget _buildLegendItem(String text, Color color, {IconData? icon}) {
-    return Row(
-      children: [
-        Container(
-          width: 24,
-          height: 24,
-          decoration: BoxDecoration(
-            color: color,
-            borderRadius: BorderRadius.circular(4),
-            border: Border.all(
-              color: Colors.white.withOpacity(0.1),
-              width: 1,
+    return IntrinsicWidth(
+      child: Row(
+        children: [
+          Container(
+            width: 24,
+            height: 24,
+            decoration: BoxDecoration(
+              color: color,
+              borderRadius: BorderRadius.circular(4),
+              border: Border.all(
+                color: Colors.white.withOpacity(0.1),
+                width: 1,
+              ),
+            ),
+            child: icon != null
+                ? Icon(icon, size: 16, color: Colors.white.withOpacity(0.5))
+                : null,
+          ),
+          const SizedBox(width: 8),
+          Text(
+            text,
+            style: GoogleFonts.poppins(
+              color: Colors.white.withOpacity(0.7),
+              fontSize: 14,
             ),
           ),
-          child: icon != null
-              ? Icon(icon, size: 16, color: Colors.white.withOpacity(0.5))
-              : null,
-        ),
-        const SizedBox(width: 8),
-        Text(
-          text,
-          style: GoogleFonts.poppins(
-            color: Colors.white.withOpacity(0.7),
-            fontSize: 14,
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 

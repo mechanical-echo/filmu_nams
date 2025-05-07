@@ -172,7 +172,7 @@ class _PaymentHistoryViewState extends State<PaymentHistoryView> {
                                   size: 16, color: style.primary),
                               const SizedBox(width: 8),
                               Text(
-                                'ID: ${payment.id.substring(1, payment.id.length - 15)}...',
+                                'ID: ${payment.id.substring(0, payment.id.length - 15)}...',
                                 style: style.titleMedium,
                               ),
                               const SizedBox(width: 4),
@@ -212,7 +212,7 @@ class _PaymentHistoryViewState extends State<PaymentHistoryView> {
                               color: style.contrast.withOpacity(0.5),
                             ),
                             Text(
-                              '${payment.schedule.id.substring(1, payment.schedule.id.length - 5)}...',
+                              '${payment.schedule.id.substring(0, payment.schedule.id.length - 10)}...',
                               style: style.bodySmall.copyWith(
                                 color: style.contrast.withOpacity(0.7),
                               ),

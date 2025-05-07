@@ -74,14 +74,6 @@ class _CarouselItemCardState extends State<CarouselItemCard> {
                   ),
                   const SizedBox(width: 16),
                   _buildLinkSection(),
-                  const SizedBox(width: 8),
-                  IconButton(
-                    icon: Icon(
-                      Icons.edit,
-                      color: theme.primary,
-                    ),
-                    onPressed: showEditForm,
-                  ),
                 ],
               ),
             ),

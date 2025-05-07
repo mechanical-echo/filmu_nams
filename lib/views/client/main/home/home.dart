@@ -243,7 +243,7 @@ class _HomeState extends State<Home> {
 
     return Column(
       children: [
-        SizedBox(height: 45),
+        SizedBox(height: 35),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

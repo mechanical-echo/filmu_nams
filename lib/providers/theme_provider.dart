@@ -273,7 +273,11 @@ class ThemeProvider extends ChangeNotifier {
       dialogTheme: DialogTheme(
         backgroundColor: isDark ? const Color(0xFF212121) : Color(0xFFEEEEEE),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
+          side: BorderSide(
+            color: Colors.white.withOpacity(0.1),
+            width: 1,
+          ),
+          borderRadius: BorderRadius.circular(5),
         ),
       ),
       snackBarTheme: SnackBarThemeData(
