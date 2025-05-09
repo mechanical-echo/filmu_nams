@@ -1,5 +1,6 @@
 import 'package:filmu_nams/assets/decorations/background.dart';
 import 'package:filmu_nams/controllers/ticket_controller.dart';
+import 'package:filmu_nams/controllers/widget_controller.dart';
 import 'package:filmu_nams/models/ticket_model.dart';
 import 'package:filmu_nams/providers/style.dart';
 import 'package:filmu_nams/views/client/main/profile/tickets/ticket_card.dart';
@@ -48,6 +49,8 @@ class _TicketsViewState extends State<TicketsView>
         _tickets = tickets;
         isLoading = false;
       });
+
+      TicketWidgetController.updateTicketsWidget();
     } catch (e) {
       setState(() {
         errorMessage = 'Neizdevās ielādēt biļetes: ${e.toString()}';

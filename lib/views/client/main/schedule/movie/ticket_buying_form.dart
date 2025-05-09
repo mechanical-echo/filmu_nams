@@ -99,14 +99,7 @@ class _TicketBuyingFormState extends State<TicketBuyingForm> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.3),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: Colors.white.withOpacity(0.1),
-          width: 1,
-        ),
-      ),
+      decoration: style.cardDecoration,
       child: Column(
         children: [
           Center(
@@ -135,12 +128,12 @@ class _TicketBuyingFormState extends State<TicketBuyingForm> {
             )
           else if (scheduleData!.isNotEmpty && availableDates.isNotEmpty)
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
+              padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Column(
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: style.cardDecoration,
+                    padding: const EdgeInsets.all(24),
+                    decoration: style.roundCardDecoration,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:confetti/confetti.dart';
+import 'package:filmu_nams/controllers/widget_controller.dart';
 import 'package:filmu_nams/models/schedule_model.dart';
 import 'package:filmu_nams/providers/style.dart';
 import 'package:flutter/material.dart';
@@ -113,7 +114,7 @@ class _HallSeatsState extends State<HallSeats> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: style.cardDecoration,
+      decoration: style.roundCardDecoration,
       child: Stack(
         children: [
           Column(
@@ -828,6 +829,9 @@ class _HallSeatsState extends State<HallSeats> {
         getTotalPrice(),
         desc,
       );
+
+      await TicketWidgetController.updateTicketsWidget();
+
       for (var seat in chosenSeats) {
         setState(() {
           takenSeats.add(seat);

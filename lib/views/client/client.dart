@@ -1,8 +1,8 @@
+import 'package:filmu_nams/controllers/widget_controller.dart';
 import 'package:filmu_nams/views/client/auth/auth_form.dart';
 import 'package:filmu_nams/views/client/main/wrapper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:home_widget/home_widget.dart';
 
 class ClientApp extends StatefulWidget {
   const ClientApp({super.key});
@@ -12,32 +12,25 @@ class ClientApp extends StatefulWidget {
 }
 
 class _ClientAppState extends State<ClientApp> {
-  String appGroupId = 'group.filmuNams';
-  String iOSWidgetName = 'FilmuNamsWidget';
-  String androidWidgetName = 'FilmuNamsWidget';
-
-  String dataKey = 'text_from_flutter_app';
-
-  void test() async {
-    try {
-      await HomeWidget.setAppGroupId(appGroupId);
-
-      await HomeWidget.saveWidgetData(dataKey, "test");
-
-      await HomeWidget.updateWidget(
-        iOSName: iOSWidgetName,
-        androidName: androidWidgetName,
-      );
-    } catch (err) {
-      debugPrint(err.toString());
-    }
-  }
-
   @override
   void initState() {
     super.initState();
+    _initializeWidget();
+  }
 
-    test();
+  Future<void> _initializeWidget() async {
+    await TicketWidgetController.initialize();
+
+    User? currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser != null) {
+      await TicketWidgetController.updateTicketsWidget();
+
+      FirebaseAuth.instance.authStateChanges().listen((User? user) {
+        if (user != null) {
+          TicketWidgetController.updateTicketsWidget();
+        }
+      });
+    }
   }
 
   @override
@@ -47,10 +40,9 @@ class _ClientAppState extends State<ClientApp> {
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return Wrapper();
+            return const Wrapper();
           }
-
-          return AuthForm();
+          return const AuthForm();
         },
       ),
     );

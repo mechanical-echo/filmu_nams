@@ -138,19 +138,19 @@ class MovieCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 8),
-                    Row(
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
                       children: [
                         _buildDetailChip(
                           Icons.access_time,
                           getDuration(),
                         ),
-                        const SizedBox(width: 8),
                         _buildDetailChip(
                           Icons.movie,
                           capitalize(data.genre),
                         ),
                         if (time != null) ...[
-                          const SizedBox(width: 8),
                           _buildDetailChip(
                             Icons.calendar_today,
                             '${getTime()} - ${hall}. Zāle',
