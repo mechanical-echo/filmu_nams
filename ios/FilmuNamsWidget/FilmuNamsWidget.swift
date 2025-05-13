@@ -410,7 +410,6 @@ struct FilmuNamsWidget: Widget {
 extension ConfigurationAppIntent {
     fileprivate static var preview: ConfigurationAppIntent {
         let intent = ConfigurationAppIntent()
-        intent.favoriteEmoji = "🎬"
         return intent
     }
 }
