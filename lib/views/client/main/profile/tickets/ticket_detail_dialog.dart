@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:filmu_nams/controllers/ticket_controller.dart';
 import 'package:filmu_nams/models/ticket_model.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -17,6 +18,8 @@ class TicketDetailDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final bool isExpired =
         ticket.schedule.time.toDate().isBefore(DateTime.now());
+    final bool isUsed = ticket.status == TicketStatusEnum.used ||
+        ticket.status == TicketStatusEnum.expiredUsed;
 
     return Dialog(
       backgroundColor: Colors.transparent,
@@ -150,59 +153,77 @@ class TicketDetailDialog extends StatelessWidget {
                               'Iegādāta:',
                               ticket.getFormattedDate(),
                             ),
+                            _buildDetailRow(
+                              isUsed
+                                  ? Icons.check_circle_outline
+                                  : Icons.pending_outlined,
+                              'Statuss:',
+                              isUsed
+                                  ? 'Izlietota'
+                                  : isExpired
+                                      ? 'Novecojusi'
+                                      : 'Aktīva',
+                              textColor: isUsed
+                                  ? Colors.green[700]
+                                  : isExpired
+                                      ? Colors.red[700]
+                                      : Colors.blue[700],
+                              bold: true,
+                            ),
                           ],
                         ),
                       ),
                       const SizedBox(height: 16),
-                      Container(
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.03),
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: Colors.black.withOpacity(0.1),
-                            width: 1,
+                      if (!isUsed)
+                        Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: Colors.black.withOpacity(0.03),
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: Colors.black.withOpacity(0.1),
+                              width: 1,
+                            ),
+                          ),
+                          child: Column(
+                            children: [
+                              Text(
+                                'Biļete',
+                                style: GoogleFonts.poppins(
+                                  color: Colors.black.withOpacity(0.9),
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              const SizedBox(height: 12),
+                              Container(
+                                padding: const EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: QrImageView(
+                                  data: _generateQRData(),
+                                  version: QrVersions.auto,
+                                  size: 180,
+                                  backgroundColor: Colors.white,
+                                  errorStateBuilder: (context, error) {
+                                    return Center(
+                                      child: Text(
+                                        'Kļūda QR koda ģenerēšanā',
+                                        style: GoogleFonts.poppins(
+                                          color: Colors.red[300],
+                                          fontSize: 14,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        child: Column(
-                          children: [
-                            Text(
-                              'Biļete',
-                              style: GoogleFonts.poppins(
-                                color: Colors.black.withOpacity(0.9),
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            const SizedBox(height: 12),
-                            Container(
-                              padding: const EdgeInsets.all(12),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: QrImageView(
-                                data: _generateQRData(),
-                                version: QrVersions.auto,
-                                size: 180,
-                                backgroundColor: Colors.white,
-                                errorStateBuilder: (context, error) {
-                                  return Center(
-                                    child: Text(
-                                      'Kļūda QR koda ģenerēšanā',
-                                      style: GoogleFonts.poppins(
-                                        color: Colors.red[300],
-                                        fontSize: 14,
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
                       const SizedBox(height: 8),
                       Text(
                         'Biļetes ID: ${ticket.id}',
@@ -216,12 +237,14 @@ class TicketDetailDialog extends StatelessWidget {
                 ),
               ),
             ),
-            if (isExpired)
+            if (isExpired || isUsed)
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.symmetric(vertical: 8),
                 decoration: BoxDecoration(
-                  color: Colors.red.withOpacity(0.1),
+                  color: isUsed
+                      ? Colors.green.withOpacity(0.1)
+                      : Colors.red.withOpacity(0.1),
                   borderRadius: const BorderRadius.only(
                     bottomLeft: Radius.circular(20),
                     bottomRight: Radius.circular(20),
@@ -229,9 +252,9 @@ class TicketDetailDialog extends StatelessWidget {
                 ),
                 child: Center(
                   child: Text(
-                    'Novecojusi',
+                    isUsed ? 'Izlietota' : 'Novecojusi',
                     style: GoogleFonts.poppins(
-                      color: Colors.red[300],
+                      color: isUsed ? Colors.green[700] : Colors.red[700],
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                     ),
@@ -244,7 +267,8 @@ class TicketDetailDialog extends StatelessWidget {
     );
   }
 
-  Widget _buildDetailRow(IconData icon, String label, String value) {
+  Widget _buildDetailRow(IconData icon, String label, String value,
+      {Color? textColor, bool bold = false}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Row(
@@ -267,9 +291,9 @@ class TicketDetailDialog extends StatelessWidget {
             child: Text(
               value,
               style: GoogleFonts.poppins(
-                color: Colors.black.withOpacity(0.9),
+                color: textColor ?? Colors.black.withOpacity(0.9),
                 fontSize: 14,
-                fontWeight: FontWeight.w500,
+                fontWeight: bold ? FontWeight.w600 : FontWeight.w500,
               ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,

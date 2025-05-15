@@ -254,7 +254,7 @@ class _PaymentCardState extends State<PaymentCard> {
                     border: Border.all(color: theme.primary.withOpacity(0.3)),
                   ),
                   child: Text(
-                    ticket.getSeatInfo(),
+                    ticket!.getSeatInfo(),
                     style: theme.bodySmall.copyWith(color: theme.contrast),
                   ),
                 );

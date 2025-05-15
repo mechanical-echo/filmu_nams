@@ -61,9 +61,11 @@ class TicketController {
 
       for (var doc in querySnapshot.docs) {
         try {
-          final ticket = await TicketModel.fromMapAsync(
-              doc.data() as Map<String, dynamic>, doc.id);
-          tickets.add(ticket);
+          if (doc.data() != null) {
+            final ticket = await TicketModel.fromMapAsync(
+                doc.data() as Map<String, dynamic>, doc.id);
+            tickets.add(ticket);
+          }
         } catch (e) {
           debugPrint('Error parsing ticket: $e');
         }
@@ -98,6 +100,18 @@ class TicketController {
     } catch (e) {
       debugPrint('Error getting taken seats: $e');
       return [];
+    }
+  }
+
+  Future<bool> updateTicketStatus(String ticketId, String status) async {
+    try {
+      await _firestore.collection('tickets').doc(ticketId).update({
+        'status': status,
+      });
+      return true;
+    } catch (e) {
+      debugPrint('Error updating ticket status: $e');
+      return false;
     }
   }
 

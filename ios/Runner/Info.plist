@@ -75,6 +75,8 @@
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Pick image from gallery</string>
 	<key>NSCameraUsageDescription</key>
-	<string>Pick image from Camera</string>
+    <string>This app needs camera access to scan QR codes for ticket validation as well as pick images for a profile picture</string>
+    <key>io.flutter.embedded_views_preview</key>
+    <true/>
 </dict>
 </plist>

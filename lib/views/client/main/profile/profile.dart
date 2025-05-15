@@ -1,8 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:filmu_nams/assets/animations/carousel_switch.dart';
+import 'package:filmu_nams/controllers/user_controller.dart';
+import 'package:filmu_nams/models/user_model.dart';
 import 'package:filmu_nams/providers/style.dart';
 import 'package:filmu_nams/views/client/main/profile/payments/payment_history_view.dart';
 import 'package:filmu_nams/views/client/main/profile/profile_view.dart';
+import 'package:filmu_nams/views/client/main/profile/qr_scanner.dart';
 import 'package:filmu_nams/views/client/main/profile/settings.dart';
 import 'package:filmu_nams/views/client/main/profile/tickets/tickets_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -21,6 +24,27 @@ class _ProfileState extends State<Profile> {
   User? user = FirebaseAuth.instance.currentUser;
   int currentView = 0;
   CarouselSwitchDirection direction = CarouselSwitchDirection.left;
+  bool isAdmin = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkUserRole();
+  }
+
+  Future<void> _checkUserRole() async {
+    try {
+      UserController userController = UserController();
+      UserModel? currentUser = await userController.getCurrentUserModel();
+      if (currentUser != null && currentUser.role == UserRolesEnum.admin) {
+        setState(() {
+          isAdmin = true;
+        });
+      }
+    } catch (e) {
+      debugPrint('Error checking user role: $e');
+    }
+  }
 
   void switchView(int viewIndex) {
     setState(() {
@@ -126,6 +150,18 @@ class _ProfileState extends State<Profile> {
               );
             },
           ),
+          if (isAdmin)
+            _buildMenuButton(
+              "QR Skenēšana",
+              Icons.qr_code_scanner,
+              () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const QRScannerView()),
+                );
+              },
+            ),
           _buildMenuButton(
             "Iestatījumi",
             Icons.settings_outlined,

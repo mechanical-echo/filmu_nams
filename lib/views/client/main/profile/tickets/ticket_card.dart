@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:filmu_nams/controllers/ticket_controller.dart';
 import 'package:filmu_nams/models/ticket_model.dart';
 import 'package:filmu_nams/providers/style.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +22,8 @@ class TicketCard extends StatelessWidget {
     final theme = Style.of(context);
     final DateTime movieTime = ticket.schedule.time.toDate();
     final bool isExpired = movieTime.isBefore(DateTime.now());
+    final bool isUsed = ticket.status == TicketStatusEnum.used ||
+        ticket.status == TicketStatusEnum.expiredUsed;
 
     return Material(
       color: Colors.transparent,
@@ -107,12 +110,14 @@ class TicketCard extends StatelessWidget {
                   ),
                 ],
               ),
-              if (isExpired)
+              if (isExpired || isUsed)
                 Container(
                   width: double.infinity,
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   decoration: BoxDecoration(
-                    color: Colors.red.withOpacity(0.15),
+                    color: isUsed
+                        ? Colors.green.withOpacity(0.15)
+                        : Colors.red.withOpacity(0.15),
                     borderRadius: const BorderRadius.only(
                       bottomLeft: Radius.circular(4),
                       bottomRight: Radius.circular(4),
@@ -120,9 +125,9 @@ class TicketCard extends StatelessWidget {
                   ),
                   child: Center(
                     child: Text(
-                      'Novecojusi | Izlietota',
+                      isUsed ? 'Izlietota' : 'Novecojusi',
                       style: GoogleFonts.poppins(
-                        color: Colors.red[300],
+                        color: isUsed ? Colors.green[300] : Colors.red[300],
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
                       ),

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:filmu_nams/models/schedule_model.dart';
 import 'package:filmu_nams/models/user_model.dart';
 import 'package:intl/intl.dart';
+import '../controllers/ticket_controller.dart';
 
 class TicketModel {
   final ScheduleModel schedule;
@@ -9,6 +10,7 @@ class TicketModel {
   final String id;
   final Map<String, dynamic> seat;
   final Timestamp purchaseDate;
+  final String status;
 
   TicketModel({
     required this.id,
@@ -16,6 +18,7 @@ class TicketModel {
     required this.user,
     required this.seat,
     required this.purchaseDate,
+    required this.status,
   });
 
   static Future<TicketModel> fromMapAsync(
@@ -41,6 +44,7 @@ class TicketModel {
       id: id,
       seat: map['seat'],
       purchaseDate: map['purchaseDate'] ?? Timestamp.now(),
+      status: map['status'] ?? TicketStatusEnum.unused,
     );
   }
 
