@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:filmu_nams/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -10,6 +11,7 @@ class UserController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseFunctions _functions = FirebaseFunctions.instance;
 
   static const String usersPath = 'users';
 
@@ -52,11 +54,21 @@ class UserController {
 
   Future<List<UserModel>> getAllUsers() async {
     try {
-      QuerySnapshot querySnapshot =
-          await _firestore.collection(usersPath).get();
+      final result = await _functions.httpsCallable('getAllUsers').call();
 
-      List<UserModel> users = querySnapshot.docs.map((doc) {
-        return UserModel.fromMap(doc.data() as Map<String, dynamic>, doc.id);
+      final List<dynamic> usersData = result.data['users'];
+      final List<UserModel> users = usersData.map((userData) {
+        final createdAtTimestamp = Timestamp.fromDate(DateTime.parse(
+            userData['createdAt'] ?? DateTime.now().toIso8601String()));
+
+        return UserModel(
+          id: userData['id'],
+          createdAt: createdAtTimestamp,
+          email: userData['email'] ?? '',
+          name: userData['name'] ?? '',
+          profileImageUrl: userData['profileImageUrl'] ?? '',
+          role: userData['role'] ?? '',
+        );
       }).toList();
 
       return users;
@@ -68,15 +80,26 @@ class UserController {
 
   Future<UserModel?> getUserById(String uid) async {
     try {
-      DocumentSnapshot doc =
-          await _firestore.collection(usersPath).doc(uid).get();
+      final result = await _functions.httpsCallable('getUserById').call({
+        'uid': uid,
+        'currentUid': getCurrentUser()!.uid,
+      });
 
-      if (!doc.exists) {
-        debugPrint('User not found: $uid');
+      if (result.data == null) {
         return null;
       }
 
-      return UserModel.fromMap(doc.data() as Map<String, dynamic>, doc.id);
+      final userData = result.data;
+
+      return UserModel(
+        id: userData['id'] ?? '',
+        createdAt: Timestamp.fromDate(DateTime.parse(
+            userData['createdAt'] ?? DateTime.now().toIso8601String())),
+        email: userData['email'] ?? '',
+        name: userData['name'] ?? '',
+        profileImageUrl: userData['profileImageUrl'] ?? '',
+        role: userData['role'] ?? '',
+      );
     } catch (e) {
       debugPrint('Error getting user by ID: $e');
       return null;
@@ -117,34 +140,21 @@ class UserController {
     Uint8List? profileImage,
   }) async {
     try {
-      UserCredential userCredential =
-          await _auth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-
-      User? user = userCredential.user;
-      if (user == null) return null;
-
       String? imageUrl;
       if (profileImage != null) {
-        imageUrl = await uploadProfileImage(user.uid, profileImage);
+        imageUrl = await uploadProfileImage(name, profileImage);
       }
 
-      await _firestore.collection(usersPath).doc(user.uid).set({
-        'name': name,
+      final result = await _functions.httpsCallable('createUser').call({
         'email': email,
-        'profileImageUrl': imageUrl ?? '',
+        'password': password,
+        'name': name,
         'role': role,
-        'createdAt': FieldValue.serverTimestamp(),
+        'profileImageUrl': imageUrl,
+        'currentUid': getCurrentUser()!.uid
       });
 
-      await user.updateDisplayName(name);
-      if (imageUrl != null) {
-        await user.updatePhotoURL(imageUrl);
-      }
-
-      return user.uid;
+      return result.data['uid'];
     } catch (e) {
       debugPrint('Error creating user: $e');
       return null;
@@ -160,38 +170,22 @@ class UserController {
     bool deleteImage = false,
   }) async {
     try {
-      Map<String, dynamic> updateData = {
+      String? imageUrl;
+      if (profileImage != null) {
+        imageUrl = await uploadProfileImage(uid, profileImage);
+      }
+
+      final result = await _functions.httpsCallable('updateUser').call({
+        'uid': uid,
         'name': name,
         'email': email,
         'role': role,
-      };
+        'profileImageUrl': imageUrl,
+        'deleteImage': deleteImage,
+        'currentUid': getCurrentUser()!.uid
+      });
 
-      if (profileImage != null) {
-        String? imageUrl = await uploadProfileImage(uid, profileImage);
-        if (imageUrl != null) {
-          updateData['profileImageUrl'] = imageUrl;
-        }
-      } else if (deleteImage) {
-        updateData['profileImageUrl'] = '';
-        await deleteProfileImage(uid);
-      }
-
-      await _firestore.collection(usersPath).doc(uid).update(updateData);
-
-      User? currentUser = _auth.currentUser;
-      if (currentUser?.uid == uid) {
-        await currentUser?.updateDisplayName(name);
-        if (profileImage != null) {
-          String? imageUrl = updateData['profileImageUrl'] as String?;
-          if (imageUrl != null) {
-            await currentUser?.updatePhotoURL(imageUrl);
-          }
-        } else if (deleteImage) {
-          await currentUser?.updatePhotoURL('');
-        }
-      }
-
-      return true;
+      return result.data['success'] ?? false;
     } catch (e) {
       debugPrint('Error updating user: $e');
       return false;
@@ -239,11 +233,11 @@ class UserController {
 
   Future<bool> deleteUser(String uid) async {
     try {
-      await _firestore.collection(usersPath).doc(uid).delete();
+      final result = await _functions.httpsCallable('deleteUser').call({
+        'uid': uid,
+      });
 
-      await deleteProfileImage(uid);
-
-      return true;
+      return result.data['success'] ?? false;
     } catch (e) {
       debugPrint('Error deleting user: $e');
       return false;
@@ -277,7 +271,28 @@ class UserController {
     User? user = _auth.currentUser;
     if (user == null) return null;
 
-    return await getUserById(user.uid);
+    try {
+      DocumentSnapshot userDoc =
+          await _firestore.collection(usersPath).doc(user.uid).get();
+
+      if (!userDoc.exists) {
+        return null;
+      }
+
+      final userData = userDoc.data() as Map<String, dynamic>;
+
+      return UserModel(
+        id: user.uid,
+        createdAt: userData['createdAt'] ?? Timestamp.now(),
+        email: userData['email'] ?? '',
+        name: userData['name'] ?? '',
+        profileImageUrl: userData['profileImageUrl'] ?? '',
+        role: userData['role'] ?? '',
+      );
+    } catch (e) {
+      debugPrint('Error getting current user model: $e');
+      return null;
+    }
   }
 
   Future<void> createUserDocument(

@@ -1,6 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:filmu_nams/assets/decorations/background.dart';
 import 'package:filmu_nams/views/admin/auth/admin_login.dart';
-import 'package:filmu_nams/controllers/user_controller.dart';
 import 'package:filmu_nams/views/admin/dashboard/admin_wrapper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +10,6 @@ class AdminAuth extends StatelessWidget {
   const AdminAuth({super.key});
   @override
   Widget build(BuildContext context) {
-    UserController userController = UserController();
     double height = MediaQuery.of(context).size.height;
 
     return Scaffold(
@@ -20,16 +19,17 @@ class AdminAuth extends StatelessWidget {
         builder: (context, authSnapshot) {
           final user = authSnapshot.data;
 
+          if (user == null) {
+            return AdminLogin();
+          }
+
           return FutureBuilder<dynamic>(
-            future: user != null
-                ? userController.getUserById(user.uid)
-                : Future.value(null),
+            future: FirebaseFirestore.instance
+                .collection('users')
+                .doc(user.uid)
+                .get(),
             builder: (context, userDocSnapshot) {
-              if (user != null &&
-                  userDocSnapshot.data != null &&
-                  userDocSnapshot.data.role == 'admin') {
-                return AdminWrapper();
-              } else if (user != null && userDocSnapshot.data == null) {
+              if (userDocSnapshot.connectionState == ConnectionState.waiting) {
                 return Background(
                   child: Center(
                     child: SizedBox(
@@ -42,6 +42,14 @@ class AdminAuth extends StatelessWidget {
                   ),
                 );
               }
+
+              if (userDocSnapshot.hasData && userDocSnapshot.data != null) {
+                final userData = userDocSnapshot.data!.data();
+                if (userData != null && userData['role'] == 'admin') {
+                  return AdminWrapper();
+                }
+              }
+
               return AdminLogin();
             },
           );

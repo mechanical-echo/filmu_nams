@@ -116,6 +116,7 @@ class _EditUserDialogState extends State<EditUserDialog> {
 
         success = newId != null;
         if (success && mounted) {
+          Navigator.of(context).pop();
           StylizedDialog.dialog(
             Icons.check_circle_outline,
             context,
@@ -134,6 +135,7 @@ class _EditUserDialogState extends State<EditUserDialog> {
         );
 
         if (success && mounted) {
+          Navigator.of(context).pop();
           StylizedDialog.dialog(
             Icons.check_circle_outline,
             context,
