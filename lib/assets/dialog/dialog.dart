@@ -5,7 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 class StylizedDialog {
   static void dialog(
       IconData icon, BuildContext context, String title, String content,
-      {Function()? onConfirm}) {
+      {Function()? onConfirm, Function()? onCancel, String? confirmText}) {
     final theme = Style.of(context);
     showGeneralDialog(
       context: context,
@@ -18,37 +18,66 @@ class StylizedDialog {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: theme.cardDecoration,
-                child: Icon(
-                  icon,
-                  color: Colors.white.withOpacity(0.9),
-                  size: 32,
-                ),
+              Row(
+                spacing: 16,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: theme.cardDecoration,
+                    child: Icon(
+                      icon,
+                      color: Colors.white.withOpacity(0.9),
+                      size: 32,
+                    ),
+                  ),
+                  Expanded(
+                    child: Text(
+                      title,
+                      style: theme.headlineMedium,
+                      softWrap: true,
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 16),
               Text(
-                title,
-                style: GoogleFonts.poppins(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w600,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 8),
-              Text(
                 content,
-                style: GoogleFonts.poppins(
-                  color: Colors.white.withOpacity(0.7),
-                  fontSize: 14,
-                ),
-                textAlign: TextAlign.center,
+                style: theme.bodyMedium,
               ),
               const SizedBox(height: 24),
               Row(
+                spacing: 8,
                 children: [
+                  if (onCancel != null)
+                    Expanded(
+                      child: Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          onTap: () {
+                            onCancel.call();
+                            Navigator.of(context).pop();
+                          },
+                          borderRadius: BorderRadius.circular(12),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 24,
+                              vertical: 8,
+                            ),
+                            decoration: theme.cardDecoration,
+                            child: Center(
+                              child: Text(
+                                'Atcelt',
+                                style: GoogleFonts.poppins(
+                                  color: Colors.white.withOpacity(0.9),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
                   Expanded(
                     child: Material(
                       color: Colors.transparent,
@@ -66,7 +95,7 @@ class StylizedDialog {
                           decoration: theme.cardDecoration,
                           child: Center(
                             child: Text(
-                              'Ok!',
+                              confirmText ?? 'Ok!',
                               style: GoogleFonts.poppins(
                                 color: Colors.white.withOpacity(0.9),
                                 fontSize: 16,

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:filmu_nams/controllers/notification_controller.dart';
 import 'package:filmu_nams/models/payment_history_model.dart';
+import 'package:filmu_nams/models/schedule_model.dart';
 import 'package:filmu_nams/stripe_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +32,9 @@ class PaymentController {
     String? customerEmail,
     required String scheduleId,
   }) async {
-    final schedule = _firestore.collection('schedule').doc(scheduleId);
+    final scheduleRef = _firestore.collection('schedule').doc(scheduleId);
+    final schedule = await ScheduleModel.fromMapAsync(
+        (await scheduleRef.get()).data()!, scheduleId);
     try {
       debugPrint("Processing payment of $amount $currency for: $description");
 
@@ -46,7 +49,7 @@ class PaymentController {
         _showPaymentError(context, "Neizdevās izveidot maksājumu");
         generateUnsuccessfulHistory(
           amount: amount,
-          schedule: schedule,
+          schedule: scheduleRef,
           reason: 'Failed to create payment intent',
           product: description,
         );
@@ -65,14 +68,14 @@ class PaymentController {
 
       await Stripe.instance.presentPaymentSheet();
 
-      _showPaymentSuccess(context);
+      _showPaymentSuccess(context, description, schedule);
       return true;
     } catch (e) {
       debugPrint("Payment error: $e");
       if (e is StripeException) {
         generateUnsuccessfulHistory(
           amount: amount,
-          schedule: schedule,
+          schedule: scheduleRef,
           reason: 'Stripe: ${e.error.localizedMessage}',
           product: description,
         );
@@ -80,7 +83,7 @@ class PaymentController {
       } else {
         generateUnsuccessfulHistory(
           amount: amount,
-          schedule: schedule,
+          schedule: scheduleRef,
           reason: "Payment error: $e",
           product: description,
         );
@@ -130,12 +133,16 @@ class PaymentController {
     }
   }
 
-  void _showPaymentSuccess(BuildContext context) {
+  void _showPaymentSuccess(
+    BuildContext context,
+    String desc,
+    ScheduleModel schedule,
+  ) {
     NotificationController().showNotification(
       1,
       "Maksājums veiksmīgs",
       "Jūsu maksājums ir veiksmīgi apstrādāts. Biļetes ir pieejāmas profila sadaļā.",
-      "Jūsu maksājums ir veiksmīgi apstrādāts. Biļetes uz filmu ir pieejāmas profila sadaļā. Paldies, ka izvēlējāties mūs!\nAr cieņu, Filmu Nams",
+      "Jūsu maksājums ir veiksmīgi apstrādāts. Prece: ${desc.replaceAll(", ${schedule.id}", "")}.\nBiļetes uz seansu ir pieejāmas profila sadaļā. Paldies, ka izvēlējāties mūs!\nAr cieņu, Filmu Nams",
       NotificationTypeEnum.payment,
     );
   }

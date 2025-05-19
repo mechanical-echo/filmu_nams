@@ -11,12 +11,12 @@ class NotificationItem extends StatefulWidget {
     super.key,
     required this.notification,
     required this.onDelete,
-    required this.onStatusChange,
+    required this.onStatusToggle,
   });
 
   final NotificationModel notification;
   final Function() onDelete;
-  final Function() onStatusChange;
+  final Function() onStatusToggle;
 
   @override
   State<NotificationItem> createState() => _NotificationItemState();
@@ -26,13 +26,12 @@ class _NotificationItemState extends State<NotificationItem>
     with SingleTickerProviderStateMixin {
   bool isExpanded = false;
   bool isLoading = false;
-  late NotificationModel _notification;
+  NotificationModel get _notification => widget.notification;
   late AnimationController _controller;
 
   @override
   void initState() {
     super.initState();
-    _notification = widget.notification;
     _controller = AnimationController(
       duration: const Duration(milliseconds: 300),
       vsync: this,
@@ -225,44 +224,10 @@ class _NotificationItemState extends State<NotificationItem>
   }
 
   void _toggleRead() async {
-    setState(() {
-      isLoading = true;
-    });
-
-    final status = _notification.status == NotificationStatusEnum.read
-        ? NotificationStatusEnum.unread
-        : NotificationStatusEnum.read;
-    try {
-      final response = await NotificationController()
-          .updateNotificationStatus(_notification.id, status);
-      setState(() {
-        _notification = response;
-      });
-      widget.onStatusChange();
-    } catch (e) {
-      debugPrint(e.toString());
-    }
-
-    setState(() {
-      isLoading = false;
-    });
+    widget.onStatusToggle();
   }
 
   void _onDelete() async {
-    setState(() {
-      isLoading = true;
-    });
-
-    try {
-      await NotificationController().updateNotificationStatus(
-          _notification.id, NotificationStatusEnum.deleted);
-      widget.onDelete();
-    } catch (e) {
-      debugPrint(e.toString());
-    }
-
-    setState(() {
-      isLoading = false;
-    });
+    widget.onDelete();
   }
 }

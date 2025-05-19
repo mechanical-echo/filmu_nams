@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:filmu_nams/models/movie_model.dart';
+import 'package:intl/intl.dart';
 
 class ScheduleModel {
   final String id;
@@ -39,5 +40,13 @@ class ScheduleModel {
       'hall': hall,
       'time': time,
     };
+  }
+
+  String getFormattedTime() {
+    return DateFormat(DateFormat.HOUR24_MINUTE).format(time.toDate());
+  }
+
+  String getFormattedDate() {
+    return DateFormat(DateFormat.YEAR_MONTH_DAY).format(time.toDate());
   }
 }

@@ -100,6 +100,60 @@ class NotificationController {
       snapshot.id,
     );
   }
+
+  Future<void> markAllAsRead() async {
+    final user = FirebaseAuth.instance.currentUser;
+    final userRef = _firestore.collection('users').doc(user!.uid);
+
+    final snapshot = await _firestore
+        .collection('notifications')
+        .where('user', isEqualTo: userRef)
+        .where('status', isNotEqualTo: NotificationStatusEnum.deleted)
+        .get();
+
+    for (var doc in snapshot.docs) {
+      await _firestore
+          .collection('notifications')
+          .doc(doc.id)
+          .update({'status': 'read'});
+    }
+  }
+
+  Future<void> deleteAll() async {
+    final user = FirebaseAuth.instance.currentUser;
+    final userRef = _firestore.collection('users').doc(user!.uid);
+
+    final snapshot = await _firestore
+        .collection('notifications')
+        .where('user', isEqualTo: userRef)
+        .where('status', isNotEqualTo: NotificationStatusEnum.deleted)
+        .get();
+
+    for (var doc in snapshot.docs) {
+      await _firestore
+          .collection('notifications')
+          .doc(doc.id)
+          .update({'status': 'deleted'});
+    }
+  }
+
+  // Future<void> returnDeleted() async {
+  //   final user = FirebaseAuth.instance.currentUser;
+  //   final userRef = _firestore.collection('users').doc(user!.uid);
+
+  //   final snapshot = await _firestore
+  //       .collection('notifications')
+  //       .where('user', isEqualTo: userRef)
+  //       .where('status', isEqualTo: NotificationStatusEnum.deleted)
+  //       .get();
+
+  //   for (var doc in snapshot.docs) {
+  //     await _firestore
+  //         .collection('notifications')
+  //         .doc(doc.id)
+  //         .update({'status': 'unread'});
+  //   }
+  // }
 }
 
 class NotificationStatusEnum {

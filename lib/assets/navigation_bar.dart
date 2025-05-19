@@ -1,4 +1,9 @@
+import 'dart:async';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:filmu_nams/models/notification_model.dart';
 import 'package:filmu_nams/providers/style.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -19,10 +24,40 @@ class NavBar extends StatefulWidget {
 class _NavBarState extends State<NavBar> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   int _previousIndex = 0;
+  List<NotificationModel> notifications = [];
+
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  StreamSubscription<QuerySnapshot>? _notificationFetchSubscription;
+
+  Future<void> fetchNotifications() async {
+    final user = FirebaseAuth.instance.currentUser;
+
+    final userRef = _firestore.collection('users').doc(user!.uid);
+
+    _notificationFetchSubscription = _firestore
+        .collection('notifications')
+        .where('user', isEqualTo: userRef)
+        .where('status', isEqualTo: 'unread')
+        .snapshots()
+        .listen((snapshot) async {
+      final notificaitonDocs = snapshot.docs.map(
+        (doc) => NotificationModel.fromMapAsync(doc.data(), doc.id),
+      );
+
+      final items = await Future.wait(notificaitonDocs.toList());
+
+      setState(() {
+        notifications = items;
+      });
+    }, onError: (e) {
+      debugPrint('Error listening to notification changes: $e');
+    });
+  }
 
   @override
   void initState() {
     super.initState();
+    fetchNotifications();
     _previousIndex = widget.currentIndex;
     _controller = AnimationController(
       duration: const Duration(milliseconds: 450),
@@ -37,6 +72,7 @@ class _NavBarState extends State<NavBar> with SingleTickerProviderStateMixin {
   @override
   void dispose() {
     _controller.dispose();
+    _notificationFetchSubscription?.cancel();
     super.dispose();
   }
 
@@ -126,15 +162,31 @@ class _NavBarState extends State<NavBar> with SingleTickerProviderStateMixin {
                                   children: [
                                     Transform.scale(
                                       scale: 1.0 + (0.1 * animation.value),
-                                      child: Icon(
-                                        icons[index],
-                                        color: Color.lerp(
-                                          theme.contrast.withOpacity(0.5),
-                                          theme.primary,
-                                          0.5 + (0.5 * animation.value),
-                                        ),
-                                        size: 28,
-                                      ),
+                                      child: icons[index] ==
+                                                  Icons.notifications &&
+                                              notifications.isNotEmpty
+                                          ? Badge.count(
+                                              count: notifications.length,
+                                              child: Icon(
+                                                icons[index],
+                                                color: Color.lerp(
+                                                  theme.contrast
+                                                      .withOpacity(0.5),
+                                                  theme.primary,
+                                                  0.5 + (0.5 * animation.value),
+                                                ),
+                                                size: 28,
+                                              ),
+                                            )
+                                          : Icon(
+                                              icons[index],
+                                              color: Color.lerp(
+                                                theme.contrast.withOpacity(0.5),
+                                                theme.primary,
+                                                0.5 + (0.5 * animation.value),
+                                              ),
+                                              size: 28,
+                                            ),
                                     ),
                                     ClipRect(
                                       child: SizedBox(
