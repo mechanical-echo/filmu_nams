@@ -30,6 +30,8 @@ class _HomeState extends State<Home> {
 
   final movieController = MovieController();
 
+  Style get theme => Style.of(context);
+
   void listenToCarouselChanges() {
     _carouselSubscription = _firestore
         .collection(MovieController.carouselCollection)
@@ -88,6 +90,17 @@ class _HomeState extends State<Home> {
             margin: const EdgeInsets.symmetric(horizontal: 8),
             child: image(index),
           ),
+          if (carouselItems![index].movie != null ||
+              carouselItems![index].offer != null)
+            Positioned(
+              top: -25,
+              left: 25,
+              right: 25,
+              child: Text(
+                '(lai lasītu vairāk, pavelciet uz augšu ⬆️)',
+                style: theme.titleSmall,
+              ),
+            ),
           if (isActive) ...[
             Positioned(
               bottom: 0,
@@ -253,12 +266,12 @@ class _HomeState extends State<Home> {
             ),
             const SizedBox(height: 8),
             Text(
-              'Aplūko jaunākus piedāvājumus:\n(lai lasītu vairāk, pavelciet uz augšu ⬆️)',
+              'Aplūko jaunākus piedāvājumus:',
               style: theme.titleMedium,
             ),
           ],
         ),
-        SizedBox(height: 60),
+        SizedBox(height: 70),
         OverlappingCarousel(
           items: carouselWidgets!,
           itemWidth: 350,
