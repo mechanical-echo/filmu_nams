@@ -61,8 +61,6 @@ jobs:
           }
           EOF
 
-      - run: flutter pub get
-      - run: flutter build web
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
