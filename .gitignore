@@ -56,3 +56,6 @@ build/
 lib/tmdb.dart
 lib/stripe_options.dart
 lib/firebase_options.dart
+
+# firebase hosting
+.firebase/

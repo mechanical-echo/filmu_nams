@@ -92,7 +92,6 @@ class _DatePickerState extends State<DatePicker>
     final totalDays = daysFromPrevMonth + currentMonthDays;
     final daysFromNextMonth = (7 - (totalDays % 7)) % 7;
 
-    final theme = Theme.of(context);
     final style = Style.of(context);
 
     return FadeTransition(

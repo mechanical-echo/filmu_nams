@@ -31,14 +31,16 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  if (Platform.isAndroid || Platform.isIOS) {
-    await NotificationController().initialize();
-    await PaymentController().initStripe();
-  }
+  if (!kIsWeb) {
+    if (Platform.isAndroid || Platform.isIOS) {
+      await NotificationController().initialize();
+      await PaymentController().initStripe();
+    }
 
-  if (Platform.isWindows || Platform.isMacOS) {
-    setWindowMinSize(const Size(770, 600));
-    setWindowFrame(const Rect.fromLTRB(0, 0, 770, 600));
+    if (Platform.isWindows || Platform.isMacOS) {
+      setWindowMinSize(const Size(770, 600));
+      setWindowFrame(const Rect.fromLTRB(0, 0, 770, 600));
+    }
   }
 
   SystemChrome.setPreferredOrientations([
@@ -71,8 +73,9 @@ class ThemedApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: themeProvider.currentTheme,
-        home:
-            Platform.isWindows || Platform.isMacOS ? AdminAuth() : ClientApp(),
+        home: kIsWeb || Platform.isWindows || Platform.isMacOS
+            ? AdminAuth()
+            : ClientApp(),
       ),
     );
   }
