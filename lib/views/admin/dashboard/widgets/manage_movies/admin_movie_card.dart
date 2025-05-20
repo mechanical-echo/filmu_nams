@@ -152,7 +152,7 @@ class _AdminMovieCardState extends State<AdminMovieCard> {
         ),
         const SizedBox(height: 8),
         Wrap(
-          spacing: 16,
+          spacing: 8,
           runSpacing: 8,
           children: [
             _buildInfoChip(
@@ -196,7 +196,9 @@ class _AdminMovieCardState extends State<AdminMovieCard> {
             const SizedBox(width: 4),
             Text(
               label,
-              style: theme.bodySmall,
+              style: theme.bodySmall.copyWith(
+                fontSize: 10,
+              ),
             ),
           ],
         ),
