@@ -14,6 +14,21 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
+          
+      - name: Fix Firebase JSON file
+        run: |
+          cat > firebase.json << 'EOF'
+          {
+            "hosting": {
+              "source": ".",
+              "frameworks": [{
+                "name": "flutter",
+                "buildCommand": "flutter build web",
+                "outputDirectory": "build/web"
+              }]
+            }
+          }
+          EOF
 
       - name: Create TMDB configuration
         run: |
@@ -31,8 +46,7 @@ jobs:
           
           class DefaultFirebaseOptions {
             static FirebaseOptions get currentPlatform {
-                return web;
-              }
+              return web;
             }
             
             static const FirebaseOptions web = FirebaseOptions(
@@ -42,11 +56,13 @@ jobs:
               projectId: 'filmu-nams',
               authDomain: 'filmu-nams.firebaseapp.com',
               storageBucket: 'filmu-nams.firebasestorage.app',
-              measurementId: '${{ secrets.FIREBASE_MEASUREMENT_ID }}',
+              measurementId: '${{ secrets.FIREBASE_MEASUREMENT_ID }}'
             );
           }
           EOF
 
+      - run: flutter pub get
+      - run: flutter build web
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
