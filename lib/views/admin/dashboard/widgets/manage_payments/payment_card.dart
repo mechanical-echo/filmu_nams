@@ -121,7 +121,7 @@ class _PaymentCardState extends State<PaymentCard> {
                 ),
                 const SizedBox(width: 4),
                 Icon(Icons.copy,
-                    size: 14, color: theme.contrast.withOpacity(0.5)),
+                    size: 14, color: theme.contrast.withAlpha(125)),
               ],
             ),
           ),
@@ -130,7 +130,7 @@ class _PaymentCardState extends State<PaymentCard> {
         Text(
           _formatDate(widget.data.purchaseDate),
           style:
-              theme.bodyMedium.copyWith(color: theme.contrast.withOpacity(0.7)),
+              theme.bodyMedium.copyWith(color: theme.contrast.withAlpha(178)),
         ),
       ],
     );
@@ -152,24 +152,24 @@ class _PaymentCardState extends State<PaymentCard> {
         Row(
           children: [
             Icon(Icons.calendar_today,
-                size: 14, color: theme.contrast.withOpacity(0.5)),
+                size: 14, color: theme.contrast.withAlpha(125)),
             const SizedBox(width: 4),
             Text(
               _formatDate(widget.data.schedule.time),
               style: theme.bodySmall
-                  .copyWith(color: theme.contrast.withOpacity(0.7)),
+                  .copyWith(color: theme.contrast.withAlpha(178)),
             ),
           ],
         ),
         Row(
           children: [
             Icon(Icons.meeting_room,
-                size: 14, color: theme.contrast.withOpacity(0.5)),
+                size: 14, color: theme.contrast.withAlpha(125)),
             const SizedBox(width: 4),
             Text(
               'Zāle ${widget.data.schedule.hall}',
               style: theme.bodySmall
-                  .copyWith(color: theme.contrast.withOpacity(0.7)),
+                  .copyWith(color: theme.contrast.withAlpha(178)),
             ),
           ],
         ),
@@ -186,7 +186,7 @@ class _PaymentCardState extends State<PaymentCard> {
         Text(
           '${widget.data.amount.toStringAsFixed(2)}€',
           style: theme.headlineMedium.copyWith(
-            color: isCompleted ? theme.contrast : Colors.red.withOpacity(0.7),
+            color: isCompleted ? theme.contrast : Colors.red.withAlpha(178),
           ),
         ),
         const SizedBox(height: 4),
@@ -206,9 +206,10 @@ class _PaymentCardState extends State<PaymentCard> {
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       decoration: BoxDecoration(
-        color: theme.surfaceVariant.withOpacity(0.1),
+        color:
+            Theme.of(context).colorScheme.surfaceContainerHighest.withAlpha(25),
         border: Border(
-          top: BorderSide(color: theme.outline.withOpacity(0.3)),
+          top: BorderSide(color: theme.outline.withAlpha(76)),
         ),
       ),
       child: Column(
@@ -249,9 +250,9 @@ class _PaymentCardState extends State<PaymentCard> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
-                    color: theme.primary.withOpacity(0.1),
+                    color: theme.primary.withAlpha(25),
                     borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: theme.primary.withOpacity(0.3)),
+                    border: Border.all(color: theme.primary.withAlpha(76)),
                   ),
                   child: Text(
                     ticket!.getSeatInfo(),
@@ -266,9 +267,9 @@ class _PaymentCardState extends State<PaymentCard> {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.red.withOpacity(0.1),
+                color: Colors.red.withAlpha(25),
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.red.withOpacity(0.3)),
+                border: Border.all(color: Colors.red.withAlpha(76)),
               ),
               child: Row(
                 children: [
@@ -278,7 +279,7 @@ class _PaymentCardState extends State<PaymentCard> {
                     child: Text(
                       'Kļūdas iemesls: ${widget.data.reason}',
                       style: theme.bodyMedium
-                          .copyWith(color: Colors.red.withOpacity(0.8)),
+                          .copyWith(color: Colors.red.withAlpha(205)),
                     ),
                   ),
                 ],
@@ -334,7 +335,7 @@ class _PaymentCardState extends State<PaymentCard> {
                           child: Icon(
                             Icons.copy,
                             size: 16,
-                            color: theme.contrast.withOpacity(0.5),
+                            color: theme.contrast.withAlpha(125),
                           ),
                         ),
                       ],

@@ -83,7 +83,7 @@ class _TicketsViewState extends State<TicketsView>
                 left: -35,
                 child: Icon(
                   Icons.confirmation_number,
-                  color: Colors.white.withOpacity(0.9),
+                  color: Colors.white.withAlpha(229),
                 ),
               ),
               Text(
@@ -110,7 +110,7 @@ class _TicketsViewState extends State<TicketsView>
                 indicatorColor: Colors.white,
                 indicatorWeight: 2,
                 labelColor: Colors.white,
-                unselectedLabelColor: Colors.white.withOpacity(0.5),
+                unselectedLabelColor: Colors.white.withAlpha(125),
                 dividerColor: Colors.transparent,
               ),
             ),
@@ -183,17 +183,17 @@ class _TicketsViewState extends State<TicketsView>
                   padding:
                       const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.05),
+                    color: Colors.white.withAlpha(15),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: Colors.white.withOpacity(0.1),
+                      color: Colors.white.withAlpha(25),
                       width: 1,
                     ),
                   ),
                   child: Text(
                     'Mēģināt vēlreiz',
                     style: GoogleFonts.poppins(
-                      color: Colors.white.withOpacity(0.9),
+                      color: Colors.white.withAlpha(229),
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
                     ),
@@ -214,13 +214,13 @@ class _TicketsViewState extends State<TicketsView>
             Icon(
               Icons.confirmation_number_outlined,
               size: 64,
-              color: Colors.white.withOpacity(0.3),
+              color: Colors.white.withAlpha(76),
             ),
             const SizedBox(height: 16),
             Text(
               'Nav biļešu šajā kategorijā',
               style: GoogleFonts.poppins(
-                color: Colors.white.withOpacity(0.5),
+                color: Colors.white.withAlpha(125),
                 fontSize: 18,
                 fontWeight: FontWeight.w500,
               ),
@@ -229,7 +229,7 @@ class _TicketsViewState extends State<TicketsView>
             Text(
               'Iegādājies biļeti, lai to redzētu šeit',
               style: GoogleFonts.poppins(
-                color: Colors.white.withOpacity(0.3),
+                color: Colors.white.withAlpha(76),
                 fontSize: 14,
               ),
               textAlign: TextAlign.center,

@@ -17,7 +17,7 @@ class TmdbController {
           await tmdbWithCustomLogs.v3.movies.getDetails(movieId);
       return movieDetails;
     } catch (e) {
-      print('Error fetching movie details: $e');
+      debugPrint('Error fetching movie details: $e');
       return [];
     }
   }

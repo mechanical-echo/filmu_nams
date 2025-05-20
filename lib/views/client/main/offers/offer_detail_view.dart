@@ -71,7 +71,7 @@ class _OfferViewState extends State<OfferView>
   Future<void> copyToClipboard(BuildContext context) async {
     if (promocode != null) {
       await Clipboard.setData(ClipboardData(text: promocode!.name));
-      if (mounted) {
+      if (context.mounted) {
         StylizedDialog.dialog(
           Icons.paste,
           context,
@@ -97,7 +97,7 @@ class _OfferViewState extends State<OfferView>
           icon: Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: theme.themeBgColor.withOpacity(0.5),
+              color: theme.themeBgColor.withAlpha(125),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(
@@ -144,8 +144,8 @@ class _OfferViewState extends State<OfferView>
                   end: Alignment.bottomCenter,
                   colors: [
                     Colors.transparent,
-                    theme.themeBgColor.withOpacity(0.5),
-                    theme.themeBgColor.withOpacity(0.8),
+                    theme.themeBgColor.withAlpha(125),
+                    theme.themeBgColor.withAlpha(205),
                     theme.themeBgColor,
                   ],
                   stops: const [0.0, 0.3, 0.5, 0.8],
@@ -179,7 +179,7 @@ class _OfferViewState extends State<OfferView>
                         child: Text(
                           widget.data.description,
                           style: GoogleFonts.poppins(
-                            color: theme.contrast.withOpacity(0.8),
+                            color: theme.contrast.withAlpha(205),
                             fontSize: 16,
                             height: 1.6,
                           ),
@@ -205,7 +205,7 @@ class _OfferViewState extends State<OfferView>
                                           Icon(
                                             Icons.local_offer,
                                             color:
-                                                theme.contrast.withOpacity(0.8),
+                                                theme.contrast.withAlpha(205),
                                             size: 24,
                                           ),
                                           const SizedBox(width: 12),
@@ -247,7 +247,7 @@ class _OfferViewState extends State<OfferView>
                                               Icon(
                                                 Icons.copy,
                                                 color: theme.contrast
-                                                    .withOpacity(0.8),
+                                                    .withAlpha(205),
                                                 size: 20,
                                               ),
                                             ],
@@ -262,8 +262,7 @@ class _OfferViewState extends State<OfferView>
                                                 ? 'Atlaide ${promocode!.amount!.toStringAsFixed(2)}€'
                                                 : 'Atlaide',
                                         style: GoogleFonts.poppins(
-                                          color:
-                                              theme.contrast.withOpacity(0.8),
+                                          color: theme.contrast.withAlpha(205),
                                           fontSize: 16,
                                         ),
                                       ),
@@ -271,8 +270,7 @@ class _OfferViewState extends State<OfferView>
                                       Text(
                                         'Nospiediet, lai kopētu',
                                         style: GoogleFonts.poppins(
-                                          color:
-                                              theme.contrast.withOpacity(0.5),
+                                          color: theme.contrast.withAlpha(125),
                                           fontSize: 14,
                                         ),
                                       ),
@@ -282,7 +280,7 @@ class _OfferViewState extends State<OfferView>
                                     child: Text(
                                       'Diemžēl promokods šobrīd nav pieejams',
                                       style: GoogleFonts.poppins(
-                                        color: theme.contrast.withOpacity(0.8),
+                                        color: theme.contrast.withAlpha(205),
                                         fontSize: 16,
                                       ),
                                       textAlign: TextAlign.center,

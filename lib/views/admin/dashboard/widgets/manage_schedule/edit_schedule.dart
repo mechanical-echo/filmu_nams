@@ -165,7 +165,9 @@ class _EditScheduleDialogState extends State<EditScheduleDialog> {
         }
       }
 
-      Navigator.of(context).pop();
+      if (mounted) {
+        Navigator.of(context).pop();
+      }
     } catch (e) {
       debugPrint('Error saving schedule: $e');
       if (mounted) {
@@ -260,7 +262,7 @@ class _EditScheduleDialogState extends State<EditScheduleDialog> {
               surface: theme.surface,
               onSurface: theme.onSurface,
             ),
-            dialogBackgroundColor: theme.surface,
+            dialogTheme: DialogThemeData(backgroundColor: theme.surface),
           ),
           child: child!,
         );
@@ -287,7 +289,7 @@ class _EditScheduleDialogState extends State<EditScheduleDialog> {
               surface: theme.surface,
               onSurface: theme.onSurface,
             ),
-            dialogBackgroundColor: theme.surface,
+            dialogTheme: DialogThemeData(backgroundColor: theme.surface),
           ),
           child: child!,
         );
@@ -372,7 +374,10 @@ class _EditScheduleDialogState extends State<EditScheduleDialog> {
                   height: 60,
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   decoration: BoxDecoration(
-                    color: theme.surfaceVariant.withOpacity(0.1),
+                    color: Theme.of(context)
+                        .colorScheme
+                        .surfaceContainerHighest
+                        .withAlpha(25),
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(color: theme.outline),
                   ),
@@ -397,7 +402,10 @@ class _EditScheduleDialogState extends State<EditScheduleDialog> {
                   height: 60,
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   decoration: BoxDecoration(
-                    color: theme.surfaceVariant.withOpacity(0.1),
+                    color: Theme.of(context)
+                        .colorScheme
+                        .surfaceContainerHighest
+                        .withAlpha(25),
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(color: theme.outline),
                   ),
@@ -422,7 +430,10 @@ class _EditScheduleDialogState extends State<EditScheduleDialog> {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           decoration: BoxDecoration(
-            color: theme.surfaceVariant.withOpacity(0.1),
+            color: Theme.of(context)
+                .colorScheme
+                .surfaceContainerHighest
+                .withAlpha(25),
             borderRadius: BorderRadius.circular(8),
             border: Border.all(color: theme.outline),
           ),
@@ -455,7 +466,10 @@ class _EditScheduleDialogState extends State<EditScheduleDialog> {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           decoration: BoxDecoration(
-            color: theme.surfaceVariant.withOpacity(0.1),
+            color: Theme.of(context)
+                .colorScheme
+                .surfaceContainerHighest
+                .withAlpha(25),
             borderRadius: BorderRadius.circular(8),
             border: Border.all(color: theme.outline),
           ),
@@ -466,9 +480,12 @@ class _EditScheduleDialogState extends State<EditScheduleDialog> {
               dropdownColor: theme.surface,
               style: theme.bodyLarge,
               icon: Icon(Icons.arrow_drop_down, color: theme.primary),
-              hint: Text('Izvēlieties filmu',
-                  style: theme.bodyLarge
-                      .copyWith(color: theme.contrast.withOpacity(0.5))),
+              hint: Text(
+                'Izvēlieties filmu',
+                style: theme.bodyLarge.copyWith(
+                  color: theme.contrast.withAlpha(130),
+                ),
+              ),
               onChanged: (String? newValue) {
                 if (newValue != null) {
                   setState(() {

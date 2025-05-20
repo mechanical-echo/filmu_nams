@@ -30,8 +30,8 @@ class _BackgroundState extends State<Background>
   void didChangeDependencies() {
     super.didChangeDependencies();
     _colorAnimation1 = ColorTween(
-      begin: Colors.white.withOpacity(0.15),
-      end: Colors.white.withOpacity(0.3),
+      begin: Colors.white.withAlpha(40),
+      end: Colors.white.withAlpha(76),
     ).animate(_controller);
 
     _colorAnimation2 = ColorTween(
@@ -46,11 +46,13 @@ class _BackgroundState extends State<Background>
     super.dispose();
   }
 
+  Style get style => Style.of(context);
+
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
-    final theme = Style.of(context);
+    final theme = Theme.of(context);
 
     return Stack(
       children: [
@@ -59,47 +61,41 @@ class _BackgroundState extends State<Background>
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: theme.isDark
-                  ? [
-                      Colors.black,
-                      Colors.black.withOpacity(0.95),
-                      Colors.black.withOpacity(0.9)
-                    ]
-                  : [
-                      Colors.grey[200]!,
-                      Colors.grey[200]!.withOpacity(0.95),
-                      Colors.grey[200]!.withOpacity(0.9),
-                    ],
+              colors: [
+                theme.colorScheme.surface,
+                theme.colorScheme.surface.withAlpha(240),
+                theme.colorScheme.surface.withAlpha(229)
+              ],
             ),
           ),
         ),
         CustomPaint(
           size: Size(width, height),
           painter: GridPainter(
-            color: theme.isDark
-                ? Colors.white.withOpacity(0.03)
-                : Colors.black.withOpacity(0.075),
+            color:
+                theme.colorScheme.onSurface.withAlpha(style.isDark ? 25 : 15),
             strokeWidth: 1,
             spacing: 30,
           ),
         ),
-        AnimatedBuilder(
-          animation: _controller,
-          builder: (context, child) {
-            return Container(
-              decoration: BoxDecoration(
-                gradient: RadialGradient(
-                  center: Alignment.topCenter,
-                  radius: 1,
-                  colors: [
-                    _colorAnimation1.value!,
-                    _colorAnimation2.value!,
-                  ],
+        if (style.isDark)
+          AnimatedBuilder(
+            animation: _controller,
+            builder: (context, child) {
+              return Container(
+                decoration: BoxDecoration(
+                  gradient: RadialGradient(
+                    center: Alignment.topCenter,
+                    radius: 1,
+                    colors: [
+                      _colorAnimation1.value!,
+                      _colorAnimation2.value!,
+                    ],
+                  ),
                 ),
-              ),
-            );
-          },
-        ),
+              );
+            },
+          ),
         widget.child,
       ],
     );

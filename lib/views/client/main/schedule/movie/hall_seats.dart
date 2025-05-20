@@ -161,7 +161,7 @@ class _HallSeatsState extends State<HallSeats> {
         children: [
           Icon(
             Icons.movie_creation_outlined,
-            color: Colors.white.withOpacity(0.7),
+            color: Colors.white.withAlpha(178),
             size: 24,
           ),
           const SizedBox(width: 12),
@@ -189,7 +189,7 @@ class _HallSeatsState extends State<HallSeats> {
             Container(
               height: 220,
               decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.3),
+                color: Colors.black.withAlpha(76),
                 borderRadius: BorderRadius.circular(12),
               ),
               padding: const EdgeInsets.all(16),
@@ -217,8 +217,8 @@ class _HallSeatsState extends State<HallSeats> {
       spacing: 16,
       runSpacing: 16,
       children: [
-        _buildLegendItem('Pieejams', Colors.white.withOpacity(0.05)),
-        _buildLegendItem('Aizņemts', Colors.white.withOpacity(0.2),
+        _buildLegendItem('Pieejams', Colors.white.withAlpha(15)),
+        _buildLegendItem('Aizņemts', Colors.white.withAlpha(50),
             icon: Icons.close),
         _buildLegendItem('Izvēlēts', const Color(0xFF2A2A2A)),
       ],
@@ -236,19 +236,19 @@ class _HallSeatsState extends State<HallSeats> {
               color: color,
               borderRadius: BorderRadius.circular(4),
               border: Border.all(
-                color: Colors.white.withOpacity(0.1),
+                color: Colors.white.withAlpha(25),
                 width: 1,
               ),
             ),
             child: icon != null
-                ? Icon(icon, size: 16, color: Colors.white.withOpacity(0.5))
+                ? Icon(icon, size: 16, color: Colors.white.withAlpha(125))
                 : null,
           ),
           const SizedBox(width: 8),
           Text(
             text,
             style: GoogleFonts.poppins(
-              color: Colors.white.withOpacity(0.7),
+              color: Colors.white.withAlpha(178),
               fontSize: 14,
             ),
           ),
@@ -272,17 +272,17 @@ class _HallSeatsState extends State<HallSeats> {
         duration: const Duration(milliseconds: 200),
         decoration: BoxDecoration(
           color: isTaken
-              ? Colors.white.withOpacity(0.2)
+              ? Colors.white.withAlpha(50)
               : isSelected && !isChosen
                   ? const Color(0xFF2A2A2A)
                   : isChosen
-                      ? Colors.white.withOpacity(0.1)
-                      : Colors.white.withOpacity(0.05),
+                      ? Colors.white.withAlpha(25)
+                      : Colors.white.withAlpha(15),
           borderRadius: BorderRadius.circular(4),
           border: Border.all(
             color: isSelected || isChosen
-                ? Colors.white.withOpacity(0.3)
-                : Colors.white.withOpacity(0.1),
+                ? Colors.white.withAlpha(76)
+                : Colors.white.withAlpha(25),
             width: 1,
           ),
         ),
@@ -290,7 +290,7 @@ class _HallSeatsState extends State<HallSeats> {
             ? Icon(
                 Icons.close,
                 size: 16,
-                color: Colors.white.withOpacity(0.5),
+                color: Colors.white.withAlpha(125),
               )
             : null,
       ),
@@ -316,7 +316,7 @@ class _HallSeatsState extends State<HallSeats> {
         children: [
           Icon(
             Icons.add_circle_outline,
-            color: Colors.white.withOpacity(0.9),
+            color: Colors.white.withAlpha(229),
             size: 20,
           ),
           const SizedBox(width: 8),
@@ -338,10 +338,10 @@ class _HallSeatsState extends State<HallSeats> {
       margin: const EdgeInsets.all(16),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.3),
+        color: Colors.black.withAlpha(76),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: Colors.white.withOpacity(0.1),
+          color: Colors.white.withAlpha(25),
           width: 1,
         ),
       ),
@@ -369,7 +369,7 @@ class _HallSeatsState extends State<HallSeats> {
           child: Text(
             'Biļete',
             style: GoogleFonts.poppins(
-              color: Colors.white.withOpacity(0.5),
+              color: Colors.white.withAlpha(125),
               fontSize: 14,
               fontWeight: FontWeight.w500,
             ),
@@ -380,7 +380,7 @@ class _HallSeatsState extends State<HallSeats> {
           child: Text(
             'Vieta',
             style: GoogleFonts.poppins(
-              color: Colors.white.withOpacity(0.5),
+              color: Colors.white.withAlpha(125),
               fontSize: 14,
               fontWeight: FontWeight.w500,
             ),
@@ -391,7 +391,7 @@ class _HallSeatsState extends State<HallSeats> {
           child: Text(
             'Cena',
             style: GoogleFonts.poppins(
-              color: Colors.white.withOpacity(0.5),
+              color: Colors.white.withAlpha(125),
               fontSize: 14,
               fontWeight: FontWeight.w500,
             ),
@@ -408,7 +408,7 @@ class _HallSeatsState extends State<HallSeats> {
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
-            color: Colors.white.withOpacity(0.1),
+            color: Colors.white.withAlpha(25),
             width: 1,
           ),
         ),
@@ -452,7 +452,7 @@ class _HallSeatsState extends State<HallSeats> {
               onPressed: () => removeTicket(index),
               icon: Icon(
                 Icons.remove_circle_outline,
-                color: Colors.red.withOpacity(0.7),
+                color: Colors.red.withAlpha(178),
                 size: 20,
               ),
               padding: EdgeInsets.zero,
@@ -471,7 +471,7 @@ class _HallSeatsState extends State<HallSeats> {
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
-            color: Colors.white.withOpacity(0.1),
+            color: Colors.white.withAlpha(25),
             width: 1,
           ),
         ),
@@ -515,7 +515,7 @@ class _HallSeatsState extends State<HallSeats> {
               onPressed: removePromocode,
               icon: Icon(
                 Icons.remove_circle_outline,
-                color: Colors.red.withOpacity(0.7),
+                color: Colors.red.withAlpha(178),
                 size: 20,
               ),
               padding: EdgeInsets.zero,
@@ -560,10 +560,10 @@ class _HallSeatsState extends State<HallSeats> {
       margin: const EdgeInsets.symmetric(horizontal: 16),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.3),
+        color: Colors.black.withAlpha(76),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: Colors.white.withOpacity(0.1),
+          color: Colors.white.withAlpha(25),
           width: 1,
         ),
       ),
@@ -573,7 +573,7 @@ class _HallSeatsState extends State<HallSeats> {
           Text(
             'Promokods',
             style: GoogleFonts.poppins(
-              color: Colors.white.withOpacity(0.7),
+              color: Colors.white.withAlpha(178),
               fontSize: 14,
               fontWeight: FontWeight.w500,
             ),
@@ -595,7 +595,7 @@ class _HallSeatsState extends State<HallSeats> {
                       border: InputBorder.none,
                       hintText: 'Ievadiet promokodu',
                       hintStyle: GoogleFonts.poppins(
-                        color: Colors.white.withOpacity(0.3),
+                        color: Colors.white.withAlpha(76),
                         fontSize: 14,
                       ),
                     ),
@@ -607,7 +607,7 @@ class _HallSeatsState extends State<HallSeats> {
                 onPressed: () => submitPromocode(context),
                 icon: Icon(
                   Icons.add_circle_outline,
-                  color: Colors.white.withOpacity(0.9),
+                  color: Colors.white.withAlpha(229),
                   size: 24,
                 ),
                 style: IconButton.styleFrom(
@@ -645,7 +645,7 @@ class _HallSeatsState extends State<HallSeats> {
                 children: [
                   Icon(
                     Icons.payment,
-                    color: Colors.white.withOpacity(0.9),
+                    color: Colors.white.withAlpha(229),
                     size: 20,
                   ),
                   const SizedBox(width: 8),
@@ -705,12 +705,14 @@ class _HallSeatsState extends State<HallSeats> {
       });
     } catch (e) {
       debugPrint(e.toString());
-      StylizedDialog.dialog(
-        Icons.error_outline,
-        context,
-        "Kļūda",
-        "Promokods nav atrasts",
-      );
+      if (context.mounted) {
+        StylizedDialog.dialog(
+          Icons.error_outline,
+          context,
+          "Kļūda",
+          "Promokods nav atrasts",
+        );
+      }
     }
   }
 
@@ -765,29 +767,34 @@ class _HallSeatsState extends State<HallSeats> {
       final description =
           "${schedule.movie.title}, vietas: $seats, ${formatDate(schedule.time)}, ${schedule.id}";
 
-      final success = await PaymentController().processPayment(
-        context: context,
-        amount: totalAmount,
-        currency: 'eur',
-        description: description,
-        customerEmail: user.email,
-        scheduleId: currentScheduleId!,
-      );
+      if (context.mounted) {
+        final success = await PaymentController().processPayment(
+          context: context,
+          amount: totalAmount,
+          currency: 'eur',
+          description: description,
+          customerEmail: user.email,
+          scheduleId: currentScheduleId!,
+        );
 
-      if (success) {
-        saveTickets(description);
+        if (success) {
+          saveTickets(description);
+        }
       }
       setState(() {
         isProcessingPayment = false;
       });
     } catch (e) {
       debugPrint('Payment error: $e');
-      StylizedDialog.dialog(
-        Icons.error_outline,
-        context,
-        "Maksājuma kļūda",
-        "Neizdevās apstrādāt maksājumu. Lūdzu, mēģiniet vēlāk.",
-      );
+
+      if (context.mounted) {
+        StylizedDialog.dialog(
+          Icons.error_outline,
+          context,
+          "Maksājuma kļūda",
+          "Neizdevās apstrādāt maksājumu. Lūdzu, mēģiniet vēlāk.",
+        );
+      }
 
       setState(() {
         isProcessingPayment = false;

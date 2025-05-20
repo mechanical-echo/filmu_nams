@@ -44,15 +44,17 @@ class _NotificationItemState extends State<NotificationItem>
     super.dispose();
   }
 
+  Style get theme => Style.of(context);
+
   @override
   Widget build(BuildContext context) {
-    final theme = Style.of(context);
-
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       decoration: _notification.status == NotificationStatusEnum.unread
           ? theme.activeCardDecoration
-          : theme.cardDecoration,
+          : theme.cardDecoration.copyWith(
+              color: theme.themeBgColor.withAlpha(100),
+            ),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
@@ -63,7 +65,7 @@ class _NotificationItemState extends State<NotificationItem>
             child: isLoading
                 ? Center(
                     child: LoadingAnimationWidget.stretchedDots(
-                      color: Colors.white,
+                      color: theme.contrast,
                       size: 40,
                     ),
                   )
@@ -94,8 +96,8 @@ class _NotificationItemState extends State<NotificationItem>
             widget.notification.title,
             style: GoogleFonts.poppins(
               color: _notification.status == NotificationStatusEnum.unread
-                  ? Colors.white
-                  : Colors.white.withOpacity(0.7),
+                  ? theme.contrast
+                  : theme.contrast.withAlpha(178),
               fontSize: 16,
               fontWeight: FontWeight.w600,
             ),
@@ -105,15 +107,15 @@ class _NotificationItemState extends State<NotificationItem>
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
             color: _notification.status == NotificationStatusEnum.unread
-                ? Colors.white.withOpacity(0.15)
-                : Colors.white.withOpacity(0.1),
+                ? theme.contrast.withAlpha(40)
+                : theme.contrast.withAlpha(25),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Icon(
             getNotificationIcon(widget.notification.type),
             color: _notification.status == NotificationStatusEnum.unread
-                ? Colors.white
-                : Colors.white.withOpacity(0.7),
+                ? theme.contrast
+                : theme.contrast.withAlpha(178),
             size: 20,
           ),
         ),
@@ -126,8 +128,8 @@ class _NotificationItemState extends State<NotificationItem>
       _notification.message,
       style: GoogleFonts.poppins(
         color: _notification.status == NotificationStatusEnum.unread
-            ? Colors.white.withOpacity(0.9)
-            : Colors.white.withOpacity(0.5),
+            ? theme.contrast.withAlpha(229)
+            : theme.contrast.withAlpha(125),
         fontSize: 14,
       ),
       maxLines: isExpanded ? null : 2,
@@ -147,7 +149,7 @@ class _NotificationItemState extends State<NotificationItem>
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.1),
+                color: theme.contrast.withAlpha(25),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Row(
@@ -157,7 +159,7 @@ class _NotificationItemState extends State<NotificationItem>
                     _notification.status == NotificationStatusEnum.unread
                         ? Icons.check_circle_outline
                         : Icons.circle_outlined,
-                    color: Colors.white.withOpacity(0.7),
+                    color: theme.contrast.withAlpha(178),
                     size: 16,
                   ),
                   const SizedBox(width: 8),
@@ -166,7 +168,7 @@ class _NotificationItemState extends State<NotificationItem>
                         ? 'Atzīmēt kā izlasītu'
                         : 'Atzīmēt kā neizlasītu',
                     style: GoogleFonts.poppins(
-                      color: Colors.white.withOpacity(0.7),
+                      color: theme.contrast.withAlpha(178),
                       fontSize: 14,
                     ),
                   ),
@@ -184,7 +186,7 @@ class _NotificationItemState extends State<NotificationItem>
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: BoxDecoration(
-                color: Colors.red.withOpacity(0.1),
+                color: Colors.red.withAlpha(25),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Row(
@@ -192,14 +194,14 @@ class _NotificationItemState extends State<NotificationItem>
                 children: [
                   Icon(
                     Icons.delete_outline,
-                    color: Colors.red.withOpacity(0.7),
+                    color: Colors.red.withAlpha(178),
                     size: 16,
                   ),
                   const SizedBox(width: 8),
                   Text(
                     'Dzēst',
                     style: GoogleFonts.poppins(
-                      color: Colors.red.withOpacity(0.7),
+                      color: Colors.red.withAlpha(178),
                       fontSize: 14,
                     ),
                   ),

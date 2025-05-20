@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:filmu_nams/providers/style.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -91,26 +92,16 @@ class _DatePickerState extends State<DatePicker>
     final totalDays = daysFromPrevMonth + currentMonthDays;
     final daysFromNextMonth = (7 - (totalDays % 7)) % 7;
 
+    final theme = Theme.of(context);
+    final style = Style.of(context);
+
     return FadeTransition(
       opacity: _fadeAnimation,
       child: SlideTransition(
         position: _slideAnimation,
         child: Container(
-          decoration: BoxDecoration(
-            color: const Color(0xFF1A1A1A),
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.3),
-                blurRadius: 20,
-                offset: const Offset(0, 10),
-              ),
-            ],
-            border: Border.all(
-              color: Colors.white.withOpacity(0.1),
-              width: 1,
-            ),
-          ),
+          decoration:
+              style.isDark ? style.opaqueCardDecoration : style.cardDecoration,
           height: 400,
           width: 350,
           child: ClipRRect(
@@ -137,13 +128,14 @@ class _DatePickerState extends State<DatePicker>
   }
 
   Widget _buildHeader() {
+    final theme = Theme.of(context);
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
       decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.3),
+        color: theme.colorScheme.surface.withAlpha(76),
         border: Border(
           bottom: BorderSide(
-            color: Colors.white.withOpacity(0.1),
+            color: theme.colorScheme.onSurface.withAlpha(25),
             width: 1,
           ),
         ),
@@ -155,14 +147,14 @@ class _DatePickerState extends State<DatePicker>
             onPressed: previousMonth,
             icon: Icon(
               Icons.chevron_left_rounded,
-              color: Colors.white.withOpacity(0.9),
+              color: theme.colorScheme.onSurface.withAlpha(229),
               size: 28,
             ),
           ),
           Text(
             "${DateFormat(DateFormat.YEAR).format(selectedDate)} ${capitalize(DateFormat(DateFormat.STANDALONE_MONTH, 'lv').format(selectedDate))}",
             style: GoogleFonts.poppins(
-              color: Colors.white,
+              color: theme.colorScheme.onSurface,
               fontSize: 18,
               fontWeight: FontWeight.w600,
               letterSpacing: 0.5,
@@ -172,7 +164,7 @@ class _DatePickerState extends State<DatePicker>
             onPressed: nextMonth,
             icon: Icon(
               Icons.chevron_right_rounded,
-              color: Colors.white.withOpacity(0.9),
+              color: theme.colorScheme.onSurface.withAlpha(229),
               size: 28,
             ),
           ),
@@ -182,6 +174,7 @@ class _DatePickerState extends State<DatePicker>
   }
 
   Widget _buildWeekDays() {
+    final theme = Theme.of(context);
     final weekDays = ['Pr', 'Ot', 'Tr', 'Ct', 'Pt', 'St', 'Sv'];
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
@@ -193,7 +186,7 @@ class _DatePickerState extends State<DatePicker>
                   child: Text(
                     day,
                     style: GoogleFonts.poppins(
-                      color: Colors.white.withOpacity(0.5),
+                      color: theme.colorScheme.onSurface.withAlpha(125),
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                     ),
@@ -271,15 +264,16 @@ class _DatePickerState extends State<DatePicker>
 
     final isEnabled = isCurrentMonth && isAvailable;
 
+    final theme = Theme.of(context);
     return GestureDetector(
       onTap: isEnabled ? () => widget.onDateSelected(date) : null,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         decoration: BoxDecoration(
           color: isToday
-              ? const Color(0xFF2A2A2A)
+              ? theme.colorScheme.primary.withAlpha(36)
               : isEnabled
-                  ? Colors.white.withOpacity(0.05)
+                  ? theme.colorScheme.onSurface.withAlpha(15)
                   : Colors.transparent,
           borderRadius: BorderRadius.circular(10),
           border: isToday
@@ -290,7 +284,9 @@ class _DatePickerState extends State<DatePicker>
           child: Text(
             "${date.day}",
             style: GoogleFonts.poppins(
-              color: isEnabled ? Colors.white : Colors.white.withOpacity(0.3),
+              color: isEnabled
+                  ? theme.colorScheme.onSurface
+                  : theme.colorScheme.onSurface.withAlpha(76),
               fontSize: 14,
               fontWeight: isToday ? FontWeight.w600 : FontWeight.w400,
             ),

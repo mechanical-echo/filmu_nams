@@ -95,7 +95,7 @@ class _FoldableDescriptionState extends State<FoldableDescription>
             child: Text(
               widget.data.description,
               style: GoogleFonts.poppins(
-                color: Colors.white.withOpacity(0.8),
+                color: Colors.white.withAlpha(205),
                 fontSize: 16,
                 height: 1.5,
               ),

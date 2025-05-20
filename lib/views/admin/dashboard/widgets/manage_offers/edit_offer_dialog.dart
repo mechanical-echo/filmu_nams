@@ -352,7 +352,10 @@ class _EditOfferDialogState extends State<EditOfferDialog> {
           width: 240,
           height: 300,
           decoration: BoxDecoration(
-            color: theme.surfaceVariant.withOpacity(0.2),
+            color: Theme.of(context)
+                .colorScheme
+                .surfaceContainerHighest
+                .withAlpha(50),
             borderRadius: BorderRadius.circular(8),
             border: Border.all(color: theme.outline),
           ),
@@ -464,7 +467,10 @@ class _EditOfferDialogState extends State<EditOfferDialog> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
-                color: theme.surfaceVariant.withOpacity(0.1),
+                color: Theme.of(context)
+                    .colorScheme
+                    .surfaceContainerHighest
+                    .withAlpha(25),
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(color: theme.outline),
               ),
@@ -477,7 +483,7 @@ class _EditOfferDialogState extends State<EditOfferDialog> {
                   icon: Icon(Icons.arrow_drop_down, color: theme.primary),
                   hint: Text('Izvēlieties promokodu',
                       style: theme.bodyLarge
-                          .copyWith(color: theme.contrast.withOpacity(0.5))),
+                          .copyWith(color: theme.contrast.withAlpha(125))),
                   onChanged: (String? newValue) {
                     setState(() {
                       selectedPromocodeId = newValue;

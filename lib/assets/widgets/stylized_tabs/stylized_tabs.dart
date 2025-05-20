@@ -128,7 +128,7 @@ class _StylizedTabsState extends State<StylizedTabs>
                                   color: Color.lerp(
                                     isActive
                                         ? theme.primary.withAlpha(170)
-                                        : theme.contrast.withOpacity(0.5),
+                                        : theme.contrast.withAlpha(125),
                                     isActive
                                         ? theme.primary.withAlpha(170)
                                         : theme.contrast,
@@ -142,7 +142,7 @@ class _StylizedTabsState extends State<StylizedTabs>
                                     color: Color.lerp(
                                       isActive
                                           ? theme.primary.withAlpha(170)
-                                          : theme.contrast.withOpacity(0.5),
+                                          : theme.contrast.withAlpha(125),
                                       isActive
                                           ? theme.primary.withAlpha(170)
                                           : theme.contrast,

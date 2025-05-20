@@ -51,7 +51,7 @@ class TicketCard extends StatelessWidget {
                       placeholder: (context, url) => Container(
                         width: 100,
                         height: 150,
-                        color: Colors.white.withOpacity(0.05),
+                        color: Colors.white.withAlpha(15),
                         child: Center(
                           child: LoadingAnimationWidget.stretchedDots(
                             color: Colors.white,
@@ -62,10 +62,10 @@ class TicketCard extends StatelessWidget {
                       errorWidget: (context, url, error) => Container(
                         width: 100,
                         height: 150,
-                        color: Colors.white.withOpacity(0.05),
+                        color: Colors.white.withAlpha(15),
                         child: Icon(
                           Icons.movie_outlined,
-                          color: Colors.white.withOpacity(0.3),
+                          color: Colors.white.withAlpha(76),
                           size: 40,
                         ),
                       ),
@@ -80,7 +80,7 @@ class TicketCard extends StatelessWidget {
                           Text(
                             ticket.schedule.movie.title,
                             style: GoogleFonts.poppins(
-                              color: Colors.white.withOpacity(0.9),
+                              color: Colors.white.withAlpha(229),
                               fontSize: 18,
                               fontWeight: FontWeight.w600,
                             ),
@@ -116,8 +116,8 @@ class TicketCard extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   decoration: BoxDecoration(
                     color: isUsed
-                        ? Colors.green.withOpacity(0.15)
-                        : Colors.red.withOpacity(0.15),
+                        ? Colors.green.withAlpha(40)
+                        : Colors.red.withAlpha(40),
                     borderRadius: const BorderRadius.only(
                       bottomLeft: Radius.circular(4),
                       bottomRight: Radius.circular(4),
@@ -149,14 +149,14 @@ class TicketCard extends StatelessWidget {
           Icon(
             icon,
             size: 16,
-            color: Colors.white.withOpacity(0.5),
+            color: Colors.white.withAlpha(125),
           ),
           const SizedBox(width: 8),
           Expanded(
             child: Text(
               text,
               style: GoogleFonts.poppins(
-                color: Colors.white.withOpacity(0.7),
+                color: Colors.white.withAlpha(178),
                 fontSize: 14,
               ),
               maxLines: 1,

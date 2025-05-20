@@ -57,7 +57,7 @@ class _UserCardState extends State<UserCard> {
                         borderRadius: BorderRadius.circular(12),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.2),
+                            color: Colors.black.withAlpha(50),
                             blurRadius: 4,
                             offset: const Offset(0, 2),
                           ),
@@ -120,7 +120,7 @@ class _UserCardState extends State<UserCard> {
     final theme = Style.of(context);
 
     return Container(
-      color: theme.surfaceVariant,
+      color: Theme.of(context).colorScheme.surfaceContainerHighest,
       child: Icon(
         Icons.person,
         size: 40,
@@ -147,14 +147,13 @@ class _UserCardState extends State<UserCard> {
           const SizedBox(height: 4),
           Row(
             children: [
-              Icon(Icons.email,
-                  size: 14, color: theme.primary.withOpacity(0.7)),
+              Icon(Icons.email, size: 14, color: theme.primary.withAlpha(178)),
               const SizedBox(width: 4),
               Expanded(
                 child: Text(
                   widget.data.email,
                   style: theme.bodyMedium
-                      .copyWith(color: theme.contrast.withOpacity(0.7)),
+                      .copyWith(color: theme.contrast.withAlpha(178)),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -165,12 +164,12 @@ class _UserCardState extends State<UserCard> {
           Row(
             children: [
               Icon(Icons.calendar_today,
-                  size: 14, color: theme.primary.withOpacity(0.7)),
+                  size: 14, color: theme.primary.withAlpha(178)),
               const SizedBox(width: 4),
               Text(
                 "Reģistrēts: ${_formatDate(widget.data.createdAt.toDate())}",
                 style: theme.bodySmall
-                    .copyWith(color: theme.contrast.withOpacity(0.7)),
+                    .copyWith(color: theme.contrast.withAlpha(178)),
               ),
             ],
           ),
@@ -187,11 +186,14 @@ class _UserCardState extends State<UserCard> {
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
         color: isAdmin
-            ? theme.primary.withOpacity(0.2)
-            : theme.surfaceVariant.withOpacity(0.3),
+            ? theme.primary.withAlpha(50)
+            : Theme.of(context)
+                .colorScheme
+                .surfaceContainerHighest
+                .withAlpha(76),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: isAdmin ? theme.primary.withOpacity(0.3) : Colors.transparent,
+          color: isAdmin ? theme.primary.withAlpha(76) : Colors.transparent,
           width: 1,
         ),
       ),
@@ -201,13 +203,13 @@ class _UserCardState extends State<UserCard> {
           Icon(
             isAdmin ? Icons.admin_panel_settings : Icons.person,
             size: 16,
-            color: isAdmin ? theme.primary : theme.contrast.withOpacity(0.7),
+            color: isAdmin ? theme.primary : theme.contrast.withAlpha(178),
           ),
           const SizedBox(width: 4),
           Text(
             isAdmin ? "Administrators" : "Lietotājs",
             style: theme.labelMedium.copyWith(
-              color: isAdmin ? theme.primary : theme.contrast.withOpacity(0.7),
+              color: isAdmin ? theme.primary : theme.contrast.withAlpha(178),
               fontWeight: isAdmin ? FontWeight.bold : FontWeight.normal,
             ),
           ),

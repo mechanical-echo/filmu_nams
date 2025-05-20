@@ -55,7 +55,7 @@ class _HomeState extends State<Home> {
         isLoading = false;
       });
     }, onError: (e) {
-      print('Error listening to carousel changes: $e');
+      debugPrint('Error listening to carousel changes: $e');
       setState(() {
         isLoading = false;
       });
@@ -115,7 +115,7 @@ class _HomeState extends State<Home> {
                     end: Alignment.bottomCenter,
                     colors: [
                       Colors.transparent,
-                      Colors.black.withOpacity(0.95),
+                      Colors.black.withAlpha(240),
                     ],
                   ),
                 ),
@@ -135,7 +135,7 @@ class _HomeState extends State<Home> {
                     Text(
                       carouselItems![index].description,
                       style: GoogleFonts.poppins(
-                        color: Colors.white.withOpacity(0.9),
+                        color: Colors.white.withAlpha(229),
                         fontSize: 14,
                       ),
                       maxLines: 3,
@@ -206,7 +206,7 @@ class _HomeState extends State<Home> {
             decoration: BoxDecoration(
               color: index == activeIndex
                   ? theme.bodySmall.color
-                  : theme.bodySmall.color!.withOpacity(0.3),
+                  : theme.bodySmall.color!.withAlpha(76),
               shape: BoxShape.circle,
             ),
           ),
@@ -236,13 +236,13 @@ class _HomeState extends State<Home> {
             Icon(
               Icons.movie,
               size: 64,
-              color: Colors.white.withOpacity(0.5),
+              color: Colors.white.withAlpha(125),
             ),
             const SizedBox(height: 16),
             Text(
               'Nav datu, lai attēlotu',
               style: TextStyle(
-                color: Colors.white.withOpacity(0.5),
+                color: Colors.white.withAlpha(125),
                 fontSize: 16,
               ),
             ),

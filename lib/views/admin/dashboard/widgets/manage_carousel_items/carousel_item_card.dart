@@ -94,7 +94,7 @@ class _CarouselItemCardState extends State<CarouselItemCard> {
           borderRadius: BorderRadius.circular(8),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.2),
+              color: Colors.black.withAlpha(50),
               blurRadius: 4,
               offset: const Offset(0, 2),
             ),
@@ -110,7 +110,7 @@ class _CarouselItemCardState extends State<CarouselItemCard> {
             ),
           ),
           errorWidget: (context, url, error) => Container(
-            color: theme.surfaceVariant,
+            color: Theme.of(context).colorScheme.surfaceContainerHighest,
             child:
                 Icon(Icons.image_not_supported, color: theme.primary, size: 30),
           ),
@@ -133,7 +133,7 @@ class _CarouselItemCardState extends State<CarouselItemCard> {
         Text(
           widget.data.description,
           style:
-              theme.bodyMedium.copyWith(color: theme.contrast.withOpacity(0.7)),
+              theme.bodyMedium.copyWith(color: theme.contrast.withAlpha(178)),
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
         ),
@@ -146,19 +146,19 @@ class _CarouselItemCardState extends State<CarouselItemCard> {
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
-          color: Colors.grey.withOpacity(0.2),
+          color: Colors.grey.withAlpha(50),
           borderRadius: BorderRadius.circular(16),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(Icons.link_off,
-                size: 16, color: theme.contrast.withOpacity(0.5)),
+                size: 16, color: theme.contrast.withAlpha(125)),
             const SizedBox(width: 4),
             Text(
               'Nav saites',
               style: theme.bodySmall
-                  .copyWith(color: theme.contrast.withOpacity(0.7)),
+                  .copyWith(color: theme.contrast.withAlpha(178)),
             ),
           ],
         ),
@@ -169,9 +169,9 @@ class _CarouselItemCardState extends State<CarouselItemCard> {
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
-          color: theme.primary.withOpacity(0.1),
+          color: theme.primary.withAlpha(25),
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: theme.primary.withOpacity(0.3)),
+          border: Border.all(color: theme.primary.withAlpha(76)),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -191,7 +191,7 @@ class _CarouselItemCardState extends State<CarouselItemCard> {
             Text(
               widget.data.movie!.title,
               style: theme.bodySmall.copyWith(
-                color: theme.contrast.withOpacity(0.7),
+                color: theme.contrast.withAlpha(178),
                 fontWeight: FontWeight.bold,
               ),
               maxLines: 1,
@@ -206,9 +206,9 @@ class _CarouselItemCardState extends State<CarouselItemCard> {
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
-          color: theme.secondary.withOpacity(0.1),
+          color: theme.secondary.withAlpha(25),
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: theme.secondary.withOpacity(0.3)),
+          border: Border.all(color: theme.secondary.withAlpha(76)),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -228,7 +228,7 @@ class _CarouselItemCardState extends State<CarouselItemCard> {
             Text(
               widget.data.offer!.title,
               style: theme.bodySmall.copyWith(
-                color: theme.contrast.withOpacity(0.7),
+                color: theme.contrast.withAlpha(178),
                 fontWeight: FontWeight.bold,
               ),
               maxLines: 1,

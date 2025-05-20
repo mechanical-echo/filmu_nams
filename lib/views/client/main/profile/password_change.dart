@@ -107,15 +107,15 @@ class _PasswordChangePageState extends State<PasswordChangePage> {
         title: Container(
           padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 5),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.05),
+            color: Colors.white.withAlpha(15),
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
-              color: Colors.white.withOpacity(0.1),
+              color: Colors.white.withAlpha(25),
               width: 1,
             ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.2),
+                color: Colors.black.withAlpha(50),
                 blurRadius: 20,
                 offset: const Offset(0, 10),
               ),
@@ -129,14 +129,14 @@ class _PasswordChangePageState extends State<PasswordChangePage> {
                 left: -35,
                 child: Icon(
                   Icons.lock_outline,
-                  color: Colors.white.withOpacity(0.9),
+                  color: Colors.white.withAlpha(229),
                 ),
               ),
               Text(
                 'Mainīt paroli',
                 textAlign: TextAlign.center,
                 style: GoogleFonts.poppins(
-                  color: Colors.white.withOpacity(0.9),
+                  color: Colors.white.withAlpha(229),
                   fontSize: 24,
                   fontWeight: FontWeight.w500,
                 ),
@@ -162,10 +162,10 @@ class _PasswordChangePageState extends State<PasswordChangePage> {
                         horizontal: 20,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.red.withOpacity(0.1),
+                        color: Colors.red.withAlpha(25),
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                          color: Colors.red.withOpacity(0.2),
+                          color: Colors.red.withAlpha(50),
                           width: 1,
                         ),
                       ),
@@ -173,7 +173,7 @@ class _PasswordChangePageState extends State<PasswordChangePage> {
                         children: [
                           Icon(
                             Icons.error_outline,
-                            color: Colors.red.withOpacity(0.9),
+                            color: Colors.red.withAlpha(229),
                             size: 24,
                           ),
                           const SizedBox(width: 15),
@@ -181,7 +181,7 @@ class _PasswordChangePageState extends State<PasswordChangePage> {
                             child: Text(
                               _errorMessage,
                               style: GoogleFonts.poppins(
-                                color: Colors.red.withOpacity(0.9),
+                                color: Colors.red.withAlpha(229),
                                 fontSize: 14,
                               ),
                             ),
@@ -242,35 +242,35 @@ class _PasswordChangePageState extends State<PasswordChangePage> {
       controller: controller,
       obscureText: obscureText,
       style: GoogleFonts.poppins(
-        color: Colors.white.withOpacity(0.9),
+        color: Colors.white.withAlpha(229),
         fontSize: 14,
       ),
       decoration: InputDecoration(
         labelText: label,
         labelStyle: GoogleFonts.poppins(
-          color: Colors.white.withOpacity(0.7),
+          color: Colors.white.withAlpha(178),
           fontSize: 14,
         ),
         filled: true,
-        fillColor: Colors.white.withOpacity(0.03),
+        fillColor: Colors.white.withAlpha(8),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(
-            color: Colors.white.withOpacity(0.1),
+            color: Colors.white.withAlpha(25),
             width: 1,
           ),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(
-            color: Colors.white.withOpacity(0.1),
+            color: Colors.white.withAlpha(25),
             width: 1,
           ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(
-            color: Colors.white.withOpacity(0.2),
+            color: Colors.white.withAlpha(50),
             width: 1,
           ),
         ),
@@ -279,7 +279,7 @@ class _PasswordChangePageState extends State<PasswordChangePage> {
             obscureText
                 ? Icons.visibility_off_outlined
                 : Icons.visibility_outlined,
-            color: Colors.white.withOpacity(0.7),
+            color: Colors.white.withAlpha(178),
           ),
           onPressed: () => onToggleVisibility(!obscureText),
         ),
@@ -311,11 +311,11 @@ class _PasswordChangePageState extends State<PasswordChangePage> {
           padding: const EdgeInsets.symmetric(vertical: 15),
           decoration: BoxDecoration(
             color: _isLoading
-                ? Colors.white.withOpacity(0.05)
-                : Colors.white.withOpacity(0.1),
+                ? Colors.white.withAlpha(15)
+                : Colors.white.withAlpha(25),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: Colors.white.withOpacity(0.2),
+              color: Colors.white.withAlpha(50),
               width: 1,
             ),
           ),
@@ -328,20 +328,20 @@ class _PasswordChangePageState extends State<PasswordChangePage> {
                   height: 20,
                   child: CircularProgressIndicator(
                     strokeWidth: 2,
-                    color: Colors.white.withOpacity(0.9),
+                    color: Colors.white.withAlpha(229),
                   ),
                 )
               else
                 Icon(
                   Icons.lock_outline,
-                  color: Colors.white.withOpacity(0.9),
+                  color: Colors.white.withAlpha(229),
                   size: 20,
                 ),
               const SizedBox(width: 8),
               Text(
                 _isLoading ? 'Maina paroli...' : 'Mainīt paroli',
                 style: GoogleFonts.poppins(
-                  color: Colors.white.withOpacity(0.9),
+                  color: Colors.white.withAlpha(229),
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
                 ),

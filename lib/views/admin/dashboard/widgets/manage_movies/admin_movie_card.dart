@@ -109,7 +109,7 @@ class _AdminMovieCardState extends State<AdminMovieCard> {
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.2),
+            color: Colors.black.withAlpha(50),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),
@@ -125,7 +125,7 @@ class _AdminMovieCardState extends State<AdminMovieCard> {
           ),
         ),
         errorWidget: (context, url, error) => Container(
-          color: theme.surfaceVariant,
+          color: Theme.of(context).colorScheme.surfaceContainerHighest,
           child: Icon(Icons.movie_filter, color: theme.primary, size: 30),
         ),
       ),
@@ -146,7 +146,7 @@ class _AdminMovieCardState extends State<AdminMovieCard> {
         Text(
           widget.data.description,
           style:
-              theme.bodyMedium.copyWith(color: theme.contrast.withOpacity(0.7)),
+              theme.bodyMedium.copyWith(color: theme.contrast.withAlpha(178)),
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
         ),
@@ -182,9 +182,12 @@ class _AdminMovieCardState extends State<AdminMovieCard> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         decoration: BoxDecoration(
-          color: theme.surfaceVariant.withOpacity(0.2),
+          color: Theme.of(context)
+              .colorScheme
+              .surfaceContainerHighest
+              .withAlpha(50),
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: theme.outline.withOpacity(0.3)),
+          border: Border.all(color: theme.outline.withAlpha(76)),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -208,9 +211,9 @@ class _AdminMovieCardState extends State<AdminMovieCard> {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           decoration: BoxDecoration(
-            color: theme.primary.withOpacity(0.1),
+            color: theme.primary.withAlpha(25),
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: theme.primary.withOpacity(0.3)),
+            border: Border.all(color: theme.primary.withAlpha(76)),
           ),
           child: Text(
             _formatDuration(widget.data.duration),
@@ -221,19 +224,22 @@ class _AdminMovieCardState extends State<AdminMovieCard> {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           decoration: BoxDecoration(
-            color: theme.surfaceVariant.withOpacity(0.1),
+            color: Theme.of(context)
+                .colorScheme
+                .surfaceContainerHighest
+                .withAlpha(25),
             borderRadius: BorderRadius.circular(16),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               Icon(Icons.calendar_today,
-                  size: 14, color: theme.contrast.withOpacity(0.7)),
+                  size: 14, color: theme.contrast.withAlpha(178)),
               const SizedBox(width: 4),
               Text(
                 _formatDate(widget.data.premiere),
                 style: theme.bodySmall
-                    .copyWith(color: theme.contrast.withOpacity(0.7)),
+                    .copyWith(color: theme.contrast.withAlpha(178)),
               ),
             ],
           ),

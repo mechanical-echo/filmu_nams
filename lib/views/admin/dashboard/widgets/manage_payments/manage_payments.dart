@@ -311,7 +311,7 @@ class _ManagePaymentsState extends State<ManagePayments> {
         value: '${getTotalFailedAmount().toStringAsFixed(2)}€',
         icon: Icons.euro,
         color: style.primary,
-        textColor: Colors.red.withOpacity(0.7),
+        textColor: Colors.red.withAlpha(178),
       ),
       _buildStatCard(
         label: 'Veiksmīgi',
@@ -362,7 +362,7 @@ class _ManagePaymentsState extends State<ManagePayments> {
               Text(
                 label,
                 style: style.bodySmall.copyWith(
-                  color: style.contrast.withOpacity(0.7),
+                  color: style.contrast.withAlpha(178),
                 ),
               ),
               Text(

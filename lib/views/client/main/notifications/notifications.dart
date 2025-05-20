@@ -184,7 +184,7 @@ class _NotificationsState extends State<Notifications> {
                             Icon(
                               Icons.notifications_none,
                               size: 64,
-                              color: theme.contrast.withOpacity(0.3),
+                              color: theme.contrast.withAlpha(76),
                             ),
                             const SizedBox(height: 16),
                             Text(

@@ -140,7 +140,7 @@ class _TicketBuyingFormState extends State<TicketBuyingForm> {
                         Text(
                           'Izvēlieties datumu un laiku',
                           style: GoogleFonts.poppins(
-                            color: Colors.white.withOpacity(0.7),
+                            color: Colors.white.withAlpha(178),
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                           ),
@@ -173,7 +173,7 @@ class _TicketBuyingFormState extends State<TicketBuyingForm> {
                                   color: const Color(0xFF2A2A2A),
                                   borderRadius: BorderRadius.circular(8),
                                   border: Border.all(
-                                    color: Colors.white.withOpacity(0.1),
+                                    color: Colors.white.withAlpha(25),
                                     width: 1,
                                   ),
                                 ),
@@ -183,7 +183,7 @@ class _TicketBuyingFormState extends State<TicketBuyingForm> {
                                   child: DropdownButton(
                                     icon: Icon(
                                       Icons.arrow_drop_down_rounded,
-                                      color: Colors.white.withOpacity(0.7),
+                                      color: Colors.white.withAlpha(178),
                                       size: 24,
                                     ),
                                     style: GoogleFonts.poppins(

@@ -3,9 +3,6 @@ import 'package:filmu_nams/controllers/login_controller.dart';
 import 'package:filmu_nams/views/client/auth/login/login_validator.dart';
 import 'package:filmu_nams/views/client/auth/login/login_view.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-
-import '../../../../providers/style.dart';
 
 class Login extends StatefulWidget {
   final void Function(int? view) onViewChange;
@@ -62,7 +59,7 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Style.of(context);
+    final theme = Theme.of(context);
 
     return LoginView(
       formKey: _formKey,
@@ -81,17 +78,27 @@ class _LoginState extends State<Login> {
             width: double.infinity,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 34, vertical: 24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    'Pieslēgties',
-                    style: theme.displaySmall,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Pieslēgties',
+                        style: theme.textTheme.displaySmall,
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'Ievadiet savu e-pastu un paroli',
+                        style: theme.textTheme.bodyMedium,
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Ievadiet savu e-pastu un paroli',
-                    style: theme.bodySmall,
+                  Icon(
+                    Icons.home_outlined,
+                    color: theme.textTheme.displaySmall!.color,
+                    size: 42,
                   ),
                 ],
               ),
@@ -101,9 +108,11 @@ class _LoginState extends State<Login> {
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Column(
               children: [
+                const SizedBox(height: 20),
                 TextFormField(
                   controller: _emailController,
                   validator: LoginValidator.validateEmail,
+                  keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
                     labelText: 'E-pasts',
                     prefixIcon: Icon(Icons.email_outlined),
@@ -122,11 +131,31 @@ class _LoginState extends State<Login> {
                         _obscurePassword
                             ? Icons.visibility_outlined
                             : Icons.visibility_off_outlined,
-                        color: theme.primary,
                       ),
                       onPressed: () =>
                           setState(() => _obscurePassword = !_obscurePassword),
                     ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                SizedBox(
+                  width: double.infinity,
+                  height: 48,
+                  child: ElevatedButton(
+                    onPressed: _isLoading ? null : _handleLogin,
+                    child: _isLoading
+                        ? const SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(Colors.white),
+                            ),
+                          )
+                        : Text(
+                            'Ielogoties',
+                          ),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -149,49 +178,10 @@ class _LoginState extends State<Login> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 24),
-                SizedBox(
-                  width: double.infinity,
-                  height: 48,
-                  child: ElevatedButton(
-                    onPressed: _isLoading ? null : _handleLogin,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: theme.primary,
-                      foregroundColor: theme.onPrimary,
-                      padding: const EdgeInsets.all(0),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    child: _isLoading
-                        ? const SizedBox(
-                            width: 24,
-                            height: 24,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              valueColor:
-                                  AlwaysStoppedAnimation<Color>(Colors.white),
-                            ),
-                          )
-                        : Text(
-                            'Pieslēgties',
-                            style: GoogleFonts.poppins(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                  ),
-                ),
                 const SizedBox(height: 16),
                 TextButton(
                   onPressed: () => widget.onViewChange(1),
-                  child: Text(
-                    'Vai vēlaties reģistrēties?',
-                    style: GoogleFonts.poppins(
-                      color: theme.primary,
-                      fontSize: 14,
-                    ),
-                  ),
+                  child: Text('Vai vēlaties reģistrēties?'),
                 ),
                 const SizedBox(height: 16),
               ],

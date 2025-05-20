@@ -79,7 +79,7 @@ class _DatePickerInputState extends State<DatePickerInput>
               behavior: HitTestBehavior.opaque,
               onTap: _removeOverlay,
               child: Container(
-                color: Colors.black.withOpacity(0.5),
+                color: Colors.black.withAlpha(125),
               ),
             ),
           ),
@@ -146,15 +146,15 @@ class _DatePickerInputState extends State<DatePickerInput>
             width: widget.width,
             height: widget.height,
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.05),
+              color: Colors.white.withAlpha(15),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: Colors.white.withOpacity(0.1),
+                color: Colors.white.withAlpha(25),
                 width: 1,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black.withAlpha(25),
                   blurRadius: 10,
                   offset: const Offset(0, 4),
                 ),
@@ -167,7 +167,7 @@ class _DatePickerInputState extends State<DatePickerInput>
                   child: Text(
                     formatDate(selectedDate),
                     style: GoogleFonts.poppins(
-                      color: Colors.white.withOpacity(0.9),
+                      color: Colors.white.withAlpha(229),
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                     ),
@@ -176,7 +176,7 @@ class _DatePickerInputState extends State<DatePickerInput>
                 ),
                 Icon(
                   Icons.calendar_today,
-                  color: Colors.white.withOpacity(0.7),
+                  color: Colors.white.withAlpha(178),
                   size: 18,
                 ),
               ],

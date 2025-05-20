@@ -46,7 +46,9 @@ class PaymentController {
       );
 
       if (paymentIntentResult == null) {
-        _showPaymentError(context, "Neizdevās izveidot maksājumu");
+        if (context.mounted) {
+          _showPaymentError(context, "Neizdevās izveidot maksājumu");
+        }
         generateUnsuccessfulHistory(
           amount: amount,
           schedule: scheduleRef,
@@ -68,7 +70,9 @@ class PaymentController {
 
       await Stripe.instance.presentPaymentSheet();
 
-      _showPaymentSuccess(context, description, schedule);
+      if (context.mounted) {
+        _showPaymentSuccess(context, description, schedule);
+      }
       return true;
     } catch (e) {
       debugPrint("Payment error: $e");
@@ -79,7 +83,10 @@ class PaymentController {
           reason: 'Stripe: ${e.error.localizedMessage}',
           product: description,
         );
-        _showPaymentError(context, "Stripe kļūda: ${e.error.localizedMessage}");
+        if (context.mounted) {
+          _showPaymentError(
+              context, "Stripe kļūda: ${e.error.localizedMessage}");
+        }
       } else {
         generateUnsuccessfulHistory(
           amount: amount,
@@ -87,7 +94,9 @@ class PaymentController {
           reason: "Payment error: $e",
           product: description,
         );
-        _showPaymentError(context, "Maksājuma kļūda: $e");
+        if (context.mounted) {
+          _showPaymentError(context, "Maksājuma kļūda: $e");
+        }
       }
       return false;
     }

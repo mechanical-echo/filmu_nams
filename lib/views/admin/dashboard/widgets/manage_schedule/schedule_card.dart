@@ -114,16 +114,16 @@ class _ScheduleCardState extends State<ScheduleCard> {
         Icon(
           icon,
           size: widget.small ? 10 : 16,
-          color: theme.contrast.withOpacity(0.7),
+          color: theme.contrast.withAlpha(178),
         ),
         Text(
           text,
           style: widget.small
               ? theme.bodySmall.copyWith(
-                  color: theme.contrast.withOpacity(0.7),
+                  color: theme.contrast.withAlpha(178),
                 )
               : theme.bodyMedium.copyWith(
-                  color: theme.contrast.withOpacity(0.7),
+                  color: theme.contrast.withAlpha(178),
                 ),
         ),
       ],
@@ -145,7 +145,7 @@ class _ScheduleCardState extends State<ScheduleCard> {
             Text(
               DateFormat('dd.MM.yyyy').format(date),
               style: theme.bodySmall.copyWith(
-                color: theme.contrast.withOpacity(0.7),
+                color: theme.contrast.withAlpha(178),
               ),
             ),
         ],

@@ -103,7 +103,8 @@ class _NavBarState extends State<NavBar> with SingleTickerProviderStateMixin {
       'Profils',
     ];
 
-    final theme = Style.of(context);
+    final style = Style.of(context);
+    final theme = Theme.of(context);
 
     return Container(
       color: Colors.transparent,
@@ -114,7 +115,7 @@ class _NavBarState extends State<NavBar> with SingleTickerProviderStateMixin {
             height: 80,
             margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             padding: const EdgeInsets.symmetric(horizontal: 12),
-            decoration: theme.roundCardDecoration,
+            decoration: style.roundCardDecoration,
             child: LayoutBuilder(
               builder: (context, constraints) {
                 return Row(
@@ -170,9 +171,8 @@ class _NavBarState extends State<NavBar> with SingleTickerProviderStateMixin {
                                               child: Icon(
                                                 icons[index],
                                                 color: Color.lerp(
-                                                  theme.contrast
-                                                      .withOpacity(0.5),
-                                                  theme.primary,
+                                                  style.contrast.withAlpha(125),
+                                                  style.primary,
                                                   0.5 + (0.5 * animation.value),
                                                 ),
                                                 size: 28,
@@ -181,8 +181,9 @@ class _NavBarState extends State<NavBar> with SingleTickerProviderStateMixin {
                                           : Icon(
                                               icons[index],
                                               color: Color.lerp(
-                                                theme.contrast.withOpacity(0.5),
-                                                theme.primary,
+                                                theme.colorScheme.onSurface
+                                                    .withAlpha(125),
+                                                theme.primaryColor,
                                                 0.5 + (0.5 * animation.value),
                                               ),
                                               size: 28,
@@ -199,7 +200,7 @@ class _NavBarState extends State<NavBar> with SingleTickerProviderStateMixin {
                                             child: Text(
                                               labels[index],
                                               style: GoogleFonts.poppins(
-                                                color: theme.primary,
+                                                color: theme.primaryColor,
                                                 fontSize: 12,
                                               ),
                                               textAlign: TextAlign.center,

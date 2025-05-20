@@ -355,7 +355,10 @@ class _EditUserDialogState extends State<EditUserDialog> {
           width: 200,
           height: 200,
           decoration: BoxDecoration(
-            color: theme.surfaceVariant.withOpacity(0.2),
+            color: Theme.of(context)
+                .colorScheme
+                .surfaceContainerHighest
+                .withAlpha(50),
             borderRadius: BorderRadius.circular(100),
             border: Border.all(color: theme.outline),
           ),
@@ -497,7 +500,7 @@ class _EditUserDialogState extends State<EditUserDialog> {
           borderRadius: BorderRadius.circular(8),
           selectedColor: theme.onPrimary,
           fillColor: theme.primary,
-          disabledColor: theme.contrast.withOpacity(0.3),
+          disabledColor: theme.contrast.withAlpha(76),
           constraints: const BoxConstraints(
             minWidth: 150.0,
             minHeight: 50.0,
@@ -526,9 +529,12 @@ class _EditUserDialogState extends State<EditUserDialog> {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: theme.surfaceVariant.withOpacity(0.1),
+              color: Theme.of(context)
+                  .colorScheme
+                  .surfaceContainerHighest
+                  .withAlpha(25),
               borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: theme.outline.withOpacity(0.5)),
+              border: Border.all(color: theme.outline.withAlpha(125)),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

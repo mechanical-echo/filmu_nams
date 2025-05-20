@@ -106,7 +106,7 @@ class _OffersListState extends State<OffersList> {
                           children: [
                             Icon(
                               Icons.local_offer_outlined,
-                              color: Colors.white.withOpacity(0.5),
+                              color: Colors.white.withAlpha(125),
                               size: 64,
                             ),
                             const SizedBox(height: 16),
@@ -209,21 +209,21 @@ class OfferCard extends StatelessWidget {
                             vertical: 6,
                           ),
                           decoration: BoxDecoration(
-                            color: theme.contrast.withOpacity(0.1),
+                            color: theme.contrast.withAlpha(25),
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Row(
                             children: [
                               Icon(
                                 Icons.local_offer,
-                                color: theme.contrast.withOpacity(0.8),
+                                color: theme.contrast.withAlpha(205),
                                 size: 16,
                               ),
                               const SizedBox(width: 4),
                               Text(
                                 "Promokods",
                                 style: GoogleFonts.poppins(
-                                  color: theme.contrast.withOpacity(0.8),
+                                  color: theme.contrast.withAlpha(205),
                                   fontSize: 14,
                                 ),
                               ),
@@ -237,7 +237,7 @@ class OfferCard extends StatelessWidget {
                           vertical: 8,
                         ),
                         decoration: BoxDecoration(
-                          color: theme.contrast.withOpacity(0.1),
+                          color: theme.contrast.withAlpha(25),
                           borderRadius: BorderRadius.circular(7),
                         ),
                         child: Row(
@@ -249,7 +249,7 @@ class OfferCard extends StatelessWidget {
                             const SizedBox(width: 4),
                             Icon(
                               Icons.arrow_forward,
-                              color: theme.contrast.withOpacity(0.8),
+                              color: theme.contrast.withAlpha(205),
                               size: 16,
                             ),
                           ],

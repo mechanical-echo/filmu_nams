@@ -74,7 +74,7 @@ class _ProfileViewState extends State<ProfileView> {
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
-    final theme = Style.of(context);
+    final style = Style.of(context);
 
     return Container(
       width: 350,
@@ -82,7 +82,7 @@ class _ProfileViewState extends State<ProfileView> {
         maxHeight: height * 0.65,
       ),
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-      decoration: theme.cardDecoration,
+      decoration: style.cardDecoration,
       child: isLoading
           ? Center(
               child: LoadingAnimationWidget.staggeredDotsWave(
@@ -100,7 +100,7 @@ class _ProfileViewState extends State<ProfileView> {
                     children: [
                       _buildBackButton(),
                       Container(
-                        decoration: theme.cardDecoration,
+                        decoration: style.cardDecoration,
                         child: Icon(
                           Icons.person,
                           size: 45,
@@ -134,13 +134,13 @@ class _ProfileViewState extends State<ProfileView> {
             children: [
               Icon(
                 Icons.arrow_back_ios_rounded,
-                color: Colors.white.withOpacity(0.7),
+                color: Colors.white.withAlpha(178),
                 size: 20,
               ),
               Text(
                 "Atpakaļ",
                 style: GoogleFonts.poppins(
-                  color: Colors.white.withOpacity(0.9),
+                  color: Colors.white.withAlpha(229),
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                 ),
@@ -190,14 +190,14 @@ class _ProfileViewState extends State<ProfileView> {
                         children: [
                           Icon(
                             Icons.image_outlined,
-                            color: Colors.white.withOpacity(0.7),
+                            color: Colors.white.withAlpha(178),
                             size: 20,
                           ),
                           Center(
                             child: Text(
                               "Mainīt bildi",
                               style: GoogleFonts.poppins(
-                                color: Colors.white.withOpacity(0.9),
+                                color: Colors.white.withAlpha(229),
                                 fontSize: 12,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -234,14 +234,14 @@ class _ProfileViewState extends State<ProfileView> {
     return TextField(
       controller: ctrl,
       style: GoogleFonts.poppins(
-        color: Colors.white.withOpacity(0.9),
+        color: Colors.white.withAlpha(229),
         fontSize: 14,
       ),
       decoration: InputDecoration(
         hintText: hint,
         prefixIcon: Icon(
           icon,
-          color: Colors.white.withOpacity(0.7),
+          color: Colors.white.withAlpha(178),
         ),
       ),
     );
@@ -263,13 +263,13 @@ class _ProfileViewState extends State<ProfileView> {
             children: [
               Icon(
                 Icons.save_outlined,
-                color: Colors.white.withOpacity(0.9),
+                color: Colors.white.withAlpha(229),
                 size: 20,
               ),
               Text(
                 "Saglabāt izmaiņas",
                 style: GoogleFonts.poppins(
-                  color: Colors.white.withOpacity(0.9),
+                  color: Colors.white.withAlpha(229),
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
                 ),

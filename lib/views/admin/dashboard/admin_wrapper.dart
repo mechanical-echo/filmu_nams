@@ -37,30 +37,32 @@ class _AdminWrapperState extends State<AdminWrapper> {
 
   void _showLogoutDialog() {
     Future.microtask(() {
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text("Izlogoties"),
-            content: Text("Vai tiešām vēlaties izlogoties?"),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text("Nē"),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  FirebaseAuth.instance.signOut();
-                },
-                child: Text("Jā"),
-              ),
-            ],
-          );
-        },
-      );
+      if (mounted) {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text("Izlogoties"),
+              content: Text("Vai tiešām vēlaties izlogoties?"),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text("Nē"),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    FirebaseAuth.instance.signOut();
+                  },
+                  child: Text("Jā"),
+                ),
+              ],
+            );
+          },
+        );
+      }
     });
   }
 

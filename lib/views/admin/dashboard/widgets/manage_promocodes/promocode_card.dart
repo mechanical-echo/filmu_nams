@@ -53,7 +53,7 @@ class _PromocodeCardState extends State<PromocodeCard> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 24),
       decoration: BoxDecoration(
-        color: theme.primary.withOpacity(0.15),
+        color: theme.primary.withAlpha(40),
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(8),
           bottomLeft: Radius.circular(8),
@@ -79,7 +79,7 @@ class _PromocodeCardState extends State<PromocodeCard> {
         Text(
           _getDiscountTypeText(),
           style:
-              theme.bodyMedium.copyWith(color: theme.contrast.withOpacity(0.7)),
+              theme.bodyMedium.copyWith(color: theme.contrast.withAlpha(178)),
         ),
       ],
     );
@@ -97,7 +97,7 @@ class _PromocodeCardState extends State<PromocodeCard> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-        color: theme.primary.withOpacity(0.2),
+        color: theme.primary.withAlpha(50),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Text(

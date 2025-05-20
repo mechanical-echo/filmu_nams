@@ -78,13 +78,13 @@ class _MovieListState extends State<MovieList> {
                           Icon(
                             Icons.movie_filter_outlined,
                             size: 64,
-                            color: Colors.white.withOpacity(0.5),
+                            color: Colors.white.withAlpha(125),
                           ),
                           const SizedBox(height: 16),
                           Text(
                             'Nav pieejamu filmu',
                             style: GoogleFonts.poppins(
-                              color: Colors.white.withOpacity(0.5),
+                              color: Colors.white.withAlpha(125),
                               fontSize: 16,
                             ),
                           ),

@@ -359,7 +359,7 @@ class _DashboardState extends State<Dashboard> {
                   Text(
                     format(now),
                     style: style.headlineMedium.copyWith(
-                      color: style.contrast.withOpacity(0.7),
+                      color: style.contrast.withAlpha(178),
                     ),
                   ),
                 ],
@@ -477,7 +477,7 @@ class _DashboardState extends State<Dashboard> {
               width: 48,
               height: 48,
               decoration: BoxDecoration(
-                color: color.withOpacity(0.2),
+                color: color.withAlpha(50),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Center(
@@ -494,7 +494,7 @@ class _DashboardState extends State<Dashboard> {
                 Text(
                   title,
                   style: style.titleMedium.copyWith(
-                    color: style.contrast.withOpacity(0.7),
+                    color: style.contrast.withAlpha(178),
                   ),
                 ),
                 isLoading
@@ -545,7 +545,7 @@ class _DashboardState extends State<Dashboard> {
           Text(
             format(DateTime.now()),
             style: style.titleMedium.copyWith(
-              color: style.contrast.withOpacity(0.7),
+              color: style.contrast.withAlpha(178),
             ),
           ),
           const SizedBox(height: 8),
@@ -561,7 +561,7 @@ class _DashboardState extends State<Dashboard> {
                       width: double.infinity,
                       height: 100,
                       decoration: BoxDecoration(
-                        color: style.contrast.withOpacity(0.1),
+                        color: style.contrast.withAlpha(25),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Center(
@@ -602,7 +602,7 @@ class _DashboardState extends State<Dashboard> {
           Text(
             "Visvairāk pārdoto biļešu",
             style: style.titleMedium.copyWith(
-              color: style.contrast.withOpacity(0.7),
+              color: style.contrast.withAlpha(178),
             ),
           ),
           const SizedBox(height: 16),
@@ -611,7 +611,7 @@ class _DashboardState extends State<Dashboard> {
                   width: double.infinity,
                   height: 200,
                   decoration: BoxDecoration(
-                    color: style.contrast.withOpacity(0.1),
+                    color: style.contrast.withAlpha(25),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Center(
@@ -630,7 +630,7 @@ class _DashboardState extends State<Dashboard> {
                         borderRadius: BorderRadius.circular(8),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.2),
+                            color: Colors.black.withAlpha(50),
                             blurRadius: 8,
                             offset: const Offset(0, 4),
                           ),
@@ -680,7 +680,7 @@ class _DashboardState extends State<Dashboard> {
                         Icon(
                           Icons.calendar_today,
                           size: 16,
-                          color: style.contrast.withOpacity(0.7),
+                          color: style.contrast.withAlpha(178),
                         ),
                         const SizedBox(width: 8),
                         Text(
@@ -688,20 +688,20 @@ class _DashboardState extends State<Dashboard> {
                             mostPopularSchedule!.time.toDate(),
                           ),
                           style: style.bodyMedium.copyWith(
-                            color: style.contrast.withOpacity(0.7),
+                            color: style.contrast.withAlpha(178),
                           ),
                         ),
                         const SizedBox(width: 16),
                         Icon(
                           Icons.meeting_room,
                           size: 16,
-                          color: style.contrast.withOpacity(0.7),
+                          color: style.contrast.withAlpha(178),
                         ),
                         const SizedBox(width: 8),
                         Text(
                           "Zāle ${mostPopularSchedule!.hall}",
                           style: style.bodyMedium.copyWith(
-                            color: style.contrast.withOpacity(0.7),
+                            color: style.contrast.withAlpha(178),
                           ),
                         ),
                       ],
@@ -742,7 +742,7 @@ class _DashboardState extends State<Dashboard> {
                   width: double.infinity,
                   height: 100,
                   decoration: BoxDecoration(
-                    color: style.contrast.withOpacity(0.1),
+                    color: style.contrast.withAlpha(25),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Center(
@@ -758,10 +758,10 @@ class _DashboardState extends State<Dashboard> {
                     final isCompleted = payment.status == 'completed';
                     return Container(
                       decoration: BoxDecoration(
-                        color: style.contrast.withOpacity(0.05),
+                        color: style.contrast.withAlpha(15),
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(
-                          color: style.contrast.withOpacity(0.1),
+                          color: style.contrast.withAlpha(25),
                         ),
                       ),
                       padding: const EdgeInsets.all(12),
@@ -792,7 +792,7 @@ class _DashboardState extends State<Dashboard> {
                                     payment.purchaseDate.toDate(),
                                   ),
                                   style: style.bodySmall.copyWith(
-                                    color: style.contrast.withOpacity(0.7),
+                                    color: style.contrast.withAlpha(178),
                                   ),
                                 ),
                               ],
@@ -816,8 +816,8 @@ class _DashboardState extends State<Dashboard> {
                                 ),
                                 decoration: BoxDecoration(
                                   color: isCompleted
-                                      ? Colors.green.withOpacity(0.2)
-                                      : Colors.red.withOpacity(0.2),
+                                      ? Colors.green.withAlpha(50)
+                                      : Colors.red.withAlpha(50),
                                   borderRadius: BorderRadius.circular(4),
                                 ),
                                 child: Text(
@@ -871,7 +871,7 @@ class _DashboardState extends State<Dashboard> {
                       width: double.infinity,
                       height: 100,
                       decoration: BoxDecoration(
-                        color: style.contrast.withOpacity(0.1),
+                        color: style.contrast.withAlpha(25),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Center(
@@ -888,10 +888,10 @@ class _DashboardState extends State<Dashboard> {
                           onTap: () => _openMovieDialog(movie),
                           child: Container(
                             decoration: BoxDecoration(
-                              color: style.contrast.withOpacity(0.05),
+                              color: style.contrast.withAlpha(15),
                               borderRadius: BorderRadius.circular(8),
                               border: Border.all(
-                                color: style.contrast.withOpacity(0.1),
+                                color: style.contrast.withAlpha(25),
                               ),
                             ),
                             padding: const EdgeInsets.all(8),
@@ -934,8 +934,7 @@ class _DashboardState extends State<Dashboard> {
                                       Text(
                                         movie.genre,
                                         style: style.bodySmall.copyWith(
-                                          color:
-                                              style.contrast.withOpacity(0.7),
+                                          color: style.contrast.withAlpha(178),
                                         ),
                                       ),
                                       Row(

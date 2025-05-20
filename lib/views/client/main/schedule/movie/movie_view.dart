@@ -97,8 +97,8 @@ class _MovieViewState extends State<MovieView>
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    Colors.black.withOpacity(0),
-                    Colors.black.withOpacity(0.7),
+                    Colors.black.withAlpha(0),
+                    Colors.black.withAlpha(178),
                     Colors.black,
                   ],
                   stops: const [0.0, 0.5, 1.0],
@@ -128,7 +128,7 @@ class _MovieViewState extends State<MovieView>
                             vertical: 6,
                           ),
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.2),
+                            color: Colors.white.withAlpha(50),
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Row(
@@ -211,13 +211,13 @@ class _MovieViewState extends State<MovieView>
                                       vertical: 6,
                                     ),
                                     decoration: BoxDecoration(
-                                      color: Colors.white.withOpacity(0.1),
+                                      color: Colors.white.withAlpha(25),
                                       borderRadius: BorderRadius.circular(20),
                                     ),
                                     child: Text(
                                       actor,
                                       style: GoogleFonts.poppins(
-                                        color: Colors.white.withOpacity(0.8),
+                                        color: Colors.white.withAlpha(205),
                                         fontSize: 14,
                                       ),
                                     ),
@@ -245,7 +245,7 @@ class _MovieViewState extends State<MovieView>
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1),
+        color: Colors.white.withAlpha(25),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Row(
@@ -253,14 +253,14 @@ class _MovieViewState extends State<MovieView>
         children: [
           Icon(
             icon,
-            color: Colors.white.withOpacity(0.8),
+            color: Colors.white.withAlpha(205),
             size: 16,
           ),
           const SizedBox(width: 4),
           Text(
             label,
             style: GoogleFonts.poppins(
-              color: Colors.white.withOpacity(0.8),
+              color: Colors.white.withAlpha(205),
               fontSize: 14,
             ),
           ),

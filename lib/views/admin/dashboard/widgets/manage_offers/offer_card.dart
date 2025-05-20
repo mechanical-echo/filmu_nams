@@ -73,7 +73,7 @@ class _OfferCardState extends State<OfferCard> {
           ),
         ),
         errorWidget: (context, url, error) => Container(
-          color: Style.of(context).surfaceVariant,
+          color: Theme.of(context).colorScheme.surfaceContainerHighest,
           child: Icon(Icons.image_not_supported),
         ),
       ),
@@ -97,7 +97,7 @@ class _OfferCardState extends State<OfferCard> {
         Text(
           widget.data.description,
           style:
-              theme.bodyMedium.copyWith(color: theme.contrast.withOpacity(0.7)),
+              theme.bodyMedium.copyWith(color: theme.contrast.withAlpha(178)),
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
         ),
@@ -112,13 +112,12 @@ class _OfferCardState extends State<OfferCard> {
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
-          color: Colors.grey.withOpacity(0.2),
+          color: Colors.grey.withAlpha(50),
           borderRadius: BorderRadius.circular(16),
         ),
         child: Text(
           'Nav promokoda',
-          style:
-              theme.bodySmall.copyWith(color: theme.contrast.withOpacity(0.5)),
+          style: theme.bodySmall.copyWith(color: theme.contrast.withAlpha(125)),
         ),
       );
     }
@@ -135,7 +134,7 @@ class _OfferCardState extends State<OfferCard> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-        color: theme.primary.withOpacity(0.2),
+        color: theme.primary.withAlpha(50),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -152,7 +151,7 @@ class _OfferCardState extends State<OfferCard> {
             Text(
               value,
               style: theme.bodySmall.copyWith(
-                color: theme.contrast.withOpacity(0.7),
+                color: theme.contrast.withAlpha(178),
               ),
             ),
         ],

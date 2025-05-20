@@ -107,7 +107,7 @@ class _ProfileState extends State<Profile> {
                 child: Text(
                   user!.displayName!,
                   style: GoogleFonts.poppins(
-                    color: Colors.white.withOpacity(0.9),
+                    color: Colors.white.withAlpha(229),
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                   ),
@@ -119,7 +119,7 @@ class _ProfileState extends State<Profile> {
           ),
           const SizedBox(height: 15),
           Divider(
-            color: theme.contrast.withOpacity(0.1),
+            color: theme.contrast.withAlpha(25),
             height: 1,
           ),
           const SizedBox(height: 15),
@@ -213,7 +213,9 @@ class _ProfileState extends State<Profile> {
     IconData icon,
     VoidCallback onPressed,
   ) {
-    final theme = Style.of(context);
+    final style = Style.of(context);
+    final theme = Theme.of(context);
+
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -223,19 +225,19 @@ class _ProfileState extends State<Profile> {
           width: double.infinity,
           padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
           margin: const EdgeInsets.only(bottom: 10),
-          decoration: theme.cardDecoration,
+          decoration: style.cardDecoration,
           child: Row(
             children: [
               Icon(
                 icon,
-                color: theme.primary.withOpacity(0.7),
+                color: theme.primaryColor.withAlpha(178),
                 size: 24,
               ),
               const SizedBox(width: 15),
               Text(
                 title,
                 style: GoogleFonts.poppins(
-                  color: theme.primary.withOpacity(0.9),
+                  color: theme.primaryColor.withAlpha(229),
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                 ),
@@ -243,7 +245,7 @@ class _ProfileState extends State<Profile> {
               const Spacer(),
               Icon(
                 Icons.arrow_forward_ios_rounded,
-                color: theme.contrast.withOpacity(0.5),
+                color: style.contrast.withAlpha(125),
                 size: 16,
               ),
             ],

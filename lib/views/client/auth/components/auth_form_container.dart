@@ -20,7 +20,7 @@ class AuthFormContainer extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 25),
       width: width,
       decoration: BoxDecoration(
-        color: Theme.of(context).dialogBackgroundColor,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(24),
       ),
       child: child,

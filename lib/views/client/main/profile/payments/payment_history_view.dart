@@ -127,7 +127,7 @@ class _PaymentHistoryViewState extends State<PaymentHistoryView> {
                       style: style.headlineMedium.copyWith(
                         color: isCompleted
                             ? style.contrast
-                            : Colors.red.withOpacity(0.7),
+                            : Colors.red.withAlpha(178),
                       ),
                     ),
                     Text(
@@ -178,7 +178,7 @@ class _PaymentHistoryViewState extends State<PaymentHistoryView> {
                               const SizedBox(width: 4),
                               Icon(Icons.copy,
                                   size: 14,
-                                  color: style.contrast.withOpacity(0.5)),
+                                  color: style.contrast.withAlpha(125)),
                             ],
                           ),
                         ),
@@ -187,7 +187,7 @@ class _PaymentHistoryViewState extends State<PaymentHistoryView> {
                       Text(
                         formatDate(payment.purchaseDate),
                         style: style.bodyMedium
-                            .copyWith(color: style.contrast.withOpacity(0.7)),
+                            .copyWith(color: style.contrast.withAlpha(178)),
                       ),
                     ],
                   ),
@@ -209,12 +209,12 @@ class _PaymentHistoryViewState extends State<PaymentHistoryView> {
                             Icon(
                               Icons.meeting_room,
                               size: 14,
-                              color: style.contrast.withOpacity(0.5),
+                              color: style.contrast.withAlpha(125),
                             ),
                             Text(
                               '${payment.schedule.id.substring(0, payment.schedule.id.length - 10)}...',
                               style: style.bodySmall.copyWith(
-                                color: style.contrast.withOpacity(0.7),
+                                color: style.contrast.withAlpha(178),
                               ),
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -241,10 +241,13 @@ class _PaymentHistoryViewState extends State<PaymentHistoryView> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                   decoration: BoxDecoration(
-                    color: style.surfaceVariant.withOpacity(0.1),
+                    color: Theme.of(context)
+                        .colorScheme
+                        .surfaceContainerHighest
+                        .withAlpha(25),
                     border: Border(
                       top: BorderSide(
-                        color: Colors.grey.withOpacity(0.3),
+                        color: Colors.grey.withAlpha(76),
                       ),
                     ),
                   ),
@@ -325,7 +328,7 @@ class _PaymentHistoryViewState extends State<PaymentHistoryView> {
                           child: Icon(
                             Icons.copy,
                             size: 16,
-                            color: style.contrast.withOpacity(0.5),
+                            color: style.contrast.withAlpha(125),
                           ),
                         ),
                       ],

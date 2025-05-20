@@ -20,7 +20,7 @@ class _QRScannerViewState extends State<QRScannerView> {
   bool _processing = false;
   bool _detected = false;
   String _lastScannedId = '';
-  List<String> _scannedTickets = [];
+  final List<String> _scannedTickets = [];
 
   Style get style => Style.of(context);
 
@@ -63,37 +63,41 @@ class _QRScannerViewState extends State<QRScannerView> {
       }
 
       final bool success = await _ticketController.updateTicketStatus(
-          ticketId,
-          TicketStatusEnum.used
-      );
+          ticketId, TicketStatusEnum.used);
 
       if (success) {
         setState(() {
           _scannedTickets.add(ticketId);
         });
 
-        StylizedDialog.dialog(
-          Icons.check_circle_outline,
-          context,
-          "Biļete apstiprināta",
-          "Biļetes statuss ir veiksmīgi atjaunināts uz 'izmantots'.\n\nFilma: ${ticketData['movieTitle']}\nVieta: ${ticketData['seat']}\nZāle: ${ticketData['hall']}",
-        );
+        if (mounted) {
+          StylizedDialog.dialog(
+            Icons.check_circle_outline,
+            context,
+            "Biļete apstiprināta",
+            "Biļetes statuss ir veiksmīgi atjaunināts uz 'izmantots'.\n\nFilma: ${ticketData['movieTitle']}\nVieta: ${ticketData['seat']}\nZāle: ${ticketData['hall']}",
+          );
+        }
       } else {
+        if (mounted) {
+          StylizedDialog.dialog(
+            Icons.error_outline,
+            context,
+            "Kļūda",
+            "Neizdevās atjaunināt biļetes statusu. Lūdzu, mēģiniet vēlreiz.",
+          );
+        }
+      }
+    } catch (e) {
+      debugPrint('Error processing QR code: $e');
+      if (mounted) {
         StylizedDialog.dialog(
           Icons.error_outline,
           context,
           "Kļūda",
-          "Neizdevās atjaunināt biļetes statusu. Lūdzu, mēģiniet vēlreiz.",
+          "Nederīgs QR kods vai neizdevās to apstrādāt. Lūdzu, mēģiniet vēlreiz.",
         );
       }
-    } catch (e) {
-      debugPrint('Error processing QR code: $e');
-      StylizedDialog.dialog(
-        Icons.error_outline,
-        context,
-        "Kļūda",
-        "Nederīgs QR kods vai neizdevās to apstrādāt. Lūdzu, mēģiniet vēlreiz.",
-      );
     } finally {
       Future.delayed(const Duration(seconds: 2), () {
         if (mounted) {
@@ -134,7 +138,7 @@ class _QRScannerViewState extends State<QRScannerView> {
                 left: -35,
                 child: Icon(
                   Icons.qr_code_scanner,
-                  color: Colors.white.withOpacity(0.9),
+                  color: Colors.white.withAlpha(229),
                 ),
               ),
               Text(
@@ -165,11 +169,12 @@ class _QRScannerViewState extends State<QRScannerView> {
         child: SafeArea(
           child: Column(
             children: [
-              Text(_processing
-                  ? "Skenējam..."
-                  : _detected
-                    ? "Biļete jau bija noskenēta"
-                    : "Gatavs skenēšanai",
+              Text(
+                _processing
+                    ? "Skenējam..."
+                    : _detected
+                        ? "Biļete jau bija noskenēta"
+                        : "Gatavs skenēšanai",
               ),
               const SizedBox(height: 20),
               Expanded(
@@ -188,7 +193,7 @@ class _QRScannerViewState extends State<QRScannerView> {
                         Container(
                           decoration: BoxDecoration(
                             border: Border.all(
-                              color: style.primary.withOpacity(0.5),
+                              color: style.primary.withAlpha(125),
                               width: 2,
                             ),
                             borderRadius: BorderRadius.circular(20),
@@ -212,7 +217,7 @@ class _QRScannerViewState extends State<QRScannerView> {
                         'Novietojiet biļetes QR kodu ierīces kamerai priekšā',
                         textAlign: TextAlign.center,
                         style: GoogleFonts.poppins(
-                          color: Colors.white.withOpacity(0.9),
+                          color: Colors.white.withAlpha(229),
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
                         ),

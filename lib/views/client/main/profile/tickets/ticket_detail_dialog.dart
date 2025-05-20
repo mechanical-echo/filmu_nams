@@ -53,7 +53,7 @@ class _TicketDetailDialogState extends State<TicketDetailDialog> {
                   IconButton(
                     icon: Icon(
                       Icons.close,
-                      color: Colors.white.withOpacity(0.7),
+                      color: Colors.white.withAlpha(178),
                     ),
                     onPressed: () => Navigator.of(context).pop(),
                   ),
@@ -80,7 +80,7 @@ class _TicketDetailDialogState extends State<TicketDetailDialog> {
                               placeholder: (context, url) => Container(
                                 width: 120,
                                 height: 180,
-                                color: Colors.black.withOpacity(0.05),
+                                color: Colors.black.withAlpha(15),
                                 child: Center(
                                   child: LoadingAnimationWidget.stretchedDots(
                                     color: Colors.black,
@@ -91,10 +91,10 @@ class _TicketDetailDialogState extends State<TicketDetailDialog> {
                               errorWidget: (context, url, error) => Container(
                                 width: 120,
                                 height: 180,
-                                color: Colors.black.withOpacity(0.05),
+                                color: Colors.black.withAlpha(15),
                                 child: Icon(
                                   Icons.movie_outlined,
-                                  color: Colors.black.withOpacity(0.3),
+                                  color: Colors.black.withAlpha(76),
                                   size: 40,
                                 ),
                               ),
@@ -159,10 +159,10 @@ class _TicketDetailDialogState extends State<TicketDetailDialog> {
                         Container(
                           padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
-                            color: Colors.black.withOpacity(0.03),
+                            color: Colors.black.withAlpha(8),
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
-                              color: Colors.black.withOpacity(0.1),
+                              color: Colors.black.withAlpha(25),
                               width: 1,
                             ),
                           ),
@@ -205,7 +205,7 @@ class _TicketDetailDialogState extends State<TicketDetailDialog> {
                       Text(
                         'Biļetes ID: ${widget.ticket.id}',
                         style: GoogleFonts.poppins(
-                          color: Colors.black.withOpacity(0.5),
+                          color: Colors.black.withAlpha(125),
                           fontSize: 12,
                         ),
                       ),
@@ -220,8 +220,8 @@ class _TicketDetailDialogState extends State<TicketDetailDialog> {
                 padding: const EdgeInsets.symmetric(vertical: 8),
                 decoration: BoxDecoration(
                   color: isUsed
-                      ? Colors.green.withOpacity(0.1)
-                      : Colors.red.withOpacity(0.1),
+                      ? Colors.green.withAlpha(25)
+                      : Colors.red.withAlpha(25),
                   borderRadius: const BorderRadius.only(
                     bottomLeft: Radius.circular(20),
                     bottomRight: Radius.circular(20),
@@ -252,7 +252,7 @@ class _TicketDetailDialogState extends State<TicketDetailDialog> {
         Icon(
           icon,
           size: 16,
-          color: Colors.white.withOpacity(0.5),
+          color: Colors.white.withAlpha(125),
         ),
         Expanded(
           child: Text(

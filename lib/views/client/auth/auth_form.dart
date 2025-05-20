@@ -1,7 +1,9 @@
+import 'package:filmu_nams/providers/theme_provider.dart';
 import 'package:filmu_nams/views/client/auth/login/login.dart';
 import 'package:filmu_nams/views/client/auth/registration/registration.dart';
 import 'package:filmu_nams/assets/decorations/background.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../providers/style.dart';
 
@@ -53,48 +55,78 @@ class _AuthFormState extends State<AuthForm>
     });
   }
 
+  Style get theme => Style.of(context);
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final theme = Style.of(context);
+    final themeProvider = Provider.of<ThemeProvider>(context);
 
     return Scaffold(
       body: Background(
         child: SafeArea(
+          bottom: false,
           child: SingleChildScrollView(
             child: SizedBox(
-              height: size.height - MediaQuery.of(context).padding.top - 50,
+              height: size.height - MediaQuery.of(context).padding.top - 0,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Flexible(
+                  Expanded(
                     flex: 2,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    child: Stack(
+                      alignment: Alignment.topCenter,
                       children: [
-                        const SizedBox(height: 20),
-                        Text(
-                          'Laipni lūdzam',
-                          style: theme.displayMedium,
+                        Positioned(
+                          left: 0,
+                          child: IconButton(
+                            icon: Icon(
+                              theme.isDark ? Icons.light_mode : Icons.dark_mode,
+                            ),
+                            onPressed: () => themeProvider.setTheme(theme.isDark
+                                ? AppTheme.redLight
+                                : AppTheme.redDark),
+                          ),
                         ),
-                        const SizedBox(height: 8),
-                        Text(
-                          'Filmu nams',
-                          style: theme.displayLarge,
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const SizedBox(height: 20),
+                            Text(
+                              'Laipni lūdzam',
+                              style: theme.displayMedium,
+                            ),
+                            Text(
+                              'Filmu nams',
+                              style: theme.displayLarge.copyWith(
+                                fontSize: 42,
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
                   ),
-                  Flexible(
+                  Expanded(
                     flex: 4,
                     child: FadeTransition(
                       opacity: _fadeAnimation,
                       child: Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 24),
-                        decoration: theme.cardDecoration,
+                        padding: const EdgeInsets.only(bottom: 20, top: 20),
+                        decoration: (theme.isDark
+                                ? theme.opaqueCardDecoration
+                                : theme.cardDecoration)
+                            .copyWith(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(45),
+                            topRight: Radius.circular(45),
+                          ),
+                        ),
                         child: ClipRRect(
-                            borderRadius: BorderRadius.circular(24),
-                            child: views[currentView]),
+                          borderRadius: BorderRadius.circular(24),
+                          child: views[currentView],
+                        ),
                       ),
                     ),
                   ),

@@ -23,7 +23,7 @@ class Style extends InheritedWidget {
 
   bool get isDark => themeProvider.isDark;
 
-  Color get primary => themeProvider.primary;
+  Color get primary => themeProvider.currentTheme.primaryColor;
   Color get onPrimary => themeProvider.currentTheme.colorScheme.onPrimary;
   Color get primaryContainer =>
       themeProvider.currentTheme.colorScheme.primaryContainer;
@@ -47,12 +47,8 @@ class Style extends InheritedWidget {
       themeProvider.currentTheme.colorScheme.errorContainer;
   Color get onErrorContainer =>
       themeProvider.currentTheme.colorScheme.onErrorContainer;
-  Color get background => themeProvider.currentTheme.colorScheme.background;
-  Color get onBackground => themeProvider.currentTheme.colorScheme.onBackground;
   Color get surface => themeProvider.currentTheme.colorScheme.surface;
   Color get onSurface => themeProvider.currentTheme.colorScheme.onSurface;
-  Color get surfaceVariant =>
-      themeProvider.currentTheme.colorScheme.surfaceVariant;
   Color get onSurfaceVariant =>
       themeProvider.currentTheme.colorScheme.onSurfaceVariant;
   Color get outline => themeProvider.currentTheme.colorScheme.outline;
@@ -93,22 +89,22 @@ class Style extends InheritedWidget {
   Color get themeBgColor => isDark ? Colors.black : Colors.white;
 
   BoxDecoration get cardDecoration => BoxDecoration(
-        color: Colors.white.withOpacity(isDark ? 0.05 : 1),
+        color: Colors.white.withAlpha(isDark ? 12 : 255),
         borderRadius: BorderRadius.circular(5),
         border: Border.all(
-          color: contrast.withOpacity(0.2),
+          color: contrast.withAlpha(50),
           width: 1,
         ),
       );
 
   BoxDecoration get roundCardDecoration => BoxDecoration(
-        color: Colors.white.withOpacity(isDark ? 0.07 : 1),
+        color: Colors.white.withAlpha(isDark ? 17 : 255),
         borderRadius: BorderRadius.circular(15),
         boxShadow: isDark
             ? [BoxShadow()]
             : [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.2),
+                  color: Colors.black.withAlpha(50),
                   blurRadius: 5,
                   offset: const Offset(0, 3),
                 ),
@@ -119,7 +115,7 @@ class Style extends InheritedWidget {
         color: primary,
         borderRadius: BorderRadius.circular(5),
         border: Border.all(
-          color: secondary.withOpacity(0.1),
+          color: secondary.withAlpha(25),
           width: 1,
         ),
       );
@@ -128,16 +124,16 @@ class Style extends InheritedWidget {
         color: Colors.grey[900],
         borderRadius: BorderRadius.circular(5),
         border: Border.all(
-          color: contrast.withOpacity(0.1),
+          color: contrast.withAlpha(25),
           width: 1,
         ),
       );
 
   BoxDecoration get activeCardDecoration => BoxDecoration(
-        color: Colors.white.withOpacity(0.1),
+        color: Colors.white.withAlpha(isDark ? 25 : 255),
         borderRadius: BorderRadius.circular(5),
         border: Border.all(
-          color: Colors.white.withOpacity(0.1),
+          color: Colors.white.withAlpha(25),
           width: 1,
         ),
       );
@@ -147,7 +143,7 @@ class Style extends InheritedWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: shadow.withOpacity(0.2),
+            color: shadow.withAlpha(50),
             blurRadius: 12,
             offset: const Offset(0, 6),
           ),
@@ -160,13 +156,13 @@ class Style extends InheritedWidget {
           end: Alignment.bottomRight,
           colors: [
             primary,
-            primary.withOpacity(0.7),
+            primary.withAlpha(178),
           ],
         ),
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: shadow.withOpacity(0.1),
+            color: shadow.withAlpha(25),
             blurRadius: 8,
             offset: const Offset(0, 4),
           ),
@@ -178,7 +174,7 @@ class Style extends InheritedWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: shadow.withOpacity(0.1),
+            color: shadow.withAlpha(25),
             blurRadius: 8,
             offset: const Offset(0, 4),
           ),

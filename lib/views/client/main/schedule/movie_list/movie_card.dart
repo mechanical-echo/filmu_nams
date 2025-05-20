@@ -49,7 +49,7 @@ class MovieCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.2),
+              color: Colors.black.withAlpha(50),
               blurRadius: 8,
               offset: const Offset(0, 4),
             ),
@@ -87,7 +87,7 @@ class MovieCard extends StatelessWidget {
                       end: Alignment.bottomCenter,
                       colors: [
                         Colors.transparent,
-                        Colors.black.withOpacity(0.7),
+                        Colors.black.withAlpha(178),
                       ],
                     ),
                   ),
@@ -103,7 +103,7 @@ class MovieCard extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
+                        color: Colors.white.withAlpha(50),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Row(
@@ -153,7 +153,7 @@ class MovieCard extends StatelessWidget {
                         if (time != null) ...[
                           _buildDetailChip(
                             Icons.calendar_today,
-                            '${getTime()} - ${hall}. Zāle',
+                            '${getTime()} - $hall. Zāle',
                           ),
                         ],
                       ],
@@ -172,7 +172,7 @@ class MovieCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1),
+        color: Colors.white.withAlpha(25),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Row(
@@ -180,14 +180,14 @@ class MovieCard extends StatelessWidget {
         children: [
           Icon(
             icon,
-            color: Colors.white.withOpacity(0.8),
+            color: Colors.white.withAlpha(205),
             size: 14,
           ),
           const SizedBox(width: 4),
           Text(
             label,
             style: GoogleFonts.poppins(
-              color: Colors.white.withOpacity(0.8),
+              color: Colors.white.withAlpha(205),
               fontSize: 12,
             ),
           ),

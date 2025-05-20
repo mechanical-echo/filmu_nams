@@ -162,7 +162,7 @@ class MovieController {
       }
     } catch (e) {
       debugPrint('Error deleting movie: $e');
-      throw e;
+      rethrow;
     }
   }
 

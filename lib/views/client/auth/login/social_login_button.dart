@@ -1,7 +1,7 @@
 import 'package:filmu_nams/providers/style.dart';
 import 'package:flutter/material.dart';
 
-class SocialLoginButton extends StatelessWidget {
+class SocialLoginButton extends StatefulWidget {
   final String iconPath;
   final String label;
   final VoidCallback onPressed;
@@ -18,11 +18,17 @@ class SocialLoginButton extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    final style = Style.of(context);
+  State<SocialLoginButton> createState() => _SocialLoginButtonState();
+}
 
+class _SocialLoginButtonState extends State<SocialLoginButton> {
+  Style get style => Style.of(context);
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return InkWell(
-      onTap: onPressed,
+      onTap: widget.onPressed,
       child: Container(
         decoration: style.cardDecoration,
         padding: const EdgeInsets.symmetric(
@@ -31,18 +37,18 @@ class SocialLoginButton extends StatelessWidget {
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
-          spacing: 12,
+          spacing: 8,
           children: [
             Image.asset(
-              iconPath,
+              widget.iconPath,
               width: 24,
               height: 24,
-              color: Colors.white,
+              color: style.isDark ? Colors.white60 : theme.primaryColor,
             ),
             FittedBox(
               child: Text(
-                label,
-                style: style.bodyMedium,
+                widget.label,
+                style: theme.textTheme.bodyMedium,
               ),
             ),
           ],

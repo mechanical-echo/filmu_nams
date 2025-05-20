@@ -2,7 +2,6 @@ import 'package:filmu_nams/controllers/registration_controller.dart';
 import 'package:filmu_nams/views/client/auth/registration/registration_validator.dart';
 import 'package:filmu_nams/views/client/auth/registration/registration_view.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class Registration extends StatefulWidget {
   final void Function(int? view) onViewChange;
@@ -63,10 +62,11 @@ class _RegistrationState extends State<Registration> {
     }
   }
 
+  // Style get theme => Style.of(context);
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
     return RegistrationView(
       formKey: _formKey,
       nameController: _nameController,
@@ -91,25 +91,24 @@ class _RegistrationState extends State<Registration> {
               child: Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 34, vertical: 24),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      'Reģistrēties',
-                      style: GoogleFonts.poppins(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w600,
-                        color: theme.colorScheme.onSurface,
-                      ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Reģistrēties',
+                          style: Theme.of(context).textTheme.displaySmall,
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'Izveidojiet savu kontu',
+                          style: theme.textTheme.bodyMedium,
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Izveidojiet savu kontu',
-                      style: GoogleFonts.poppins(
-                        fontSize: 14,
-                        color: theme.colorScheme.onSurface.withOpacity(0.7),
-                      ),
-                    ),
+                    Icon(Icons.person_add, size: 42),
                   ],
                 ),
               ),
@@ -123,23 +122,7 @@ class _RegistrationState extends State<Registration> {
                     validator: RegistrationValidator.validateName,
                     decoration: InputDecoration(
                       labelText: 'Vārds',
-                      prefixIcon: Icon(Icons.person_outline,
-                          color: theme.colorScheme.primary),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide:
-                            BorderSide(color: theme.colorScheme.outline),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide:
-                            BorderSide(color: theme.colorScheme.outline),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide:
-                            BorderSide(color: theme.colorScheme.primary),
-                      ),
+                      prefixIcon: Icon(Icons.person_outline),
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -148,23 +131,7 @@ class _RegistrationState extends State<Registration> {
                     validator: RegistrationValidator.validateEmail,
                     decoration: InputDecoration(
                       labelText: 'E-pasts',
-                      prefixIcon: Icon(Icons.email_outlined,
-                          color: theme.colorScheme.primary),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide:
-                            BorderSide(color: theme.colorScheme.outline),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide:
-                            BorderSide(color: theme.colorScheme.outline),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide:
-                            BorderSide(color: theme.colorScheme.primary),
-                      ),
+                      prefixIcon: Icon(Icons.email_outlined),
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -174,32 +141,15 @@ class _RegistrationState extends State<Registration> {
                     obscureText: _obscurePassword,
                     decoration: InputDecoration(
                       labelText: 'Parole',
-                      prefixIcon: Icon(Icons.lock_outline,
-                          color: theme.colorScheme.primary),
+                      prefixIcon: Icon(Icons.lock_outline),
                       suffixIcon: IconButton(
                         icon: Icon(
                           _obscurePassword
                               ? Icons.visibility_outlined
                               : Icons.visibility_off_outlined,
-                          color: theme.colorScheme.primary,
                         ),
                         onPressed: () => setState(
                             () => _obscurePassword = !_obscurePassword),
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide:
-                            BorderSide(color: theme.colorScheme.outline),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide:
-                            BorderSide(color: theme.colorScheme.outline),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide:
-                            BorderSide(color: theme.colorScheme.primary),
                       ),
                     ),
                   ),
@@ -212,32 +162,15 @@ class _RegistrationState extends State<Registration> {
                     obscureText: _obscureConfirmPassword,
                     decoration: InputDecoration(
                       labelText: 'Apstiprināt paroli',
-                      prefixIcon: Icon(Icons.lock_outline,
-                          color: theme.colorScheme.primary),
+                      prefixIcon: Icon(Icons.lock_outline),
                       suffixIcon: IconButton(
                         icon: Icon(
                           _obscureConfirmPassword
                               ? Icons.visibility_outlined
                               : Icons.visibility_off_outlined,
-                          color: theme.colorScheme.primary,
                         ),
                         onPressed: () => setState(() =>
                             _obscureConfirmPassword = !_obscureConfirmPassword),
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide:
-                            BorderSide(color: theme.colorScheme.outline),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide:
-                            BorderSide(color: theme.colorScheme.outline),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide:
-                            BorderSide(color: theme.colorScheme.primary),
                       ),
                     ),
                   ),
@@ -247,13 +180,6 @@ class _RegistrationState extends State<Registration> {
                     height: 48,
                     child: ElevatedButton(
                       onPressed: _isLoading ? null : _handleRegistration,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: theme.colorScheme.primary,
-                        foregroundColor: theme.colorScheme.onPrimary,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
                       child: _isLoading
                           ? const SizedBox(
                               width: 24,
@@ -264,25 +190,13 @@ class _RegistrationState extends State<Registration> {
                                     AlwaysStoppedAnimation<Color>(Colors.white),
                               ),
                             )
-                          : Text(
-                              'Reģistrēties',
-                              style: GoogleFonts.poppins(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
+                          : Text('Reģistrēties'),
                     ),
                   ),
                   const SizedBox(height: 16),
                   TextButton(
                     onPressed: () => widget.onViewChange(0),
-                    child: Text(
-                      'Vai jums jau ir konts?',
-                      style: GoogleFonts.poppins(
-                        color: theme.colorScheme.primary,
-                        fontSize: 14,
-                      ),
-                    ),
+                    child: Text('Vai jums jau ir konts?'),
                   ),
                   const SizedBox(height: 16),
                 ],

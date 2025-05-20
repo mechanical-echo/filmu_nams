@@ -275,36 +275,40 @@ class _TMDBMovieCardState extends State<TMDBMovieCard> {
                 DateTime.parse(value['release_date']),
               ),
             }, 'new');
-            Navigator.of(context).pop();
-            showGeneralDialog(
-              context: context,
-              pageBuilder: (context, animation, secondaryAnimation) {
-                return EditMovieDialog(data: movie);
-              },
-              transitionBuilder:
-                  (context, animation, secondaryAnimation, child) {
-                return FadeTransition(
-                  opacity: animation,
-                  child: ScaleTransition(
-                    scale: Tween<double>(begin: 0.8, end: 1.0).animate(
-                      CurvedAnimation(
-                        parent: animation,
-                        curve: Curves.easeOutBack,
+            if (context.mounted) {
+              Navigator.of(context).pop();
+              showGeneralDialog(
+                context: context,
+                pageBuilder: (context, animation, secondaryAnimation) {
+                  return EditMovieDialog(data: movie);
+                },
+                transitionBuilder:
+                    (context, animation, secondaryAnimation, child) {
+                  return FadeTransition(
+                    opacity: animation,
+                    child: ScaleTransition(
+                      scale: Tween<double>(begin: 0.8, end: 1.0).animate(
+                        CurvedAnimation(
+                          parent: animation,
+                          curve: Curves.easeOutBack,
+                        ),
                       ),
+                      child: child,
                     ),
-                    child: child,
-                  ),
-                );
-              },
-              transitionDuration: const Duration(milliseconds: 400),
-            );
+                  );
+                },
+                transitionDuration: const Duration(milliseconds: 400),
+              );
+            }
           }).catchError((error) {
             debugPrint('Error fetching movie details: $error');
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('Error fetching movie details: $error'),
-              ),
-            );
+            if (context.mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Error fetching movie details: $error'),
+                ),
+              );
+            }
           });
         },
         child: Stack(

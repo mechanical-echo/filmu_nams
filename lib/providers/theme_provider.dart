@@ -73,7 +73,9 @@ class ThemeProvider extends ChangeNotifier {
       colorScheme: ColorScheme.fromSeed(
         seedColor: seedColor,
         brightness: brightness,
+        primary: seedColor,
       ),
+      primaryColor: seedColor,
       textTheme: TextTheme(
         displayLarge: GoogleFonts.poppins(
           fontSize: 32,
@@ -185,31 +187,31 @@ class ThemeProvider extends ChangeNotifier {
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
-        iconColor: Color(0xFFEEEEEE).withOpacity(0.7),
+        iconColor: Color(0xFFEEEEEE).withAlpha(178),
         hintStyle: GoogleFonts.poppins(
-          color: Color(0xFFEEEEEE).withOpacity(0.5),
+          color: Color(0xFFEEEEEE).withAlpha(125),
           fontSize: 14,
         ),
         filled: true,
-        fillColor: Color(0xFFEEEEEE).withOpacity(0.03),
+        fillColor: Color(0xFFEEEEEE).withAlpha(8),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(5),
           borderSide: BorderSide(
-            color: Color(0xFFEEEEEE).withOpacity(0.1),
+            color: Color(isDark ? 0xFFEEEEEE : 0xFF121212).withAlpha(25),
             width: 1,
           ),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(5),
           borderSide: BorderSide(
-            color: Color(0xFFEEEEEE).withOpacity(0.1),
+            color: Color(isDark ? 0xFFEEEEEE : 0xFF121212).withAlpha(25),
             width: 1,
           ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(5),
           borderSide: BorderSide(
-            color: Color(0xFFEEEEEE).withOpacity(0.2),
+            color: Color(isDark ? 0xFFEEEEEE : 0xFF121212).withAlpha(50),
             width: 1,
           ),
         ),
@@ -222,7 +224,7 @@ class ThemeProvider extends ChangeNotifier {
             fontSize: 16,
             fontWeight: FontWeight.w600,
           ),
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 0),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
@@ -245,11 +247,9 @@ class ThemeProvider extends ChangeNotifier {
       ),
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
-          foregroundColor: seedColor,
-          textStyle: GoogleFonts.poppins(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
+          foregroundColor:
+              Color(isDark ? 0xFFEEEEEE : 0xFF121212).withAlpha(165),
+          textStyle: GoogleFonts.poppins(fontSize: 14),
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         ),
       ),
@@ -274,7 +274,7 @@ class ThemeProvider extends ChangeNotifier {
         backgroundColor: isDark ? const Color(0xFF212121) : Color(0xFFEEEEEE),
         shape: RoundedRectangleBorder(
           side: BorderSide(
-            color: Colors.white.withOpacity(0.1),
+            color: Colors.white.withAlpha(25),
             width: 1,
           ),
           borderRadius: BorderRadius.circular(5),
@@ -293,7 +293,7 @@ class ThemeProvider extends ChangeNotifier {
       chipTheme: ChipThemeData(
         backgroundColor: isDark ? const Color(0xFF212121) : Color(0xFFEEEEEE),
         selectedColor: seedColor,
-        secondarySelectedColor: seedColor.withOpacity(0.5),
+        secondarySelectedColor: seedColor.withAlpha(125),
         disabledColor: Colors.grey[400],
         labelStyle: GoogleFonts.poppins(
           color: isDark ? Color(0xFFEEEEEE) : Color(0xFF1D1616),
@@ -345,7 +345,7 @@ class ThemeProvider extends ChangeNotifier {
   bool get isDark =>
       _currentTheme == AppTheme.redDark || _currentTheme == AppTheme.blueDark;
 
-  Color get primary => _currentTheme == AppTheme.redDark
-      ? Color.fromARGB(255, 168, 38, 43)
-      : const Color.fromARGB(255, 102, 177, 243);
+  // Color get primary => _currentTheme == AppTheme.redDark
+  //     ? Color.fromARGB(255, 168, 38, 43)
+  //     : const Color.fromARGB(255, 102, 177, 243);
 }

@@ -23,11 +23,12 @@ class _SettingsPageState extends State<SettingsPage> {
     });
   }
 
+  Style get style => Style.of(context);
+  ThemeData get theme => Theme.of(context);
+
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
-    final theme = Style.of(context);
-
     return Stack(
       children: [
         Scaffold(
@@ -41,7 +42,7 @@ class _SettingsPageState extends State<SettingsPage> {
             clipBehavior: Clip.none,
             title: Container(
               padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 5),
-              decoration: theme.cardDecoration,
+              decoration: style.cardDecoration,
               child: Stack(
                 alignment: Alignment.centerLeft,
                 clipBehavior: Clip.none,
@@ -50,17 +51,13 @@ class _SettingsPageState extends State<SettingsPage> {
                     left: -35,
                     child: Icon(
                       Icons.settings_outlined,
-                      color: Colors.white.withOpacity(0.9),
+                      color: theme.primaryColor,
                     ),
                   ),
                   Text(
                     'Iestatījumi',
                     textAlign: TextAlign.center,
-                    style: GoogleFonts.poppins(
-                      color: Colors.white.withOpacity(0.9),
-                      fontSize: 24,
-                      fontWeight: FontWeight.w500,
-                    ),
+                    style: style.displaySmall,
                   ),
                 ],
               ),
@@ -128,22 +125,22 @@ class _SettingsPageState extends State<SettingsPage> {
                 });
               },
               child: Container(
-                color: Colors.black.withOpacity(0.7),
+                color: Colors.black.withAlpha(178),
                 child: Center(
                   child: Container(
                     height: 250,
                     padding: const EdgeInsets.symmetric(
                         vertical: 20, horizontal: 25),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.1),
+                      color: Colors.white.withAlpha(25),
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(
-                        color: Colors.white.withOpacity(0.2),
+                        color: Colors.white.withAlpha(50),
                         width: 1,
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.3),
+                          color: Colors.black.withAlpha(76),
                           blurRadius: 20,
                           spreadRadius: 5,
                         ),
@@ -174,7 +171,7 @@ class _SettingsPageState extends State<SettingsPage> {
           child: Text(
             title,
             style: GoogleFonts.poppins(
-              color: Colors.white.withOpacity(0.9),
+              color: style.displaySmall.color,
               fontSize: 18,
               fontWeight: FontWeight.w600,
             ),
@@ -183,7 +180,7 @@ class _SettingsPageState extends State<SettingsPage> {
         ...children,
         const SizedBox(height: 16),
         Divider(
-          color: Colors.white.withOpacity(0.1),
+          color: Colors.white.withAlpha(25),
           height: 1,
         ),
       ],
@@ -278,7 +275,6 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Widget _buildInfoItem(String title, String value, {VoidCallback? onTap}) {
-    final theme = Style.of(context);
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -287,25 +283,12 @@ class _SettingsPageState extends State<SettingsPage> {
         child: Container(
           margin: const EdgeInsets.only(bottom: 8),
           padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-          decoration: theme.cardDecoration,
+          decoration: style.cardDecoration,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                title,
-                style: GoogleFonts.poppins(
-                  color: Colors.white.withOpacity(0.9),
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              Text(
-                value,
-                style: GoogleFonts.poppins(
-                  color: Colors.white.withOpacity(0.7),
-                  fontSize: 16,
-                ),
-              ),
+              Text(title, style: style.bodyLarge),
+              Text(value, style: style.bodyLarge),
             ],
           ),
         ),
@@ -327,19 +310,19 @@ class _SettingsPageState extends State<SettingsPage> {
         child: Container(
           margin: const EdgeInsets.only(bottom: 8),
           padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-          decoration: theme.activeCardDecoration,
+          decoration: theme.cardDecoration,
           child: Row(
             children: [
               Icon(
                 icon,
-                color: Colors.white.withOpacity(0.7),
+                color: theme.contrast.withAlpha(178),
                 size: 24,
               ),
               const SizedBox(width: 15),
               Text(
                 title,
                 style: GoogleFonts.poppins(
-                  color: Colors.white.withOpacity(0.9),
+                  color: theme.contrast.withAlpha(229),
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                 ),
@@ -347,7 +330,7 @@ class _SettingsPageState extends State<SettingsPage> {
               const Spacer(),
               Icon(
                 Icons.arrow_forward_ios_rounded,
-                color: Colors.white.withOpacity(0.5),
+                color: theme.contrast.withAlpha(125),
                 size: 16,
               ),
             ],

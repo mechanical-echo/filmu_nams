@@ -161,7 +161,7 @@ class _OverlappingCarouselState extends State<OverlappingCarousel> {
                               scale: scale,
                               child: Stack(
                                 children: [
-                                  Container(
+                                  SizedBox(
                                     width: widget.itemWidth,
                                     height: widget.itemHeight,
                                     child: widget.items[wrappedIndex],
