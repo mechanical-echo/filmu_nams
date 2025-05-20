@@ -14,6 +14,59 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
+
+      - name: Create TMDB configuration
+        run: |
+          cat > lib/tmdb.dart << 'EOF'
+          // TMDB API configuration
+          const String tmdbApiKey = '${{ secrets.TMDB_API_KEY }}';
+          const String tmdbReadAccess = '${{ secrets.TMDB_READ_ACCESS }}';
+          EOF
+
+      - name: Create Firebase configuration
+        run: |
+          cat > lib/firebase_options.dart << 'EOF'
+          import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
+          import 'package:flutter/foundation.dart' show defaultTargetPlatform, TargetPlatform;
+          
+          class DefaultFirebaseOptions {
+            static FirebaseOptions get currentPlatform {
+              if (kIsWeb) {
+                return web;
+              }
+              switch (defaultTargetPlatform) {
+                case TargetPlatform.android:
+                  return android;
+                case TargetPlatform.iOS:
+                  return ios;
+                case TargetPlatform.macOS:
+                  return macos;
+                case TargetPlatform.windows:
+                  return windows;
+                case TargetPlatform.linux:
+                  throw UnsupportedError(
+                    'DefaultFirebaseOptions have not been configured for linux - '
+                    'you can reconfigure this by running the FlutterFire CLI again.',
+                  );
+                default:
+                  throw UnsupportedError(
+                    'DefaultFirebaseOptions are not supported for this platform.',
+                  );
+              }
+            }
+            
+            static const FirebaseOptions web = FirebaseOptions(
+              apiKey: '${{ secrets.FIREBASE_API_KEY }}',
+              appId: '${{ secrets.FIREBASE_APP_ID }}',
+              messagingSenderId: '${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}',
+              projectId: 'filmu-nams',
+              authDomain: 'filmu-nams.firebaseapp.com',
+              storageBucket: 'filmu-nams.firebasestorage.app',
+              measurementId: '${{ secrets.FIREBASE_MEASUREMENT_ID }}',
+            );
+          }
+          EOF
+
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
