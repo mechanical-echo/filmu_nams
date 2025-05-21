@@ -14,7 +14,22 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
-      - name: Disable Stripe for web build
+
+      - name: Create mock StripeOptions
+        run: |
+          cat > lib/stripe_options.dart << 'EOF'
+          class StripeOptions {
+            String pk() {
+              return 'mock_pk_for_ci_build';
+            }
+            
+            String sk() {
+              return 'mock_sk_for_ci_build';
+            }
+          }
+          EOF
+
+      - name: Temporarily disable Stripe for web build
         run: |
           # Create .stripeignore file to exclude stripe-related code during build
           cat > lib/.stripeignore << 'EOF'
@@ -42,6 +57,232 @@ jobs:
             }
           }
           EOF
+
+      - name: Create mock payment controller for CI build
+        run: |
+          # Back up original file
+          mkdir -p backup
+          cp lib/controllers/payment_controller.dart backup/
+
+          # Create CI-compatible version
+          cat > lib/controllers/payment_controller.dart << 'EOF'
+          import 'package:cloud_firestore/cloud_firestore.dart';
+          import 'package:dio/dio.dart';
+          import 'package:filmu_nams/controllers/notification_controller.dart';
+          import 'package:filmu_nams/models/payment_history_model.dart';
+          import 'package:filmu_nams/models/schedule_model.dart';
+          import 'package:filmu_nams/stripe_options.dart';
+          import 'package:firebase_auth/firebase_auth.dart';
+          import 'package:flutter/material.dart';
+          import 'package:filmu_nams/assets/dialog/dialog.dart';
+
+          // Mock Stripe classes for CI build
+          class Stripe {
+            static String publishableKey = '';
+            static final Stripe instance = Stripe();
+            
+            Future<void> applySettings() async {
+              debugPrint('CI Mock: Applied Stripe settings');
+            }
+            
+            Future<void> initPaymentSheet({required SetupPaymentSheetParameters paymentSheetParameters}) async {
+              debugPrint('CI Mock: Initialized payment sheet');
+            }
+            
+            Future<void> presentPaymentSheet() async {
+              debugPrint('CI Mock: Presented payment sheet');
+            }
+          }
+
+          class SetupPaymentSheetParameters {
+            SetupPaymentSheetParameters({
+              required this.merchantDisplayName,
+              required this.paymentIntentClientSecret,
+              required this.style,
+            });
+            
+            final String merchantDisplayName;
+            final String paymentIntentClientSecret;
+            final ThemeMode style;
+          }
+
+          class StripeException implements Exception {
+            StripeException(this.error);
+            final StripeError error;
+          }
+
+          class StripeError {
+            String get localizedMessage => 'Mock error message for CI';
+          }
+
+          class PaymentController {
+            final String _paymentApiUrl = "https://api.stripe.com/v1/payment_intents";
+            final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+            final FirebaseAuth _auth = FirebaseAuth.instance;
+
+            Future<void> initStripe() async {
+              try {
+                Stripe.publishableKey = StripeOptions().pk();
+                await Stripe.instance.applySettings();
+                debugPrint('CI Mock: Stripe initialized successfully');
+              } catch (e) {
+                debugPrint('CI Mock: Failed to initialize Stripe: $e');
+              }
+            }
+
+            Future<bool> processPayment({
+              required BuildContext context,
+              required double amount,
+              required String currency,
+              required String description,
+              String? customerEmail,
+              required String scheduleId,
+            }) async {
+              final scheduleRef = _firestore.collection('schedule').doc(scheduleId);
+              final schedule = await ScheduleModel.fromMapAsync(
+                  (await scheduleRef.get()).data()!, scheduleId);
+              try {
+                debugPrint("CI Mock: Processing payment of $amount $currency for: $description");
+                
+                // Skip actual payment processing in CI build
+                if (context.mounted) {
+                  _showPaymentSuccess(context, description, schedule);
+                }
+                return true;
+              } catch (e) {
+                debugPrint("CI Mock: Payment error: $e");
+                if (context.mounted) {
+                  _showPaymentError(context, "Mock payment error for CI");
+                }
+                return false;
+              }
+            }
+
+            Future<Map<String, dynamic>?> _createPaymentIntent({
+              required int amount,
+              required String currency,
+              required String description,
+              String? customerEmail,
+            }) async {
+              debugPrint('CI Mock: Payment intent created successfully');
+              return {
+                'client_secret': 'mock_client_secret',
+                'id': 'mock_payment_intent_id',
+              };
+            }
+
+            void _showPaymentSuccess(
+              BuildContext context,
+              String desc,
+              ScheduleModel schedule,
+            ) {
+              NotificationController().showNotification(
+                1,
+                "Maksājums veiksmīgs",
+                "Jūsu maksājums ir veiksmīgi apstrādāts. Biļetes ir pieejāmas profila sadaļā.",
+                "Jūsu maksājums ir veiksmīgi apstrādāts. Prece: ${desc.replaceAll(", ${schedule.id}", "")}.\nBiļetes uz seansu ir pieejāmas profila sadaļā. Paldies, ka izvēlējāties mūs!\nAr cieņu, Filmu Nams",
+                NotificationTypeEnum.payment,
+              );
+            }
+
+            void _showPaymentError(BuildContext context, String message) {
+              StylizedDialog.dialog(
+                Icons.error_outline,
+                context,
+                "Maksājuma kļūda",
+                message,
+              );
+            }
+
+            void generateHistory(
+                {required double amount,
+                required DocumentReference schedule,
+                required List<DocumentReference> tickets,
+                required String product}) async {
+              final userRef = _firestore.collection('users').doc(_auth.currentUser?.uid);
+
+              _firestore.collection('payments').add({
+                'user': userRef,
+                'amount': amount,
+                'schedule': schedule,
+                'tickets': tickets,
+                'purchaseDate': Timestamp.now(),
+                'status': 'completed',
+                'product': product,
+              }).catchError((error) {
+                debugPrint("Failed to add payment history: $error");
+                throw Exception("Failed to add payment history: $error");
+              });
+            }
+
+            void generateUnsuccessfulHistory({
+              required double amount,
+              required DocumentReference schedule,
+              required String reason,
+              required String product,
+            }) async {
+              final userRef = _firestore.collection('users').doc(_auth.currentUser?.uid);
+
+              _firestore.collection('payments').add({
+                'user': userRef,
+                'amount': amount,
+                'schedule': schedule,
+                'purchaseDate': Timestamp.now(),
+                'status': 'failed',
+                'reason': reason,
+                'product': product,
+              }).catchError((error) {
+                debugPrint("Failed to add unsuccessful payment history: $error");
+                throw Exception("Failed to add unsuccessful payment history: $error");
+              });
+            }
+
+            Future<List<PaymentHistoryModel>> getPaymentHistory() async {
+              final userRef = _firestore.collection('users').doc(_auth.currentUser?.uid);
+
+              try {
+                final QuerySnapshot querySnapshot = await _firestore
+                    .collection('payments')
+                    .where('user', isEqualTo: userRef)
+                    .orderBy('purchaseDate', descending: true)
+                    .get();
+                final List<PaymentHistoryModel> paymentHistory = [];
+                for (var doc in querySnapshot.docs) {
+                  final paymentHistoryModel = await PaymentHistoryModel.fromMapAsync(
+                    doc.data() as Map<String, dynamic>,
+                    doc.id,
+                  );
+                  paymentHistory.add(paymentHistoryModel);
+                }
+                return paymentHistory;
+              } catch (e) {
+                debugPrint("Failed to retrieve payment history: $e");
+                return [];
+              }
+            }
+          }
+
+          class PaymentHistoryStatusEnum {
+            static const String completed = 'Apstrādāts';
+            static const String failed = 'Neveiksmīgs';
+
+            static String getStatus(String status) {
+              switch (status) {
+                case 'completed':
+                  return completed;
+                case 'failed':
+                  return failed;
+                default:
+                  return 'Nezināms';
+              }
+            }
+
+            static bool isCompleted(String status) {
+              return status == 'completed';
+            }
+          }
+          EOF
+
       - name: Fix Firebase JSON file
         run: |
           cat > firebase.json << 'EOF'
