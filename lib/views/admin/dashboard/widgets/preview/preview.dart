@@ -1,14 +1,14 @@
 import 'package:filmu_nams/views/client/client.dart';
 import 'package:flutter/material.dart';
 
-class Preview extends StatefulWidget {
-  const Preview({super.key});
+class PreviewMobileApp extends StatefulWidget {
+  const PreviewMobileApp({super.key});
 
   @override
-  State<Preview> createState() => _PreviewState();
+  State<PreviewMobileApp> createState() => _PreviewMobileAppState();
 }
 
-class _PreviewState extends State<Preview> {
+class _PreviewMobileAppState extends State<PreviewMobileApp> {
   @override
   Widget build(BuildContext context) {
     return Container(

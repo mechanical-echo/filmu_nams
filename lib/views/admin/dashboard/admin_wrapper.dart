@@ -86,7 +86,7 @@ class _AdminWrapperState extends State<AdminWrapper> {
       case 7:
         return Center(child: ManagePayments());
       case 8:
-        return Center(child: Preview());
+        return Center(child: PreviewMobileApp());
       case 9:
         return Center(
           child: LoadingAnimationWidget.staggeredDotsWave(

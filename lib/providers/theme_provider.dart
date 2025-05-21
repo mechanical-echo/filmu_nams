@@ -135,13 +135,6 @@ class ThemeProvider extends ChangeNotifier {
       ),
       scaffoldBackgroundColor:
           isDark ? const Color(0xFF121212) : const Color(0xFFF5F5F7),
-      cardTheme: CardTheme(
-        color: isDark ? const Color(0xFF212121) : Color(0xFFEEEEEE),
-        elevation: 2,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
-      ),
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
           backgroundColor: seedColor,
@@ -268,16 +261,6 @@ class ThemeProvider extends ChangeNotifier {
           borderRadius: BorderRadius.vertical(
             top: Radius.circular(20),
           ),
-        ),
-      ),
-      dialogTheme: DialogTheme(
-        backgroundColor: isDark ? const Color(0xFF212121) : Color(0xFFEEEEEE),
-        shape: RoundedRectangleBorder(
-          side: BorderSide(
-            color: Colors.white.withAlpha(25),
-            width: 1,
-          ),
-          borderRadius: BorderRadius.circular(5),
         ),
       ),
       snackBarTheme: SnackBarThemeData(
