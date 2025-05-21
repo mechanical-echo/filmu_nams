@@ -80,7 +80,7 @@ class _PaymentHistoryViewState extends State<PaymentHistoryView> {
                           child: ListView.builder(
                             itemCount: paymentHistory.length,
                             padding: const EdgeInsets.symmetric(
-                              horizontal: 20,
+                              horizontal: 10,
                               vertical: 10,
                             ),
                             itemBuilder: (context, index) {
