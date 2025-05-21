@@ -125,7 +125,7 @@ class _AdminWrapperState extends State<AdminWrapper> {
                   navigationItem("Piedāvājumi", Icons.local_offer, 5),
                   navigationItem("Promokodi", Icons.card_giftcard, 6),
                   navigationItem("Maksājumi", Icons.payment, 7),
-                  navigationItem("Preview", Icons.preview, 8),
+                  navigationItem("Priekšskatīt", Icons.preview, 8),
                   navigationItem("Izlogoties", Icons.logout, 9),
                 ],
               ),
