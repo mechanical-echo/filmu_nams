@@ -8,6 +8,7 @@ import 'package:filmu_nams/views/admin/dashboard/widgets/manage_payments/manage_
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_promocodes/manage_promocodes.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_schedule/manage_schedule.dart';
 import 'package:filmu_nams/views/admin/dashboard/widgets/manage_users/manage_users.dart';
+import 'package:filmu_nams/views/admin/dashboard/widgets/preview/preview.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -25,7 +26,7 @@ class _AdminWrapperState extends State<AdminWrapper> {
   Style get theme => Style.of(context);
 
   void switchPage(int index) {
-    if (index == 8) {
+    if (index == 9) {
       _showLogoutDialog();
       return;
     }
@@ -85,6 +86,8 @@ class _AdminWrapperState extends State<AdminWrapper> {
       case 7:
         return Center(child: ManagePayments());
       case 8:
+        return Center(child: Preview());
+      case 9:
         return Center(
           child: LoadingAnimationWidget.staggeredDotsWave(
             color: Colors.white12,
@@ -122,7 +125,8 @@ class _AdminWrapperState extends State<AdminWrapper> {
                   navigationItem("Piedāvājumi", Icons.local_offer, 5),
                   navigationItem("Promokodi", Icons.card_giftcard, 6),
                   navigationItem("Maksājumi", Icons.payment, 7),
-                  navigationItem("Izlogoties", Icons.logout, 8),
+                  navigationItem("Preview", Icons.preview, 8),
+                  navigationItem("Izlogoties", Icons.logout, 9),
                 ],
               ),
             ),
