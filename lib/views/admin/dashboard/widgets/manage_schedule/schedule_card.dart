@@ -62,8 +62,8 @@ class _ScheduleCardState extends State<ScheduleCard> {
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(8),
-          bottomLeft: Radius.circular(8),
+          topLeft: Radius.circular(5),
+          bottomLeft: Radius.circular(5),
         ),
       ),
       child: CachedNetworkImage(

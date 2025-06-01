@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:filmu_nams/assets/decorations/background.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -28,6 +31,10 @@ class ThemeProvider extends ChangeNotifier {
         orElse: () => AppTheme.redDark,
       );
       notifyListeners();
+    }
+
+    if (kIsWeb || Platform.isWindows || Platform.isMacOS) {
+      _currentTheme = AppTheme.redLight;
     }
   }
 
@@ -327,8 +334,4 @@ class ThemeProvider extends ChangeNotifier {
 
   bool get isDark =>
       _currentTheme == AppTheme.redDark || _currentTheme == AppTheme.blueDark;
-
-  // Color get primary => _currentTheme == AppTheme.redDark
-  //     ? Color.fromARGB(255, 168, 38, 43)
-  //     : const Color.fromARGB(255, 102, 177, 243);
 }

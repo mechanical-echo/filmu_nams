@@ -59,22 +59,23 @@ class _TicketsViewState extends State<TicketsView>
     }
   }
 
+  Style get style => Style.of(context);
+  ThemeData get theme => Theme.of(context);
+
   @override
   Widget build(BuildContext context) {
-    final theme = Style.of(context);
-
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         centerTitle: true,
         iconTheme: IconThemeData(
-          color: theme.primary,
+          color: style.primary,
         ),
         backgroundColor: Colors.transparent,
         clipBehavior: Clip.none,
         title: Container(
           padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 5),
-          decoration: theme.cardDecoration,
+          decoration: style.cardDecoration,
           child: Stack(
             alignment: Alignment.centerLeft,
             clipBehavior: Clip.none,
@@ -83,13 +84,13 @@ class _TicketsViewState extends State<TicketsView>
                 left: -35,
                 child: Icon(
                   Icons.confirmation_number,
-                  color: Colors.white.withAlpha(229),
+                  color: Theme.of(context).colorScheme.primary.withAlpha(229),
                 ),
               ),
               Text(
                 'Manas biļetes',
                 textAlign: TextAlign.center,
-                style: theme.displaySmall,
+                style: style.displaySmall,
               ),
             ],
           ),
@@ -103,14 +104,14 @@ class _TicketsViewState extends State<TicketsView>
               child: TabBar(
                 controller: _tabController,
                 tabs: [
-                  Tab(child: Text('Atkuālie', style: theme.bodyMedium)),
-                  Tab(child: Text('Izmantotie', style: theme.bodyMedium)),
-                  Tab(child: Text('Novecojušie', style: theme.bodyMedium)),
+                  Tab(child: Text('Atkuālie', style: style.bodyMedium)),
+                  Tab(child: Text('Izmantotie', style: style.bodyMedium)),
+                  Tab(child: Text('Novecojušie', style: style.bodyMedium)),
                 ],
-                indicatorColor: Colors.white,
+                indicatorColor: theme.primaryColor,
                 indicatorWeight: 2,
-                labelColor: Colors.white,
-                unselectedLabelColor: Colors.white.withAlpha(125),
+                labelColor: theme.primaryColor,
+                unselectedLabelColor: theme.primaryColor.withAlpha(125),
                 dividerColor: Colors.transparent,
               ),
             ),
@@ -154,7 +155,7 @@ class _TicketsViewState extends State<TicketsView>
     if (isLoading) {
       return Center(
         child: LoadingAnimationWidget.stretchedDots(
-          color: Colors.white,
+          color: style.contrast,
           size: 50,
         ),
       );
@@ -183,17 +184,17 @@ class _TicketsViewState extends State<TicketsView>
                   padding:
                       const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                   decoration: BoxDecoration(
-                    color: Colors.white.withAlpha(15),
+                    color: style.contrast.withAlpha(15),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: Colors.white.withAlpha(25),
+                      color: style.contrast.withAlpha(25),
                       width: 1,
                     ),
                   ),
                   child: Text(
                     'Mēģināt vēlreiz',
                     style: GoogleFonts.poppins(
-                      color: Colors.white.withAlpha(229),
+                      color: style.contrast.withAlpha(229),
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
                     ),
@@ -214,13 +215,13 @@ class _TicketsViewState extends State<TicketsView>
             Icon(
               Icons.confirmation_number_outlined,
               size: 64,
-              color: Colors.white.withAlpha(76),
+              color: style.contrast.withAlpha(76),
             ),
             const SizedBox(height: 16),
             Text(
               'Nav biļešu šajā kategorijā',
               style: GoogleFonts.poppins(
-                color: Colors.white.withAlpha(125),
+                color: style.contrast.withAlpha(125),
                 fontSize: 18,
                 fontWeight: FontWeight.w500,
               ),
@@ -229,7 +230,7 @@ class _TicketsViewState extends State<TicketsView>
             Text(
               'Iegādājies biļeti, lai to redzētu šeit',
               style: GoogleFonts.poppins(
-                color: Colors.white.withAlpha(76),
+                color: style.contrast.withAlpha(76),
                 fontSize: 14,
               ),
               textAlign: TextAlign.center,

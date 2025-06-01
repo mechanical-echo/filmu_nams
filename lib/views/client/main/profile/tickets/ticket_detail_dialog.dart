@@ -32,7 +32,7 @@ class _TicketDetailDialogState extends State<TicketDetailDialog> {
     return Dialog(
       backgroundColor: Colors.transparent,
       child: Container(
-        decoration: style.opaqueCardDecoration,
+        decoration: style.cardDecoration,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -53,7 +53,7 @@ class _TicketDetailDialogState extends State<TicketDetailDialog> {
                   IconButton(
                     icon: Icon(
                       Icons.close,
-                      color: Colors.white.withAlpha(178),
+                      color: style.contrast.withAlpha(178),
                     ),
                     onPressed: () => Navigator.of(context).pop(),
                   ),
@@ -158,6 +158,7 @@ class _TicketDetailDialogState extends State<TicketDetailDialog> {
                       if (!isUsed)
                         Container(
                           padding: const EdgeInsets.all(16),
+                          margin: const EdgeInsets.only(top: 8),
                           decoration: BoxDecoration(
                             color: Colors.black.withAlpha(8),
                             borderRadius: BorderRadius.circular(12),
@@ -252,13 +253,13 @@ class _TicketDetailDialogState extends State<TicketDetailDialog> {
         Icon(
           icon,
           size: 16,
-          color: Colors.white.withAlpha(125),
+          color: style.contrast.withAlpha(125),
         ),
         Expanded(
           child: Text(
             value,
             style: GoogleFonts.poppins(
-              color: textColor ?? Colors.white,
+              color: textColor ?? style.contrast,
               fontSize: 14,
               fontWeight: bold ? FontWeight.w600 : FontWeight.w400,
             ),

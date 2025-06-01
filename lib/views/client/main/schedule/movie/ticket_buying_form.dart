@@ -1,6 +1,5 @@
 import 'package:filmu_nams/providers/style.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:filmu_nams/assets/widgets/date_picker/date_picker_input.dart';
@@ -99,51 +98,45 @@ class _TicketBuyingFormState extends State<TicketBuyingForm> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: style.cardDecoration,
+      decoration: style.roundCardDecoration.copyWith(
+        color: style.contrast.withAlpha(50),
+      ),
       child: Column(
         children: [
           Center(
             child: Padding(
-              padding: const EdgeInsets.all(24),
+              padding: const EdgeInsets.all(16),
               child: Text(
                 scheduleData == null ||
                         (scheduleData!.isNotEmpty && availableDates.isNotEmpty)
                     ? "Nopirkt biļeti"
                     : "Nav pieejama saraksta",
-                style: GoogleFonts.poppins(
-                  color: Colors.white,
-                  fontSize: 24,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 0.5,
-                ),
+                style: style.displaySmall.copyWith(color: Colors.white),
+                textAlign: TextAlign.center,
               ),
             ),
           ),
           if (isLoading)
             Center(
               child: LoadingAnimationWidget.staggeredDotsWave(
-                color: Colors.white,
+                color: style.contrast,
                 size: 40,
               ),
             )
           else if (scheduleData!.isNotEmpty && availableDates.isNotEmpty)
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 8),
               child: Column(
                 children: [
                   Container(
                     padding: const EdgeInsets.all(24),
-                    decoration: style.roundCardDecoration,
+                    decoration: style.cardDecoration,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           'Izvēlieties datumu un laiku',
-                          style: GoogleFonts.poppins(
-                            color: Colors.white.withAlpha(178),
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                          ),
+                          style: style.bodyMedium,
                         ),
                         const SizedBox(height: 16),
                         Row(
@@ -151,8 +144,9 @@ class _TicketBuyingFormState extends State<TicketBuyingForm> {
                             Expanded(
                               flex: 2,
                               child: DatePickerInput(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 15),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 15,
+                                ),
                                 availableDates: availableDates,
                                 sharp: true,
                                 height: 50,
@@ -169,28 +163,17 @@ class _TicketBuyingFormState extends State<TicketBuyingForm> {
                             Expanded(
                               child: Container(
                                 height: 50,
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFF2A2A2A),
-                                  borderRadius: BorderRadius.circular(8),
-                                  border: Border.all(
-                                    color: Colors.white.withAlpha(25),
-                                    width: 1,
-                                  ),
-                                ),
+                                decoration: style.cardDecoration,
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 12),
                                 child: DropdownButtonHideUnderline(
                                   child: DropdownButton(
                                     icon: Icon(
                                       Icons.arrow_drop_down_rounded,
-                                      color: Colors.white.withAlpha(178),
+                                      color: style.contrast.withAlpha(100),
                                       size: 24,
                                     ),
-                                    style: GoogleFonts.poppins(
-                                      color: Colors.white,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
-                                    ),
+                                    style: style.bodyMedium,
                                     items: timeList,
                                     onChanged: (value) {
                                       setState(() {
@@ -199,7 +182,6 @@ class _TicketBuyingFormState extends State<TicketBuyingForm> {
                                     },
                                     value: selectedId,
                                     isExpanded: true,
-                                    dropdownColor: const Color(0xFF2A2A2A),
                                   ),
                                 ),
                               ),
@@ -209,7 +191,7 @@ class _TicketBuyingFormState extends State<TicketBuyingForm> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 8),
                   if (selectedId != null)
                     HallSeats(
                       scheduleId: selectedId!,
@@ -218,7 +200,7 @@ class _TicketBuyingFormState extends State<TicketBuyingForm> {
                 ],
               ),
             ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 8),
         ],
       ),
     );

@@ -6,7 +6,7 @@ import 'package:flutter/widgets.dart';
 
 class PaymentHistoryModel {
   final String id;
-  final double amount;
+  final dynamic amount;
   final ScheduleModel schedule;
   final List<TicketModel?>? tickets;
   final Timestamp purchaseDate;

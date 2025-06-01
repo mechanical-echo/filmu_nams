@@ -99,26 +99,26 @@ class _DatePickerState extends State<DatePicker>
       child: SlideTransition(
         position: _slideAnimation,
         child: Container(
-          decoration:
-              style.isDark ? style.opaqueCardDecoration : style.cardDecoration,
+          decoration: style.isDark
+              ? style.opaqueCardDecoration
+              : style.cardDecoration.copyWith(
+                  borderRadius: BorderRadius.circular(25),
+                ),
           height: 400,
           width: 350,
           child: ClipRRect(
             borderRadius: BorderRadius.circular(20),
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-              child: Column(
-                children: [
-                  _buildHeader(),
-                  _buildWeekDays(),
-                  _buildMonth(
-                    daysFromPrevMonth,
-                    lastDayPrevMonth,
-                    currentMonthDays,
-                    daysFromNextMonth,
-                  ),
-                ],
-              ),
+            child: Column(
+              children: [
+                _buildHeader(),
+                _buildWeekDays(),
+                _buildMonth(
+                  daysFromPrevMonth,
+                  lastDayPrevMonth,
+                  currentMonthDays,
+                  daysFromNextMonth,
+                ),
+              ],
             ),
           ),
         ),

@@ -295,34 +295,37 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: 8,
-        children: [
-          _buildWelcomeSection(),
-          _buildStatisticsSection(),
-          IntrinsicHeight(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              spacing: 8,
-              children: [
-                Expanded(flex: 3, child: _buildTodayScheduleSection()),
-                Expanded(flex: 2, child: _buildUpcomingMoviesSection()),
-              ],
+    return SizedBox(
+      height: MediaQuery.of(context).size.height - 41,
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 8,
+          children: [
+            _buildWelcomeSection(),
+            _buildStatisticsSection(),
+            IntrinsicHeight(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                spacing: 8,
+                children: [
+                  Expanded(flex: 3, child: _buildTodayScheduleSection()),
+                  Expanded(flex: 2, child: _buildUpcomingMoviesSection()),
+                ],
+              ),
             ),
-          ),
-          IntrinsicHeight(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              spacing: 8,
-              children: [
-                Expanded(child: _buildRecentPaymentsSection()),
-                Expanded(child: _buildPopularMovieSection()),
-              ],
+            IntrinsicHeight(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                spacing: 8,
+                children: [
+                  Expanded(child: _buildRecentPaymentsSection()),
+                  Expanded(child: _buildPopularMovieSection()),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -353,7 +356,7 @@ class _DashboardState extends State<Dashboard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "$greeting, ${currentAdminName ?? 'Administrator'}!",
+                    "$greeting, ${currentAdminName ?? 'Administrators'}!",
                     style: style.displayLarge,
                   ),
                   Text(
@@ -373,10 +376,13 @@ class _DashboardState extends State<Dashboard> {
                   children: [
                     Icon(
                       Icons.access_time,
+                      color: Colors.white70,
                     ),
                     Text(
                       DateFormat('HH:mm:ss').format(now),
-                      style: style.headlineLarge,
+                      style: style.headlineLarge.copyWith(
+                        color: Colors.white70,
+                      ),
                     ),
                   ],
                 ),
@@ -549,40 +555,47 @@ class _DashboardState extends State<Dashboard> {
             ),
           ),
           const SizedBox(height: 8),
-          isLoading
-              ? Center(
-                  child: LoadingAnimationWidget.staggeredDotsWave(
-                    color: style.contrast,
-                    size: 40,
-                  ),
-                )
-              : todaySchedule.isEmpty
-                  ? Container(
-                      width: double.infinity,
-                      height: 100,
-                      decoration: BoxDecoration(
-                        color: style.contrast.withAlpha(25),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Center(
-                        child: Text(
-                          "Šodienas saraksts ir tukšs",
-                          style: style.bodyLarge,
-                        ),
-                      ),
-                    )
-                  : Column(
-                      spacing: 12,
-                      children: todaySchedule
-                          .map(
-                            (schedule) => ScheduleCard(
-                              data: schedule,
-                              onEdit: (id) => _openScheduleDialog(id: id),
-                              small: true,
-                            ),
-                          )
-                          .toList(),
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: style.contrast.withAlpha(25),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: isLoading
+                ? Center(
+                    child: LoadingAnimationWidget.staggeredDotsWave(
+                      color: style.contrast,
+                      size: 40,
                     ),
+                  )
+                : todaySchedule.isEmpty
+                    ? Container(
+                        width: double.infinity,
+                        height: 100,
+                        decoration: BoxDecoration(
+                          color: style.contrast.withAlpha(25),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Center(
+                          child: Text(
+                            "Šodienas saraksts ir tukšs",
+                            style: style.bodyLarge,
+                          ),
+                        ),
+                      )
+                    : Column(
+                        spacing: 8,
+                        children: todaySchedule
+                            .map(
+                              (schedule) => ScheduleCard(
+                                data: schedule,
+                                onEdit: (id) => _openScheduleDialog(id: id),
+                                small: true,
+                              ),
+                            )
+                            .toList(),
+                      ),
+          ),
         ],
       ),
     );
@@ -752,90 +765,93 @@ class _DashboardState extends State<Dashboard> {
                     ),
                   ),
                 )
-              : Column(
-                  spacing: 12,
-                  children: recentPayments.map((payment) {
-                    final isCompleted = payment.status == 'completed';
-                    return Container(
-                      decoration: BoxDecoration(
-                        color: style.contrast.withAlpha(15),
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(
-                          color: style.contrast.withAlpha(25),
-                        ),
-                      ),
-                      padding: const EdgeInsets.all(12),
-                      child: Row(
-                        spacing: 12,
-                        children: [
-                          Container(
-                            width: 4,
-                            height: 40,
-                            decoration: BoxDecoration(
-                              color: isCompleted ? Colors.green : Colors.red,
-                              borderRadius: BorderRadius.circular(2),
+              : Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: style.contrast.withAlpha(25),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Column(
+                    spacing: 8,
+                    children: recentPayments.map((payment) {
+                      final isCompleted = payment.status == 'completed';
+                      return Container(
+                        decoration: style.cardDecoration,
+                        padding: const EdgeInsets.all(16),
+                        child: Row(
+                          spacing: 12,
+                          children: [
+                            Container(
+                              width: 4,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                color: isCompleted ? Colors.green : Colors.red,
+                                borderRadius: BorderRadius.circular(2),
+                              ),
                             ),
-                          ),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                spacing: 4,
+                                children: [
+                                  Text(
+                                    payment.product,
+                                    style: style.titleMedium,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  Text(
+                                    DateFormat('dd.MM.yyyy HH:mm').format(
+                                      payment.purchaseDate.toDate(),
+                                    ),
+                                    style: style.bodySmall.copyWith(
+                                      color: style.contrast.withAlpha(178),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
                               spacing: 4,
                               children: [
                                 Text(
-                                  payment.product,
-                                  style: style.titleMedium,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                Text(
-                                  DateFormat('dd.MM.yyyy HH:mm').format(
-                                    payment.purchaseDate.toDate(),
+                                  "${payment.amount.toStringAsFixed(2)}€",
+                                  style: style.titleMedium.copyWith(
+                                    color: isCompleted
+                                        ? style.contrast
+                                        : Colors.red,
                                   ),
-                                  style: style.bodySmall.copyWith(
-                                    color: style.contrast.withAlpha(178),
+                                ),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 2,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: isCompleted
+                                        ? Colors.green.withAlpha(50)
+                                        : Colors.red.withAlpha(50),
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                  child: Text(
+                                    PaymentHistoryStatusEnum.getStatus(
+                                        payment.status),
+                                    style: style.bodySmall.copyWith(
+                                      color: isCompleted
+                                          ? Colors.green
+                                          : Colors.red,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ),
                               ],
                             ),
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            spacing: 4,
-                            children: [
-                              Text(
-                                "${payment.amount.toStringAsFixed(2)}€",
-                                style: style.titleMedium.copyWith(
-                                  color:
-                                      isCompleted ? style.contrast : Colors.red,
-                                ),
-                              ),
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 8,
-                                  vertical: 2,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: isCompleted
-                                      ? Colors.green.withAlpha(50)
-                                      : Colors.red.withAlpha(50),
-                                  borderRadius: BorderRadius.circular(4),
-                                ),
-                                child: Text(
-                                  PaymentHistoryStatusEnum.getStatus(
-                                      payment.status),
-                                  style: style.bodySmall.copyWith(
-                                    color:
-                                        isCompleted ? Colors.green : Colors.red,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    );
-                  }).toList(),
+                          ],
+                        ),
+                      );
+                    }).toList(),
+                  ),
                 ),
         ],
       ),

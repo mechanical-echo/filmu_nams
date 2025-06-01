@@ -220,11 +220,10 @@ class _ProfileState extends State<Profile> {
       color: Colors.transparent,
       child: InkWell(
         onTap: onPressed,
-        borderRadius: BorderRadius.circular(12),
         child: Container(
           width: double.infinity,
           padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-          margin: const EdgeInsets.only(bottom: 10),
+          margin: const EdgeInsets.only(bottom: 8),
           decoration: style.cardDecoration,
           child: Row(
             children: [
@@ -236,11 +235,7 @@ class _ProfileState extends State<Profile> {
               const SizedBox(width: 15),
               Text(
                 title,
-                style: GoogleFonts.poppins(
-                  color: theme.primaryColor.withAlpha(229),
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                ),
+                style: style.bodyLarge,
               ),
               const Spacer(),
               Icon(

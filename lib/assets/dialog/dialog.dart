@@ -13,7 +13,7 @@ class StylizedDialog {
         backgroundColor: Colors.transparent,
         child: Container(
           padding: const EdgeInsets.all(24),
-          decoration: theme.opaqueCardDecoration,
+          decoration: theme.cardDecoration.copyWith(color: theme.themeBgColor),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -26,7 +26,7 @@ class StylizedDialog {
                     decoration: theme.cardDecoration,
                     child: Icon(
                       icon,
-                      color: Colors.white.withAlpha(229),
+                      color: theme.contrast.withAlpha(229),
                       size: 32,
                     ),
                   ),
@@ -68,7 +68,7 @@ class StylizedDialog {
                               child: Text(
                                 'Atcelt',
                                 style: GoogleFonts.poppins(
-                                  color: Colors.white.withAlpha(229),
+                                  color: theme.contrast.withAlpha(229),
                                   fontSize: 16,
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -97,7 +97,7 @@ class StylizedDialog {
                             child: Text(
                               confirmText ?? 'Ok!',
                               style: GoogleFonts.poppins(
-                                color: Colors.white.withAlpha(229),
+                                color: theme.contrast.withAlpha(229),
                                 fontSize: 16,
                                 fontWeight: FontWeight.w500,
                               ),

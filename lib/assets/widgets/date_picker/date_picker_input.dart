@@ -1,5 +1,5 @@
+import 'package:filmu_nams/providers/style.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:filmu_nams/assets/widgets/date_picker/date_picker.dart';
 
@@ -68,6 +68,8 @@ class _DatePickerInputState extends State<DatePickerInput>
 
   String formatDate(DateTime t) => DateFormat('y. E d. MMMM', 'lv').format(t);
 
+  Style get style => Style.of(context);
+
   void _showOverlay() {
     _removeOverlay();
 
@@ -83,32 +85,26 @@ class _DatePickerInputState extends State<DatePickerInput>
               ),
             ),
           ),
-          Positioned(
-            width: 500,
-            child: CompositedTransformFollower(
-              link: _layerLink,
-              offset: const Offset(-82, -358),
-              child: Material(
-                color: Colors.transparent,
-                child: FadeTransition(
-                  opacity: _fadeAnimation,
-                  child: SlideTransition(
-                    position: _slideAnimation,
-                    child: Column(
-                      children: [
-                        DatePicker(
-                          availableDates: widget.availableDates,
-                          onDateSelected: (date) {
-                            setState(() {
-                              selectedDate = date;
-                              if (widget.onDateChanged != null) {
-                                widget.onDateChanged!(date);
-                              }
-                              _removeOverlay();
-                            });
-                          },
-                        ),
-                      ],
+          Center(
+            child: Material(
+              color: Colors.transparent,
+              child: FadeTransition(
+                opacity: _fadeAnimation,
+                child: SlideTransition(
+                  position: _slideAnimation,
+                  child: SizedBox(
+                    width: 340,
+                    child: DatePicker(
+                      availableDates: widget.availableDates,
+                      onDateSelected: (date) {
+                        setState(() {
+                          selectedDate = date;
+                          if (widget.onDateChanged != null) {
+                            widget.onDateChanged!(date);
+                          }
+                          _removeOverlay();
+                        });
+                      },
                     ),
                   ),
                 ),
@@ -136,51 +132,30 @@ class _DatePickerInputState extends State<DatePickerInput>
   Widget build(BuildContext context) {
     return CompositedTransformTarget(
       link: _layerLink,
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: _showOverlay,
-          borderRadius: BorderRadius.circular(12),
-          child: Container(
-            padding: widget.padding,
-            width: widget.width,
-            height: widget.height,
-            decoration: BoxDecoration(
-              color: Colors.white.withAlpha(15),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: Colors.white.withAlpha(25),
-                width: 1,
+      child: InkWell(
+        onTap: _showOverlay,
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          padding: widget.padding,
+          width: widget.width,
+          height: widget.height,
+          decoration: style.cardDecoration,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Text(
+                  formatDate(selectedDate),
+                  style: style.bodyMedium,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withAlpha(25),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Text(
-                    formatDate(selectedDate),
-                    style: GoogleFonts.poppins(
-                      color: Colors.white.withAlpha(229),
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-                Icon(
-                  Icons.calendar_today,
-                  color: Colors.white.withAlpha(178),
-                  size: 18,
-                ),
-              ],
-            ),
+              Icon(
+                Icons.calendar_today,
+                color: style.contrast.withAlpha(178),
+                size: 18,
+              ),
+            ],
           ),
         ),
       ),

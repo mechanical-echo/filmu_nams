@@ -160,7 +160,7 @@ class _NotificationsState extends State<Notifications> {
                         itemCount: notifications.length,
                         itemBuilder: (context, index) {
                           return Padding(
-                            padding: const EdgeInsets.only(bottom: 16),
+                            padding: const EdgeInsets.only(bottom: 8),
                             child: NotificationItem(
                               key: ValueKey(notifications[index].id +
                                   notifications[index].status),

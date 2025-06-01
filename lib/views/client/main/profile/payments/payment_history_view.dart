@@ -72,7 +72,7 @@ class _PaymentHistoryViewState extends State<PaymentHistoryView> {
               ),
               isLoading
                   ? LoadingAnimationWidget.staggeredDotsWave(
-                      color: Colors.white60,
+                      color: style.primary,
                       size: 50,
                     )
                   : paymentHistory.isNotEmpty

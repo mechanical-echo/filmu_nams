@@ -89,12 +89,21 @@ class Style extends InheritedWidget {
   Color get themeBgColor => isDark ? Colors.black : Colors.white;
 
   BoxDecoration get cardDecoration => BoxDecoration(
-        color: Colors.white.withAlpha(isDark ? 25 : 255),
+        color: isDark ? Colors.black.withAlpha(100) : Colors.white,
         borderRadius: BorderRadius.circular(5),
         border: Border.all(
-          color: contrast.withAlpha(50),
+          color: contrast.withAlpha(isDark ? 100 : 50),
           width: 1,
         ),
+        boxShadow: isDark
+            ? []
+            : [
+                BoxShadow(
+                  color: Colors.black.withAlpha(20),
+                  blurRadius: 1.5,
+                  offset: const Offset(2, 2.75),
+                ),
+              ],
       );
 
   BoxDecoration get roundCardDecoration => BoxDecoration(

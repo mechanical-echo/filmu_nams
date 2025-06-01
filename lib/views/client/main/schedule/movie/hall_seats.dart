@@ -114,19 +114,23 @@ class _HallSeatsState extends State<HallSeats> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: style.roundCardDecoration,
+      decoration: style.cardDecoration,
       child: Stack(
         children: [
-          Column(
-            children: [
-              _buildHeader(),
-              _buildSeatGrid(),
-              if (chosenSeats.isNotEmpty) ...[
-                _buildTicketTable(),
-                if (submittedPromocode == null) _buildPromocodeInput(),
+          Container(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              spacing: 8,
+              children: [
+                _buildHeader(),
+                _buildSeatGrid(),
+                if (chosenSeats.isNotEmpty) ...[
+                  _buildTicketTable(),
+                  if (submittedPromocode == null) _buildPromocodeInput(),
+                ],
+                _buildSubmitButton(),
               ],
-              _buildSubmitButton(),
-            ],
+            ),
           ),
           Align(
             alignment: Alignment.center,
@@ -155,20 +159,19 @@ class _HallSeatsState extends State<HallSeats> {
   Widget _buildHeader() {
     return Container(
       padding: const EdgeInsets.all(16),
-      margin: const EdgeInsets.all(8),
       decoration: style.cardDecoration,
       child: Row(
         children: [
           Icon(
             Icons.movie_creation_outlined,
-            color: Colors.white.withAlpha(178),
+            color: style.contrast.withAlpha(178),
             size: 24,
           ),
           const SizedBox(width: 12),
           Text(
             "${widget.hallId}. Zāle",
             style: GoogleFonts.poppins(
-              color: Colors.white,
+              color: style.contrast,
               fontSize: 18,
               fontWeight: FontWeight.w600,
             ),
@@ -179,49 +182,46 @@ class _HallSeatsState extends State<HallSeats> {
   }
 
   Widget _buildSeatGrid() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        children: [
-          if (isLoading)
-            const Center(child: CircularProgressIndicator())
-          else ...[
-            Container(
-              height: 220,
-              decoration: BoxDecoration(
-                color: Colors.black.withAlpha(76),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              padding: const EdgeInsets.all(16),
-              child: GridView.count(
-                physics: const NeverScrollableScrollPhysics(),
-                crossAxisCount: 10,
-                mainAxisSpacing: 8,
-                crossAxisSpacing: 8,
-                childAspectRatio: 0.8,
-                children: List.generate(50, (index) => _buildSeat(49 - index)),
-              ),
+    return Column(
+      spacing: 8,
+      children: [
+        if (isLoading)
+          const Center(child: CircularProgressIndicator())
+        else ...[
+          Container(
+            decoration: style.cardDecoration,
+            padding: const EdgeInsets.all(8),
+            child: GridView.count(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              crossAxisCount: 10,
+              mainAxisSpacing: 8,
+              crossAxisSpacing: 8,
+              childAspectRatio: 0.8,
+              children: List.generate(50, (index) => _buildSeat(49 - index)),
             ),
-            const SizedBox(height: 16),
-            _buildLegend(),
-            const SizedBox(height: 16),
-            _buildAddTicketButton(),
-          ],
+          ),
+          _buildLegend(),
+          _buildAddTicketButton(),
         ],
-      ),
+      ],
     );
   }
 
   Widget _buildLegend() {
-    return Wrap(
-      spacing: 16,
-      runSpacing: 16,
-      children: [
-        _buildLegendItem('Pieejams', Colors.white.withAlpha(15)),
-        _buildLegendItem('Aizņemts', Colors.white.withAlpha(50),
-            icon: Icons.close),
-        _buildLegendItem('Izvēlēts', const Color(0xFF2A2A2A)),
-      ],
+    return Container(
+      decoration: style.cardDecoration,
+      padding: const EdgeInsets.all(8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        spacing: 16,
+        children: [
+          _buildLegendItem('Pieejams', style.contrast.withAlpha(15)),
+          _buildLegendItem('Aizņemts', style.contrast.withAlpha(50),
+              icon: Icons.close),
+          _buildLegendItem('Izvēlēts', const Color(0xFF2A2A2A)),
+        ],
+      ),
     );
   }
 
@@ -230,26 +230,25 @@ class _HallSeatsState extends State<HallSeats> {
       child: Row(
         children: [
           Container(
-            width: 24,
+            width: 20,
             height: 24,
             decoration: BoxDecoration(
               color: color,
               borderRadius: BorderRadius.circular(4),
               border: Border.all(
-                color: Colors.white.withAlpha(25),
+                color: style.contrast.withAlpha(25),
                 width: 1,
               ),
             ),
             child: icon != null
-                ? Icon(icon, size: 16, color: Colors.white.withAlpha(125))
+                ? Icon(icon, size: 16, color: style.contrast.withAlpha(125))
                 : null,
           ),
           const SizedBox(width: 8),
-          Text(
-            text,
-            style: GoogleFonts.poppins(
-              color: Colors.white.withAlpha(178),
-              fontSize: 14,
+          FittedBox(
+            child: Text(
+              text,
+              style: style.bodySmall,
             ),
           ),
         ],
@@ -272,17 +271,17 @@ class _HallSeatsState extends State<HallSeats> {
         duration: const Duration(milliseconds: 200),
         decoration: BoxDecoration(
           color: isTaken
-              ? Colors.white.withAlpha(50)
+              ? style.contrast.withAlpha(50)
               : isSelected && !isChosen
                   ? const Color(0xFF2A2A2A)
                   : isChosen
-                      ? Colors.white.withAlpha(25)
-                      : Colors.white.withAlpha(15),
+                      ? style.contrast.withAlpha(25)
+                      : style.contrast.withAlpha(15),
           borderRadius: BorderRadius.circular(4),
           border: Border.all(
             color: isSelected || isChosen
-                ? Colors.white.withAlpha(76)
-                : Colors.white.withAlpha(25),
+                ? style.contrast.withAlpha(76)
+                : style.contrast.withAlpha(25),
             width: 1,
           ),
         ),
@@ -290,7 +289,7 @@ class _HallSeatsState extends State<HallSeats> {
             ? Icon(
                 Icons.close,
                 size: 16,
-                color: Colors.white.withAlpha(125),
+                color: style.contrast.withAlpha(125),
               )
             : null,
       ),
@@ -298,53 +297,42 @@ class _HallSeatsState extends State<HallSeats> {
   }
 
   Widget _buildAddTicketButton() {
-    return TextButton(
-      onPressed: () {
+    return InkWell(
+      onTap: () {
         if (!chosenSeats.contains(selected())) {
           addTicket();
         }
       },
-      style: TextButton.styleFrom(
-        backgroundColor: const Color(0xFF2A2A2A),
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
+      child: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: style.cardDecoration.copyWith(
+          color: style.isDark ? style.cardDecoration.color : Colors.grey[200],
+          boxShadow: [],
         ),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            Icons.add_circle_outline,
-            color: Colors.white.withAlpha(229),
-            size: 20,
-          ),
-          const SizedBox(width: 8),
-          Text(
-            'Pievienot biļeti',
-            style: GoogleFonts.poppins(
-              color: Colors.white,
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
+        width: double.infinity,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.add_circle_outline,
+              color: style.contrast.withAlpha(229),
+              size: 20,
             ),
-          ),
-        ],
+            const SizedBox(width: 8),
+            Text(
+              'Pievienot biļeti',
+              style: style.bodyMedium,
+            ),
+          ],
+        ),
       ),
     );
   }
 
   Widget _buildTicketTable() {
     return Container(
-      margin: const EdgeInsets.all(16),
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.black.withAlpha(76),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: Colors.white.withAlpha(25),
-          width: 1,
-        ),
-      ),
+      decoration: style.cardDecoration,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -365,22 +353,15 @@ class _HallSeatsState extends State<HallSeats> {
     return Row(
       children: [
         Expanded(
-          flex: 2,
-          child: Text(
-            'Biļete',
-            style: GoogleFonts.poppins(
-              color: Colors.white.withAlpha(125),
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
+          flex: 1,
+          child: Text('Nr.', style: style.bodyMedium),
         ),
         Expanded(
-          flex: 3,
+          flex: 2,
           child: Text(
             'Vieta',
             style: GoogleFonts.poppins(
-              color: Colors.white.withAlpha(125),
+              color: style.contrast.withAlpha(125),
               fontSize: 14,
               fontWeight: FontWeight.w500,
             ),
@@ -388,14 +369,7 @@ class _HallSeatsState extends State<HallSeats> {
         ),
         Expanded(
           flex: 2,
-          child: Text(
-            'Cena',
-            style: GoogleFonts.poppins(
-              color: Colors.white.withAlpha(125),
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
+          child: Text('Cena', style: style.bodyMedium),
         ),
         const SizedBox(width: 40),
       ],
@@ -408,7 +382,7 @@ class _HallSeatsState extends State<HallSeats> {
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
-            color: Colors.white.withAlpha(25),
+            color: style.contrast.withAlpha(25),
             width: 1,
           ),
         ),
@@ -416,23 +390,17 @@ class _HallSeatsState extends State<HallSeats> {
       child: Row(
         children: [
           Expanded(
-            flex: 2,
+            flex: 1,
             child: Text(
-              'Biļete ${index + 1}',
-              style: GoogleFonts.poppins(
-                color: Colors.white,
-                fontSize: 14,
-              ),
+              '${index + 1}',
+              style: style.bodyMedium,
             ),
           ),
           Expanded(
-            flex: 3,
+            flex: 2,
             child: Text(
-              'Rinda ${getRowFromIndex(chosenSeats[index]) + 1}, Vieta ${getColFromIndex(chosenSeats[index]) + 1}',
-              style: GoogleFonts.poppins(
-                color: Colors.white,
-                fontSize: 14,
-              ),
+              'Rinda ${getRowFromIndex(chosenSeats[index]) + 1},\nVieta ${getColFromIndex(chosenSeats[index]) + 1}',
+              style: style.bodyMedium,
             ),
           ),
           Expanded(
@@ -440,7 +408,7 @@ class _HallSeatsState extends State<HallSeats> {
             child: Text(
               '${getTicketPrice().toStringAsFixed(2)}€',
               style: GoogleFonts.poppins(
-                color: Colors.white,
+                color: style.contrast,
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
               ),
@@ -471,7 +439,7 @@ class _HallSeatsState extends State<HallSeats> {
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
-            color: Colors.white.withAlpha(25),
+            color: style.contrast.withAlpha(25),
             width: 1,
           ),
         ),
@@ -482,20 +450,14 @@ class _HallSeatsState extends State<HallSeats> {
             flex: 2,
             child: Text(
               'Atlaide',
-              style: GoogleFonts.poppins(
-                color: Colors.white,
-                fontSize: 14,
-              ),
+              style: style.bodyMedium,
             ),
           ),
           Expanded(
-            flex: 3,
+            flex: 2,
             child: Text(
               submittedPromocode!.name,
-              style: GoogleFonts.poppins(
-                color: Colors.white,
-                fontSize: 14,
-              ),
+              style: style.bodyMedium,
             ),
           ),
           Expanded(
@@ -537,7 +499,7 @@ class _HallSeatsState extends State<HallSeats> {
           Text(
             'Kopā: ',
             style: GoogleFonts.poppins(
-              color: Colors.white,
+              color: style.contrast,
               fontSize: 16,
               fontWeight: FontWeight.w500,
             ),
@@ -545,7 +507,7 @@ class _HallSeatsState extends State<HallSeats> {
           Text(
             getSum(),
             style: GoogleFonts.poppins(
-              color: Colors.white,
+              color: style.contrast,
               fontSize: 18,
               fontWeight: FontWeight.w600,
             ),
@@ -557,23 +519,15 @@ class _HallSeatsState extends State<HallSeats> {
 
   Widget _buildPromocodeInput() {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.black.withAlpha(76),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: Colors.white.withAlpha(25),
-          width: 1,
-        ),
-      ),
+      decoration: style.cardDecoration,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             'Promokods',
             style: GoogleFonts.poppins(
-              color: Colors.white.withAlpha(178),
+              color: style.contrast.withAlpha(178),
               fontSize: 14,
               fontWeight: FontWeight.w500,
             ),
@@ -582,37 +536,28 @@ class _HallSeatsState extends State<HallSeats> {
           Row(
             children: [
               Expanded(
-                child: Container(
+                child: SizedBox(
                   height: 40,
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
                   child: TextField(
                     controller: promocodeController,
-                    style: GoogleFonts.poppins(
-                      color: Colors.white,
-                      fontSize: 14,
-                    ),
+                    style: style.bodyMedium,
                     decoration: InputDecoration(
                       border: InputBorder.none,
                       hintText: 'Ievadiet promokodu',
                       hintStyle: GoogleFonts.poppins(
-                        color: Colors.white.withAlpha(76),
+                        color: style.contrast.withAlpha(76),
                         fontSize: 14,
                       ),
                     ),
                   ),
                 ),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: 8),
               IconButton(
                 onPressed: () => submitPromocode(context),
                 icon: Icon(
                   Icons.add_circle_outline,
-                  color: Colors.white.withAlpha(229),
                   size: 24,
-                ),
-                style: IconButton.styleFrom(
-                  backgroundColor: const Color(0xFF2A2A2A),
-                  padding: const EdgeInsets.all(12),
                 ),
               ),
             ],
@@ -642,21 +587,10 @@ class _HallSeatsState extends State<HallSeats> {
               },
               child: Row(
                 mainAxisSize: MainAxisSize.min,
+                spacing: 8,
                 children: [
-                  Icon(
-                    Icons.payment,
-                    color: Colors.white.withAlpha(229),
-                    size: 20,
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    'Apmaksāt',
-                    style: GoogleFonts.poppins(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
+                  Icon(Icons.payment),
+                  Text('Apmaksāt'),
                 ],
               ),
             ),

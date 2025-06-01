@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:filmu_nams/providers/style.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class Background extends StatefulWidget {
@@ -48,6 +51,8 @@ class _BackgroundState extends State<Background>
 
   Style get style => Style.of(context);
 
+  bool get isAdmin => kIsWeb || Platform.isWindows || Platform.isMacOS;
+
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
@@ -57,17 +62,7 @@ class _BackgroundState extends State<Background>
     return Stack(
       children: [
         Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                theme.colorScheme.surface,
-                theme.colorScheme.surface.withAlpha(240),
-                theme.colorScheme.surface.withAlpha(229)
-              ],
-            ),
-          ),
+          color: style.isDark ? theme.colorScheme.surface : Color(0xf4f6f7FF),
         ),
         CustomPaint(
           size: Size(width, height),
@@ -75,7 +70,7 @@ class _BackgroundState extends State<Background>
             color:
                 theme.colorScheme.onSurface.withAlpha(style.isDark ? 25 : 15),
             strokeWidth: 1,
-            spacing: 30,
+            spacing: isAdmin ? 20 : 30,
           ),
         ),
         if (style.isDark)

@@ -7,7 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
-class TicketCard extends StatelessWidget {
+class TicketCard extends StatefulWidget {
   final TicketModel ticket;
   final VoidCallback onTap;
 
@@ -18,17 +18,23 @@ class TicketCard extends StatelessWidget {
   });
 
   @override
+  State<TicketCard> createState() => _TicketCardState();
+}
+
+class _TicketCardState extends State<TicketCard> {
+  Style get theme => Style.of(context);
+
+  @override
   Widget build(BuildContext context) {
-    final theme = Style.of(context);
-    final DateTime movieTime = ticket.schedule.time.toDate();
+    final DateTime movieTime = widget.ticket.schedule.time.toDate();
     final bool isExpired = movieTime.isBefore(DateTime.now());
-    final bool isUsed = ticket.status == TicketStatusEnum.used ||
-        ticket.status == TicketStatusEnum.expiredUsed;
+    final bool isUsed = widget.ticket.status == TicketStatusEnum.used ||
+        widget.ticket.status == TicketStatusEnum.expiredUsed;
 
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: onTap,
+        onTap: widget.onTap,
         borderRadius: BorderRadius.circular(16),
         child: Container(
           margin: const EdgeInsets.only(bottom: 16),
@@ -44,17 +50,17 @@ class TicketCard extends StatelessWidget {
                       topLeft: Radius.circular(4),
                     ),
                     child: CachedNetworkImage(
-                      imageUrl: ticket.schedule.movie.posterUrl,
+                      imageUrl: widget.ticket.schedule.movie.posterUrl,
                       width: 130,
                       height: 220,
                       fit: BoxFit.cover,
                       placeholder: (context, url) => Container(
                         width: 100,
                         height: 150,
-                        color: Colors.white.withAlpha(15),
+                        color: theme.contrast.withAlpha(15),
                         child: Center(
                           child: LoadingAnimationWidget.stretchedDots(
-                            color: Colors.white,
+                            color: theme.contrast,
                             size: 30,
                           ),
                         ),
@@ -62,10 +68,10 @@ class TicketCard extends StatelessWidget {
                       errorWidget: (context, url, error) => Container(
                         width: 100,
                         height: 150,
-                        color: Colors.white.withAlpha(15),
+                        color: theme.contrast.withAlpha(15),
                         child: Icon(
                           Icons.movie_outlined,
-                          color: Colors.white.withAlpha(76),
+                          color: theme.contrast.withAlpha(76),
                           size: 40,
                         ),
                       ),
@@ -78,9 +84,9 @@ class TicketCard extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            ticket.schedule.movie.title,
+                            widget.ticket.schedule.movie.title,
                             style: GoogleFonts.poppins(
-                              color: Colors.white.withAlpha(229),
+                              color: theme.contrast.withAlpha(229),
                               fontSize: 18,
                               fontWeight: FontWeight.w600,
                             ),
@@ -98,11 +104,11 @@ class TicketCard extends StatelessWidget {
                           ),
                           _buildDetailRow(
                             Icons.chair,
-                            "Rinda: ${ticket.seat['row'] + 1}, Vieta: ${ticket.seat['seat'] + 1}",
+                            "Rinda: ${widget.ticket.seat['row'] + 1}, Vieta: ${widget.ticket.seat['seat'] + 1}",
                           ),
                           _buildDetailRow(
                             Icons.meeting_room,
-                            "${ticket.schedule.hall}. zāle",
+                            "${widget.ticket.schedule.hall}. zāle",
                           ),
                         ],
                       ),
@@ -149,14 +155,14 @@ class TicketCard extends StatelessWidget {
           Icon(
             icon,
             size: 16,
-            color: Colors.white.withAlpha(125),
+            color: theme.contrast.withAlpha(125),
           ),
           const SizedBox(width: 8),
           Expanded(
             child: Text(
               text,
               style: GoogleFonts.poppins(
-                color: Colors.white.withAlpha(178),
+                color: theme.contrast.withAlpha(178),
                 fontSize: 14,
               ),
               maxLines: 1,

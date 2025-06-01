@@ -51,7 +51,7 @@ class _NotificationItemState extends State<NotificationItem>
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       decoration: _notification.status == NotificationStatusEnum.unread
-          ? theme.activeCardDecoration
+          ? theme.cardDecoration
           : theme.cardDecoration.copyWith(
               color: theme.themeBgColor.withAlpha(100),
             ),

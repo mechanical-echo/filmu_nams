@@ -229,7 +229,9 @@ class _OfferViewState extends State<OfferView>
                                             vertical: 12,
                                           ),
                                           decoration:
-                                              theme.activeCardDecoration,
+                                              theme.cardDecoration.copyWith(
+                                            color: theme.contrast.withAlpha(25),
+                                          ),
                                           child: Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,

@@ -71,10 +71,11 @@ class _ProfileViewState extends State<ProfileView> {
     }
   }
 
+  Style get style => Style.of(context);
+
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
-    final style = Style.of(context);
 
     return Container(
       width: 350,
@@ -86,7 +87,7 @@ class _ProfileViewState extends State<ProfileView> {
       child: isLoading
           ? Center(
               child: LoadingAnimationWidget.staggeredDotsWave(
-                color: Colors.white,
+                color: style.contrast,
                 size: 50,
               ),
             )
@@ -104,7 +105,7 @@ class _ProfileViewState extends State<ProfileView> {
                         child: Icon(
                           Icons.person,
                           size: 45,
-                          color: Colors.white.withAlpha(200),
+                          color: style.contrast.withAlpha(200),
                         ),
                       ),
                     ],
@@ -134,13 +135,13 @@ class _ProfileViewState extends State<ProfileView> {
             children: [
               Icon(
                 Icons.arrow_back_ios_rounded,
-                color: Colors.white.withAlpha(178),
+                color: style.contrast.withAlpha(178),
                 size: 20,
               ),
               Text(
                 "Atpakaļ",
                 style: GoogleFonts.poppins(
-                  color: Colors.white.withAlpha(229),
+                  color: style.contrast.withAlpha(229),
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                 ),
@@ -190,14 +191,14 @@ class _ProfileViewState extends State<ProfileView> {
                         children: [
                           Icon(
                             Icons.image_outlined,
-                            color: Colors.white.withAlpha(178),
+                            color: style.contrast.withAlpha(178),
                             size: 20,
                           ),
                           Center(
                             child: Text(
                               "Mainīt bildi",
                               style: GoogleFonts.poppins(
-                                color: Colors.white.withAlpha(229),
+                                color: style.contrast.withAlpha(229),
                                 fontSize: 12,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -234,49 +235,28 @@ class _ProfileViewState extends State<ProfileView> {
     return TextField(
       controller: ctrl,
       style: GoogleFonts.poppins(
-        color: Colors.white.withAlpha(229),
+        color: style.contrast.withAlpha(229),
         fontSize: 14,
       ),
       decoration: InputDecoration(
         hintText: hint,
         prefixIcon: Icon(
           icon,
-          color: Colors.white.withAlpha(178),
+          color: style.contrast.withAlpha(178),
         ),
       ),
     );
   }
 
   Widget _buildSaveButton() {
-    final theme = Style.of(context);
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: submit,
-        child: Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(vertical: 15),
-          decoration: theme.activeCardDecoration,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            spacing: 8,
-            children: [
-              Icon(
-                Icons.save_outlined,
-                color: Colors.white.withAlpha(229),
-                size: 20,
-              ),
-              Text(
-                "Saglabāt izmaiņas",
-                style: GoogleFonts.poppins(
-                  color: Colors.white.withAlpha(229),
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
-          ),
-        ),
+    return FilledButton(
+      onPressed: submit,
+      child: Row(
+        spacing: 8,
+        children: [
+          Icon(Icons.save_outlined),
+          Text("Saglabāt izmaiņas"),
+        ],
       ),
     );
   }

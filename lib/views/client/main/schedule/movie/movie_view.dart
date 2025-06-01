@@ -155,76 +155,86 @@ class _MovieViewState extends State<MovieView>
                     ),
                     SliverToBoxAdapter(
                       child: Padding(
-                        padding: const EdgeInsets.all(16),
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              widget.data.title,
-                              style: GoogleFonts.poppins(
-                                color: Colors.white,
-                                fontSize: 32,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(height: 16),
-                            Wrap(
-                              spacing: 8,
-                              runSpacing: 8,
-                              children: [
-                                _buildDetailChip(
-                                  Icons.access_time,
-                                  getDuration(),
-                                ),
-                                _buildDetailChip(
-                                  Icons.movie,
-                                  GenreName[widget.data.genre] ??
-                                      widget.data.genre,
-                                ),
-                                _buildDetailChip(
-                                  Icons.person,
-                                  widget.data.director,
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 24),
-                            FoldableDescription(data: widget.data),
-                            const SizedBox(height: 24),
-                            if (widget.data.actors.isNotEmpty)
-                              Text(
-                                'Aktieri',
-                                style: GoogleFonts.poppins(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            const SizedBox(height: 8),
-                            if (widget.data.actors.isNotEmpty)
-                              Wrap(
-                                spacing: 8,
-                                runSpacing: 8,
-                                children: widget.data.actors.map((actor) {
-                                  return Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 12,
-                                      vertical: 6,
+                            Padding(
+                              padding: const EdgeInsets.all(8),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    widget.data.title,
+                                    style: GoogleFonts.poppins(
+                                      color: Colors.white,
+                                      fontSize: 32,
+                                      fontWeight: FontWeight.bold,
                                     ),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white.withAlpha(25),
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    child: Text(
-                                      actor,
+                                  ),
+                                  const SizedBox(height: 16),
+                                  Wrap(
+                                    spacing: 8,
+                                    runSpacing: 8,
+                                    children: [
+                                      _buildDetailChip(
+                                        Icons.access_time,
+                                        getDuration(),
+                                      ),
+                                      _buildDetailChip(
+                                        Icons.movie,
+                                        GenreName[widget.data.genre] ??
+                                            widget.data.genre,
+                                      ),
+                                      _buildDetailChip(
+                                        Icons.person,
+                                        widget.data.director,
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 24),
+                                  FoldableDescription(data: widget.data),
+                                  const SizedBox(height: 24),
+                                  if (widget.data.actors.isNotEmpty)
+                                    Text(
+                                      'Aktieri',
                                       style: GoogleFonts.poppins(
-                                        color: Colors.white.withAlpha(205),
-                                        fontSize: 14,
+                                        color: Colors.white,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                  );
-                                }).toList(),
+                                  const SizedBox(height: 8),
+                                  if (widget.data.actors.isNotEmpty)
+                                    Wrap(
+                                      spacing: 8,
+                                      runSpacing: 8,
+                                      children: widget.data.actors.map((actor) {
+                                        return Container(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 12,
+                                            vertical: 6,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: Colors.white.withAlpha(25),
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                          ),
+                                          child: Text(
+                                            actor,
+                                            style: GoogleFonts.poppins(
+                                              color:
+                                                  Colors.white.withAlpha(205),
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                        );
+                                      }).toList(),
+                                    ),
+                                  const SizedBox(height: 24),
+                                ],
                               ),
-                            const SizedBox(height: 24),
+                            ),
                             TicketBuyingForm(movieData: widget.data),
                             const SizedBox(height: 32),
                           ],
