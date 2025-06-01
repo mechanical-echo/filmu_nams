@@ -34,7 +34,7 @@ class ThemeProvider extends ChangeNotifier {
     }
 
     if (kIsWeb || Platform.isWindows || Platform.isMacOS) {
-      _currentTheme = AppTheme.redLight;
+      _currentTheme = AppTheme.blueDark;
     }
   }
 
