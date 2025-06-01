@@ -156,6 +156,7 @@ class _EditCarouselItemDialogState extends State<EditCarouselItemDialog> {
       "Brīdinājums",
       "Vai tiešām vēlaties izdzēst šo elementu?",
       onConfirm: () => deleteItem(),
+      onCancel: () {},
     );
   }
 

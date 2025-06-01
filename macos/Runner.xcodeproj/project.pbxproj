@@ -603,6 +603,7 @@
 					"$(SRCROOT)/Flutter/ephemeral/FlutterMacOS.framework/Headers",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dyshlovaya.filmuNams;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 			};
@@ -793,6 +794,7 @@
 					"$(SRCROOT)/Flutter/ephemeral/FlutterMacOS.framework/Headers",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dyshlovaya.filmuNams;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -818,6 +820,7 @@
 					"$(SRCROOT)/Flutter/ephemeral/FlutterMacOS.framework/Headers",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dyshlovaya.filmuNams;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 			};

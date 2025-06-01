@@ -190,6 +190,7 @@ class _EditMovieDialogState extends State<EditMovieDialog> {
       "Brīdinājums",
       "Vai tiešām vēlaties izdzēst šo elementu?",
       onConfirm: () => deleteItem(),
+      onCancel: () {},
     );
   }
 

@@ -92,14 +92,14 @@ class Style extends InheritedWidget {
         color: isDark ? Colors.black.withAlpha(100) : Colors.white,
         borderRadius: BorderRadius.circular(5),
         border: Border.all(
-          color: contrast.withAlpha(isDark ? 100 : 50),
+          color: contrast.withAlpha(isDark ? 100 : 20),
           width: 1,
         ),
         boxShadow: isDark
             ? []
             : [
                 BoxShadow(
-                  color: Colors.black.withAlpha(20),
+                  color: Colors.black.withAlpha(5),
                   blurRadius: 1.5,
                   offset: const Offset(2, 2.75),
                 ),

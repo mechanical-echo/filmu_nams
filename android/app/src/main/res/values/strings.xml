@@ -4,4 +4,11 @@
     <string name="facebook_app_id">683734514180595</string>
     <string name="fb_login_protocol_scheme">fb683734514180595</string>
     <string name="facebook_client_token">819cc5654f262c6735c963be694edf63</string>
+    <string name="appwidget_text">Filmu Nams</string>
+    <string name="appwidget_description">Rāda jūsu jaunākās filmu biļetes</string>
+    <string name="widget_refresh">Atjaunināt</string>
+    <string name="widget_no_tickets">Nav biļešu</string>
+    <string name="widget_loading">Ielādē...</string>
+    <string name="widget_error">Kļūda ielādējot datus</string>
+    <string name="ticket_poster">Ticket poster</string>
 </resources>
