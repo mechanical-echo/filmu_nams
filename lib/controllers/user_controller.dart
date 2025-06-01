@@ -235,6 +235,7 @@ class UserController {
     try {
       final result = await _functions.httpsCallable('deleteUser').call({
         'uid': uid,
+        'currentUid': getCurrentUser()!.uid,
       });
 
       return result.data['success'] ?? false;
